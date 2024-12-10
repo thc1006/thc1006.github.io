@@ -760,15 +760,67 @@ Globals.eventInfo = {
         
         <script>
                 (function(){
-  var FLAGS = {
-    'boe': true,'boe.conference.ui': true,'boe.live_stream': true,'boe.qa': true,'boe.conference.live_booths': true,'boe.chat_moderation': true,'boe.conference.my_agenda': true,'boe.simulcast': true,'boe.upload': true,'boe.many_to_many': true,'boe.conference.mux_data': true,'boe.conference.multiple_stages': true,'logrocket': true,'boe.private_rooms': true,'boe.notifications': true,'boe.extend_sessions_on_join': true,'boe.qa.vote_sorting': true,'boe.use_fetched_breakout_list': true,'event.hybrid': true,'boe.slow_mode': true,'pendo.enabled': true,'boe.chat.data.instrumentation': true,'event.dashboard.v2': true,'event.dashboard.v2/event-edit': true,'boe.ui.end_confirmation': true,'boe.zendesk_live_chat': false,'boe.ui.chat_upgraded': true,'event.dashboard.v2/attendees': true,'boe.blur_background': true,'boe.menu_links': true,'event.dashboard.v2/attendee_management.p1': true,'event.dashboard.v2/attendee_management.pb': true,'page_header.language_switcher': false,'event.cohosted': true,'event.cohosted.p3': true,'event.cohosted.p4': true,'boe.location_auto_complete': true,'show_ga4_admin_setting': true
-    },
-    SWITCHES = {
-    'boe.new_breakout_routing': true,'integrations.tray': true,'integrations.tray.hubspot': false,'integrations.tray.google_calendar': true,'integrations.meetup.gql': true,'boe.disable_breakouts': false,'integrations.looker': true,'integrations.looker.loadingIndicator': false,'boe.conference.ui': true,'boe.use_parallelized_split_participants': true,'integrations.looker.Beta.Admin': true,'integrations.tray.slack': true,'i18next': true,'dashboard.mobile_settings': false,'algolia.celery.multitenant': false,'integrations.looker.Chapter': true,'dev.integrations.looker.Beta.ReportCenter': true,'boe.default_screenshare': true,'email.parallelized_mass_emails': true,'email.cohosted_emails': true,'email.parallelized_trigger_schedules': true,'ga4_enabled': true,'localization.admin_dashboard.controls': true,'email.system_to_automated.ticket_and_manually_added_attendee_notification': true,'email.automated.l10n': true,'email.system_to_automated.order_refund_confirmation': true,'email.system_to_automated.signup_welcome': true,'integrations.looker.website.analytics': true
-    },
-    SAMPLES = {
-    
-    };
+var FLAGS = {
+    'boe': true,
+    'boe.conference.ui': true,
+    'boe.live_stream': true,
+    'boe.qa': true,
+    'boe.conference.live_booths': true,
+    'boe.conference.my_agenda': true,
+    'boe.simulcast': true,
+    'boe.upload': true,
+    'boe.many_to_many': true,
+    'boe.conference.mux_data': true,
+    'boe.conference.multiple_stages': true,
+    'logrocket': true,
+    'boe.private_rooms': true,
+    'boe.notifications': true,
+    'boe.extend_sessions_on_join': true,
+    'boe.qa.vote_sorting': true,
+    'event.hybrid': true,
+    'boe.slow_mode': true,
+    'pendo.enabled': true,
+    'event.dashboard.v2': true,
+    'event.dashboard.v2/event-edit': true,
+    'event.dashboard.v2/attendees': true,
+    'boe.blur_background': true,
+    'boe.menu_links': true,
+    'event.dashboard.v2/attendee_management.p1': true,
+    'event.dashboard.v2/attendee_management.pb': true,
+    'page_header.language_switcher': false,
+    'event.cohosted': true,
+    'boe.location_auto_complete': true,
+    'show_ga4_admin_setting': true
+};
+
+var SWITCHES = {
+    'boe.new_breakout_routing': true,
+    'integrations.tray': true,
+    'integrations.tray.google_calendar': true,
+    'integrations.meetup.gql': true,
+    'boe.disable_breakouts': false,
+    'integrations.looker': true,
+    'boe.conference.ui': true,
+    'boe.use_parallelized_split_participants': true,
+    'integrations.looker.Beta.Admin': true,
+    'integrations.tray.slack': true,
+    'i18next': true,
+    'dashboard.mobile_settings': false,
+    'integrations.looker.Chapter': true,
+    'boe.default_screenshare': true,
+    'email.parallelized_mass_emails': true,
+    'email.cohosted_emails': true,
+    'email.parallelized_trigger_schedules': true,
+    'ga4_enabled': true,
+    'localization.admin_dashboard.controls': true,
+    'email.system_to_automated.ticket_and_manually_added_attendee_notification': true,
+    'email.automated.l10n': true,
+    'email.system_to_automated.order_refund_confirmation': true,
+    'email.system_to_automated.signup_welcome': true,
+    'integrations.looker.website.analytics': true
+};
+
+var SAMPLES = {};
   window.waffle = {
     "flag_is_active": function waffle_flag(flag_name) {
       
