@@ -3,237 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Colosseum-ORAN-FRL-Demo | An End-to-End FRL Framework</title>
+    <title>Colosseum-ORAN-FRL-Demo | Offline FRL for O-RAN Slicing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #0D47A1; /* 深藍 */
-            --secondary-color: #1976D2; /* 中藍 */
-            --accent-color: #42A5F5; /* 亮藍 */
-            --text-color: #333;
-            --light-gray: #f8f9fa;
-        }
-        html {
-            scroll-behavior: smooth;
+            --primary-color: #0d1117; /* GitHub Dark */
+            --secondary-color: #161b22; /* GitHub Darker */
+            --border-color: #30363d;
+            --text-color: #c9d1d9;
+            --text-secondary-color: #8b949e;
+            --accent-color: #58a6ff; /* GitHub Blue */
         }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.8;
+            font-family: 'Noto Sans TC', sans-serif;
+            line-height: 1.7;
             margin: 0;
             padding: 0;
+            background: var(--primary-color);
             color: var(--text-color);
         }
-        nav {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
-        nav .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
+        .container {
             max-width: 1100px;
-            margin: 0 auto;
+            margin: auto;
+            padding: 0 20px;
         }
-        nav .logo {
-            font-weight: bold;
-            font-size: 1.5rem;
-            color: var(--primary-color);
+        .hero {
+            background: var(--secondary-color);
+            padding: 100px 0;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
         }
-        nav ul {
-            list-style: none;
-            display: flex;
-            margin: 0;
-            padding: 0;
+        .hero h1 {
+            margin: 0 0 15px 0;
+            font-size: 3rem;
+            color: #fff;
         }
-        nav ul li {
-            margin-left: 20px;
+        .hero .subtitle {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px auto;
+            color: var(--text-secondary-color);
         }
-        nav ul li a {
+        .btn {
+            display: inline-block;
+            background: var(--accent-color);
+            color: #fff;
+            padding: 12px 28px;
             text-decoration: none;
-            color: #555;
+            border-radius: 6px;
             font-weight: 500;
-            transition: color 0.3s;
+            transition: all 0.3s ease;
+            border: 1px solid var(--accent-color);
         }
-        nav ul li a:hover {
+        .btn:hover {
+            background: #fff;
             color: var(--accent-color);
         }
 
-        .hero {
-            background-image: linear-gradient(rgba(13, 71, 161, 0.7), rgba(25, 118, 210, 0.7)), url('https://i.imgur.com/your-background-image.jpg');
-            background-size: cover;
-            background-position: center;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: #fff;
-            padding: 0 20px;
-        }
-        .hero h1 {
-            font-size: 3.5rem;
-            margin: 0;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
-        }
-        .hero p {
-            font-size: 1.2rem;
-            max-width: 600px;
-            margin: 20px 0 30px;
-            opacity: 0.9;
-        }
-        .hero .btn {
-            background: var(--accent-color);
-            padding: 15px 30px;
-            font-size: 1rem;
-            border-radius: 50px;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .hero .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
         .section {
-            padding: 80px 20px;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-        .section-light {
-            background: #fff;
-        }
-        .section-dark {
-            background: var(--light-gray);
+            padding: 80px 0;
         }
         .section-title {
             text-align: center;
             margin-bottom: 50px;
-            font-size: 2.5rem;
-            color: var(--primary-color);
+            font-size: 2.2rem;
         }
-        .step-container {
+        .feature-grid {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 50px;
-            align-items: center;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
         }
-        @media(min-width: 768px) {
-            .step-container { grid-template-columns: 1fr 1fr; }
-            .step-container.reverse { grid-template-columns: 1fr 1fr; }
-            .step-container.reverse .text-content { order: 2; }
-            .step-container.reverse .image-content { order: 1; }
+        .card {
+            background: var(--secondary-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
-        .text-content h3 {
-            font-size: 2rem;
-            color: var(--secondary-color);
-            margin-bottom: 15px;
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
         }
-        .image-content img {
+        .card img {
             width: 100%;
-            max-width: 400px;
-            display: block;
-            margin: 0 auto;
-            border-radius: 10px;
+            height: 200px;
+            object-fit: cover;
+        }
+        .card-content {
+            padding: 25px;
+        }
+        .card-content h3 {
+            margin-top: 0;
+            color: var(--accent-color);
+        }
+        .card-content p {
+            color: var(--text-secondary-color);
         }
 
-        .cta {
+        #quick-start {
             background: var(--secondary-color);
-            color: #fff;
-            text-align: center;
-            padding: 60px 20px;
         }
-        .cta h2 {
-            font-size: 2.2rem;
-            margin-bottom: 20px;
+        #quick-start pre {
+            background: #010409;
+            color: #ccc;
+            padding: 20px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        #quick-start code {
+             font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
         }
 
         footer {
-            background: #222;
-            color: #ccc;
             text-align: center;
-            padding: 20px;
+            padding: 30px 0;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary-color);
         }
     </style>
 </head>
 <body>
 
-    <nav>
+    <header class="hero">
         <div class="container">
-            <div class="logo">Colosseum-FRL</div>
-            <ul>
-                <li><a href="#problem">核心問題</a></li>
-                <li><a href="#solution">解決方案</a></li>
-                <li><a href="#quick-start">快速開始</a></li>
-                <li><a href="https://github.com/thc1006/colosseum-oran-frl-demo">GitHub</a></li>
-            </ul>
+            <h1>Colosseum-ORAN-FRL-Demo</h1>
+            <p class="subtitle">一個為 O-RAN 設計，端到端、可重現的離線聯邦強化學習研究框架。我們將真實世界的複雜數據轉化為可驅動 AI 創新的洞見。</p>
+            <a href="https://github.com/thc1006/colosseum-oran-frl-demo" class="btn">v0.1.1 - 探索 GitHub</a>
         </div>
-    </nav>
+    </header>
 
-    <section class="hero">
-        <h1>告別繁瑣，專注創新</h1>
-        <p>一個為 O-RAN AI 研究而生的可重現框架。我們處理了數據工程，您只需專注於演算法的核心價值。</p>
-        <a href="https://github.com/thc1006/colosseum-oran-frl-demo" class="btn">v0.1.1 - 立即探索</a>
-    </section>
+    <main>
+        <section id="features" class="section">
+            <div class="container">
+                <h2 class="section-title">核心架構與價值</h2>
+                <div class="feature-grid">
+                    <div class="card">
+                        <img src="https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="數據處理抽象圖">
+                        <div class="card-content">
+                            <h3>智能數據管線</h3>
+                            <p>將龐雜的 Colosseum 原始數據軌跡，透過自動化腳本轉換為乾淨、高效且附帶元數據的 Parquet 格式，為所有機器學習任務奠定堅實基礎。</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <img src="https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="AI 核心與神經網路圖">
+                        <div class="card-content">
+                            <h3>高擬真數位分身</h3>
+                            <p>提供一個 Gym-style 的離線模擬環境。它作為真實網路的數位分身，讓您的 RL Agent 能在安全、可控且零成本的沙盒中進行訓練與評估。</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <img src="https://images.pexels.com/photos/392018/pexels-photo-392018.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="5G 網路訊號傳播圖">
+                        <div class="card-content">
+                            <h3>分散式智能框架</h3>
+                            <p>內建的聯邦學習機制，完整模擬了 O-RAN 中多個 gNB xApp 的協同決策過程。這不僅是一個演算法，更是對未來 RAN 智能架構的具體實踐。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <section id="problem" class="section section-light">
-        <h2 class="section-title">研究的困境</h2>
-        <div class="step-container">
-            <div class="image-content">
-                <img src="https://i.imgur.com/your-image1.png" alt="複雜的數據圖示">
-            </div>
-            <div class="text-content">
-                <h3>數據的迷霧</h3>
-                <p>學術研究常始於偉大的想法，卻終於繁瑣的數據清理。原始的網路數據集格式不一、充滿雜訊，往往耗費了研究人員 80% 的時間，卻只貢獻了 20% 的價值。</p>
-            </div>
-        </div>
-    </section>
+        <section id="quick-start" class="section">
+            <div class="container">
+                <h2 class="section-title">快速上手</h2>
+                <p style="text-align:center; max-width: 700px; margin: -30px auto 50px auto; color: var(--text-secondary-color);">只需三個指令，即可在您的本地環境中啟動並運行整個專案。</p>
+                
+                <h3>1. 安裝環境與相依套件</h3>
+                <pre><code>git clone https://github.com/thc1006/colosseum-oran-frl-demo.git
+cd colosseum-oran-frl-demo
+pip install .[dev]</code></pre>
 
-    <section id="solution" class="section section-dark">
-        <h2 class="section-title">我們的解決方案</h2>
-        <div class="step-container reverse">
-            <div class="image-content">
-                <img src="https://i.imgur.com/your-image2.png" alt="清晰的流程圖示">
+                <h3>2. 執行數據準備</h3>
+                <pre><code>python scripts/make_dataset.py --raw /path/to/your/raw_csvs --out src/colosseum_oran_frl_demo/data/processed</code></pre>
+                
+                <h3>3. 啟動聯邦學習訓練</h3>
+                <pre><code>python scripts/train.py --rounds 10 --clients 1,2,6</code></pre>
             </div>
-            <div class="text-content">
-                <h3>智能數據引擎</h3>
-                <p>我們的數據管線能自動解析 Colosseum 的 CSV 數據，不僅轉換為高效的 Parquet 格式，更注入了實驗場景的元數據，讓數據變得「聰明」且「可用」。</p>
-            </div>
-        </div>
-        <div class="step-container" style="margin-top: 50px;">
-            <div class="image-content">
-                <img src="https://i.imgur.com/your-image3.png" alt="模擬環境圖示">
-            </div>
-            <div class="text-content">
-                <h3>高擬真數位分身</h3>
-                <p><code>SliceSimEnv</code> 提供了一個安全、零成本的實驗沙盒。它重播真實數據軌跡，讓您的 RL Agent 能在貼近現實的環境中進行訓練與評估，無需昂貴的硬體投資。</p>
-            </div>
-        </div>
-         <div class="step-container reverse" style="margin-top: 50px;">
-            <div class="image-content">
-                <img src="https://i.imgur.com/your-image4.png" alt="聯邦式 AI 圖示">
-            </div>
-            <div class="text-content">
-                <h3>分散式智能中樞</h3>
-                <p>內建的聯邦學習框架，模擬了多個 gNB xApp 之間的協同決策過程。這不僅是一個演算法，更是對未來 O-RAN 智能架構的一次具體實踐。</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="quick-start" class="section cta">
-        <div class="container">
-            <h2>準備好開始了嗎？</h2>
-            <p>我們的專案已經準備就緒，您可以立即下載並執行您的第一個 FRL 實驗。</p>
-            <a href="https://github.com/thc1006/colosseum-oran-frl-demo" class="btn">查看 GitHub 上的 Quick Start</a>
-        </div>
-    </section>
+        </section>
+    </main>
 
     <footer>
-        <p>&copy; 2025 Hsiu-Chi Tsai. All Rights Reserved.</p>
+        <div class="container">
+            <p>專案由 Hsiu-Chi Tsai 建立與維護 | 採用 MIT 授權條款</p>
+            <p>特別感謝美國東北大學 WiNES Lab 團隊釋出 Colosseum 數據集</p>
+        </div>
     </footer>
 
 </body>
