@@ -3,195 +3,346 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Colosseum-ORAN-FRL-Demo | Offline FRL for O-RAN Slicing</title>
+    <title>Colosseum-ORAN-FRL-Demo | 一場數據的演化之旅</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #0d1117; /* GitHub Dark */
-            --secondary-color: #161b22; /* GitHub Darker */
-            --border-color: #30363d;
-            --text-color: #c9d1d9;
-            --text-secondary-color: #8b949e;
-            --accent-color: #58a6ff; /* GitHub Blue */
-        }
         body {
-            font-family: 'Noto Sans TC', sans-serif;
-            line-height: 1.7;
             margin: 0;
             padding: 0;
-            background: var(--primary-color);
-            color: var(--text-color);
+            background-color: #000000;
+            color: #e0e0e0;
+            font-family: 'Noto Sans TC', sans-serif;
+            overflow-x: hidden;
         }
-        .container {
-            max-width: 1100px;
-            margin: auto;
-            padding: 0 20px;
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
         }
-        .hero {
-            background: var(--secondary-color);
-            padding: 100px 0;
+
+        .scroll-container {
+            position: relative;
+            z-index: 10;
+        }
+        
+        .sticky-wrapper {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             text-align: center;
-            border-bottom: 1px solid var(--border-color);
+            padding: 0 5%;
+            box-sizing: border-box;
+            pointer-events: none; /* 讓滑鼠可以穿透此層 */
         }
-        .hero h1 {
-            margin: 0 0 15px 0;
-            font-size: 3rem;
-            color: #fff;
-        }
-        .hero .subtitle {
-            font-size: 1.2rem;
+
+        .text-box {
+            background-color: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 40px;
+            border-radius: 15px;
             max-width: 700px;
-            margin: 0 auto 30px auto;
-            color: var(--text-secondary-color);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            pointer-events: all; /* 讓按鈕可以被點擊 */
         }
+
+        .text-box.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .text-box h1, .text-box h2 {
+            margin: 0 0 20px 0;
+            font-weight: 700;
+            line-height: 1.3;
+            text-shadow: 0 0 20px rgba(88, 166, 255, 0.6);
+        }
+        .text-box h1 { font-size: 3.2rem; }
+        .text-box h2 { font-size: 2.8rem; color: #58a6ff; }
+        .text-box p {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: #b0b8c4;
+            font-weight: 300;
+        }
+
+        .btn-container { margin-top: 30px; }
         .btn {
             display: inline-block;
-            background: var(--accent-color);
-            color: #fff;
-            padding: 12px 28px;
+            background: #58a6ff;
+            color: #000;
+            padding: 14px 32px;
             text-decoration: none;
-            border-radius: 6px;
-            font-weight: 500;
+            border-radius: 50px;
+            font-weight: 700;
             transition: all 0.3s ease;
-            border: 1px solid var(--accent-color);
         }
         .btn:hover {
             background: #fff;
-            color: var(--accent-color);
+            color: #000;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(88, 166, 255, 0.5);
         }
-
-        .section {
-            padding: 80px 0;
+        
+        .scene-trigger {
+            height: 200vh; /* 提供足夠的滾動空間讓動畫播放 */
+            position: relative;
+            z-index: 5;
         }
-        .section-title {
-            text-align: center;
-            margin-bottom: 50px;
-            font-size: 2.2rem;
+        
+        #scroll-prompt {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            color: #fff;
+            font-size: 0.9rem;
+            opacity: 0.7;
+            animation: bounce 2s infinite;
+            transition: opacity 0.5s;
         }
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+         #scroll-prompt.hidden {
+            opacity: 0;
         }
-        .card {
-            background: var(--secondary-color);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-        }
-        .card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-        .card-content {
-            padding: 25px;
-        }
-        .card-content h3 {
-            margin-top: 0;
-            color: var(--accent-color);
-        }
-        .card-content p {
-            color: var(--text-secondary-color);
-        }
-
-        #quick-start {
-            background: var(--secondary-color);
-        }
-        #quick-start pre {
-            background: #010409;
-            color: #ccc;
-            padding: 20px;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-        #quick-start code {
-             font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
-        }
-
-        footer {
-            text-align: center;
-            padding: 30px 0;
-            margin-top: 40px;
-            border-top: 1px solid var(--border-color);
-            color: var(--text-secondary-color);
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); }
+            40% { transform: translate(-50%, -15px); }
+            60% { transform: translate(-50%, -7px); }
         }
     </style>
 </head>
 <body>
 
-    <header class="hero">
-        <div class="container">
-            <h1>Colosseum-ORAN-FRL-Demo</h1>
-            <p class="subtitle">一個為 O-RAN 設計，端到端、可重現的離線聯邦強化學習研究框架。我們將真實世界的複雜數據轉化為可驅動 AI 創新的洞見。</p>
-            <a href="https://github.com/thc1006/colosseum-oran-frl-demo" class="btn">v0.1.1 - 探索 GitHub</a>
-        </div>
-    </header>
+    <canvas id="bg-canvas"></canvas>
 
-    <main>
-        <section id="features" class="section">
-            <div class="container">
-                <h2 class="section-title">核心架構與價值</h2>
-                <div class="feature-grid">
-                    <div class="card">
-                        <img src="https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="數據處理抽象圖">
-                        <div class="card-content">
-                            <h3>智能數據管線</h3>
-                            <p>將龐雜的 Colosseum 原始數據軌跡，透過自動化腳本轉換為乾淨、高效且附帶元數據的 Parquet 格式，為所有機器學習任務奠定堅實基礎。</p>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <img src="https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="AI 核心與神經網路圖">
-                        <div class="card-content">
-                            <h3>高擬真數位分身</h3>
-                            <p>提供一個 Gym-style 的離線模擬環境。它作為真實網路的數位分身，讓您的 RL Agent 能在安全、可控且零成本的沙盒中進行訓練與評估。</p>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <img src="https://images.pexels.com/photos/392018/pexels-photo-392018.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="5G 網路訊號傳播圖">
-                        <div class="card-content">
-                            <h3>分散式智能框架</h3>
-                            <p>內建的聯邦學習機制，完整模擬了 O-RAN 中多個 gNB xApp 的協同決策過程。這不僅是一個演算法，更是對未來 RAN 智能架構的具體實踐。</p>
-                        </div>
-                    </div>
-                </div>
+    <div class="scroll-container">
+        <div class="sticky-wrapper">
+             <div id="main-text-box" class="text-box">
+                <!-- 文字內容將由 JS 動態更新 -->
             </div>
-        </section>
-
-        <section id="quick-start" class="section">
-            <div class="container">
-                <h2 class="section-title">快速上手</h2>
-                <p style="text-align:center; max-width: 700px; margin: -30px auto 50px auto; color: var(--text-secondary-color);">只需三個指令，即可在您的本地環境中啟動並運行整個專案。</p>
-                
-                <h3>1. 安裝環境與相依套件</h3>
-                <pre><code>git clone https://github.com/thc1006/colosseum-oran-frl-demo.git
-cd colosseum-oran-frl-demo
-pip install .[dev]</code></pre>
-
-                <h3>2. 執行數據準備</h3>
-                <pre><code>python scripts/make_dataset.py --raw /path/to/your/raw_csvs --out src/colosseum_oran_frl_demo/data/processed</code></pre>
-                
-                <h3>3. 啟動聯邦學習訓練</h3>
-                <pre><code>python scripts/train.py --rounds 10 --clients 1,2,6</code></pre>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="container">
-            <p>專案由 Hsiu-Chi Tsai 建立與維護 | 採用 MIT 授權條款</p>
-            <p>特別感謝美國東北大學 WiNES Lab 團隊釋出 Colosseum 數據集</p>
         </div>
-    </footer>
 
+        <div class="scene-trigger" data-scene="intro"></div>
+        <div class="scene-trigger" data-scene="data_chaos"></div>
+        <div class="scene-trigger" data-scene="digital_twin"></div>
+        <div class="scene-trigger" data-scene="federated_learning"></div>
+        <div class="scene-trigger" data-scene="outro"></div>
+    </div>
+    
+    <div id="scroll-prompt">向下滾動，開啟旅程</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
+
+    <script>
+        // --- 設定場景 ---
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 80;
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000, 1);
+
+        // --- 3D 物件 ---
+        let chaosGroup, grid, federatedGroup;
+
+        // 場景1: 混沌數據
+        function createChaos() {
+            chaosGroup = new THREE.Group();
+            const geometry = new THREE.IcosahedronGeometry(0.5, 0);
+            for (let i = 0; i < 1500; i++) {
+                const material = new THREE.MeshBasicMaterial({ color: Math.random() * 0x808080 + 0x808080, wireframe: true, transparent: true, opacity: 0.5 });
+                const mesh = new THREE.Mesh(geometry, material);
+                mesh.position.set(
+                    (Math.random() - 0.5) * 200,
+                    (Math.random() - 0.5) * 200,
+                    (Math.random() - 0.5) * 200
+                );
+                mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+                chaosGroup.add(mesh);
+            }
+            scene.add(chaosGroup);
+        }
+
+        // 場景2: 秩序網格
+        function createGrid() {
+            grid = new THREE.GridHelper(200, 80, 0x16293a, 0x16293a);
+            grid.material.opacity = 0;
+            grid.material.transparent = true;
+            grid.position.y = 0;
+            scene.add(grid);
+        }
+        
+        // 場景3: 聯邦網路
+        function createFederatedNetwork() {
+            federatedGroup = new THREE.Group();
+            const nodeGeometry = new THREE.SphereGeometry(1.5, 32, 32);
+            const nodeMaterial = new THREE.MeshStandardMaterial({
+                color: 0x58a6ff,
+                emissive: 0x58a6ff,
+                emissiveIntensity: 0,
+                metalness: 0.5,
+                roughness: 0.3,
+            });
+            const lineMaterial = new THREE.LineBasicMaterial({ color: 0x58a6ff, transparent: true, opacity: 0 });
+
+            // 中心節點
+            const centerNode = new THREE.Mesh(nodeGeometry, nodeMaterial.clone());
+            centerNode.material.color.set(0xffffff);
+            centerNode.material.emissive.set(0xffffff);
+            federatedGroup.add(centerNode);
+            
+            const nodes = [centerNode];
+            for (let i = 0; i < 7; i++) {
+                const node = new THREE.Mesh(nodeGeometry, nodeMaterial.clone());
+                const angle = (i / 7) * Math.PI * 2;
+                node.position.set(Math.cos(angle) * 35, (Math.random() - 0.5) * 20, Math.sin(angle) * 35);
+                federatedGroup.add(node);
+                nodes.push(node);
+                
+                const points = [centerNode.position, node.position];
+                const geometry = new THREE.BufferGeometry().setFromPoints(points);
+                const line = new THREE.Line(geometry, lineMaterial.clone());
+                federatedGroup.add(line);
+            }
+            scene.add(federatedGroup);
+            federatedGroup.position.z = -50;
+            federatedGroup.visible = false;
+        }
+
+        // --- 光照 ---
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
+        scene.add(ambientLight);
+        const pointLight = new THREE.PointLight(0x58a6ff, 1, 300);
+        scene.add(pointLight);
+
+        // --- 動畫 ---
+        function animate() {
+            requestAnimationFrame(animate);
+            if (chaosGroup) chaosGroup.rotation.y += 0.0002;
+            if (federatedGroup) federatedGroup.rotation.y -= 0.001;
+            renderer.render(scene, camera);
+        }
+
+        createChaos();
+        createGrid();
+        createFederatedNetwork();
+        animate();
+        
+        // --- 滾動與敘事 ---
+        gsap.registerPlugin(ScrollTrigger);
+
+        const textBox = document.getElementById('main-text-box');
+        const scrollPrompt = document.getElementById('scroll-prompt');
+
+        const scenes = {
+            intro: {
+                title: 'Colosseum-ORAN-FRL-Demo',
+                text: '這不僅是一個專案，而是一場數據的演化之旅。<br>從混沌的訊號中，我們將見證智能的誕生。'
+            },
+            data_chaos: {
+                title: '第一章：混沌之海',
+                text: '一切始於數據——數以百萬計的原始軌跡，如同宇宙塵埃，混亂而無序。它們是真實世界的低語，卻也隱藏著通往未來的密碼。'
+            },
+            digital_twin: {
+                title: '第二章：秩序的建立',
+                text: '我們打造了一個「數位分身」——一個基於真實數據的模擬宇宙。在這裡，混沌的數據被轉化為結構化的網格，構建出一個安全、可控、且能反映真實物理定律的實驗沙盒。'
+            },
+            federated_learning: {
+                title: '第三章：分散式覺醒',
+                text: '智能無需唯一的中心。我們將 AI 代理部署於網路的各個節點，讓它們獨立學習、各自為王，再透過聯邦機制共享智慧，共同進化。這是對 O-RAN 分散式理念的終極致敬。'
+            },
+            outro: {
+                title: '終章：智能湧現',
+                text: '當一切塵埃落定，一個優雅、高效的控制系統從中湧現。這就是我們的目標：為下一代無線網路，注入自我演化的靈魂。',
+                button: true
+            }
+        };
+        
+        function updateTextContent(sceneName) {
+            const content = scenes[sceneName];
+            textBox.classList.remove('is-visible');
+            
+            setTimeout(() => {
+                const titleTag = (sceneName === 'intro') ? 'h1' : 'h2';
+                let buttonHtml = '';
+                if(content.button) {
+                    buttonHtml = `<div class="btn-container"><a href="https://github.com/thc1006/colosseum-oran-frl-demo" class="btn" target="_blank">探索專案原始碼</a></div>`;
+                }
+                textBox.innerHTML = `<${titleTag}>${content.title}</${titleTag}><p>${content.text}</p>${buttonHtml}`;
+                textBox.classList.add('is-visible');
+            }, 300);
+        }
+        
+        // --- 主時間軸與滾動觸發 ---
+        let mainTimeline = gsap.timeline({
+            scrollTrigger: {
+                trigger: ".scroll-container",
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 1.5,
+            }
+        });
+
+        // Intro to Data Chaos
+        mainTimeline.to(camera.position, { z: 20, ease: 'power1.inOut' }, 0);
+        mainTimeline.to(chaosGroup.rotation, { x: Math.PI / 4, ease: 'power1.inOut' }, 0);
+        
+        // Data Chaos to Digital Twin
+        mainTimeline.to(chaosGroup.children.map(c => c.material), { opacity: 0.1, stagger: 0.001 }, 1);
+        mainTimeline.to(grid.material, { opacity: 0.4 }, 1.2);
+        mainTimeline.to(camera.position, { z: 120, y: 50 }, 1.2);
+        mainTimeline.to(camera.rotation, { x: -Math.PI / 8 }, 1.2);
+
+        // Digital Twin to Federated Learning
+        mainTimeline.to(grid.material, { opacity: 0.1 }, 2);
+        mainTimeline.call(() => { federatedGroup.visible = true; }, null, 2.1);
+        mainTimeline.to(federatedGroup.children.filter(c => c.type === "Mesh").map(c => c.material), { emissiveIntensity: 1.5, stagger: 0.1 }, 2.2);
+        mainTimeline.to(federatedGroup.children.filter(c => c.type === "Line").map(c => c.material), { opacity: 0.3, stagger: 0.1 }, 2.3);
+        mainTimeline.to(camera.position, { z: 90, y: 10 }, 2.2);
+        
+        // Federated Learning to Outro
+        mainTimeline.to(federatedGroup.scale, { x: 0.01, y: 0.01, z: 0.01, ease: 'power2.in' }, 3);
+        mainTimeline.to(pointLight, { intensity: 0 }, 3);
+        mainTimeline.to(camera.position, { z: 150 }, 3);
+
+        // --- 文字更新觸發 ---
+        document.querySelectorAll('.scene-trigger').forEach((trigger) => {
+            ScrollTrigger.create({
+                trigger: trigger,
+                start: "top center",
+                end: "bottom center",
+                onToggle: self => {
+                    if (self.isActive) {
+                        updateTextContent(trigger.dataset.scene);
+                    }
+                }
+            });
+        });
+        
+        // --- 隱藏滾動提示 ---
+        ScrollTrigger.create({
+            trigger: ".scene-trigger[data-scene='data_chaos']",
+            start: "top bottom",
+            onEnter: () => scrollPrompt.classList.add('hidden')
+        });
+
+        // 初始文字
+        updateTextContent('intro');
+    </script>
 </body>
 </html>
