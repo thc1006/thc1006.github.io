@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>蔡秀吉 | The Living Galaxy</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Poppins:wght@600&display=swap');
+        
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #00000a;
+            font-family: 'Noto Sans TC', sans-serif;
+            color: #e0e0e0;
+        }
+        #galaxy-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            cursor: grab;
+        }
+        #galaxy-canvas:active {
+            cursor: grabbing;
+        }
+        #info-panel {
+            position: absolute;
+            top: 50%;
+            left: -100%; /* Initially off-screen */
+            transform: translateY(-50%);
+            width: 90%;
+            max-width: 400px;
+            background: rgba(10, 10, 20, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            z-index: 10;
+            transition: left 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        #info-panel.visible {
+            left: 5%;
+        }
+        #info-panel h2 {
+            font-family: 'Poppins', sans-serif;
+            color: #87CEEB; /* Sky Blue */
+            margin-top: 0;
+            font-size: 1.75rem;
+        }
+        #info-panel p {
+            line-height: 1.7;
+            color: #c0c0c0;
+        }
+        #close-panel {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        #close-panel:hover {
+            opacity: 1;
+        }
+        #intro-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+            text-align: center;
+            pointer-events: none;
+            transition: opacity 1s ease-out;
+        }
+         #intro-text h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3rem;
+            margin: 0;
+            color: #fff;
+            text-shadow: 0 0 15px rgba(135, 206, 235, 0.7);
+        }
+        #intro-text p {
+            font-size: 1.2rem;
+            color: #aaa;
+        }
+
+        /* Scrollbar styles for info panel */
+        #info-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+        #info-panel::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+        }
+        #info-panel::-webkit-scrollbar-thumb {
+            background: rgba(135, 206, 235, 0.5);
+            border-radius: 4px;
+        }
+        #info-panel::-webkit-scrollbar-thumb:hover {
+            background: rgba(135, 206, 235, 0.8);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="intro-text">
+        <h1>歡迎來到我的星系</h1>
+        <p>點擊拖曳以探索，點擊節點以展開故事</p>
+    </div>
+
+    <canvas id="galaxy-canvas"></canvas>
+
+    <div id="info-panel">
+        <button id="close-panel">&times;</button>
+        <h2 id="info-title"></h2>
+        <p id="info-content"></p>
+    </div>
+
+    <script>
+        // --- DATA STRUCTURE ---
+        // This defines the nodes (experiences) and edges (connections) of your galaxy.
+        const galaxyData = {
+            nodes: [
+                { id: 1, label: '偏鄉成長', content: '我的故事始於台灣南部的鄉村，一個中低收入的藍領家庭。這段經歷讓我深刻體會基層的需求，也成為我所有行動的初衷。' },
+                { id: 2, label: '夜市叫賣', content: '12歲起，為了分擔家計，我在夜市叫賣。這份早熟的歷練不僅鍛鍊了我的溝通能力，也意外地讓我練就一口流利的台語。' },
+                { id: 3, label: '台語能力', content: '童年的經歷讓台語成為我的第二母語，這項看似平凡的技能，卻成為日後我連結在地、進行文化轉譯的關鍵鑰匙。' },
+                { id: 4, label: '歌仔戲表演', content: '憑藉著語言天賦與表演熱情，我加入了蘭陽戲劇團，並在《天公疼憨人》中擔綱主角，更入圍全國歌仔戲比賽複賽。' },
+                { id: 5, label: '台語技術演說', content: '我堅信技術不應有語言隔閡。因此，我站上SITCON年會與中研院的講台，用「全台語」向大眾科普5G O-RAN等前瞻科技。' },
+                { id: 6, label: 'AI與5G研究', content: '我對科技充滿熱情，主持國科會O-RAN計畫、在廣達電腦實習，並在通訊大賽中以「5G智慧醫療」專案入圍決賽。' },
+                { id: 7, label: '技術社群演講', content: '我活躍於SITCON、COSCUP、Google Developer Groups等開源社群，分享我的研究與實踐，致力於技術的普及。' },
+                { id: 8, label: '教育科技創新', content: '為弭平城鄉教育落差，我發起了「108課綱資源整合平台」，並代表學校參加Google Solution Challenge。' },
+                { id: 9, label: '社會創業', content: '我創辦了「語您童行」與「藝童教育」，用商業模式推動文化傳承與弱勢教育，並榮獲教育部青年署卓越行動獎及校內創業競賽獎金。' },
+                { id: 10, label: '總統教育獎', content: '這份全國性的榮譽，肯定了我在逆境中奮鬥不懈，並致力於服務社會的努力。' },
+                { id: 11, label: '國際交流', content: '我深信全球視野的重要性，獲選為韓國浦項工科大學交換生，並取得捷克政府全額獎學金，將赴查理大學進行訪問研究。' }
+            ],
+            edges: [
+                { source: 1, target: 2 }, { source: 1, target: 8 }, { source: 1, target: 10 },
+                { source: 2, target: 3 },
+                { source: 3, target: 4 }, { source: 3, target: 5 }, { source: 3, target: 9 },
+                { source: 6, target: 5 }, { source: 6, target: 7 }, { source: 6, target: 11 },
+                { source: 8, target: 10 }, { source: 9, target: 10 }
+            ]
+        };
+
+        // --- CANVAS & 3D SIMULATION SETUP ---
+        const canvas = document.getElementById('galaxy-canvas');
+        const ctx = canvas.getContext('2d');
+        const infoPanel = document.getElementById('info-panel');
+        const infoTitle = document.getElementById('info-title');
+        const infoContent = document.getElementById('info-content');
+        const closePanelBtn = document.getElementById('close-panel');
+        const introText = document.getElementById('intro-text');
+
+        let width, height, nodes, edges, mouseX = 0, mouseY = 0, isMouseDown = false;
+        let targetRotationX = 0, targetRotationY = 0, currentRotationX = 0, currentRotationY = 0;
+        let selectedNode = null, hoverNode = null;
+        let firstInteraction = false;
+
+        function init() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            
+            nodes = galaxyData.nodes.map(n => ({
+                ...n,
+                x: Math.random() * 2 - 1,
+                y: Math.random() * 2 - 1,
+                z: Math.random() * 2 - 1,
+                screenX: 0,
+                screenY: 0,
+                scale: 1,
+            }));
+
+            edges = galaxyData.edges.map(e => ({
+                source: nodes.find(n => n.id === e.source),
+                target: nodes.find(n => n.id === e.target),
+            }));
+
+            animate();
+        }
+
+        function project(node) {
+            const rotX = Math.cos(currentRotationX) * node.y + Math.sin(currentRotationX) * node.z;
+            const rotZ = -Math.sin(currentRotationX) * node.y + Math.cos(currentRotationX) * node.z;
+            const rotY = Math.cos(currentRotationY) * node.x + Math.sin(currentRotationY) * rotZ;
+            const finalZ = -Math.sin(currentRotationY) * node.x + Math.cos(currentRotationY) * rotZ;
+            
+            const scale = 1 / (2.5 + finalZ);
+            node.scale = scale;
+            node.screenX = width / 2 + rotY * 300 * scale;
+            node.screenY = height / 2 + rotX * 300 * scale;
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+
+            currentRotationX += (targetRotationX - currentRotationX) * 0.05;
+            currentRotationY += (targetRotationY - currentRotationY) * 0.05;
+            if (!isMouseDown) {
+                 targetRotationY += 0.0005;
+            }
+
+            nodes.forEach(project);
+            
+            ctx.strokeStyle = 'rgba(135, 206, 235, 0.2)';
+            ctx.lineWidth = 1;
+            edges.forEach(edge => {
+                if (selectedNode && (edge.source === selectedNode || edge.target === selectedNode)) {
+                    ctx.strokeStyle = 'rgba(135, 206, 235, 0.8)';
+                    ctx.lineWidth = 2;
+                } else {
+                    ctx.strokeStyle = 'rgba(135, 206, 235, 0.2)';
+                    ctx.lineWidth = 1;
+                }
+                ctx.beginPath();
+                ctx.moveTo(edge.source.screenX, edge.source.screenY);
+                ctx.lineTo(edge.target.screenX, edge.target.screenY);
+                ctx.stroke();
+            });
+
+            nodes.forEach(node => {
+                const radius = node.scale * 10;
+                let isActive = selectedNode === node;
+                let isHover = hoverNode === node;
+                let isConnected = selectedNode && edges.some(e => (e.source === selectedNode && e.target === node) || (e.target === selectedNode && e.source === node));
+
+                ctx.beginPath();
+                ctx.arc(node.screenX, node.screenY, radius, 0, Math.PI * 2);
+                
+                if (isActive || isHover) {
+                    ctx.fillStyle = '#87CEEB';
+                    ctx.shadowColor = '#87CEEB';
+                    ctx.shadowBlur = 15;
+                } else if (isConnected) {
+                    ctx.fillStyle = 'rgba(135, 206, 235, 0.7)';
+                    ctx.shadowBlur = 0;
+                } else if (selectedNode) {
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+                    ctx.shadowBlur = 0;
+                } else {
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+                    ctx.shadowBlur = 5;
+                    ctx.shadowColor = 'rgba(255, 255, 255, 0.5)';
+                }
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                if (isHover || isActive) {
+                    ctx.fillStyle = '#fff';
+                    ctx.font = `${14 * node.scale}px 'Poppins'`;
+                    ctx.textAlign = 'center';
+                    ctx.fillText(node.label, node.screenX, node.screenY - radius - 5);
+                }
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        // --- EVENT LISTENERS ---
+        canvas.addEventListener('mousedown', e => {
+            isMouseDown = true;
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            if (!firstInteraction) {
+                introText.style.opacity = '0';
+                firstInteraction = true;
+            }
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            isMouseDown = false;
+        });
+
+        canvas.addEventListener('mouseout', () => {
+            isMouseDown = false;
+        });
+
+        canvas.addEventListener('mousemove', e => {
+            if (isMouseDown) {
+                targetRotationY += (e.clientX - mouseX) * 0.005;
+                targetRotationX += (e.clientY - mouseY) * 0.005;
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            }
+
+            let foundHover = null;
+            for(const node of nodes) {
+                const dx = e.clientX - node.screenX;
+                const dy = e.clientY - node.screenY;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                if (dist < node.scale * 10) {
+                    foundHover = node;
+                    break;
+                }
+            }
+            canvas.style.cursor = foundHover ? 'pointer' : 'grab';
+            hoverNode = foundHover;
+        });
+
+        canvas.addEventListener('click', e => {
+            if (hoverNode) {
+                selectedNode = hoverNode;
+                infoTitle.textContent = selectedNode.label;
+                infoContent.textContent = selectedNode.content;
+                infoPanel.classList.add('visible');
+            }
+        });
+
+        closePanelBtn.addEventListener('click', () => {
+            infoPanel.classList.remove('visible');
+            selectedNode = null;
+        });
+
+        window.addEventListener('resize', init);
+
+        // --- START ---
+        init();
+    </script>
+</body>
+</html>
