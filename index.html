@@ -69,7 +69,7 @@
         .gallery .img-responsive { border-radius: 8px; margin-bottom: 30px; transition: transform 0.2s; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
         .gallery .img-responsive:hover { transform: scale(1.05); }
         .presentation { padding: 40px 0; background-color: #f8f9fa; }
-        .agenda-table .EventPageAgenda-styles-agendaItemContainer-bywsN { display: flex; margin-bottom: 15px; } /* Increased margin */
+        .agenda-table .EventPageAgenda-styles-agendaItemContainer-bywsN { display: flex; margin-bottom: 15px; }
         .agenda-table .EventPageAgenda-styles-agendaItemDateContainer-mXCZM { flex-basis: 100px; flex-shrink: 0; }
         .agenda-table .EventPageAgenda-styles-agendaItemDate-3bMKo { font-weight: bold; }
         .agenda-table .EventPageAgenda-styles-agendaItemActivity-ENtjI { flex-grow: 1; }
@@ -132,40 +132,15 @@
         
         <div class="event-wrapup-photos">
             <div class="container">
-                <h1 class="event-page general-h1">活動照片錦集 (Check out what happened)</h1>
-                <div id="photo-gallery" class="display-gallery">
+                <h1 class="event-page general-h1">Check out what happened</h1>
+                <div class="display-gallery">
                     <ul class="gallery row" style="list-style-type: none; padding: 0;">
-                         <!-- Original Photos from CDN -->
-                        <li class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
-                            <a href="https://res.cloudinary.com/startup-grind/image/upload/v1/gcs/platform-data-dsc/event_wrapup/DSCF2715%7E2.JPG" target="_blank">
-                                <img alt="活動照片 1" class="img-responsive" src="https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_400,q_auto:good,w_600/v1/gcs/platform-data-dsc/event_wrapup/DSCF2715%7E2.JPG">
-                            </a>
-                        </li>
-                        <li class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
-                            <a href="https://res.cloudinary.com/startup-grind/image/upload/v1/gcs/platform-data-dsc/event_wrapup/DSCF1680.JPG" target="_blank">
-                                <img alt="活動照片 2" class="img-responsive" src="https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_400,q_auto:good,w_600/v1/gcs/platform-data-dsc/event_wrapup/DSCF1680.JPG">
-                            </a>
-                        </li>
-                        <li class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
-                            <a href="https://res.cloudinary.com/startup-grind/image/upload/v1/gcs/platform-data-dsc/event_wrapup/351352353_1233880190822251_6197257803487070112_n_bPStFAJ.jpg" target="_blank">
-                                <img alt="活動照片 3" class="img-responsive" src="https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_400,q_auto:good,w_600/v1/gcs/platform-data-dsc/event_wrapup/351352353_1233880190822251_6197257803487070112_n_bPStFAJ.jpg">
-                            </a>
-                        </li>
-                        <li class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
-                            <a href="https://res.cloudinary.com/startup-grind/image/upload/v1/gcs/platform-data-dsc/event_wrapup/PXL_20230603_032312552%7E2.jpg" target="_blank">
-                                <img alt="活動照片 4" class="img-responsive" src="https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_400,q_auto:good,w_600/v1/gcs/platform-data-dsc/event_wrapup/PXL_20230603_032312552%7E2.jpg">
-                            </a>
-                        </li>
-                        <li class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
-                           <a href="https://res.cloudinary.com/startup-grind/image/upload/v1/gcs/platform-data-dsc/event_wrapup/DSC01567%7E2.JPG" target="_blank">
-                                <img alt="活動照片 5" class="img-responsive" src="https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_400,q_auto:good,w_600/v1/gcs/platform-data-dsc/event_wrapup/DSC01567%7E2.JPG">
-                            </a>
-                        </li>
-                        <li class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
-                            <a href="https://res.cloudinary.com/startup-grind/image/upload/v1/gcs/platform-data-dsc/event_wrapup/DSC_8278%7E2.JPG" target="_blank">
-                                <img alt="活動照片 6" class="img-responsive" src="https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_400,q_auto:good,w_600/v1/gcs/platform-data-dsc/event_wrapup/DSC_8278%7E2.JPG">
-                            </a>
-                        </li>
+                        <li class="col-lg-4 col-md-6 col-sm-6 col-xs-12"><a href="https://res.cloudinary.com/startup-grind/image/upload/v1/gcs/platform-data-dsc/event_wrapup/DSCF2715%7E2.JPG" target="_blank"><img alt="活動照片 1" class="img-responsive" src="https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_400,q_auto:good/v1/gcs/platform-data-dsc/event_wrapup/DSCF2715%7E2.JPG"></a></li>
+                        <li class="col-lg-4 col-md-6 col-sm-6 col-xs-12"><a href="https://res.cloudinary.com/startup-grind/image/upload/v1/gcs/platform-data-dsc/event_wrapup/DSCF1680.JPG" target="_blank"><img alt="活動照片 2" class="img-responsive" src="https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_400,q_auto:good/v1/gcs/platform-data-dsc/event_wrapup/DSCF1680.JPG"></a></li>
+                        <li class="col-lg-4 col-md-6 col-sm-6 col-xs-12"><a href="https://res.cloudinary.com/startup-grind/image/upload/v1/gcs/platform-data-dsc/event_wrapup/351352353_1233880190822251_6197257803487070112_n_bPStFAJ.jpg" target="_blank"><img alt="活動照片 3" class="img-responsive" src="https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_400,q_auto:good/v1/gcs/platform-data-dsc/event_wrapup/351352353_1233880190822251_6197257803487070112_n_bPStFAJ.jpg"></a></li>
+                        <li class="col-lg-4 col-md-6 col-sm-6 col-xs-12"><a href="https://res.cloudinary.com/startup-grind/image/upload/v1/gcs/platform-data-dsc/event_wrapup/PXL_20230603_032312552%7E2.jpg" target="_blank"><img alt="活動照片 4" class="img-responsive" src="https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_400,q_auto:good/v1/gcs/platform-data-dsc/event_wrapup/PXL_20230603_032312552%7E2.jpg"></a></li>
+                        <li class="col-lg-4 col-md-6 col-sm-6 col-xs-12"><a href="https://res.cloudinary.com/startup-grind/image/upload/v1/gcs/platform-data-dsc/event_wrapup/DSC01567%7E2.JPG" target="_blank"><img alt="活動照片 5" class="img-responsive" src="https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_400,q_auto:good/v1/gcs/platform-data-dsc/event_wrapup/DSC01567%7E2.JPG"></a></li>
+                        <li class="col-lg-4 col-md-6 col-sm-6 col-xs-12"><a href="https://res.cloudinary.com/startup-grind/image/upload/v1/gcs/platform-data-dsc/event_wrapup/DSC_8278%7E2.JPG" target="_blank"><img alt="活動照片 6" class="img-responsive" src="https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_400,q_auto:good/v1/gcs/platform-data-dsc/event_wrapup/DSC_8278%7E2.JPG"></a></li>
                     </ul>
                 </div>
             </div>
@@ -182,19 +157,16 @@
         </div>
         
         <div class="container people">
-             <!-- All people cards will be populated here -->
+            <!-- All people cards will be populated by JS -->
         </div>
         
         <div class="dark_bg _global-style-colored-section" id="event-info">
-             <!-- Restored When/Where/Agenda -->
             <div class="container">
                 <div class="row">
                     <div class="event-info-container">
                         <div class="address-info col-md-4">
                             <div class="container-inner">
-                                <div class="icon when">
-                                    <img src="./See Google I_O Extended 2023 Hsinchu at Google Developer Student Clubs National Yang Ming Chiao Tung University_files/icon_date_time.svg" alt="">
-                                </div>
+                                <div class="icon when"><img src="https://res.cloudinary.com/startup-grind/image/upload/dpr_2.0,fl_sanitize/v1/gcs/platform-data-dsc/contentbuilder/icon_date_time.svg" alt="When"></div>
                                 <div class="second-column">
                                     <h3 class="title-span">When</h3>
                                     <p>Saturday, Jun 3<br>9:00 AM - 5:00 PM (CST)</p>
@@ -203,16 +175,10 @@
                         </div>
                         <div class="address-info col-md-4">
                             <div class="container-inner">
-                                <div class="icon address">
-                                    <img src="./See Google I_O Extended 2023 Hsinchu at Google Developer Student Clubs National Yang Ming Chiao Tung University_files/icon_address.svg" alt="">
-                                </div>
+                                <div class="icon address"><img src="https://res.cloudinary.com/startup-grind/image/upload/dpr_2.0,fl_sanitize/v1/gcs/platform-data-dsc/contentbuilder/icon_address.svg" alt="Where"></div>
                                 <div class="second-column">
                                     <h3 class="title-span">Where</h3>
-                                    <div class="venue-map-container">
-                                        <a target="_blank" href="https://www.google.com/maps/dir//%E6%9D%B1%E5%8D%80%E5%A4%A7%E5%AD%B8%E8%B7%AF1001%E8%99%9F%20%E6%96%B0%E7%AB%B9%E5%B8%82">
-                                            <img class="venue-map" src="./See Google I_O Extended 2023 Hsinchu at Google Developer Student Clubs National Yang Ming Chiao Tung University_files/staticmap">
-                                        </a>
-                                    </div>
+                                    <div class="venue-map-container"><a target="_blank" href="https://www.google.com/maps/dir//%E6%9D%B1%E5%8D%80%E5%A4%A7%E5%AD%B8%E8%B7%AF1001%E8%99%9F%20%E6%96%B0%E7%AB%B9%E5%B8%82" rel="noopener noreferrer"><img class="venue-map" src="https://maps.googleapis.com/maps/api/staticmap?scale=2&center=%E4%BA%BA%E7%A4%BE%E4%B8%89%E9%A4%A8%2C%E6%9D%B1%E5%8D%80%E5%A4%A7%E5%AD%B8%E8%B7%AF1001%E8%99%9F%2C%E6%96%B0%E7%AB%B9%E5%B8%82%2C300&zoom=15&size=290x160&markers=icon:https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2,f_auto,g_center,q_auto:good/v1/gcs/platform-data-dsc/contentbuilder/map-marker.png|%E4%BA%BA%E7%A4%BE%E4%B8%89%E9%A4%A8%2C%E6%9D%B1%E5%8D%80%E5%A4%A7%E5%AD%B8%E8%B7%AF1001%E8%99%9F%2C%E6%96%B0%E7%AB%B9%E5%B8%82%2C300&style=feature:landscape.natural|element:geometry.fill|color:0xdadce0&style=feature:poi|element:all|visibility:off&style=feature:road|element:all|color:0xFEFEFE&style=feature:road|element:labels.text.fill|color:0x999999&style=feature:transit|element:all|visibility:off&style=feature:water|element:geometry.fill|color:0xf1f3f4&key="></a></div>
                                     <p>人社三館<br><span class="address-block">東區大學路1001號, 新竹市, 300</span></p>
                                 </div>
                             </div>
@@ -220,13 +186,9 @@
                         <div class="col-xs-12 col-sm-12 col-md-4">
                              <div class="agenda-container">
                                 <div class="container-inner">
-                                     <div class="icon agenda" style="float: left; margin-right: 15px;">
-                                         <img src="./See Google I_O Extended 2023 Hsinchu at Google Developer Student Clubs National Yang Ming Chiao Tung University_files/icon_agenda.svg" alt="議程圖示">
-                                     </div>
+                                     <div class="icon agenda" style="float: left; margin-right: 15px;"><img src="https://res.cloudinary.com/startup-grind/image/upload/dpr_2.0,fl_sanitize/v1/gcs/platform-data-dsc/contentbuilder/icon_agenda.svg" alt="Agenda"></div>
                                     <h3 class="title-span">Agenda</h3>
-                                    <div id="agenda-list" class="agenda-table" style="padding-top: 10px;">
-                                        <!-- Agenda items will be dynamically added here -->
-                                    </div>
+                                    <div id="agenda-list" class="agenda-table" style="padding-top: 10px;"></div>
                                 </div>
                             </div>
                         </div>
@@ -242,59 +204,41 @@
         </div>
     </main>
 
-    <!-- Modals will be dynamically added here by JavaScript -->
     <div id="modals-container"></div>
     
     <footer class="page-footer">
         <div class="footer-bottom">
-            <div class="container">
-                <div class="row">
-                    <div class="site-info">
-                        <div class="copyright">
-                           © 2024 Google. 頁面由 thc1006 存檔。
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div class="container"><div class="row"><div class="site-info">
+                <div class="copyright">© 2024 Google. 頁面由 thc1006 存檔。</div>
+            </div></div></div>
         </div>
     </footer>
     
-    <!-- Scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     
     <script>
     $(document).ready(function() {
-        // --- DATA ---
         const allPeople = [
             // Speakers
             { id: 1, type: 'speaker', name: "宗信 吳", company: "國家太空中心", title: "主任", img: "https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_250,q_auto:good/v1/gcs/platform-data-dsc/events/2021-12-27-61c974c270c2c-460x355-574443.jpg", bio: "吳宗信(Jong-Shinn Wu)，國家太空中心主任、國立陽明交通大學機械系特聘教授。是五月天2016年專輯《自傳》裡歌曲〈頑固〉的MV故事主角的原形人物。" },
             { id: 2, type: 'speaker', name: "建超 曾", company: "國立陽明交通大學", title: "資訊學院副院長", img: "https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_250,q_auto:good/v1/gcs/platform-data-dsc/events/epY9KL5m7HcEML9gO7Uam19NqtY0YMFvm6BhpsVA_0hlrgOG.png", bio: "國立陽明交通大學 資訊工程學系 特聘教授，研究興趣：軟體定義網路/網路功能虛擬化、行動網路功能虛擬化之管理與協作、開放無線接取網路服務管理與協作、持續整合持續佈署與DevOps雲原生技術。" },
             { id: 3, type: 'speaker', name: "元甫 廖", company: "國立陽明交通大學", title: "智能系統研究所 所長", img: "https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_250,q_auto:good/v1/gcs/platform-data-dsc/events/Untitled%20(1)_17NQKPs.jpg", bio: "廖元甫是國立陽明交通大學產學創新研究學院/智能系統所的教授，專長數位語音訊號處理。他帶領的人工智慧語音研發中心，讓ChatGPT學會了台語和客語！" },
-            { id: 4, type: 'speaker', name: "Tzer-jen Wei", company: "Google Developer Expert", title: "國立陽明交通大學 應用數學系", img: "https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_250,q_auto:good/v1/gcs/platform-data-dsc/events/wei_Uwbiq5W.png", bio: "Tzer-Jen Wei is a math professor who codes for fun and profit. He is a lecturer of Taiwan AI Academy, an AI consultant of Ubitus, and the chief mathematician of iiNumbers." },
-            { id: 5, type: 'speaker', name: "Jerry Wu", company: "Google Developer Expert", title: "亞太智能機器 創辦人", img: "https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_250,q_auto:good/v1/gcs/platform-data-dsc/events/JerryWu_SPYEAgi.jpg", bio: "Jerry Wu現任亞太智能機器(APMIC)創辦人兼執行長、Google機器學習開發專家(GDE)、TensorFlow User Group Taipei 發起人，專注於機器智能(Machine Intelligence)的研發與整合。" },
             // Hosts
             { id: 7, type: 'host', name: "秀吉 蔡", company: "Google for Developers", title: "GDSC Lead NYCU", img: "https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_250,q_auto:good/v1/gcs/platform-data-dsc/events/GDG23%20Photo%20Frame%20-%20Yell12ow%20%E7%9A%84%E5%89%AF%E6%9C%AC%20%E7%9A%84%E5%89%AF%E6%9C%AC.png", bio: "Tsai, Hsiu-Chi | GDSC NYCU Lead<br>NTHU EECS, NYCU Arete Honors Program, AI (Biomedical) ,NYCU DHCR, <br>Research Fields: O-RAN, B5G ,6G, Cloud-Native" },
             { id: 8, type: 'host', name: "Tiffany Hung", company: "NYCU", title: "GDSC Lead", img: "https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_250,q_auto:good/v1/gcs/platform-data-dsc/events/tiffany_hung.jpg", bio: "GDSC Lead at National Yang Ming Chiao Tung University." },
-            { id: 9, type: 'host', name: "Ken Hou", company: "cacaFly 聖洋科技", title: "業務副理", img: "https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_250,q_auto:good/v1/gcs/platform-data-dsc/events/S__28925977.jpg", bio: "演講題目：cacaFly 雲端智能中心：Going Cloud from Google Cloud" },
             // Organizers
             { id: 10, type: 'organizer', name: "啟賢 黃", company: "國立清華大學", title: "Technical", img: "https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_250,q_auto:good/v1/gcs/platform-data-dsc/events/%E5%A4%A7%E9%A0%AD%E8%B2%BC%E5%8E%BB%E8%83%8C%EF%BC%884%E5%80%8D%EF%BC%89_rALs0pJ.jpg" },
-            { id: 11, type: 'organizer', name: "詠崴 楊", company: "", title: "Technical", img: "https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_250,q_auto:good/v1/gcs/platform-data-dsc/events/%E8%A9%A0%E5%B4%B4_%E6%A5%8A.jpg" },
         ];
-
+        
         const agendaItems = [
-            {"time":"9:00 AM","activity":"報到進場"},
-            {"time":"9:30 AM","activity":"開場"},
+            {"time":"9:00 AM","activity":"報到進場"}, {"time":"9:30 AM","activity":"開場"},
             {"time":"10:00 AM","activity":"Taiwanese Dream to Space (臺灣的太空夢)"},
             {"time":"11:05 AM","activity":"cacaFly 雲端智能中心：Going Cloud from Google Cloud"},
-            {"time":"11:25 AM","activity":"休息時間"},
-            {"time":"11:30 AM","activity":"廖元甫教授 -ChatGPT 敢會曉台語文？"},
-            {"time":"12:20 PM","activity":"中午休息"},
-            {"time":"1:40 PM","activity":"GDE 魏澤人 -7 cool things you can do with Generative AI "},
-            {"time":"2:30 PM","activity":"中午休息"},
-            {"time":"2:50 PM","activity":"GDE Jerry Wu -搭上 Google 的生成式 AI 與 LLMs 風潮"},
-            {"time":"3:40 PM","activity":"換場"},
-            {"time":"4:00 PM","activity":"What's new in Cloud Firestore for an ease development and migrations"},
+            {"time":"11:25 AM","activity":"休息時間"}, {"time":"11:30 AM","activity":"廖元甫教授 -ChatGPT 敢會曉台語文？"},
+            {"time":"12:20 PM","activity":"中午休息"}, {"time":"1:40 PM","activity":"GDE 魏澤人 -7 cool things you can do with Generative AI "},
+            {"time":"2:30 PM","activity":"中午休息"}, {"time":"2:50 PM","activity":"GDE Jerry Wu -搭上 Google 的生成式 AI 與 LLMs 風潮"},
+            {"time":"3:40 PM","activity":"換場"}, {"time":"4:00 PM","activity":"What's new in Cloud Firestore for an ease development and migrations"},
             {"time":"4:50 PM","activity":"合照及場復"}
         ];
         
@@ -303,19 +247,12 @@
         const organizersContainer = $('.chapter.has-people-cards-v2 .hosts.container');
         
         peopleContainer.html(`
-            <div id="speakers-section">
-                <h1 class="event-page general-h1">Speakers</h1>
-                <ul class="people-cards-speakers row"></ul>
-            </div>
-            <div id="hosts-section" style="margin-top: 50px;">
-                <h1 class="event-page general-h1">Hosts</h1>
-                <ul class="people-cards-hosts row"></ul>
-            </div>`);
+            <div id="speakers-section"><h1 class="event-page general-h1">Speakers</h1><ul class="people-cards-speakers row"></ul></div>
+            <div id="hosts-section" style="margin-top: 50px;"><h1 class="event-page general-h1">Hosts</h1><ul class="people-cards-hosts row"></ul></div>`);
         
         organizersContainer.html(`
             <h1 class="event-page general-h1">主辦團隊與合作夥伴</h1>
-            <h2 class="general-h2">主辦團隊 (Organizers)</h2>
-            <ul class="people-cards-organizers row"></ul>
+            <h2 class="general-h2">主辦團隊 (Organizers)</h2><ul class="people-cards-organizers row"></ul>
             <h2 class="general-h2" style="margin-top: 40px;">合作夥伴 (Partners)</h2>
             <ul class="sponsor-container row" style="list-style-type:none; padding: 0;">
                 <li class="sponsor-holder big col-sm-6 col-md-3"><a href="https://liberalarts.nycu.edu.tw/" title="國立陽明交通大學博雅書苑" rel="nofollow noopener noreferrer" target="_blank"><div class="sponsor-rectangle" style="background-image: url('https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_360,q_auto:good/v1/gcs/platform-data-dsc/events/logo_S2t3kBv.png')"></div></a></li>
@@ -325,68 +262,27 @@
                 <li class="sponsor-holder big col-sm-6 col-md-3"><a href="https://www.nycutaigi.com/" title="語您童行" rel="nofollow noopener noreferrer" target="_blank"><div class="sponsor-rectangle" style="background-image: url('https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_360,q_auto:good/v1/gcs/platform-data-dsc/events/taigi%E5%8E%BB%E8%83%8C%E6%9D%BF.png')"></div></a></li>
             </ul>`);
 
-
         function createCardAndModal(person) {
             let container, modalPrefix, cardClass;
             switch(person.type) {
-                case 'speaker':
-                    container = $('.people-cards-speakers');
-                    modalPrefix = 'speaker';
-                    cardClass = 'col-md-4 col-sm-6';
-                    break;
-                case 'host':
-                    container = $('.people-cards-hosts');
-                    modalPrefix = 'host';
-                    cardClass = 'col-md-4 col-sm-6';
-                    break;
-                case 'organizer':
-                    container = $('.people-cards-organizers');
-                    cardClass = 'col-md-3 col-sm-4'; // Corrected class for 4 per row
-                    break;
+                case 'speaker': container = $('.people-cards-speakers'); modalPrefix = 'speaker'; cardClass = 'col-md-4 col-sm-6'; break;
+                case 'host': container = $('.people-cards-hosts'); modalPrefix = 'host'; cardClass = 'col-md-4 col-sm-6'; break;
+                case 'organizer': container = $('.people-cards-organizers'); cardClass = 'col-md-3 col-sm-6'; break;
             }
-
-            const modalContainer = $('#modals-container');
-            const card = `
-                <li class="people-card general-card ${cardClass}">
-                    <img src="${person.img}" alt="${person.name}" class="people-card--avatar" onerror="this.src='https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_250,q_auto:good,w_250/v1/gcs/platform-data-dsc/contentbuilder/GDG-Bevy-DefaultProfile.png';">
-                    <div class="people-card--text">
-                        <h2 class="people-card--name">${person.name}</h2>
-                        <p class="people-card--company">${person.company || '&nbsp;'}</p>
-                        <p class="people-card--title">${person.title || '&nbsp;'}</p>
-                        ${person.bio && modalPrefix ? `<button class="btn btn-secondary" data-toggle="modal" data-target="#${modalPrefix}-modal-${person.id}">查看簡介</button>` : ''}
-                    </div>
-                </li>`;
+            const card = `<li class="people-card general-card ${cardClass}"><img src="${person.img}" alt="${person.name}" class="people-card--avatar"><div class="people-card--text"><h2 class="people-card--name">${person.name}</h2><p class="people-card--company">${person.company||'&nbsp;'}</p><p class="people-card--title">${person.title||'&nbsp;'}</p>${person.bio&&modalPrefix?`<button class="btn btn-secondary" data-toggle="modal" data-target="#${modalPrefix}-modal-${person.id}">查看簡介</button>`:''}</div></li>`;
             container.append(card);
-
             if (person.bio && modalPrefix) {
-                const modal = `
-                    <div class="modal fade" id="${modalPrefix}-modal-${person.id}" tabindex="-1" role="dialog">
-                        <div class="modal-dialog" role="document"><div class="modal-content">
-                            <div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title">簡介</h4></div>
-                            <div class="modal-body text-center">
-                                <img class="picture" src="${person.img}" alt="${person.name}">
-                                <h4 class="name">${person.name}</h4><h5 class="company">${person.company}</h5>
-                                <div class="bio"><p>${person.bio}</p></div>
-                            </div>
-                        </div></div>
-                    </div>`;
-                modalContainer.append(modal);
+                const modal = `<div class="modal fade" id="${modalPrefix}-modal-${person.id}" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title">簡介</h4></div><div class="modal-body text-center"><img class="picture" src="${person.img}" alt="${person.name}"><h4 class="name">${person.name}</h4><h5 class="company">${person.company}</h5><div class="bio"><p>${person.bio}</p></div></div></div></div></div>`;
+                $('#modals-container').append(modal);
             }
         }
-        
-        allPeople.forEach(person => createCardAndModal(person));
+        allPeople.forEach(p => createCardAndModal(p));
         
         const agendaContainer = $('#agenda-list');
         agendaItems.forEach(item => {
-            const agendaHtml = `
-                <div class="EventPageAgenda-styles-agendaItemContainer-bywsN">
-                    <div class="EventPageAgenda-styles-agendaItemDateContainer-mXCZM"><div class="EventPageAgenda-styles-agendaItemDate-3bMKo">${item.time}</div></div>
-                    <div class="EventPageAgenda-styles-agendaItemActivity-ENtjI">${item.activity}</div>
-                </div>`;
-            agendaContainer.append(agendaHtml);
+            agendaContainer.append(`<div class="EventPageAgenda-styles-agendaItemContainer-bywsN"><div class="EventPageAgenda-styles-agendaItemDateContainer-mXCZM"><div class="EventPageAgenda-styles-agendaItemDate-3bMKo">${item.time}</div></div><div class="EventPageAgenda-styles-agendaItemActivity-ENtjI">${item.activity}</div></div>`);
         });
     });
     </script>
-
 </body>
 </html>
