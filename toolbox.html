@@ -6,7 +6,7 @@
     <title>資源與實用工具箱｜ADHD 光譜</title>
     
     <script src="https://js.puter.com/v2/"></script>
-    
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -98,8 +98,8 @@
                      <circle cx="65" cy="45" r="5" fill="#3D352E"/>
                  </svg>
                  <span class="text-2xl font-extrabold text-[#A44A3F]">ADHD 光譜</span>
-            </a>
-            <a href="index.html" class="text-gray-700 hover:text-[#A44A3F] transition-colors">&larr; 回到首頁</a>
+             </a>
+             <a href="index.html" class="text-gray-700 hover:text-[#A44A3F] transition-colors">&larr; 回到首頁</a>
         </div>
     </header>
 
@@ -131,7 +131,7 @@
                      <h3 class="mt-0 font-bold">焦慮程度：廣泛性焦慮量表 (GAD-7)</h3>
                      <p>ADHD 常與焦慮共存。這個量表只有 7 題，非常簡潔，可以快速篩檢出你最近的焦慮指數有多高，適合作為定期的情緒溫度計。</p>
                  </div>
-                  </div>
+                 </div>
 
             <h2>尋求專業協助：台灣就醫指南</h2>
             <p>決定尋求幫助，是這趟旅程中最勇敢的一步。在台灣，你可以透過以下幾個方向來找到適合你的資源。</p>
@@ -149,7 +149,7 @@
                         <li>如果有做過上述的自我評估量表，可以帶著結果和醫師討論。</li>
                         <li>如果可能，可以詢問家人你小時候是否有類似的狀況。</li>
                     </ul>
-                    
+                     
                     <div class="mt-8 border-t-2 border-dashed border-gray-200 pt-8" id="ai-note-generator">
                         <h4 class="text-xl font-bold text-[#A44A3F] flex items-center">
                             <span class="text-3xl mr-3">✨</span>
@@ -168,7 +168,7 @@
 
                         <div id="aiResult" class="mt-6 bg-green-50 p-6 rounded-lg border-l-4 border-green-500 hidden">
                             <h4 class="font-bold text-lg text-green-800">這是為你整理好的看診筆記：</h4>
-                            <div id="resultContent" class="mt-2 text-gray-700"></div>
+                            <div id="resultContent" class="mt-2 text-gray-700 whitespace-pre-wrap"></div>
                             <button id="copyButton" class="mt-4 text-sm bg-gray-200 text-gray-700 py-1 px-3 rounded-md hover:bg-gray-300">複製內容</button>
                         </div>
                          <div id="errorMessage" class="mt-6 bg-red-50 p-4 rounded-lg text-red-700 hidden"></div>
@@ -191,7 +191,7 @@
             </div>
 
              <h2>旅程的下一步</h2>
-            <p>拿著這些地圖和工具，你已經比昨天的自己，又更往前一步了。記住，尋求幫助是強大的象徵。無論你現在在哪個階段，都請溫柔地對待自己， क्योंकि你正在做的，是一件非常了不起的事。</p>
+            <p>拿著這些地圖和工具，你已經比昨天的自己，又更往前一步了。記住，尋求幫助是強大的象徵。無論你現在在哪個階段，都請溫柔地對待自己，因為你正在做的，是一件非常了不起的事。</p>
 
         </article>
     </main>
@@ -202,6 +202,7 @@
             <p class="text-gray-400 text-sm mt-4">&copy; 2025 ADHD 光譜. All rights reserved.</p>
         </div>
     </footer>
+
 <script>
     const generateButton = document.getElementById('generateButton');
     const buttonText = document.getElementById('buttonText');
@@ -227,7 +228,7 @@
         buttonText.textContent = '整理中...';
         loader.classList.remove('hidden');
 
-        // --- Prepare prompt for the AI ---
+        // --- 準備給 AI 的指令 (Prompt) ---
         const prompt = `你是一位溫暖、有同理心的心理健康助理。一位可能患有ADHD的使用者正在準備他的第一次身心科看診，他寫下了這些雜亂的筆記，請你幫他整理成一份有條理、清晰、點列式的看診筆記，方便他與醫師溝通。
 
 請將內容分類，使用以下標題：
@@ -245,42 +246,25 @@ ${inputText}
 `;
 
         try {
-            // --- 步驟 2 & 3: 替換 fetch 呼叫為 puter.ai.chat() ---
+            // ✅ 步驟 2: 將 fetch 呼叫替換為 puter.ai.chat()
             const response = await puter.ai.chat(prompt, {
-                // 可替換模型，例如 'google/gemini-2.0-flash-lite-001'
-                model: 'google/gemini-flash-1.5', 
-                stream: false // 非串流模式，一次性取得完整回應
+              model: 'google/gemini-2.0-flash-lite-001', // 使用免費模型
+              stream: false // 使用非串流模式，一次性取得結果
             });
-
-            // Puter.js 的回應格式較為直接
-            const generatedText = response.message.content;
+            
+            // 從 Puter.js 的回應中取得內容
+            const generatedText = response?.message?.content;
 
             if (!generatedText) {
-                 throw new Error("AI 回應的內容為空。");
+                throw new Error("AI 回應的格式不正確或為空。");
             }
-
-            // --- Display result ---
-            // 將 AI 回應的 Markdown 格式轉換為 HTML 顯示
-            // 替換 **bold** -> <strong>
-            let htmlResult = generatedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
             
-            // 替換 - list item -> <li>
-            // 使用正則表達式，將所有以 '-' 或 '*' 開頭的列表項目轉換
-            htmlResult = htmlResult.replace(/^[ \t]*[-*]\s+(.*)$/gm, '<li class="ml-4 list-disc">$1</li>');
-
-            // 將轉換後的 <li> 包在 <ul> 中 (如果需要的話可以更精細處理)
-            // 簡易包裝：只要有 li 就用 ul 包起來
-            if (htmlResult.includes('<li>')) {
-                htmlResult = `<ul>${htmlResult}</ul>`.replace(/<\/ul>\n?<ul>/g, ''); // 合併相鄰的 ul
-            }
-
-            // 處理換行符，使其在 HTML 中生效
-            htmlResult = htmlResult.replace(/\n/g, '<br>');
-            // 修正 <li> 和 <br> 標籤的並存問題
-            htmlResult = htmlResult.replace(/<br><li/g, '<li');
-            htmlResult = htmlResult.replace(/<\/li><br>/g, '</li>');
-            htmlResult = htmlResult.replace(/<\/strong><br>/g, '</strong>');
-
+            // --- 顯示結果 (這部分邏輯不變) ---
+            // 將 Markdown 格式轉換為 HTML，以便在頁面上正確顯示
+            let htmlResult = generatedText
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // 粗體
+                .replace(/-\s(.*?)(?=\n-|\n\n|$)/g, '<li class="ml-4 list-disc">$1</li>') // 項目符號
+                .replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>'); // 將 li 包在 ul 裡
 
             resultContent.innerHTML = htmlResult;
             aiResult.classList.remove('hidden');
@@ -290,25 +274,18 @@ ${inputText}
             errorMessage.textContent = '整理筆記時發生錯誤，請檢查網路連線或稍後再試一次。';
             errorMessage.classList.remove('hidden');
         } finally {
-            // --- Reset UI ---
+            // --- 重置 UI 狀態 (這部分邏輯不變) ---
             generateButton.disabled = false;
             buttonText.textContent = '幫我整理筆記';
             loader.classList.add('hidden');
         }
     });
 
-    // --- Copy to clipboard functionality (保持不變) ---
+    // --- 複製到剪貼簿功能 (這部分邏輯不變) ---
     copyButton.addEventListener('click', () => {
-        // 建立一個臨時的 div 來解析 HTML
-        const tempDiv = document.createElement('div');
-        // 為了正確解析換行，將 <br> 換成換行符，並移除 HTML 標籤
-        tempDiv.innerHTML = resultContent.innerHTML.replace(/<br\s*\/?>/gi, '\n');
-        const textToCopy = tempDiv.textContent || tempDiv.innerText || '';
-
+        const textToCopy = resultContent.innerText; // 使用 innerText 來取得純文字
         const textArea = document.createElement('textarea');
         textArea.value = textToCopy;
-        textArea.style.position = 'absolute';
-        textArea.style.left = '-9999px'; // 移出畫面外
         document.body.appendChild(textArea);
         textArea.select();
         try {
