@@ -3,160 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADHD 長期用藥衛教指南</title>
+    <title>ADHD 衛教指南：你的神經探索地圖</title>
+    
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 引入 Google Fonts - Noto Sans TC & Lexend (對閱讀障礙友善) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- 自訂樣式與動畫 -->
     <style>
-        /* 這裡是基本的 CSS 樣式，讓網站看起來更舒服 */
+        :root {
+            --bg-color: #111827;
+            --text-color: #e5e7eb;
+            --primary-glow: rgba(59, 130, 246, 0.6);
+            --secondary-glow: rgba(139, 92, 246, 0.6);
+            --particle-color: #4b5563;
+        }
+
+        /* 專注模式樣式 */
+        body.focus-mode {
+            --particle-color: transparent;
+        }
+        body.focus-mode .interactive-map-container::before {
+            opacity: 0;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
+            font-family: 'Lexend', 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
         }
-        .container {
-            max-width: 800px;
-            margin: auto;
-            overflow: auto;
-            padding: 0 20px;
+        
+        /* 動態粒子背景 */
+        .particle-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 1px 1px, var(--particle-color) 1px, transparent 0);
+            background-size: 25px 25px;
+            animation: pan-bg 60s linear infinite;
         }
-        header {
-            background: #333;
-            color: #fff;
-            padding: 1rem 0;
+
+        @keyframes pan-bg {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+
+        /* 互動地圖容器 */
+        .interactive-map-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 60vh;
+            padding: 4rem 1rem;
+        }
+
+        /* 中心節點 */
+        .hub-node {
+            width: 150px;
+            height: 150px;
+            z-index: 10;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        /* 周圍的探索節點 */
+        .topic-node {
+            position: absolute;
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             text-align: center;
+            padding: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            z-index: 5;
+            background-color: rgba(31, 41, 55, 0.8);
+            border: 2px solid rgba(75, 85, 99, 0.8);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
         }
-        header h1 {
-            margin: 0;
-            font-size: 2.5rem;
+        .topic-node:hover {
+            transform: scale(1.15) !important;
+            z-index: 20;
+            border-color: white;
         }
-        header p {
-            font-size: 1.1rem;
+        
+        /* 節點光暈動畫 */
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 20px 5px var(--primary-glow); }
+            50% { box-shadow: 0 0 35px 10px var(--secondary-glow); }
         }
-        nav {
-            background: #444;
-            color: #fff;
-            padding: 1rem;
-            text-align: center;
+        
+        /* 連結路徑的線條 (偽元素) */
+        .interactive-map-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                /* 預先繪製好連結線，僅為示意 */
+                radial-gradient(circle at center, transparent 74px, rgba(75, 85, 99, 0.5) 75px, transparent 76px),
+                radial-gradient(circle at center, transparent 149px, rgba(75, 85, 99, 0.5) 150px, transparent 151px),
+                radial-gradient(circle at center, transparent 224px, rgba(75, 85, 99, 0.5) 225px, transparent 226px);
+            z-index: 1;
+            transition: opacity 0.5s ease;
         }
-        nav ul {
-            padding: 0;
-            list-style: none;
-        }
-        nav ul li {
-            display: inline;
-            margin-right: 20px;
-        }
-        nav a {
-            color: #fff;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        main {
-            padding: 20px 0;
-        }
-        .section {
-            background: #fff;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-        }
-        footer {
-            text-align: center;
-            padding: 20px;
-            background: #333;
-            color: #fff;
-            margin-top: 20px;
-        }
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-        .grid-item {
-            background: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            text-align: center;
-        }
-        .grid-item h3 {
-            margin-top: 0;
-        }
-        .grid-item a {
-            display: block;
-            margin-top: 15px;
-            background: #5a9;
-            color: white;
-            padding: 10px;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-        .grid-item a:hover {
-            background: #498;
+        
+        /* 標題漸層文字 */
+        .gradient-text {
+            background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
     </style>
 </head>
-<body>
+<body class="antialiased">
+    <div class="particle-bg"></div>
 
-    <header>
-        <div class="container">
-            <h1>ADHD 長期用藥衛教指南</h1>
-            <p>一個基於科學實證，為 ADHD 同行者打造的資訊平台</p>
+    <!-- 頁首與功能切換 -->
+    <header class="container mx-auto px-6 py-6 flex justify-between items-center">
+        <div class="text-lg font-bold">
+            <a href="index.html">神經探索地圖</a>
         </div>
+        <button id="focus-mode-toggle" class="px-3 py-2 text-sm font-medium border border-gray-600 rounded-lg hover:bg-gray-700 transition-colors" title="切換專注模式">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
+            </svg>
+        </button>
     </header>
 
-    <nav>
-        <ul>
-            <li><a href="index.html">首頁</a></li>
-            <li><a href="#benefits">正向效益</a></li>
-            <li><a href="#risks">風險與副作用</a></li>
-            <li><a href="#controversies">熱門爭議</a></li>
-            <li><a href="#self-help">用藥決策</a></li>
-            <li><a href="#tools">實用工具</a></li>
-            <li><a href="#about">關於我們</a></li>
-        </ul>
-    </nav>
+    <!-- 主內容區塊 -->
+    <main>
+        <!-- 引導區塊 -->
+        <section class="text-center py-12 md:py-16 px-6">
+            <h1 class="text-4xl md:text-6xl font-bold gradient-text mb-4">歡迎來到你的大腦指南</h1>
+            <p class="max-w-3xl mx-auto text-lg text-gray-400">這裡沒有複雜的論文，只有為你準備的探索任務。<br>點擊下方任何一個星球，開始解鎖關於 ADHD 與藥物的知識吧！</p>
+        </section>
 
-    <main class="container">
-        <div class="section">
-            <h2>一個給 ADHD 同行者的指南</h2>
-            <p>你好，歡迎來到這裡。不論你是剛確診的患者、服藥多年的夥伴，或是關心 ADHD 親友的家人，你可能都曾在網路上被各種關於藥物的資訊淹沒，感到困惑、焦慮，甚至懷疑。</p>
-            <p>這個網站的目標很簡單：我們不迴避爭議、不美化現實，而是誠實地整理最新的科學研究，將複雜的論文轉化為你能理解的語言。我們希望透過呈現正反兩面的證據，幫助你在這趟旅程中，做出更踏實、更有信心的決定。</p>
-        </div>
-
-        <div class="section">
-            <h2>我該從哪裡開始？</h2>
-            <p>根據你心中最想了解的問題，選擇一個入口吧：</p>
-            <div class="grid-container">
-                <div class="grid-item">
-                    <h3>藥物真的有好處嗎？</h3>
-                    <p>了解長期用藥如何幫助降低生活中的風險，看看科學數據怎麼說。</p>
-                    <a href="benefits.html">查看【正向效益與保護因子】</a>
-                </div>
-                <div class="grid-item">
-                    <h3>副作用很可怕嗎？</h3>
-                    <p>誠實面對常見的副作用與潛在風險，知道該注意哪些事情。</p>
-                    <a href="risks.html">查看【風險與副作用】</a>
-                </div>
-                 <div class="grid-item">
-                    <h3>網路傳言是真的嗎？</h3>
-                    <p>深入探討關於成癮、思考僵化等熱門爭議，我們一起破解迷思。</p>
-                    <a href="controversies.html">查看【熱門爭議大解析】</a>
-                </div>
-                <div class="grid-item">
-                    <h3>我能自己調藥嗎？</h3>
-                    <p>理解想自行調藥背後的心理，並學習如何與醫師更安全地溝通。</p>
-                    <a href="self-adjustment.html">查看【我的用藥我做主？】</a>
-                </div>
+        <!-- 互動式探索地圖 -->
+        <div class="interactive-map-container">
+            <!-- 中心節點 -->
+            <div class="hub-node bg-gray-800 rounded-full flex flex-col justify-center items-center p-4 shadow-2xl">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-2 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2h8a2 2 0 002-2v-1a2 2 0 012-2h1.945M7.707 4.055a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-2.829 2.828a2 2 0 01-2.828 0l-2.828-2.828a2 2 0 010-2.828l2.828-2.829z" />
+                </svg>
+                <span class="text-xl font-bold gradient-text">探索核心</span>
             </div>
+
+            <!-- 主題節點 (星球) -->
+            <a href="#link-to-benefits-risks-page" class="topic-node" style="transform: translate(-150px, -150px) rotate(-45deg);">藥物的<br>好處vs壞處</a>
+            <a href="#link-to-controversies-page" class="topic-node" style="transform: translate(180px, -100px) rotate(25deg);">熱門爭議<br>大解析</a>
+            <a href="#link-to-self-adjustment-page" class="topic-node" style="transform: translate(160px, 160px) rotate(135deg);">自行調藥的<br>內心戲</a>
+            <a href="#link-to-toolbox-page" class="topic-node" style="transform: translate(-80px, 200px) rotate(220deg);">給自己的<br>工具箱</a>
+            <a href="#link-to-about-page" class="topic-node" style="transform: translate(-220px, 50px) rotate(-110deg);">關於<br>本計畫</a>
         </div>
+        
     </main>
 
-    <footer>
-        <p>&copy; 2025 ADHD 長期用藥衛教指南. 本站內容僅供參考，無法取代專業醫療建議。</p>
+    <!-- 頁尾 -->
+    <footer class="text-center mt-16 md:mt-24 py-8 px-6 border-t border-gray-800">
+        <div class="container mx-auto">
+            <p class="mb-4 text-gray-400">&copy; 2025 ADHD 神經探索地圖. 本站內容基於公開研究資料整理，僅供參考，無法取代專業醫療建議。</p>
+            <div class="flex justify-center items-center space-x-2 text-sm text-gray-500">
+                <a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" class="hover:text-gray-300">
+                    <img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" style="height: 1.2em; display: inline-block; vertical-align: middle;" alt="Creative Commons">
+                    <img src="https://mirrors.creativecommons.org/presskit/icons/by.svg" style="height: 1.2em; display: inline-block; vertical-align: middle;" alt="Attribution">
+                    <img src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" style="height: 1.2em; display: inline-block; vertical-align: middle;" alt="Share Alike">
+                </a>
+                <span>本網站內容採用 <a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" class="underline hover:text-gray-300">姓名標示-相同方式分享 4.0 國際</a> 授權條款釋出。</span>
+            </div>
+        </div>
     </footer>
-
+    
+    <script>
+        // 專注模式切換
+        const focusModeToggle = document.getElementById('focus-mode-toggle');
+        focusModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('focus-mode');
+        });
+    </script>
 </body>
 </html>
