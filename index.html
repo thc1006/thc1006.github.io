@@ -27,6 +27,7 @@
         body.focus-mode {
             --particle-color: transparent;
         }
+        
         body.focus-mode .interactive-map-container::before {
             opacity: 0;
         }
@@ -57,80 +58,126 @@
             100% { background-position: 100% 100%; }
         }
 
-        /* 互動地圖容器 */
-        .interactive-map-container {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 60vh;
-            padding: 4rem 1rem;
-        }
-
-        /* 中心節點 */
-        .hub-node {
-            width: 150px;
-            height: 150px;
-            z-index: 10;
-            animation: pulse 4s ease-in-out infinite;
-        }
-
-        /* 周圍的探索節點 */
-        .topic-node {
-            position: absolute;
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 8px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            z-index: 5;
-            background-color: rgba(31, 41, 55, 0.8);
-            border: 2px solid rgba(75, 85, 99, 0.8);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-        }
-        .topic-node:hover {
-            transform: scale(1.15) !important;
-            z-index: 20;
-            border-color: white;
-        }
-        
-        /* 節點光暈動畫 */
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 20px 5px var(--primary-glow); }
-            50% { box-shadow: 0 0 35px 10px var(--secondary-glow); }
-        }
-        
-        /* 連結路徑的線條 (偽元素) */
-        .interactive-map-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image:
-                /* 預先繪製好連結線，僅為示意 */
-                radial-gradient(circle at center, transparent 74px, rgba(75, 85, 99, 0.5) 75px, transparent 76px),
-                radial-gradient(circle at center, transparent 149px, rgba(75, 85, 99, 0.5) 150px, transparent 151px),
-                radial-gradient(circle at center, transparent 224px, rgba(75, 85, 99, 0.5) 225px, transparent 226px);
-            z-index: 1;
-            transition: opacity 0.5s ease;
-        }
-        
         /* 標題漸層文字 */
         .gradient-text {
             background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+        }
+
+        /* --- Mobile First (行動裝置優先) 樣式 --- */
+
+        /* 互動區塊在手機上是垂直排列的列表 */
+        .interactive-map-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem; /* 列表項目的間距 */
+            padding: 2rem 1rem;
+        }
+        
+        /* 手機版的中心節點，將其隱藏，讓列表更簡潔 */
+        .hub-node {
+            display: none;
+        }
+
+        /* 手機版的探索節點，設計成易於點擊的卡片 */
+        .topic-node {
+            position: static; /* 移除絕對定位 */
+            width: 90%;
+            max-width: 400px;
+            height: auto; /* 高度自動 */
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem; /* 圓角矩形 */
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            background-color: rgba(31, 41, 55, 0.8);
+            border: 2px solid rgba(75, 85, 99, 0.8);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .topic-node:hover {
+            background-color: rgba(55, 65, 81, 0.9);
+            transform: scale(1.03);
+        }
+        
+        /* --- Desktop (桌機板) 樣式 --- */
+        @media (min-width: 768px) {
+            /* 在大螢幕上，恢復互動地圖的佈局 */
+            .interactive-map-container {
+                position: relative;
+                min-height: 60vh;
+                padding: 4rem 1rem;
+                display: flex; /* 恢復為 flex 以便置中 */
+                justify-content: center;
+                align-items: center;
+            }
+
+            /* 恢復中心節點 */
+            .hub-node {
+                display: flex; /* 設為 flex 讓內容置中 */
+                width: 150px;
+                height: 150px;
+                z-index: 10;
+                animation: pulse 4s ease-in-out infinite;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 1rem;
+                border-radius: 9999px;
+                background-color: rgba(31, 41, 55, 0.8);
+            }
+            
+            /* 節點光暈動畫 */
+            @keyframes pulse {
+                0%, 100% { box-shadow: 0 0 20px 5px var(--primary-glow); }
+                50% { box-shadow: 0 0 35px 10px var(--secondary-glow); }
+            }
+
+            /* 恢復探索節點的星球外觀和絕對定位 */
+            .topic-node {
+                position: absolute;
+                width: 110px;
+                height: 110px;
+                border-radius: 50%;
+                font-size: 0.9rem;
+                padding: 8px;
+                display: flex; /* 讓文字在星球內置中 */
+                justify-content: center;
+                align-items: center;
+            }
+            .topic-node:hover {
+                transform: scale(1.15) !important; /* !important 確保覆蓋手機版的 transform */
+                z-index: 20;
+                border-color: white;
+            }
+            
+            /* 使用 CSS 選擇器來定位每個星球，取代 inline style */
+            .topic-node:nth-of-type(1) { transform: translate(-150px, -150px) rotate(-45deg); }
+            .topic-node:nth-of-type(2) { transform: translate(180px, -100px) rotate(25deg); }
+            .topic-node:nth-of-type(3) { transform: translate(160px, 160px) rotate(135deg); }
+            .topic-node:nth-of-type(4) { transform: translate(-80px, 200px) rotate(220deg); }
+            .topic-node:nth-of-type(5) { transform: translate(-220px, 50px) rotate(-110deg); }
+
+            /* 恢復連結線條 */
+            .interactive-map-container::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-image:
+                    radial-gradient(circle at center, transparent 74px, rgba(75, 85, 99, 0.5) 75px, transparent 76px),
+                    radial-gradient(circle at center, transparent 149px, rgba(75, 85, 99, 0.5) 150px, transparent 151px),
+                    radial-gradient(circle at center, transparent 224px, rgba(75, 85, 99, 0.5) 225px, transparent 226px);
+                z-index: 1;
+                transition: opacity 0.5s ease;
+            }
         }
     </style>
 </head>
@@ -154,13 +201,13 @@
         <!-- 引導區塊 -->
         <section class="text-center py-12 md:py-16 px-6">
             <h1 class="text-4xl md:text-6xl font-bold gradient-text mb-4">歡迎來到你的大腦指南</h1>
-            <p class="max-w-3xl mx-auto text-lg text-gray-400">這裡沒有複雜的論文，只有為你準備的探索任務。<br>點擊下方任何一個星球，開始解鎖關於 ADHD 與藥物的知識吧！</p>
+            <p class="max-w-3xl mx-auto text-lg text-gray-400">這裡沒有複雜的論文，只有為你準備的探索任務。<br>點擊下方任何一個選項，開始解鎖關於 ADHD 與藥物的知識吧！</p>
         </section>
 
-        <!-- 互動式探索地圖 -->
+        <!-- 互動式探索地圖 (現在是響應式的) -->
         <div class="interactive-map-container">
-            <!-- 中心節點 -->
-            <div class="hub-node bg-gray-800 rounded-full flex flex-col justify-center items-center p-4 shadow-2xl">
+            <!-- 中心節點 (僅在桌機版顯示) -->
+            <div class="hub-node">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-2 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2h8a2 2 0 002-2v-1a2 2 0 012-2h1.945M7.707 4.055a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-2.829 2.828a2 2 0 01-2.828 0l-2.828-2.828a2 2 0 010-2.828l2.828-2.829z" />
                 </svg>
@@ -168,11 +215,11 @@
             </div>
 
             <!-- 主題節點 (星球) -->
-            <a href="#link-to-benefits-risks-page" class="topic-node" style="transform: translate(-150px, -150px) rotate(-45deg);">藥物的<br>好處vs壞處</a>
-            <a href="#link-to-controversies-page" class="topic-node" style="transform: translate(180px, -100px) rotate(25deg);">熱門爭議<br>大解析</a>
-            <a href="#link-to-self-adjustment-page" class="topic-node" style="transform: translate(160px, 160px) rotate(135deg);">自行調藥的<br>內心戲</a>
-            <a href="#link-to-toolbox-page" class="topic-node" style="transform: translate(-80px, 200px) rotate(220deg);">給自己的<br>工具箱</a>
-            <a href="#link-to-about-page" class="topic-node" style="transform: translate(-220px, 50px) rotate(-110deg);">關於<br>本計畫</a>
+            <a href="#link-to-benefits-risks-page" class="topic-node">藥物的好處 vs 壞處</a>
+            <a href="#link-to-controversies-page" class="topic-node">熱門爭議大解析</a>
+            <a href="#link-to-self-adjustment-page" class="topic-node">自行調藥的內心戲</a>
+            <a href="#link-to-toolbox-page" class="topic-node">給自己的工具箱</a>
+            <a href="#link-to-about-page" class="topic-node">關於本計畫</a>
         </div>
         
     </main>
