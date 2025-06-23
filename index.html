@@ -217,26 +217,31 @@
             const nodes = document.querySelectorAll('.topic-node');
             const body = document.body;
 
+            const resetMap = () => {
+                nodes.forEach(n => n.classList.remove('is-centered'));
+                body.classList.remove('map-active');
+            };
+
             nodes.forEach(node => {
                 node.addEventListener('click', (e) => {
-                    // 此互動邏輯僅在桌面版（寬度 >= 768px）啟動
+                    // 根據點擊當下的螢幕寬度決定行為
                     if (window.innerWidth < 768) {
                         // 在行動版，讓連結正常跳轉
                         return;
                     }
 
-                    // 在桌面版，阻止預設行為以觸發動畫
+                    // --- 以下為桌面版邏輯 ---
                     e.preventDefault();
                     e.stopPropagation(); // 阻止事件冒泡到 container
 
                     const isCentered = node.classList.contains('is-centered');
                     
                     if (isCentered) {
-                        // 如果點擊的節點已經在中間，則導覽至目標頁面
+                        // 如果點擊的節點已經在中間 (第二次點擊)，則導覽至目標頁面
                         window.location.href = node.href;
                     } else {
-                        // 否則，先移除所有其他星球的置中狀態
-                        nodes.forEach(n => n.classList.remove('is-centered'));
+                        // 如果是第一次點擊
+                        resetMap(); // 先重置地圖
                         
                         // 然後將被點擊的星球置中
                         node.classList.add('is-centered');
@@ -253,8 +258,7 @@
                     }
                     // 只有當點擊的不是星球本身時才重置
                     if (!e.target.closest('.topic-node')) {
-                        nodes.forEach(n => n.classList.remove('is-centered'));
-                        body.classList.remove('map-active');
+                       resetMap();
                     }
                 });
             }
