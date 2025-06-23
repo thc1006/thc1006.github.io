@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADHD 衛教指南：你的神經探索地圖</title>
+    <title>ADHD 衛教指南：你的神經探索之旅</title>
     
     <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,20 +13,22 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     
+    <!-- 引入 Alpine.js 用於互動效果 -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
     <!-- 自訂樣式與動畫 -->
     <style>
         :root {
-            --bg-color: #111827;
+            --bg-color: #0d1117; /* 更深邃的背景色 */
             --text-color: #e5e7eb;
-            --primary-glow: rgba(59, 130, 246, 0.6);
-            --secondary-glow: rgba(139, 92, 246, 0.6);
-            --particle-color: #4b5563;
+            --primary-color: #3b82f6;
+            --secondary-color: #8b5cf6;
+            --accent-color: #ec4899;
         }
 
-        /* 專注模式樣式 */
-        body.focus-mode { --particle-color: transparent; }
-        body.focus-mode .interactive-map-container::before { opacity: 0; }
-
+        html {
+            scroll-behavior: smooth;
+        }
         body {
             font-family: 'Lexend', 'Noto Sans TC', sans-serif;
             background-color: var(--bg-color);
@@ -34,162 +36,116 @@
             overflow-x: hidden;
         }
         
-        /* 動態粒子背景 */
-        .particle-bg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; background-color: var(--bg-color);
-            background-image: radial-gradient(circle at 1px 1px, var(--particle-color) 1px, transparent 0);
-            background-size: 25px 25px; animation: pan-bg 60s linear infinite;
+        /* 頁首的動態極光背景 */
+        .hero-bg {
+            background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(59, 130, 246, 0.3), transparent),
+                        radial-gradient(ellipse 80% 50% at 50% 120%, rgba(139, 92, 246, 0.2), transparent);
+            animation: bg-aurora 8s ease-in-out infinite;
         }
-        @keyframes pan-bg {
-            0% { background-position: 0% 0%; }
-            100% { background-position: 100% 100%; }
+        @keyframes bg-aurora {
+            0% { background-position: 50% 0%, 50% 100%; }
+            50% { background-position: 100% 0%, 0% 100%; }
+            100% { background-position: 50% 0%, 50% 100%; }
         }
 
         .gradient-text {
             background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
-
-        /* --- Mobile First (行動裝置優先) - 滑動式星系 --- */
-        .interactive-map-container {
-            display: flex;
-            align-items: center;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            gap: 1.5rem;
-            padding: 2rem 1.5rem;
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
-        }
-        .interactive-map-container::-webkit-scrollbar { display: none; }
         
-        .hub-node { display: none; }
-
-        .topic-node {
-            flex: 0 0 150px;
-            width: 150px; height: 150px;
-            display: flex; justify-content: center; align-items: center; text-align: center;
-            padding: 1rem;
-            border-radius: 50%;
-            font-weight: 700; font-size: 1rem;
-            cursor: pointer;
-            scroll-snap-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-            background-color: rgba(31, 41, 55, 0.8);
-            border: 2px solid rgba(75, 85, 99, 0.8);
-            backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+        /* 內容區塊的動畫效果 */
+        .scroll-fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
-        .topic-node:hover {
-            border-color: white; transform: scale(1.05);
+        .is-visible {
+            opacity: 1;
+            transform: translateY(0);
         }
-        
-        /* --- Desktop (桌機板) - 互動式地圖 --- */
-        @media (min-width: 768px) {
-            .interactive-map-container {
-                position: relative; min-height: 60vh;
-                padding: 4rem 1rem; overflow-x: visible;
-                display: flex; justify-content: center; align-items: center;
-                cursor: pointer; /* 讓背景也可點擊以重置 */
-            }
 
-            .hub-node {
-                display: flex; flex-direction: column; justify-content: center; align-items: center;
-                width: 150px; height: 150px; padding: 1rem; border-radius: 9999px;
-                z-index: 10; background-color: rgba(31, 41, 55, 0.8);
-                animation: pulse 4s ease-in-out infinite; transition: opacity 0.5s ease, transform 0.5s ease;
-                pointer-events: none; /* 中心節點本身不可點擊 */
-            }
-            body.map-active .hub-node { opacity: 0; transform: scale(0.5); }
-            @keyframes pulse {
-                0%, 100% { box-shadow: 0 0 20px 5px var(--primary-glow); }
-                50% { box-shadow: 0 0 35px 10px var(--secondary-glow); }
-            }
-
-            .topic-node {
-                position: absolute; width: 110px; height: 110px;
-                font-size: 0.9rem; padding: 8px; flex-shrink: 0;
-                transition: transform 0.5s ease-in-out, opacity 0.5s ease;
-            }
-            
-            /* 互動狀態的樣式 */
-            body.map-active .topic-node {
-                 opacity: 0.4;
-                 transform: scale(0.9);
-            }
-            body.map-active .topic-node.is-centered {
-                opacity: 1;
-                transform: translate(0, 0) scale(1.4) !important;
-                z-index: 20;
-            }
-            .topic-node:hover {
-                 transform: scale(1.15) !important;
-                 z-index: 20;
-                 border-color: white;
-            }
-             body.map-active .topic-node:not(.is-centered):hover {
-                opacity: 1;
-                transform: scale(1.05); /* 當地圖激活時，滑鼠懸停在非中心星球上的效果 */
-             }
-            body.map-active .topic-node.is-centered:hover {
-                transform: translate(0, 0) scale(1.45) !important; /* 滑鼠懸停在已置中的星球上 */
-            }
-
-            /* 每個星球的初始位置 */
-            .topic-node[data-pos="1"] { transform: translate(-150px, -150px) rotate(-45deg); }
-            .topic-node[data-pos="2"] { transform: translate(180px, -100px) rotate(25deg); }
-            .topic-node[data-pos="3"] { transform: translate(160px, 160px) rotate(135deg); }
-            .topic-node[data-pos="4"] { transform: translate(-80px, 200px) rotate(220deg); }
-            .topic-node[data-pos="5"] { transform: translate(-220px, 50px) rotate(-110deg); }
-
-            .interactive-map-container::before {
-                content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-                background-image:
-                    radial-gradient(circle at center, transparent 74px, rgba(75, 85, 99, 0.5) 75px, transparent 76px),
-                    radial-gradient(circle at center, transparent 149px, rgba(75, 85, 99, 0.5) 150px, transparent 151px),
-                    radial-gradient(circle at center, transparent 224px, rgba(75, 85, 99, 0.5) 225px, transparent 226px);
-                z-index: 1; transition: opacity 0.5s ease;
-            }
+        /* 導覽進度條 */
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            width: 0%;
+            z-index: 50;
+            transition: width 0.1s linear;
         }
     </style>
 </head>
-<body class="antialiased">
-    <div class="particle-bg"></div>
+<body x-data>
 
-    <header class="container mx-auto px-6 py-6 flex justify-between items-center">
-        <div class="text-lg font-bold">
-            <a href="index.html">神經探索地圖</a>
-        </div>
-        <button id="focus-mode-toggle" class="px-3 py-2 text-sm font-medium border border-gray-600 rounded-lg hover:bg-gray-700 transition-colors" title="切換專注模式">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
+    <div id="progress-bar"></div>
+
+    <!-- 頁首區塊 -->
+    <header class="hero-bg min-h-screen flex flex-col justify-center items-center text-center p-6">
+        <h1 class="text-4xl md:text-6xl font-bold gradient-text mb-4 animate-fade-in-down">歡迎來到你的大腦指南</h1>
+        <p class="max-w-3xl mx-auto text-lg md:text-xl text-gray-300 mb-8 animate-fade-in-up">這裡沒有複雜的論文，只有一場為你設計的探索之旅。<br>準備好了嗎？請向下滾動，開始探索。</p>
+        <a href="#journey-start" class="animate-bounce">
+            <svg class="w-10 h-10 text-gray-400" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                <path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
             </svg>
-        </button>
+        </a>
     </header>
 
-    <main>
-        <section class="text-center py-12 md:py-16 px-6">
-            <h1 class="text-4xl md:text-6xl font-bold gradient-text mb-4">歡迎來到你的大腦指南</h1>
-            <p class="max-w-3xl mx-auto text-lg text-gray-400">這裡沒有複雜的論文，只有為你準備的探索任務。<br>點擊或滑動下方的星球，開始解鎖關於 ADHD 與藥物的知識吧！</p>
+    <!-- 主內容旅程 -->
+    <main id="journey-start" class="container mx-auto px-6 py-16 md:py-24 space-y-24 md:space-y-32">
+
+        <!-- 旅程第一站：天秤的兩端 -->
+        <section class="scroll-fade-in grid md:grid-cols-2 gap-12 items-center">
+            <div class="text-center md:text-left">
+                <span class="text-sm font-bold text-blue-400">第一站</span>
+                <h2 class="text-3xl md:text-4xl font-bold my-4">天秤的兩端</h2>
+                <p class="text-gray-400 mb-6">藥物是幫手還是麻煩？在下決定前，我們需要誠實地看看天秤的兩邊各放了些什麼。這裡沒有標準答案，只有基於科學的多元視角。</p>
+                <a href="benefits-risks.html" class="inline-block bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition-colors">探索效益與風險</a>
+            </div>
+            <div class="flex justify-center">
+                <!-- SVG 插圖：天秤 -->
+                <svg class="w-48 h-48 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 6l3 1m0 0l-3 9a2 2 0 002 2h10a2 2 0 002-2l-3-9m0 0l3-1m-6 0v12" /></svg>
+            </div>
         </section>
 
-        <div class="interactive-map-container">
-            <div class="hub-node">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-2 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2h8a2 2 0 002-2v-1a2 2 0 012-2h1.945M7.707 4.055a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-2.829 2.828a2 2 0 01-2.828 0l-2.828-2.828a2 2 0 010-2.828l2.828-2.829z" />
-                </svg>
-                <span class="text-xl font-bold gradient-text">探索核心</span>
+        <!-- 旅程第二站：熱門爭議 -->
+        <section class="scroll-fade-in grid md:grid-cols-2 gap-12 items-center">
+            <div class="flex justify-center md:order-2">
+                <!-- SVG 插圖：迷霧/問題 -->
+                 <svg class="w-48 h-48 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" /></svg>
             </div>
+            <div class="text-center md:text-left md:order-1">
+                <span class="text-sm font-bold text-purple-400">第二站</span>
+                <h2 class="text-3xl md:text-4xl font-bold my-4">穿越迷霧森林</h2>
+                <p class="text-gray-400 mb-6">「吃藥會上癮？」、「會不會變笨？」網路上各種真假難辨的傳言，就像一座迷霧森林。讓我們拿起科學的火把，一起照亮前方的路。</p>
+                <a href="controversies.html" class="inline-block bg-purple-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-purple-700 transition-colors">破解熱門爭議</a>
+            </div>
+        </section>
 
-            <a href="benefits-risks.html" class="topic-node" data-pos="1">藥物的好處<br>vs 壞處</a>
-            <a href="controversies.html" class="topic-node" data-pos="2">熱門爭議<br>大解析</a>
-            <a href="self-adjustment.html" class="topic-node" data-pos="3">自行調藥的<br>內心戲</a>
-            <a href="toolbox.html" class="topic-node" data-pos="4">給自己的<br>工具箱</a>
-            <a href="about.html" class="topic-node" data-pos="5">關於<br>本計畫</a>
+        <!-- 旅程第三站：自行調藥 -->
+        <section class="scroll-fade-in grid md:grid-cols-2 gap-12 items-center">
+            <div class="text-center md:text-left">
+                <span class="text-sm font-bold text-pink-400">第三站</span>
+                <h2 class="text-3xl md:text-4xl font-bold my-4">我的用藥我做主？</h2>
+                <p class="text-gray-400 mb-6">為什麼總想自己調整藥量？這個念頭的背後，藏著對自主權的渴望、對副作用的擔憂。讓我們深入你的內心，並學習如何更安全地與醫師溝通。</p>
+                <a href="self-adjustment.html" class="inline-block bg-pink-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-pink-700 transition-colors">理解調藥的內心戲</a>
+            </div>
+             <div class="flex justify-center">
+                 <!-- SVG 插圖：大腦與設定 -->
+                 <svg class="w-48 h-48 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.47 2.118v-.09A12.75 12.75 0 0112 3.25a12.75 12.75 0 019.73 16.003v.09a2.25 2.25 0 01-2.47-2.118 3 3 0 00-5.78-1.128L12 15.65l-2.47 2.572z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 9.75a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5z" /></svg>
+            </div>
+        </section>
+        
+        <!-- 其他區塊預留位置 -->
+        <div class="text-center text-gray-500 py-16 border-t border-b border-gray-800">
+            <p>更多探索區域正在建構中...</p>
+            <p class="mt-2 text-sm">（給自己的工具箱、關於本計畫...）</p>
         </div>
+
     </main>
 
-    <footer class="text-center mt-16 md:mt-24 py-8 px-6 border-t border-gray-800">
+    <footer class="text-center mt-16 md:mt-24 py-8 px-6">
         <div class="container mx-auto">
             <p class="mb-4 text-gray-400">&copy; 2025 ADHD 神經探索地圖. 本站內容基於公開研究資料整理，僅供參考，無法取代專業醫療建議。</p>
             <div class="flex justify-center items-center space-x-2 text-sm text-gray-500">
@@ -205,63 +161,28 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // 專注模式切換
-            const focusModeToggle = document.getElementById('focus-mode-toggle');
-            if(focusModeToggle) {
-                focusModeToggle.addEventListener('click', () => {
-                    document.body.classList.toggle('focus-mode');
-                });
-            }
-
-            const container = document.querySelector('.interactive-map-container');
-            const nodes = document.querySelectorAll('.topic-node');
-            const body = document.body;
-
-            const resetMap = () => {
-                nodes.forEach(n => n.classList.remove('is-centered'));
-                body.classList.remove('map-active');
-            };
-
-            nodes.forEach(node => {
-                node.addEventListener('click', (e) => {
-                    // 根據點擊當下的螢幕寬度決定行為
-                    if (window.innerWidth < 768) {
-                        // 在行動版，讓連結正常跳轉
-                        return;
-                    }
-
-                    // --- 以下為桌面版邏輯 ---
-                    e.preventDefault();
-                    e.stopPropagation(); // 阻止事件冒泡到 container
-
-                    const isCentered = node.classList.contains('is-centered');
-                    
-                    if (isCentered) {
-                        // 如果點擊的節點已經在中間 (第二次點擊)，則導覽至目標頁面
-                        window.location.href = node.href;
-                    } else {
-                        // 如果是第一次點擊
-                        resetMap(); // 先重置地圖
-                        
-                        // 然後將被點擊的星球置中
-                        node.classList.add('is-centered');
-                        body.classList.add('map-active');
+            // 滾動觸發動畫
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
                     }
                 });
+            }, {
+                threshold: 0.1
             });
 
-            // 監聽整個地圖容器的點擊事件，用於重置地圖
-            if (container) {
-                container.addEventListener('click', (e) => {
-                     if (window.innerWidth < 768) {
-                        return;
-                    }
-                    // 只有當點擊的不是星球本身時才重置
-                    if (!e.target.closest('.topic-node')) {
-                       resetMap();
-                    }
-                });
-            }
+            document.querySelectorAll('.scroll-fade-in').forEach((el) => {
+                observer.observe(el);
+            });
+
+            // 滾動進度條
+            const progressBar = document.getElementById('progress-bar');
+            window.addEventListener('scroll', () => {
+                const totalHeight = document.body.scrollHeight - window.innerHeight;
+                const progress = (window.pageYOffset / totalHeight) * 100;
+                progressBar.style.width = progress + '%';
+            });
         });
     </script>
 </body>
