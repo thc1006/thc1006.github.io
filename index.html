@@ -59,16 +59,15 @@
             scroll-snap-type: x mandatory;
             gap: 1.5rem;
             padding: 2rem 1.5rem;
-            /* 隱藏滾動條 */
             -ms-overflow-style: none;  /* IE and Edge */
             scrollbar-width: none;  /* Firefox */
         }
         .interactive-map-container::-webkit-scrollbar { display: none; }
         
-        .hub-node { display: none; } /* 手機上隱藏中心節點 */
+        .hub-node { display: none; }
 
         .topic-node {
-            flex: 0 0 150px; /* 固定星球大小 */
+            flex: 0 0 150px;
             width: 150px; height: 150px;
             display: flex; justify-content: center; align-items: center; text-align: center;
             padding: 1rem;
@@ -107,22 +106,34 @@
 
             .topic-node {
                 position: absolute; width: 110px; height: 110px;
-                font-size: 0.9rem; padding: 8px; flex-shrink: 0; /* 確保大小不變 */
+                font-size: 0.9rem; padding: 8px; flex-shrink: 0;
                 transition: transform 0.5s ease-in-out, opacity 0.5s ease;
             }
-            body.map-active .topic-node { opacity: 0.4; transform: scale(0.9); }
-            body.map-active .topic-node.is-centered { opacity: 1; transform: translate(0, 0) scale(1.4) !important; z-index: 20; }
+            
+            /* The magic happens here: state-based transforms */
+            body.map-active .topic-node {
+                 opacity: 0.4;
+                 transform: scale(0.9); /* Default state for non-centered nodes */
+            }
+            body.map-active .topic-node.is-centered {
+                opacity: 1;
+                transform: translate(0, 0) scale(1.4) !important; /* Center the selected node */
+                z-index: 20;
+            }
             .topic-node:hover {
-                transform: scale(1.15) !important; z-index: 20; border-color: white;
+                 transform: scale(1.15) !important;
+                 z-index: 20;
+                 border-color: white;
             }
-            body.map-active .topic-node:hover {
-                opacity: 1; transform: scale(1) !important;
-            }
+             body.map-active .topic-node:not(.is-centered):hover {
+                opacity: 1;
+                transform: scale(1.05); /* Slightly enlarge non-centered nodes on hover */
+             }
             body.map-active .topic-node.is-centered:hover {
-                transform: translate(0, 0) scale(1.45) !important;
+                transform: translate(0, 0) scale(1.45) !important; /* Enlarge centered node on hover */
             }
 
-            /* 為每個節點設定初始位置 */
+            /* Set initial positions using data attributes */
             .topic-node[data-pos="1"] { transform: translate(-150px, -150px) rotate(-45deg); }
             .topic-node[data-pos="2"] { transform: translate(180px, -100px) rotate(25deg); }
             .topic-node[data-pos="3"] { transform: translate(160px, 160px) rotate(135deg); }
@@ -168,11 +179,11 @@
                 <span class="text-xl font-bold gradient-text">探索核心</span>
             </div>
 
-            <a href="#link-to-benefits-risks-page" class="topic-node" data-pos="1">藥物的好處<br>vs 壞處</a>
-            <a href="#link-to-controversies-page" class="topic-node" data-pos="2">熱門爭議<br>大解析</a>
-            <a href="#link-to-self-adjustment-page" class="topic-node" data-pos="3">自行調藥的<br>內心戲</a>
-            <a href="#link-to-toolbox-page" class="topic-node" data-pos="4">給自己的<br>工具箱</a>
-            <a href="#link-to-about-page" class="topic-node" data-pos="5">關於<br>本計畫</a>
+            <a href="benefits-risks.html" class="topic-node" data-pos="1">藥物的好處<br>vs 壞處</a>
+            <a href="controversies.html" class="topic-node" data-pos="2">熱門爭議<br>大解析</a>
+            <a href="self-adjustment.html" class="topic-node" data-pos="3">自行調藥的<br>內心戲</a>
+            <a href="toolbox.html" class="topic-node" data-pos="4">給自己的<br>工具箱</a>
+            <a href="about.html" class="topic-node" data-pos="5">關於<br>本計畫</a>
         </div>
     </main>
 
@@ -194,35 +205,43 @@
         document.addEventListener('DOMContentLoaded', () => {
             // 專注模式切換
             const focusModeToggle = document.getElementById('focus-mode-toggle');
-            focusModeToggle.addEventListener('click', () => {
-                document.body.classList.toggle('focus-mode');
-            });
-
-            // 桌面版地圖互動邏輯
-            if (window.innerWidth >= 768) {
-                const nodes = document.querySelectorAll('.topic-node');
-                const body = document.body;
-
-                nodes.forEach(node => {
-                    node.addEventListener('click', (e) => {
-                        e.preventDefault(); // 阻止連結跳轉
-
-                        const isCentered = node.classList.contains('is-centered');
-                        
-                        // 移除所有節點的 is-centered 狀態
-                        nodes.forEach(n => n.classList.remove('is-centered'));
-                        
-                        if (isCentered) {
-                            // 如果點擊的節點已經在中間，則取消地圖的 active 狀態
-                            body.classList.remove('map-active');
-                        } else {
-                            // 如果是新點擊，則設定地圖為 active 並將該節點設為 is-centered
-                            body.classList.add('map-active');
-                            node.classList.add('is-centered');
-                        }
-                    });
+            if(focusModeToggle) {
+                focusModeToggle.addEventListener('click', () => {
+                    document.body.classList.toggle('focus-mode');
                 });
             }
+
+            const nodes = document.querySelectorAll('.topic-node');
+            const body = document.body;
+
+            nodes.forEach(node => {
+                node.addEventListener('click', (e) => {
+                    // 此互動邏輯僅在桌面版（寬度 >= 768px）啟動
+                    if (window.innerWidth < 768) {
+                        // 在行動版，讓連結正常跳轉
+                        window.location.href = node.href;
+                        return;
+                    }
+
+                    // 在桌面版阻止連結預設行為以觸發動畫
+                    e.preventDefault();
+
+                    const isCentered = node.classList.contains('is-centered');
+                    
+                    if (isCentered) {
+                        // 如果點擊的節點已經在中間，則恢復地圖
+                        node.classList.remove('is-centered');
+                        body.classList.remove('map-active');
+                    } else {
+                        // 否則，先移除所有其他星球的置中狀態
+                        nodes.forEach(n => n.classList.remove('is-centered'));
+                        
+                        // 然後將被點擊的星球置中
+                        node.classList.add('is-centered');
+                        body.classList.add('map-active');
+                    }
+                });
+            });
         });
     </script>
 </body>
