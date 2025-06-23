@@ -24,13 +24,8 @@
         }
 
         /* 專注模式樣式 */
-        body.focus-mode {
-            --particle-color: transparent;
-        }
-        
-        body.focus-mode .interactive-map-container::before {
-            opacity: 0;
-        }
+        body.focus-mode { --particle-color: transparent; }
+        body.focus-mode .interactive-map-container::before { opacity: 0; }
 
         body {
             font-family: 'Lexend', 'Noto Sans TC', sans-serif;
@@ -41,142 +36,106 @@
         
         /* 動態粒子背景 */
         .particle-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background-color: var(--bg-color);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; background-color: var(--bg-color);
             background-image: radial-gradient(circle at 1px 1px, var(--particle-color) 1px, transparent 0);
-            background-size: 25px 25px;
-            animation: pan-bg 60s linear infinite;
+            background-size: 25px 25px; animation: pan-bg 60s linear infinite;
         }
-
         @keyframes pan-bg {
             0% { background-position: 0% 0%; }
             100% { background-position: 100% 100%; }
         }
 
-        /* 標題漸層文字 */
         .gradient-text {
             background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
 
-        /* --- Mobile First (行動裝置優先) 樣式 --- */
-
-        /* 互動區塊在手機上是垂直排列的列表 */
+        /* --- Mobile First (行動裝置優先) - 滑動式星系 --- */
         .interactive-map-container {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 1rem; /* 列表項目的間距 */
-            padding: 2rem 1rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 1.5rem;
+            padding: 2rem 1.5rem;
+            /* 隱藏滾動條 */
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
         }
+        .interactive-map-container::-webkit-scrollbar { display: none; }
         
-        /* 手機版的中心節點，將其隱藏，讓列表更簡潔 */
-        .hub-node {
-            display: none;
-        }
+        .hub-node { display: none; } /* 手機上隱藏中心節點 */
 
-        /* 手機版的探索節點，設計成易於點擊的卡片 */
         .topic-node {
-            position: static; /* 移除絕對定位 */
-            width: 90%;
-            max-width: 400px;
-            height: auto; /* 高度自動 */
-            padding: 1rem 1.5rem;
-            border-radius: 0.75rem; /* 圓角矩形 */
-            font-weight: 700;
-            font-size: 1.1rem;
+            flex: 0 0 150px; /* 固定星球大小 */
+            width: 150px; height: 150px;
+            display: flex; justify-content: center; align-items: center; text-align: center;
+            padding: 1rem;
+            border-radius: 50%;
+            font-weight: 700; font-size: 1rem;
             cursor: pointer;
-            transition: transform 0.2s ease, background-color 0.2s ease;
+            scroll-snap-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
             background-color: rgba(31, 41, 55, 0.8);
             border: 2px solid rgba(75, 85, 99, 0.8);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
         }
-
         .topic-node:hover {
-            background-color: rgba(55, 65, 81, 0.9);
-            transform: scale(1.03);
+            border-color: white; transform: scale(1.05);
         }
         
-        /* --- Desktop (桌機板) 樣式 --- */
+        /* --- Desktop (桌機板) - 互動式地圖 --- */
         @media (min-width: 768px) {
-            /* 在大螢幕上，恢復互動地圖的佈局 */
             .interactive-map-container {
-                position: relative;
-                min-height: 60vh;
-                padding: 4rem 1rem;
-                display: flex; /* 恢復為 flex 以便置中 */
-                justify-content: center;
-                align-items: center;
+                position: relative; min-height: 60vh;
+                padding: 4rem 1rem; overflow-x: visible;
+                display: flex; justify-content: center; align-items: center;
             }
 
-            /* 恢復中心節點 */
             .hub-node {
-                display: flex; /* 設為 flex 讓內容置中 */
-                width: 150px;
-                height: 150px;
-                z-index: 10;
-                animation: pulse 4s ease-in-out infinite;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                padding: 1rem;
-                border-radius: 9999px;
-                background-color: rgba(31, 41, 55, 0.8);
+                display: flex; flex-direction: column; justify-content: center; align-items: center;
+                width: 150px; height: 150px; padding: 1rem; border-radius: 9999px;
+                z-index: 10; background-color: rgba(31, 41, 55, 0.8);
+                animation: pulse 4s ease-in-out infinite; transition: opacity 0.5s ease, transform 0.5s ease;
             }
-            
-            /* 節點光暈動畫 */
+            body.map-active .hub-node { opacity: 0; transform: scale(0.5); }
             @keyframes pulse {
                 0%, 100% { box-shadow: 0 0 20px 5px var(--primary-glow); }
                 50% { box-shadow: 0 0 35px 10px var(--secondary-glow); }
             }
 
-            /* 恢復探索節點的星球外觀和絕對定位 */
             .topic-node {
-                position: absolute;
-                width: 110px;
-                height: 110px;
-                border-radius: 50%;
-                font-size: 0.9rem;
-                padding: 8px;
-                display: flex; /* 讓文字在星球內置中 */
-                justify-content: center;
-                align-items: center;
+                position: absolute; width: 110px; height: 110px;
+                font-size: 0.9rem; padding: 8px; flex-shrink: 0; /* 確保大小不變 */
+                transition: transform 0.5s ease-in-out, opacity 0.5s ease;
             }
+            body.map-active .topic-node { opacity: 0.4; transform: scale(0.9); }
+            body.map-active .topic-node.is-centered { opacity: 1; transform: translate(0, 0) scale(1.4) !important; z-index: 20; }
             .topic-node:hover {
-                transform: scale(1.15) !important; /* !important 確保覆蓋手機版的 transform */
-                z-index: 20;
-                border-color: white;
+                transform: scale(1.15) !important; z-index: 20; border-color: white;
             }
-            
-            /* 使用 CSS 選擇器來定位每個星球，取代 inline style */
-            .topic-node:nth-of-type(1) { transform: translate(-150px, -150px) rotate(-45deg); }
-            .topic-node:nth-of-type(2) { transform: translate(180px, -100px) rotate(25deg); }
-            .topic-node:nth-of-type(3) { transform: translate(160px, 160px) rotate(135deg); }
-            .topic-node:nth-of-type(4) { transform: translate(-80px, 200px) rotate(220deg); }
-            .topic-node:nth-of-type(5) { transform: translate(-220px, 50px) rotate(-110deg); }
+            body.map-active .topic-node:hover {
+                opacity: 1; transform: scale(1) !important;
+            }
+            body.map-active .topic-node.is-centered:hover {
+                transform: translate(0, 0) scale(1.45) !important;
+            }
 
-            /* 恢復連結線條 */
+            /* 為每個節點設定初始位置 */
+            .topic-node[data-pos="1"] { transform: translate(-150px, -150px) rotate(-45deg); }
+            .topic-node[data-pos="2"] { transform: translate(180px, -100px) rotate(25deg); }
+            .topic-node[data-pos="3"] { transform: translate(160px, 160px) rotate(135deg); }
+            .topic-node[data-pos="4"] { transform: translate(-80px, 200px) rotate(220deg); }
+            .topic-node[data-pos="5"] { transform: translate(-220px, 50px) rotate(-110deg); }
+
             .interactive-map-container::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
+                content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
                 background-image:
                     radial-gradient(circle at center, transparent 74px, rgba(75, 85, 99, 0.5) 75px, transparent 76px),
                     radial-gradient(circle at center, transparent 149px, rgba(75, 85, 99, 0.5) 150px, transparent 151px),
                     radial-gradient(circle at center, transparent 224px, rgba(75, 85, 99, 0.5) 225px, transparent 226px);
-                z-index: 1;
-                transition: opacity 0.5s ease;
+                z-index: 1; transition: opacity 0.5s ease;
             }
         }
     </style>
@@ -184,7 +143,6 @@
 <body class="antialiased">
     <div class="particle-bg"></div>
 
-    <!-- 頁首與功能切換 -->
     <header class="container mx-auto px-6 py-6 flex justify-between items-center">
         <div class="text-lg font-bold">
             <a href="index.html">神經探索地圖</a>
@@ -196,17 +154,13 @@
         </button>
     </header>
 
-    <!-- 主內容區塊 -->
     <main>
-        <!-- 引導區塊 -->
         <section class="text-center py-12 md:py-16 px-6">
             <h1 class="text-4xl md:text-6xl font-bold gradient-text mb-4">歡迎來到你的大腦指南</h1>
-            <p class="max-w-3xl mx-auto text-lg text-gray-400">這裡沒有複雜的論文，只有為你準備的探索任務。<br>點擊下方任何一個選項，開始解鎖關於 ADHD 與藥物的知識吧！</p>
+            <p class="max-w-3xl mx-auto text-lg text-gray-400">這裡沒有複雜的論文，只有為你準備的探索任務。<br>點擊或滑動下方的星球，開始解鎖關於 ADHD 與藥物的知識吧！</p>
         </section>
 
-        <!-- 互動式探索地圖 (現在是響應式的) -->
         <div class="interactive-map-container">
-            <!-- 中心節點 (僅在桌機版顯示) -->
             <div class="hub-node">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-2 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2h8a2 2 0 002-2v-1a2 2 0 012-2h1.945M7.707 4.055a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-2.829 2.828a2 2 0 01-2.828 0l-2.828-2.828a2 2 0 010-2.828l2.828-2.829z" />
@@ -214,17 +168,14 @@
                 <span class="text-xl font-bold gradient-text">探索核心</span>
             </div>
 
-            <!-- 主題節點 (星球) -->
-            <a href="#link-to-benefits-risks-page" class="topic-node">藥物的好處 vs 壞處</a>
-            <a href="#link-to-controversies-page" class="topic-node">熱門爭議大解析</a>
-            <a href="#link-to-self-adjustment-page" class="topic-node">自行調藥的內心戲</a>
-            <a href="#link-to-toolbox-page" class="topic-node">給自己的工具箱</a>
-            <a href="#link-to-about-page" class="topic-node">關於本計畫</a>
+            <a href="#link-to-benefits-risks-page" class="topic-node" data-pos="1">藥物的好處<br>vs 壞處</a>
+            <a href="#link-to-controversies-page" class="topic-node" data-pos="2">熱門爭議<br>大解析</a>
+            <a href="#link-to-self-adjustment-page" class="topic-node" data-pos="3">自行調藥的<br>內心戲</a>
+            <a href="#link-to-toolbox-page" class="topic-node" data-pos="4">給自己的<br>工具箱</a>
+            <a href="#link-to-about-page" class="topic-node" data-pos="5">關於<br>本計畫</a>
         </div>
-        
     </main>
 
-    <!-- 頁尾 -->
     <footer class="text-center mt-16 md:mt-24 py-8 px-6 border-t border-gray-800">
         <div class="container mx-auto">
             <p class="mb-4 text-gray-400">&copy; 2025 ADHD 神經探索地圖. 本站內容基於公開研究資料整理，僅供參考，無法取代專業醫療建議。</p>
@@ -240,10 +191,38 @@
     </footer>
     
     <script>
-        // 專注模式切換
-        const focusModeToggle = document.getElementById('focus-mode-toggle');
-        focusModeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('focus-mode');
+        document.addEventListener('DOMContentLoaded', () => {
+            // 專注模式切換
+            const focusModeToggle = document.getElementById('focus-mode-toggle');
+            focusModeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('focus-mode');
+            });
+
+            // 桌面版地圖互動邏輯
+            if (window.innerWidth >= 768) {
+                const nodes = document.querySelectorAll('.topic-node');
+                const body = document.body;
+
+                nodes.forEach(node => {
+                    node.addEventListener('click', (e) => {
+                        e.preventDefault(); // 阻止連結跳轉
+
+                        const isCentered = node.classList.contains('is-centered');
+                        
+                        // 移除所有節點的 is-centered 狀態
+                        nodes.forEach(n => n.classList.remove('is-centered'));
+                        
+                        if (isCentered) {
+                            // 如果點擊的節點已經在中間，則取消地圖的 active 狀態
+                            body.classList.remove('map-active');
+                        } else {
+                            // 如果是新點擊，則設定地圖為 active 並將該節點設為 is-centered
+                            body.classList.add('map-active');
+                            node.classList.add('is-centered');
+                        }
+                    });
+                });
+            }
         });
     </script>
 </body>
