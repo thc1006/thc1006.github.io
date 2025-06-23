@@ -4,18 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>熱門爭議大解析 - ADHD 衛教指南</title>
-    
+
+    <!-- Puter.js：免 API Key 的 Gemini/LLM 代理 -->
+    <script src="https://js.puter.com/v2/"></script>
+
     <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- 引入 Google Fonts - Noto Sans TC & Lexend -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
-    
+
     <!-- 引入 Alpine.js 用於互動效果 -->
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    
+
     <!-- 自訂樣式與動畫 -->
     <style>
         :root {
@@ -33,36 +36,28 @@
             color: var(--text-color);
             overflow-x: hidden;
         }
-        
         .particle-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1; background-color: var(--bg-color);
             background-image: radial-gradient(circle at 1px 1px, #374151 1px, transparent 0);
             background-size: 25px 25px;
         }
-
         .gradient-text {
             background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
-        
         .content-card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
         }
-        
         [x-cloak] { display: none !important; }
-
-        /* AI 生成內容的樣式 */
         .ai-response {
             background-color: var(--ai-response-bg);
             border-left: 4px solid #3b82f6;
         }
         .ai-response p { margin-bottom: 0.75rem; }
         .ai-response strong { color: #93c5fd; }
-        
-        /* 簡易 로딩 스피너 */
         .loader {
             border: 4px solid #f3f3f3; border-top: 4px solid #3b82f6;
             border-radius: 50%; width: 24px; height: 24px;
@@ -71,7 +66,7 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 
-    <!-- 將 AI 輔助函數的腳本移到 head，確保在 Alpine.js 初始化前被定義 -->
+    <!-- AI 輔助函數：使用 Puter.js 免金鑰調用 Gemini 2.0 Flash -->
     <script>
         function aiHelpers() {
             return {
@@ -80,8 +75,8 @@
                     state.aiResponse = '';
                     let prompt = '';
 
-                    // 根據類型建立不同的提示
-                    switch(type) {
+                    // 建立提示詞
+                    switch (type) {
                         case 'summarize':
                             prompt = `請你扮演一位親切的衛教專家，用條列式、口語化的方式，為ADHD患者摘要以下關於藥物爭議的重點，讓內容更容易理解。請直接提供摘要內容，不要有開頭問候語。原文如下：\n\n${context}`;
                             break;
@@ -89,7 +84,7 @@
                             prompt = `請你扮演一位情境劇作家。一位ADHD患者的家人或朋友很擔心他吃的藥會上癮。請生成一段這位患者可以參考的對話範例，內容需要有同理心、能安撫對方情緒，並用簡單的方式解釋科學證據。請參考以下資訊來組織你的對話內容，並以「你」和「家人/朋友」的對話形式呈現：\n\n${context}`;
                             break;
                         case 'dialogue_creativity':
-                             prompt = `請你扮演一位心理諮商師。一位有創作者身份的ADHD患者，正在為「藥物是否會扼殺我的創造力」而感到焦慮。請生成一段他可以參考的「內心自我對話」範例，幫助他用更平衡的視角看待藥物的「穩定性」與可能的「靈活性」影響，權衡利弊。請參考以下資訊來組織你的對話內容：\n\n${context}`;
+                            prompt = `請你扮演一位心理諮商師。一位有創作者身份的ADHD患者，正在為「藥物是否會扼殺我的創造力」而感到焦慮。請生成一段他可以參考的「內心自我對話」範例，幫助他用更平衡的視角看待藥物的「穩定性」與可能的「靈活性」影響，權衡利弊。請參考以下資訊來組織你的對話內容：\n\n${context}`;
                             break;
                         case 'dialogue_personality':
                             prompt = `請你扮演一位關係諮商師。一位ADHD患者感覺服藥後個性有些改變，變得比較「平」，正在和他的伴侶/摯友討論這件事。請生成一段有同理心、能開啟有效溝通的對話範例，幫助他表達感受並尋求對方的理解與支持。請參考以下資訊來組織你的對話內容：\n\n${context}`;
@@ -100,42 +95,25 @@
                         state.isLoading = false;
                         return;
                     }
-                    
-                    try {
-                        let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
-                        const payload = { contents: chatHistory };
-                        const apiKey = ""; // API 金鑰留空
-                        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
-                        const response = await fetch(apiUrl, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(payload)
+                    try {
+                        // 透過 Puter.js 呼叫免金鑰模型
+                        const resp = await puter.ai.chat(prompt, {
+                            model: 'google/gemini-2.0-flash-lite-001',
+                            stream: false
                         });
 
-                        if (!response.ok) {
-                            throw new Error(`API 請求失敗，狀態碼：${response.status}`);
-                        }
-
-                        const result = await response.json();
-                        
-                        if (result.candidates && result.candidates.length > 0 &&
-                            result.candidates[0].content && result.candidates[0].content.parts &&
-                            result.candidates[0].content.parts.length > 0) {
-                            // 將純文字換行符號轉換為 HTML <br> 標籤
-                            const rawText = result.candidates[0].content.parts[0].text;
-                            state.aiResponse = rawText.replace(/\n/g, '<br>');
-                        } else {
-                           throw new Error("從 API 收到的回應格式不正確。");
-                        }
+                        // 將換行轉為 <br>
+                        const rawText = resp?.message?.content || '';
+                        state.aiResponse = rawText.replace(/\n/g, '<br>');
                     } catch (error) {
-                        console.error("呼叫 Gemini API 時發生錯誤:", error);
+                        console.error('Puter / Gemini 服務調用錯誤:', error);
                         state.aiResponse = `<p class="text-red-400">哎呀，AI 好像有點累了，請稍後再試一次。錯誤訊息：${error.message}</p>`;
                     } finally {
                         state.isLoading = false;
                     }
                 }
-            }
+            };
         }
     </script>
 </head>
