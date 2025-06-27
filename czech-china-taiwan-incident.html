@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>互動式報告：布拉格跟監事件分析</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Neutral Harmony -->
+    <!-- Application Structure Plan: The application is structured as a single-page narrative dashboard with a top navigation bar for quick access to thematic sections. The flow is designed for intuitive exploration: 1. Hero section for immediate context. 2. An interactive timeline ('事件總覽') to establish the sequence of events. 3. A core '多方角力' section using cards and a comparative chart to analyze the key players' responses (Czech, Taiwan, China). 4. A '法律與規範' section with interactive cards to explain the legal violations. 5. A '地緣政治漣漪' section with a conceptual map to visualize the geopolitical impact. 6. A '未來應對' section with accordions for policy recommendations. This thematic, non-linear structure is chosen over a direct report-to-page conversion because it transforms a dense text document into an explorable experience, allowing users to digest complex information in manageable, interconnected chunks and understand the incident from multiple angles (chronological, political, legal, and strategic). -->
+    <!-- Visualization & Content Choices: 1. Incident Timeline (HTML/CSS): Goal=Inform sequence. Method=Interactive horizontal/vertical timeline. Interaction=Click to reveal details. Justification=More engaging than text for chronological data. 2. Response Comparison Chart (Chart.js/Canvas): Goal=Compare reactions. Method=Bar chart visualizing 'response intensity'. Interaction=Hover/click to see quotes. Justification=Quickly highlights the disparity in reactions, a key report finding. 3. Vienna Convention Explorer (HTML/CSS): Goal=Organize/Inform legal breach. Method=Interactive 'flipping' cards. Interaction=Click to reveal legal text and analysis. Justification=Makes dense legal information interactive and digestible. 4. Geopolitical Ripples Map (HTML/CSS): Goal=Show relationships/impact. Method=Conceptual diagram with nodes and connecting lines. Interaction=Hover for summary tooltips. Justification=Visually represents complex international relations shifts more effectively than text. All textual content is summarized from the report and placed within these interactive contexts to provide narrative support. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #F8F7F4;
+            color: #3D3D3D;
+        }
+        .nav-link {
+            transition: color 0.3s, border-color 0.3s;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #A0522D;
+            border-bottom-color: #A0522D;
+        }
+        .card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .timeline-item .timeline-content {
+            display: none;
+            transition: all 0.5s ease-in-out;
+        }
+        .timeline-item.active .timeline-content {
+            display: block;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 500px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-[#F8F7F4]">
+
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-4">
+            <ul class="flex items-center justify-center space-x-4 sm:space-x-8 text-sm sm:text-base font-medium">
+                <li><a href="#overview" class="nav-link py-4 inline-block border-b-2 border-transparent">事件總覽</a></li>
+                <li><a href="#actors" class="nav-link py-4 inline-block border-b-2 border-transparent">多方角力</a></li>
+                <li><a href="#law" class="nav-link py-4 inline-block border-b-2 border-transparent">法律與規範</a></li>
+                <li><a href="#impact" class="nav-link py-4 inline-block border-b-2 border-transparent">地緣政治漣漪</a></li>
+                <li><a href="#future" class="nav-link py-4 inline-block border-b-2 border-transparent">未來應對</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-8">
+
+        <section id="hero" class="text-center my-12 sm:my-20">
+            <h1 class="text-4xl md:text-6xl font-bold text-[#A0522D] tracking-wider">布拉格陰影</h1>
+            <p class="mt-4 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">一場針對台灣副總統的外交脅迫事件，如何揭示中國在歐洲行動的升級與地緣政治的暗流湧動。</p>
+        </section>
+
+        <section id="overview" class="my-16 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-4">事件總覽</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">此互動時間軸重建了自2024年3月事件發生，至2025年6月官方證實的關鍵過程。點擊各個節點以展開詳細資訊，了解從代表團抵達到事件被揭露的完整序列。</p>
+            <div class="relative w-full md:w-11/12 lg:w-4/5 mx-auto">
+                <div class="absolute left-1/2 -translate-x-1/2 md:left-4 h-full w-0.5 bg-gray-300"></div>
+                <div class="space-y-12">
+                    <div class="timeline-item relative">
+                        <div class="timeline-marker absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 md:left-4 w-4 h-4 rounded-full bg-gray-400 border-4 border-white cursor-pointer"></div>
+                        <div class="w-full md:ml-12 md:pl-12">
+                            <div class="p-6 bg-white rounded-lg shadow-md card cursor-pointer">
+                                <h3 class="font-bold text-lg text-[#A0522D]">2024年3月17-19日：訪問與跟監</h3>
+                                <div class="timeline-content mt-2 text-gray-700">
+                                    <p>時任台灣副總統當選人蕭美琴應捷克智庫「解析中國」邀請訪問布拉格。自3月18日其代表團抵達機場起，即遭一輛可疑車輛跟監，駕駛者後被證實為中國駐布拉格大使館武官處的外交官。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item relative">
+                        <div class="timeline-marker absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 md:left-4 w-4 h-4 rounded-full bg-gray-400 border-4 border-white cursor-pointer"></div>
+                        <div class="w-full md:ml-12 md:pl-12">
+                             <div class="p-6 bg-white rounded-lg shadow-md card cursor-pointer">
+                                <h3 class="font-bold text-lg text-[#A0522D]">事件核心：危險駕駛</h3>
+                                <div class="timeline-content mt-2 text-gray-700">
+                                    <p>在從機場前往市區途中，跟監車輛為緊隨蕭美琴代表團車隊，公然闖越紅燈，險些與其他車輛碰撞，造成嚴重交通危險。此舉驚動捷克警察保護局，並當場攔截該車輛，確認了駕駛者的外交官身份。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item relative">
+                        <div class="timeline-marker absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 md:left-4 w-4 h-4 rounded-full bg-gray-400 border-4 border-white cursor-pointer"></div>
+                        <div class="w-full md:ml-12 md:pl-12">
+                             <div class="p-6 bg-white rounded-lg shadow-md card cursor-pointer">
+                                <h3 class="font-bold text-lg text-[#A0522D]">2024年4月初：媒體披露與初步反應</h3>
+                                <div class="timeline-content mt-2 text-gray-700">
+                                    <p>布拉格新聞網站《Seznam Zprávy》率先報導此事件。台灣外交部隨即指示駐捷克代表處查證。捷克外交部召見中國大使馮飈，並對其解釋表示不滿，稱「不認為此事已了結」。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item relative">
+                        <div class="timeline-marker absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 md:left-4 w-4 h-4 rounded-full bg-gray-400 border-4 border-white cursor-pointer"></div>
+                        <div class="w-full md:ml-12 md:pl-12">
+                             <div class="p-6 bg-white rounded-lg shadow-md card cursor-pointer">
+                                <h3 class="font-bold text-lg text-[#A0522D]">2025年6月底：官方證實與情報揭露</h3>
+                                <div class="timeline-content mt-2 text-gray-700">
+                                    <p>事件發生超過一年後，捷克媒體於6月底引述軍事情報局（Vojenské zpravodajství）的官方報告，正式證實此事件為中國情報部門策劃的「示威性事件」，其中包含製造「衝撞」事故的「動能行動」預案。此一權威證實將事件重新帶回公眾視野，並將其定性為「史無前例」的挑釁，且公然違反《維也納外交關係公約》。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="actors" class="my-16 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-4">多方角力</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">此事件引發了台灣、捷克與中國三方的不同反應，呈現出一場複雜的外交與情報博弈。本區透過互動圖表與卡片，比較各方立場的強弱與策略的差異，揭示其背後的戰略考量。</p>
+            
+            <div class="chart-container mb-12">
+                <canvas id="responseChart"></canvas>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-md card">
+                    <h3 class="font-bold text-xl mb-3 text-[#A0522D]">捷克：情報與外交的二元性</h3>
+                    <p class="text-gray-700"><strong>軍事情報局：</strong>直白揭露，將事件定性為中國策劃的「史無前例」的挑釁，並證實有製造「衝撞」的「動能行動」預案。</p>
+                    <p class="text-gray-700 mt-2"><strong>外交部：</strong>立場謹慎，召見中國大使表達不滿，但未採取驅逐等公開報復行動，保留外交斡旋空間。</p>
+                    <p class="text-gray-700 mt-2"><strong>國會：</strong>反應強烈，參議院議長稱之為「極不恰當」，更有參議員直指其為「流氓行徑」，呼籲驅逐涉事外交官。</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md card">
+                    <h3 class="font-bold text-xl mb-3 text-[#A0522D]">台灣：從掌握到譴責</h3>
+                    <p class="text-gray-700"><strong>事前掌握：</strong>國安單位透過與捷克的情報共享，全程掌握相關情資與威脅，確保了代表團安全。</p>
+                    <p class="text-gray-700 mt-2"><strong>官方譴責：</strong>在捷克官方證實後，總統府、陸委會、執政黨等部門對中國的「不法行為」與「不文明行徑」發出最強烈譴責，並要求北京公開道歉。</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md card md:col-span-2 lg:col-span-1">
+                    <h3 class="font-bold text-xl mb-3 text-[#A0522D]">中國：戰略性沉默</h3>
+                    <p class="text-gray-700"><strong>全面沉默：</strong>從事件曝光到官方證實，中國駐布拉格大使館與北京外交部始終拒絕回應媒體詢問。</p>
+                    <p class="text-gray-700 mt-2"><strong>策略分析：</strong>這種沉默是一種精心計算的策略，意圖剝奪指控的合法性、避免在辯解中證實細節，並將採取升級行動的責任推給對方。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="law" class="my-16 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-4">法律與規範</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">中方外交官的行為不僅是政治挑釁，更嚴重踐踏了國際法基本準則。點擊下方卡片，了解其行為如何公然違背《維也納外交關係公約》的核心條款，以及這種對外交豁免權的「武器化」行為所帶來的衝擊。</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="accordion-item bg-white p-6 rounded-lg shadow-md card cursor-pointer">
+                    <h3 class="font-bold text-xl text-[#A0522D]">違反第41條：尊重地主國法律與不干涉內政</h3>
+                    <div class="accordion-content mt-2 text-gray-700">
+                        <p class="font-semibold">條文要旨：</p>
+                        <p class="mb-2">所有享有外交特權與豁免者，有義務「尊重接受國之法律規章」，且「不干涉該國內政」。</p>
+                        <p class="font-semibold">違規事實：</p>
+                        <p>1. <strong>違反法律規章：</strong>闖紅燈等危險駕駛行為，直接違反捷克交通法規。<br>2. <strong>干涉內政：</strong>對他國政要進行威脅性跟監、情蒐及策劃干擾，已構成對捷克內部事務的嚴重干涉。</p>
+                    </div>
+                </div>
+                <div class="accordion-item bg-white p-6 rounded-lg shadow-md card cursor-pointer">
+                    <h3 class="font-bold text-xl text-[#A0522D]">超越第3條：濫用外交使節職務</h3>
+                    <div class="accordion-content mt-2 text-gray-700">
+                        <p class="font-semibold">條文要旨：</p>
+                        <p class="mb-2">界定外交使團的合法職能，包含代表、保護、交涉、以一切「合法手段」調查情況等。</p>
+                        <p class="font-semibold">違規事實：</p>
+                        <p>對他國政要策劃具人身威脅的「動能行動」，遠遠超出任何合法的外交職能範疇，屬於非法的情報與脅迫活動。這是對外交豁免權的「武器化」，嚴重侵蝕了公約精神。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="impact" class="my-16 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-4">地緣政治漣漪</h2>
+             <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">此事件的影響遠超單純的外交摩擦，它像一顆投入水中的石子，激起了層層漣漪，深刻影響了捷克、台灣、中國三邊關係，並對整個歐洲的對華認知發出了警示。下方示意圖呈現了這些關係的變化。</p>
+            <div class="relative p-8 bg-white rounded-lg shadow-lg max-w-4xl mx-auto">
+                <div class="flex flex-col md:flex-row justify-around items-center space-y-8 md:space-y-0">
+                    <div class="text-center p-4 border-2 border-blue-500 rounded-lg bg-blue-50">
+                        <h3 class="text-2xl font-bold text-blue-800">台灣</h3>
+                    </div>
+                    <div class="text-center p-4 border-2 border-green-500 rounded-lg bg-green-50">
+                        <h3 class="text-2xl font-bold text-green-800">捷克共和國</h3>
+                    </div>
+                     <div class="text-center p-4 border-2 border-red-500 rounded-lg bg-red-50">
+                        <h3 class="text-2xl font-bold text-red-800">中國</h3>
+                    </div>
+                </div>
+
+                <div class="absolute top-0 left-0 w-full h-full flex flex-col md:flex-row justify-around items-center pointer-events-none">
+                     <div class="w-full h-full relative">
+                        <div class="absolute top-1/2 left-1/4 w-1/4 h-0.5 bg-green-500 transform -translate-y-1/2"></div>
+                        <div class="absolute top-1/2 left-1/4 text-green-700 transform -translate-x-1/2 -translate-y-6 text-sm font-semibold">▲ 互信強化</div>
+                        <div class="absolute top-1/2 right-1/4 w-1/4 h-0.5 bg-red-500 transform -translate-y-1/2"></div>
+                        <div class="absolute top-1/2 right-1/4 text-red-700 transform translate-x-1/2 -translate-y-6 text-sm font-semibold">▼ 信任崩潰</div>
+                        <div class="absolute top-1/2 left-1/2 w-0.5 h-1/4 bg-yellow-500 transform -translate-x-1/2 -translate-y-full"></div>
+                        <div class="absolute top-1/4 left-1/2 text-yellow-700 transform -translate-x-1/2 -translate-y-1/2 text-sm font-semibold">歐洲警示</div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+                    <div class="p-4 rounded-md bg-green-100 text-green-800">
+                        <h4 class="font-bold">捷克-台灣關係</h4>
+                        <p>共同應對威脅增進了雙方互信，在共享價值外，建立了更堅實的安全夥伴情誼。</p>
+                    </div>
+                    <div class="p-4 rounded-md bg-red-100 text-red-800">
+                        <h4 class="font-bold">捷克-中國關係</h4>
+                        <p>本已緊張的關係雪上加霜，政治互信降至冰點，將鞏固捷克對華「去風險化」的共識。</p>
+                    </div>
+                    <div class="p-4 rounded-md bg-yellow-100 text-yellow-800">
+                        <h4 class="font-bold">對歐洲的警示</h4>
+                        <p>事件證明中國威脅從抽象層級轉為具體的物理威脅，強化了「制度性對手」論述，促使歐洲各國重新評估安全防範。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="future" class="my-16 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-4">未來應對</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">鑑於此次事件揭示的嚴峻挑戰，相關各方應採取更積極的應對策略。本區彙總了針對台灣與歐洲民主國家的政策建議，旨在建立更具韌性的反制脅迫機制。點擊標題以展開建議內容。</p>
+            <div class="max-w-3xl mx-auto space-y-4">
+                <div class="accordion-item bg-white rounded-lg shadow-md cursor-pointer overflow-hidden">
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl text-[#A0522D]">對台灣：強化維安與國際合作</h3>
+                    </div>
+                    <div class="accordion-content px-6 pb-6 text-gray-700">
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>深化情報共享：</strong>與地主國建立更緊密的即時情報共享機制，進行聯合風險評估。</li>
+                            <li><strong>標準化應對程序：</strong>建立應對海外灰色地帶脅迫事件的標準作業程序（SOP）。</li>
+                            <li><strong>善用公共外交：</strong>策略性地利用事件向國際揭示中國脅迫本質，爭取輿論支持。</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="accordion-item bg-white rounded-lg shadow-md cursor-pointer overflow-hidden">
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl text-[#A0522D]">對捷克與歐洲：建立聯合反制機制</h3>
+                    </div>
+                    <div class="accordion-content px-6 pb-6 text-gray-700">
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>制定共同應對劇本：</strong>歐盟或北約成員國應合作制定反制外國外交人員非法脅迫的共同劇本，形成集體威懾力。</li>
+                            <li><strong>加強反情報資源：</strong>增加資源投入，防範利用外交豁免權從事的非法活動。</li>
+                            <li><strong>堅持公開歸因：</strong>掌握確鑿證據後，應聯合公開歸因於幕後國家，提高其政治與聲譽成本。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="text-center p-8 border-t border-gray-200 mt-16">
+        <p class="text-sm text-gray-500">此互動報告根據公開資訊與分析報告製作，旨在促進公眾對國際事務的理解。</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Smooth scrolling for nav links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // Active nav link highlighting on scroll
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('nav a');
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 65) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+
+            // Timeline interaction
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            timelineItems.forEach(item => {
+                const header = item.querySelector('.card');
+                const marker = item.querySelector('.timeline-marker');
+                header.addEventListener('click', () => {
+                    const wasActive = item.classList.contains('active');
+                    timelineItems.forEach(i => {
+                        i.classList.remove('active');
+                        i.querySelector('.timeline-marker').style.backgroundColor = '#9CA3AF'; // gray-400
+                    });
+                    if (!wasActive) {
+                       item.classList.add('active');
+                       marker.style.backgroundColor = '#A0522D';
+                    }
+                });
+            });
+            // Auto-open first timeline item
+            if (timelineItems.length > 0) {
+                timelineItems[0].classList.add('active');
+                timelineItems[0].querySelector('.timeline-marker').style.backgroundColor = '#A0522D';
+            }
+
+
+            // Accordion interaction
+            const accordionItems = document.querySelectorAll('.accordion-item');
+            accordionItems.forEach(item => {
+                const header = item.querySelector('h3');
+                const content = item.querySelector('.accordion-content');
+                item.addEventListener('click', () => {
+                    const isOpen = content.style.maxHeight;
+                    if (isOpen && isOpen !== '0px') {
+                        content.style.maxHeight = '0px';
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + 'px';
+                    }
+                });
+            });
+
+
+            // Chart.js implementation
+            const ctx = document.getElementById('responseChart').getContext('2d');
+            const responseData = {
+                labels: ['中國', '捷克外交部', '台灣', '捷克國會', '捷克軍情局'],
+                datasets: [{
+                    label: '反應強度',
+                    data: [1, 2, 4, 4.5, 5],
+                    backgroundColor: [
+                        'rgba(239, 68, 68, 0.6)', // red
+                        'rgba(251, 191, 36, 0.6)', // amber
+                        'rgba(59, 130, 246, 0.6)', // blue
+                        'rgba(168, 85, 247, 0.6)', // purple
+                        'rgba(168, 85, 247, 0.8)', // purple-darker
+                    ],
+                    borderColor: [
+                        'rgba(239, 68, 68, 1)',
+                        'rgba(251, 191, 36, 1)',
+                        'rgba(59, 130, 246, 1)',
+                        'rgba(168, 85, 247, 1)',
+                        'rgba(168, 85, 247, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            const tooltips = [
+                '戰略性沉默：拒絕回應，意圖剝奪指控合法性。',
+                '謹慎應對：召見大使但未公開報復，保留外交空間。',
+                '強烈譴責：官方多部門公開譴責並要求道歉。',
+                '強硬呼籲：形容為「流氓行徑」，主張驅逐外交官。',
+                '直白揭露：定性為「史無前例」的挑釁，並證實「動能行動」預案。'
+            ];
+
+            const responseChart = new Chart(ctx, {
+                type: 'bar',
+                data: responseData,
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 5,
+                            title: {
+                                display: true,
+                                text: '反應強度 (弱 → 強)',
+                                font: {
+                                    size: 14,
+                                    family: "'Noto Sans TC', sans-serif"
+                                }
+                            }
+                        },
+                        y: {
+                           ticks: {
+                               font: {
+                                   size: 14,
+                                   family: "'Noto Sans TC', sans-serif"
+                               }
+                           }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += tooltips[context.dataIndex];
+                                    return label.match(/.{1,20}/g); // Wrap text
+                                }
+                            },
+                             bodyFont: {
+                                size: 14,
+                                family: "'Noto Sans TC', sans-serif"
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
