@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>避錯寶 Bitrobo：AI 決策流程視覺化</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+        }
+        .stage-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            border: 1px solid #e5e7eb;
+        }
+        .arrow-down {
+            width: 3rem;
+            height: 3rem;
+            margin: 2rem auto;
+            color: #9ca3af;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
+        
+        <!-- 頁首標題 -->
+        <header class="text-center mb-12">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">避錯寶 Bitrobo</h1>
+            <p class="mt-4 text-lg text-gray-600">從數據到決策的智能路徑</p>
+            <p class="mt-2 text-md text-gray-500">我們的核心價值，是將複雜的數據輸入，透過獨家 AI 引擎，轉化為商家能一目了然、立即採用的進貨決策。</p>
+        </header>
+
+        <!-- 流程容器 -->
+        <div class="space-y-8">
+
+            <!-- 階段一：數據輸入 -->
+            <section id="stage-1">
+                <h2 class="text-2xl font-bold text-center mb-6 text-blue-600">【階段一：多維度數據輸入】</h2>
+                <p class="text-center text-gray-500 mb-6 italic">一切決策的基礎，來自於整合商家內部與外部市場的數據。</p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- 商家內部數據 -->
+                    <div class="stage-card">
+                        <h3 class="font-bold text-xl mb-4 text-center text-gray-700">商家內部數據 (Internal Data)</h3>
+                        <p class="text-center text-sm text-gray-500 mb-4">透過 API 或 Excel 匯入</p>
+                        <ul class="space-y-3 text-gray-600">
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-blue-500 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                <span>歷史銷售紀錄</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-blue-500 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 8v-3c0-1.1.9-2 2-2z"></path></svg>
+                                <span>商品資訊 (SKU、價格、分類)</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-blue-500 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4"></path></svg>
+                                <span>現有庫存數量</span>
+                            </li>
+                             <li class="flex items-start">
+                                <svg class="w-5 h-5 text-blue-500 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                                <span>顧客回饋與評價</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- 外部市場數據 -->
+                    <div class="stage-card">
+                        <h3 class="font-bold text-xl mb-4 text-center text-gray-700">外部市場數據 (External Data)</h3>
+                        <p class="text-center text-sm text-gray-500 mb-4">透過爬蟲與 API 整合</p>
+                        <ul class="space-y-3 text-gray-600">
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-blue-500 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                <span>社群聲量 (Dcard, Instagram)</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-blue-500 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                                <span>搜尋熱度趨勢 (Google Trends)</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-blue-500 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                                <span>競品討論度與定價區間</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 箭頭 -->
+            <div class="arrow-down">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-full h-full">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
+                </svg>
+            </div>
+
+            <!-- 階段二：AI 預測引擎 -->
+            <section id="stage-2">
+                <h2 class="text-2xl font-bold text-center mb-6 text-blue-600">【階段二：AI 預測引擎】</h2>
+                <p class="text-center text-gray-500 mb-6 italic">這是「避錯寶」的核心技術護城河。我們不使用通用模型，而是採用專為預測銷售而設計的機器學習演算法。</p>
+                <div class="stage-card text-center max-w-3xl mx-auto border-2 border-blue-500 bg-blue-50">
+                    <h3 class="font-bold text-xl mb-2 text-blue-800">預測模型：XGBoost Regressor + 分位數迴歸</h3>
+                    <p class="text-gray-700">此模型整合內、外部所有數據特徵，並非只預測一個「平均值」，而是精準預測出未來 2-3 週銷量的 <strong class="text-blue-600">「機率區間」</strong>。</p>
+                    <p class="mt-2 text-gray-700">這就是我們能提供「建議數量區間」與「風險提醒」的關鍵。</p>
+                </div>
+            </section>
+
+            <!-- 箭頭 -->
+            <div class="arrow-down">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-full h-full">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
+                </svg>
+            </div>
+
+            <!-- 階段三：決策建議報告 -->
+            <section id="stage-3">
+                <h2 class="text-2xl font-bold text-center mb-6 text-blue-600">【階段三：生成決策建議報告】</h2>
+                <p class="text-center text-gray-500 mb-6 italic">我們將複雜的 AI 運算結果，轉化為一份任何人都能看懂、立即使用的決策報告。</p>
+                
+                <div class="bg-white rounded-lg p-6 md:p-8 font-sans max-w-2xl mx-auto shadow-lg border border-gray-200">
+                    <h4 class="text-center text-xl font-bold text-gray-800">避錯寶 Bitrobo 進貨決策建議</h4>
+                    <hr class="my-4">
+                    
+                    <div class="space-y-4">
+                        <p>📦 <strong>商品資訊</strong>：XXX 球鞋（米白、限量、品牌名）</p>
+                        <div>
+                            <p class="font-semibold">🔥 市場熱度</p>
+                            <ul class="list-disc list-inside text-gray-600">
+                                <li>綜合趨勢指數：<span class="font-bold text-lg text-red-500">89/100</span>（屬於高熱度商品）</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <p class="font-semibold">📉 類似商品銷售週期</p>
+                            <ul class="list-disc list-inside text-gray-600">
+                                <li>平均售罄時間：約 <strong>11 天</strong></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <p class="font-semibold">📊 您的過去銷售狀況</p>
+                            <ul class="list-disc list-inside text-gray-600">
+                                <li>過去動銷天數區間：<strong>8～15 天</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <hr class="my-6">
+
+                    <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-md">
+                        <p class="font-bold text-green-800">✅ 建議進貨量區間</p>
+                        <h2 class="text-center my-2 text-green-600 font-bold text-4xl md:text-5xl">8 – 12 雙</h2>
+                    </div>
+
+                    <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-md mt-4">
+                        <p class="font-bold text-yellow-800">⚠️ 進貨風險提醒</p>
+                        <ul class="list-disc list-inside text-yellow-700 mt-2">
+                            <li>若高於 <strong>12</strong> 雙：可能<strong class="font-semibold">囤貨風險上升</strong>（預估動銷天數將超過 25 天）。</li>
+                            <li>若低於 <strong>8</strong> 雙：可能<strong class="font-semibold">錯失銷售機會</strong>（缺貨風險顯著增加）。</li>
+                        </ul>
+                    </div>
+                    
+                    <p class="text-right text-xs text-gray-400 mt-6">🔗 <strong>資料來源</strong>：Bitrobo 系統整合（Google Trends、平台銷售數據、類似商品分析）</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+</body>
+</html>
