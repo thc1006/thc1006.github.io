@@ -19,20 +19,14 @@
             font-family: 'Poppins', 'Noto Sans TC', sans-serif;
             background-color: var(--background);
             margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            padding: 0;
+            overflow: hidden; /* 確保不會有滾動條 */
         }
 
         .presentation-container {
-            width: 100%;
-            max-width: 1200px;
-            aspect-ratio: 16 / 9;
+            width: 100vw;
+            height: 100vh;
             background: var(--background);
-            border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
             position: relative;
             overflow: hidden;
             display: flex;
