@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>避錯寶 AI 解決方案 Pitch Deck (修正版)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-teal: #00C2C8;
+            --accent-yellow: #F4D019;
+            --title-indigo: #1A1A4F;
+            --kpi-green: #234E38;
+            --light-gray-bg: #E9ECEF;
+            --text-gray: #6C757D;
+            --white: #FFFFFF;
+            --black: #000000;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #333;
+            margin: 0;
+            padding: 2rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: var(--light-gray-bg);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 15px;
+            right: 25px;
+            font-size: 12pt;
+            font-weight: 700;
+            color: var(--text-gray);
+        }
+
+        /* Slide 1: Solution Overview */
+        .slide-1 {
+            display: flex;
+        }
+        .slide-1 .left-pane {
+            width: 33.33%;
+            background-color: var(--primary-teal);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+        }
+        .slide-1 .right-pane {
+            width: 66.67%;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .slide-title {
+            font-size: 58pt;
+            font-weight: 900;
+            color: var(--title-indigo);
+            margin: 0 0 30px 0;
+            line-height: 1.25;
+        }
+        .slide-1 .subtitle {
+            font-size: 26pt;
+            color: var(--title-indigo);
+            margin: 0 0 30px 0;
+            line-height: 1.5;
+        }
+        .slide-1 .kpi-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .kpi-card {
+            background-color: var(--light-gray-bg);
+            border: 4px solid var(--kpi-green);
+            border-radius: 32px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            flex-grow: 1;
+        }
+        .kpi-label {
+            font-size: 22pt;
+            font-weight: 700;
+            color: var(--kpi-green);
+            margin-bottom: 8px;
+        }
+        .kpi-number {
+            font-size: 48pt;
+            font-weight: 900;
+            color: var(--kpi-green);
+            line-height: 1;
+        }
+        .capsule-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .capsule-tag {
+            padding: 10px 24px;
+            border-radius: 32px;
+            font-size: 22pt;
+            font-weight: 700;
+        }
+        .capsule-tag.teal {
+            background-color: var(--primary-teal);
+            color: var(--accent-yellow);
+        }
+        .capsule-tag.yellow {
+            background-color: var(--accent-yellow);
+            color: var(--title-indigo);
+        }
+        .robot-illustration {
+            width: 100%;
+            max-width: 300px;
+        }
+
+        /* Slide 2: How it Works */
+        .slide-2 {
+            display: flex;
+            flex-direction: column;
+        }
+        .slide-2 .top-section {
+            padding: 60px 60px 30px 60px;
+        }
+        .slide-2 .bottom-section {
+            flex-grow: 1;
+            background-color: var(--primary-teal);
+            padding: 30px 60px 60px 60px;
+            display: flex;
+            flex-direction: column;
+        }
+        .workflow-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch; /* Changed to stretch */
+            gap: 30px;
+            flex-grow: 1;
+            position: relative;
+        }
+        .workflow-step {
+            background-color: var(--white);
+            border-radius: 32px;
+            padding: 20px;
+            width: 31%; /* Adjusted width */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        .workflow-icon {
+            width: 70px;
+            height: 70px;
+            margin-bottom: 15px;
+            flex-shrink: 0;
+        }
+        .workflow-title {
+            font-size: 26pt;
+            font-weight: 900;
+            color: var(--title-indigo);
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+        .workflow-description {
+            font-size: 20pt;
+            color: var(--text-gray);
+            line-height: 1.4;
+            flex-grow: 1;
+        }
+        .workflow-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            color: var(--accent-yellow);
+        }
+        .arrow-1 { left: 32%; }
+        .arrow-2 { right: 32%; }
+        
+        /* Slide 3: Appendix */
+        .slide-3 {
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+        }
+        .slide-3 .tech-grid {
+            display: flex;
+            gap: 30px;
+            flex-grow: 1;
+            margin-top: 20px;
+        }
+        .tech-column {
+            width: 33.33%;
+            display: flex;
+        }
+        .tech-card {
+            background-color: var(--white);
+            border-radius: 32px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        .tech-card-title {
+            font-size: 26pt;
+            font-weight: 900;
+            color: var(--title-indigo);
+            margin: 0 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--primary-teal);
+        }
+        .tech-card-body {
+            font-size: 19pt;
+            color: var(--text-gray);
+            line-height: 1.55;
+            flex-grow: 1;
+        }
+        .tech-card-body strong {
+            color: var(--kpi-green);
+            font-weight: 700;
+        }
+        .tech-card-body code {
+            background-color: #d1e7dd;
+            color: var(--kpi-green);
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Slide 1: Solution Overview -->
+    <div class="slide-container slide-1">
+        <div class="left-pane">
+            <svg class="robot-illustration" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <!-- 避錯寶機器人 - 拿著放大鏡分析圖表 -->
+                <g stroke-width="3" stroke="#1A1A4F" fill="none">
+                    <rect x="65" y="30" width="70" height="50" rx="15" fill="#FFFFFF"/>
+                    <circle cx="100" cy="20" r="10" fill="#F4D019"/>
+                    <line x1="100" y1="20" x2="100" y2="30"/>
+                    <circle cx="85" cy="55" r="8" fill="#00C2C8"/>
+                    <circle cx="115" cy="55" r="8" fill="#00C2C8"/>
+                    <rect x="50" y="80" width="100" height="80" rx="20" fill="#00C2C8"/>
+                    <g transform="rotate(-30, 40, 100)">
+                        <circle cx="40" cy="100" r="25" stroke-width="4" fill="rgba(255,255,255,0.5)"/>
+                        <line x1="15" y1="100" x2="-10" y2="100" stroke-width="8"/>
+                    </g>
+                    <g transform="translate(130, 110)">
+                        <path d="M 0 50 L 15 30 L 30 40 L 45 10" stroke="#F4D019" stroke-width="4"/>
+                        <rect x="-5" y="-5" width="55" height="60" rx="5" stroke-dasharray="4 4" stroke-width="2" fill="none"/>
+                    </g>
+                </g>
+            </svg>
+        </div>
+        <div class="right-pane">
+            <h1 class="slide-title">解決方案：<br>從數據到決策</h1>
+            <p class="subtitle">我們打造的「三層式混合智慧預測引擎」，不僅告訴你『該進多少』，更用數據解釋『為什麼』。</p>
+            <div class="kpi-container">
+                <div class="kpi-card">
+                    <div class="kpi-label">降低滯銷率</div>
+                    <div class="kpi-number">30%<span style="font-size: 28pt; font-weight: 700;">+</span></div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">提升預測準度</div>
+                    <div class="kpi-number">20%<span style="font-size: 28pt; font-weight: 700;">+</span></div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">節省決策時間</div>
+                    <div class="kpi-number">50%<span style="font-size: 28pt; font-weight: 700;">+</span></div>
+                </div>
+            </div>
+            <div class="capsule-container">
+                <div class="capsule-tag teal">數據驅動</div>
+                <div class="capsule-tag yellow">AI 預測</div>
+                <div class="capsule-tag teal">風險管理</div>
+            </div>
+        </div>
+        <div class="slide-number">01</div>
+    </div>
+
+    <!-- Slide 2: How It Works -->
+    <div class="slide-container slide-2">
+        <div class="top-section">
+            <h1 class="slide-title" style="text-align: center; margin-bottom: 0;">運作流程：三層式智慧引擎</h1>
+        </div>
+        <div class="bottom-section">
+            <div class="workflow-container">
+                <!-- Step 1 -->
+                <div class="workflow-step">
+                    <svg class="workflow-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="#1A1A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 12C13.6569 12 15 10.6569 15 9C15 7.34315 13.6569 6 12 6C10.3431 6 9 7.34315 9 9C9 10.6569 10.3431 12 12 12Z" stroke="#1A1A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M5.5 18.5C5.5 18.5 7.5 15 12 15C16.5 15 18.5 18.5 18.5 18.5" stroke="#1A1A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M17 3.5L19.5 6" stroke="#00C2C8" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M4.5 6L7 3.5" stroke="#00C2C8" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <h2 class="workflow-title">數據整合<br>& 語意理解</h2>
+                    <p class="workflow-description">整合內外部數據，獨家萃取「市場狀態」與「語意特徵」，為預測提供最豐富的原料。</p>
+                </div>
+                
+                <!-- Arrow 1 -->
+                <svg class="workflow-arrow arrow-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 12H19" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 5L19 12L12 19" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+
+                <!-- Step 2 -->
+                <div class="workflow-step">
+                    <svg class="workflow-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#1A1A4F" stroke-width="2" stroke-miterlimit="10"/>
+                        <path d="M16.8299 12.0001L13.4299 14.5001C13.1199 14.7301 12.7199 14.5601 12.6599 14.1901L11.9999 10.1901C11.9699 10.0101 12.0299 9.83011 12.1599 9.70011L14.6599 7.19011C14.8899 6.96011 15.2699 7.11011 15.2699 7.42011L15.2699 10.8201C15.2699 11.0001 15.3399 11.1801 15.4699 11.3101L16.8299 12.6701" fill="#00C2C8"/>
+                        <path d="M11.83 12L8.43 14.5C8.12 14.73 7.72 14.56 7.66 14.19L7 10.19C6.97 10.01 7.03 9.83 7.16 9.7L9.66 7.19C9.89 6.96 10.27 7.11 10.27 7.42V10.82C10.27 11 10.34 11.18 10.47 11.31L11.83 12.67" stroke="#1A1A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <h2 class="workflow-title">核心預測<br>& 風險量化</h2>
+                    <p class="workflow-description">採用 <code>XGBoost</code> 與 <code>分位數迴歸</code>，產出精準的銷量預測，並直接轉化為科學的進貨區間。</p>
+                </div>
+                
+                <!-- Arrow 2 -->
+                <svg class="workflow-arrow arrow-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 12H19" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 5L19 12L12 19" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+
+                <!-- Step 3 -->
+                <div class="workflow-step">
+                     <svg class="workflow-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="#1A1A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M14 2V8H20" stroke="#1A1A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M16 13H8" stroke="#00C2C8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M16 17H8" stroke="#00C2C8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M10 9H8" stroke="#00C2C8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <h2 class="workflow-title">洞察生成<br>& 報告呈現</h2>
+                    <p class="workflow-description">透過 <code>XAI</code> 解釋成因，並由 <code>LLM</code> 生成人類易讀的進貨建議報告，讓決策有理有據。</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">02</div>
+    </div>
+    
+    <!-- Slide 3: Appendix -->
+    <div class="slide-container slide-3">
+        <h1 class="slide-title" style="margin: 0 0 20px 0;">附錄：AI 引擎技術原理</h1>
+        <div class="tech-grid">
+            <!-- Column 1 -->
+            <div class="tech-column">
+                <div class="tech-card">
+                    <h3 class="tech-card-title">層級一：特徵工程</h3>
+                    <p class="tech-card-body">
+                        此層級負責數據整合與特徵萃取，建立預測基礎。
+                        <br><br>
+                        <strong>獨家特徵：</strong>透過狀態模型 (MEM/HMM)，我們將市場趨勢量化為 <strong>「加速成長期」</strong> 等質化標籤，捕捉動態變化。
+                        <br><br>
+                        <strong>語意特徵：</strong>利用 LLM 的自然語言理解 (NLU) 能力，從商品評論中提取 <strong>「設計細節」、「負評面向」</strong> 等非結構化資訊。
+                    </p>
+                </div>
+            </div>
+            <!-- Column 2 -->
+            <div class="tech-column">
+                 <div class="tech-card">
+                    <h3 class="tech-card-title">層級二：核心預測</h3>
+                    <p class="tech-card-body">
+                        此層級負責產出精準的量化預測與風險評估。
+                        <br><br>
+                        <strong>預測模型：</strong>我們採用業界領先的 <code>XGBoost Regressor</code>，它能高效處理層級一產出的數十種複雜特徵，精準預測未來銷量。
+                        <br><br>
+                        <strong>風險模型：</strong>結合 <code>Quantile Regression</code>，模型能直接輸出銷量的機率分佈 (P10-P90)，科學地生成「建議進貨區間」。
+                    </p>
+                </div>
+            </div>
+            <!-- Column 3 -->
+            <div class="tech-column">
+                 <div class="tech-card">
+                    <h3 class="tech-card-title">層級三：洞察生成</h3>
+                    <p class="tech-card-body">
+                        此層級負責打破 AI 黑盒子，將數字轉化為可信的商業洞察。
+                        <br><br>
+                        <strong>歸因分析：</strong>我們引入可解釋性 AI 技術 (<code>XAI - SHAP</code>)，讓每一次預測都透明化，清晰呈現各特徵的貢獻度。
+                        <br><br>
+                        <strong>報告生成：</strong>最後，LLM (NLG) 會將所有分析結果，自動生成一份具備完整決策依據的**人性化建議報告**。
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">03</div>
+    </div>
+
+</body>
+</html>
