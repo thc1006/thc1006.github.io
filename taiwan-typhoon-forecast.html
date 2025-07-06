@@ -5,16 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>最終整合版：台灣颱風決策互動分析報告 (2008-2024)</title>
     
-    <!-- 引入 Puter.js - 免 API Key 使用 Gemini -->
-    <script src="https://js.puter.com/v2/"></script>
-    
-    <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- 引入 Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
-    <!-- 引入 Google Fonts - Noto Sans TC -->
+    <script src="https://js.puter.com/v2/"></script>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -127,20 +123,17 @@
 </head>
 <body class="antialiased">
 
-    <!-- Header -->
     <header class="bg-white shadow-md sticky top-0 z-50">
         <div class="container mx-auto px-4 sm:px-6 py-4">
             <h1 class="text-2xl md:text-4xl font-black text-slate-900 tracking-tight">
                 台灣颱風決策之整合分析報告
             </h1>
-            <p class="text-sm text-slate-600 mt-1">研究期間：2008年5月20日 - 2024年5月19日 (Puter.js + Gemini 版本)</p>
+            <p class="text-sm text-slate-600 mt-1">研究期間：2008年5月20日 - 2024年5月19日 (最終驗證版)</p>
         </div>
     </header>
 
-    <!-- Main Content -->
     <main class="container mx-auto px-4 sm:px-6 py-10">
 
-        <!-- Section: 摘要 -->
         <section id="abstract" class="mb-12">
             <div class="content-card p-6 md:p-8">
                 <h2 class="!mt-0">綜合摘要 (Synthesized Abstract)</h2>
@@ -153,16 +146,12 @@
             </div>
         </section>
 
-        <!-- Section: Gemini AI Forecast -->
         <section id="gemini-forecast" class="mb-12">
             <div class="content-card p-6 md:p-8">
                 <div class="flex justify-between items-start">
                     <div>
-                        <h2 class="!mt-0">Gemini AI 颱風假預測 (Powered by Puter.js)</h2>
+                        <h2 class="!mt-0">Puter.js + Gemini AI 颱風假預測</h2>
                         <p class="text-slate-600 -mt-4 mb-6">整合即時氣象與歷史數據，提供全國各縣市明日停班停課機率預測。</p>
-                        <div class="bg-green-50 border border-green-200 rounded-lg p-3 text-sm text-green-800">
-                            <strong>✨ 使用 Puter.js：</strong>無需 API Key，直接在前端呼叫 Gemini 2.0 Flash
-                        </div>
                     </div>
                     <svg viewBox="0 0 24 24" class="w-12 h-12" xmlns="http://www.w3.org/2000/svg">
                         <defs>
@@ -176,23 +165,19 @@
                     </svg>
                 </div>
                 
-                <div class="text-center mt-6">
+                <div class="text-center">
                     <button id="generate-forecast-btn" class="gemini-button text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg">
-                        生成全國颱風假預測報告
+                        生成全國颱風假預測報告 (免API Key)
                     </button>
                 </div>
 
                 <div id="forecast-loader" class="hidden">
                     <div class="loader"></div>
-                    <p class="text-center text-slate-500">Gemini 正在分析中，請稍候...</p>
+                    <p class="text-center text-slate-500">Puter.js 正在透過 Gemini 分析中，請稍候...</p>
                 </div>
 
                 <div id="forecast-results-container" class="hidden mt-8">
                     <div id="report-details" class="text-sm text-slate-500 mb-4 bg-slate-100 p-3 rounded-md"></div>
-                    <div id="ai-analysis" class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                        <h3 class="text-blue-900 !mt-0 mb-2">AI 分析摘要</h3>
-                        <div id="ai-summary" class="text-blue-800"></div>
-                    </div>
                     <div class="overflow-x-auto rounded-lg border border-slate-200">
                         <table class="min-w-full bg-white">
                             <thead class="bg-slate-100">
@@ -204,15 +189,13 @@
                                 </tr>
                             </thead>
                             <tbody id="forecast-table-body">
-                                <!-- 預測結果將動態生成於此 -->
-                            </tbody>
+                                </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Section: 互動數據儀表板 -->
         <section id="dashboard" class="mb-12">
             <div class="content-card p-6 md:p-8">
                 <h2>歷史數據儀表板</h2>
@@ -271,7 +254,6 @@
             </div>
         </section>
 
-        <!-- Section: 深度剖析 -->
         <section id="deep-dive" class="mb-12">
             <div class="content-card p-6 md:p-8">
                 <h2>深度剖析：決策背後的動力學</h2>
@@ -318,7 +300,6 @@
             </div>
         </section>
 
-        <!-- Section: Raw Data -->
         <section id="raw-data" class="mb-12">
             <div class="content-card p-6 md:p-8">
                 <h2>原始數據資料庫 (共61筆，經最終驗證)</h2>
@@ -334,7 +315,6 @@
             </div>
         </section>
 
-        <!-- Section: 政策建議 -->
         <section id="recommendation">
             <div class="content-card p-6 md:p-8 bg-blue-950 text-white">
                 <h2 class="!border-blue-800 text-white">政策建議與未來研究</h2>
@@ -343,82 +323,203 @@
                 <p class="mt-2 text-lg text-blue-200">由行政院人事行政總處 (DGPA) 主導，建立一個公開、權威、且為 <strong class="font-bold text-white">機器可讀格式 (Machine-Readable)</strong> 的歷史決策資料庫。此舉將是提升政府透明度、杜絕不實資訊、並為所有未來相關研究提供堅實基礎的關鍵一步。</p>
                  <h3 class="text-blue-200 border-t border-blue-800 pt-6 mt-6">前瞻性研究議程</h3>
                  <ul class="list-disc list-inside space-y-2 text-blue-200">
-                    <li>應用計量經濟學模型，精確估算各項變數的影響力。</li>
-                    <li>整合災後實際損失數據，驗證「組織學習」假說。</li>
-                    <li>深入分析停班停課的經濟衝擊與勞工權益問題。</li>
-                    <li>透過對關鍵決策者的質性訪談，挖掘數據背後的真實脈絡。</li>
+                     <li>應用計量經濟學模型，精確估算各項變數的影響力。</li>
+                     <li>整合災後實際損失數據，驗證「組織學習」假說。</li>
+                     <li>深入分析停班停課的經濟衝擊與勞工權益問題。</li>
+                     <li>透過對關鍵決策者的質性訪談，挖掘數據背後的真實脈絡。</li>
                  </ul>
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
     <footer class="bg-slate-900 text-white text-center py-6 mt-12">
-        <p>&copy; 2025 使用 Puter.js + Gemini 2.0. 基於公開資料之最終整合分析報告。</p>
+        <p>&copy; 2025 Puter.js & Gemini. 基於公開資料之最終整合分析報告。</p>
     </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- Gemini Forecast Logic with Puter.js ---
+            // --- Gemini Forecast Logic (Modified for Puter.js) ---
             const generateBtn = document.getElementById('generate-forecast-btn');
             const loader = document.getElementById('forecast-loader');
             const resultsContainer = document.getElementById('forecast-results-container');
             const reportDetailsEl = document.getElementById('report-details');
             const forecastTableBody = document.getElementById('forecast-table-body');
-            const aiSummaryEl = document.getElementById('ai-summary');
 
             generateBtn.addEventListener('click', async () => {
                 loader.style.display = 'block';
                 resultsContainer.style.display = 'none';
                 forecastTableBody.innerHTML = '';
-                aiSummaryEl.innerHTML = '';
 
                 try {
-                    // 使用 Puter.js 呼叫 Gemini 2.0 Flash
-                    const prompt = `你是一位台灣氣象專家。請根據颱風歷史數據，分析並預測全國各縣市明日的停班停課機率。
-                    
-請生成一份JSON格式的預測報告，包含：
-1. report_details: 包含 typhoon_name（颱風名稱）、report_time（報告時間）、data_source（資料來源）
-2. forecasts: 每個縣市的預測，包含：
-   - region_name: 縣市名稱
-   - prediction: 預測結果（高機率停班停課/中等機率/低機率停班停課）
-   - confidence_score: 信心指數（0-100）
-   - summary: 簡短說明原因
-3. ai_analysis: 整體分析摘要（約100字）
+                    // 1. Construct the prompt with dynamic "live" data
+                    const liveTyphoonData = {
+                        name: "凱米颱風 (Kemi)",
+                        strength: "中度颱風",
+                        location: "台灣東南方約 400 公里海面",
+                        path: "預計將朝西北西方向移動，暴風圈可能在明天清晨接觸台灣東部陸地。",
+                        alert: "已發布海上陸上颱風警報"
+                    };
+                    const today = new Date();
+                    const tomorrow = new Date(today);
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+                    const tomorrowDate = `${tomorrow.getFullYear()}年${String(tomorrow.getMonth() + 1).padStart(2, '0')}月${String(tomorrow.getDate()).padStart(2, '0')}日`;
 
-請確保包含所有22個縣市。回應必須是純JSON格式，不要包含其他文字。`;
+                    const prompt = `# 角色
+你是一位頂尖的氣象學家與台灣災害管理顧問。你的專長是整合即時氣象數據與歷史資料，為全台灣所有縣市製作一份全面性的颱風停班停課風險評估報告。
 
-                    // 使用 Puter.ai.chat 呼叫 Gemini
-                    const response = await puter.ai.chat(prompt, { 
+# 即時情資
+- **颱風名稱:** ${liveTyphoonData.name}
+- **颱風強度:** ${liveTyphoonData.strength}
+- **目前位置:** ${liveTyphoonData.location}
+- **預測路徑摘要:** ${liveTyphoonData.path}
+- **警報狀態:** ${liveTyphoonData.alert}
+
+# 預測任務
+- **預測時間點:** 明天 (${tomorrowDate})
+- **目標地區:** **台灣所有主要行政區**。
+
+# 分析指示
+基於以上提供的「即時情資」，並結合你擁有的台灣過去 10 年的颱風災害歷史資料庫，請對台灣所有22個主要縣市獨立進行分析，並生成一份完整的預測報告。
+
+# 輸出格式
+請嚴格按照以下 JSON 格式回傳一個包含「report_details」和「forecasts」陣列的物件。陣列中必須包含台灣所有22個縣市的預測，順序不拘。不要在 JSON 區塊前後添加任何說明文字。
+
+{
+  "report_details": {
+    "typhoon_name": "${liveTyphoonData.name}",
+    "report_time": "[生成報告的當前時間 YYYY-MM-DD HH:mm:ss]",
+    "data_source": "中央氣象署模擬數據 + Gemini歷史資料分析模型"
+  },
+  "forecasts": [
+    {
+      "region_name": "台北市",
+      "prediction": "高機率停班停課",
+      "confidence_score": 85,
+      "summary": "預計風力將達標，且基於北北基桃共同生活圈決策模式，同步放假機率高。"
+    }
+  ]
+}`;
+
+                    // 2. Make the API call using Puter.js
+                    const responseText = await puter.ai.chat(prompt, { 
                         model: "gemini-2.0-flash",
-                        temperature: 0.7,
-                        max_tokens: 2000
+                        // Requesting JSON output as per the prompt instructions
+                        response_format: { type: "json_object" } 
                     });
-
-                    // 解析 AI 回應
-                    let aiData;
-                    try {
-                        // 嘗試解析 JSON 回應
-                        aiData = JSON.parse(response);
-                    } catch (e) {
-                        // 如果解析失敗，使用預設數據
-                        console.warn('AI 回應解析失敗，使用預設數據', e);
-                        aiData = getMockForecast();
+                    
+                    // 3. Process the response
+                    if (!responseText) {
+                         throw new Error("API did not return a valid response.");
                     }
+                    
+                    const forecastData = JSON.parse(responseText);
 
-                    // 渲染預測結果
-                    renderForecast(aiData);
-                    loader.style.display = 'none';
-                    resultsContainer.style.display = 'block';
+                    const now = new Date();
+                    const formattedTime = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+                    forecastData.report_details.report_time = formattedTime;
+
+                    renderForecast(forecastData);
 
                 } catch (error) {
-                    console.error('Puter.js AI 呼叫失敗:', error);
-                    // 發生錯誤時使用模擬數據
-                    const mockData = getMockForecast();
-                    renderForecast(mockData);
-                    loader.style.display = 'none';
+                    console.error("預測生成失敗:", error);
                     resultsContainer.style.display = 'block';
-                    
-                    // 顯示錯誤提示
-                    aiSummaryEl.innerHTML = `<span class="text-red-600">AI 分析暫時無法使用，顯示模擬數據。錯誤：${error.message}</span>`;
+                    reportDetailsEl.innerHTML = `<p class="text-red-500 font-bold">預測生成失敗，請稍後再試。錯誤訊息：${error.message}</p>`;
+                } finally {
+                    // 4. Hide loader
+                    loader.style.display = 'none';
                 }
+            });
+
+            function renderForecast(data) {
+                if (!data || !data.report_details || !data.forecasts) {
+                    reportDetailsEl.innerHTML = `<p class="text-red-500 font-bold">收到的資料格式不正確，無法呈現報告。</p>`;
+                    resultsContainer.style.display = 'block';
+                    return;
+                }
+                const { typhoon_name, report_time, data_source } = data.report_details;
+                reportDetailsEl.innerHTML = `
+                    <strong>颱風名稱：</strong>${typhoon_name} | 
+                    <strong>報告生成時間：</strong>${report_time} | 
+                    <strong>資料來源：</strong>${data_source}
+                `;
+
+                data.forecasts.forEach(region => {
+                    let predictionClass = 'pred-medium'; // Default
+                    if(region.prediction.includes('高機率')){
+                        predictionClass = 'pred-high';
+                    } else if (region.prediction.includes('低機率')){
+                        predictionClass = 'pred-low';
+                    }
+                    
+                    const row = `
+                        <tr class="border-t border-slate-200 hover:bg-slate-50">
+                            <td class="py-3 px-4 font-bold text-slate-700">${region.region_name}</td>
+                            <td class="py-3 px-4"><span class="prediction-badge ${predictionClass}">${region.prediction}</span></td>
+                            <td class="py-3 px-4">
+                                <div class="flex items-center">
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: ${region.confidence_score}%"></div>
+                                    </div>
+                                    <span class="text-sm font-medium text-gray-500 ml-2">${region.confidence_score}%</span>
+                                </div>
+                            </td>
+                            <td class="py-3 px-4 text-slate-600 text-sm">${region.summary}</td>
+                        </tr>`;
+                    forecastTableBody.innerHTML += row;
+                });
+                
+                resultsContainer.style.display = 'block';
+            }
+
+            // --- Existing Logic from previous steps ---
+            const typhoonRawData = [
+                { year: 2008, name: '卡玫基', term: '馬英九', leave: true }, { year: 2008, name: '鳳凰', term: '馬英九', leave: true }, { year: 2008, name: '辛樂克', term: '馬英九', leave: true }, { year: 2008, name: '薔蜜', term: '馬英九', leave: true },
+                { year: 2009, name: '蓮花', term: '馬英九', leave: true }, { year: 2009, name: '莫拉克', term: '馬英九', leave: true }, { year: 2009, name: '芭瑪', term: '馬英九', leave: true },
+                { year: 2010, name: '萊羅克', term: '馬英九', leave: false }, { year: 2010, name: '凡那比', term: '馬英九', leave: true }, { year: 2010, name: '梅姬', term: '馬英九', leave: true }, { year: 2010, name: '璨樹', term: '馬英九', leave: false },
+                { year: 2011, name: '南瑪都', term: '馬英九', leave: true }, { year: 2011, name: '奈格', term: '馬英九', leave: true }, { year: 2011, name: '諾盧', term: '馬英九', leave: true },
+                { year: 2012, name: '瑪娃', term: '馬英九', leave: false }, { year: 2012, name: '泰利', term: '馬英九', leave: true }, { year: 2012, name: '杜蘇芮', term: '馬英九', leave: true }, { year: 2012, name: '蘇拉', term: '馬英九', leave: true }, { year: 2012, name: '啟德', term: '馬英九', leave: true }, { year: 2012, name: '天秤', term: '馬英九', leave: true }, { year: 2012, name: '布拉萬', term: '馬英九', leave: true }, { year: 2012, name: '杰拉華', term: '馬英九', leave: true }, { year: 2012, name: '三巴', term: '馬英九', leave: false },
+                { year: 2013, name: '蘇力', term: '馬英九', leave: true }, { year: 2013, name: '西馬隆', term: '馬英九', leave: true }, { year: 2013, name: '尤特', term: '馬英九', leave: true }, { year: 2013, name: '潭美', term: '馬英九', leave: true }, { year: 2013, name: '康芮', term: '馬英九', leave: true }, { year: 2013, name: '天兔', term: '馬英九', leave: true }, { year: 2013, name: '菲特', term: '馬英九', leave: true },
+                { year: 2014, name: '麥德姆', term: '馬英九', leave: true }, { year: 2014, name: '鳳凰', term: '馬英九', leave: true }, { year: 2014, name: '哈格比', term: '馬英九', leave: false },
+                { year: 2015, name: '蓮花', term: '馬英九', leave: true }, { year: 2015, name: '昌鴻', term: '馬英九', leave: true }, { year: 2015, name: '蘇迪勒', term: '馬英九', leave: true }, { year: 2015, name: '天鵝', term: '馬英九', leave: true }, { year: 2015, 'name': '杜鵑', 'term': '馬英九', 'leave': true },
+                { year: 2016, name: '尼伯特', term: '蔡英文', leave: true }, { year: 2016, name: '莫蘭蒂', term: '蔡英文', leave: true }, { year: 2016, name: '馬勒卡', term: '蔡英文', leave: true }, { year: 2016, name: '梅姬', term: '蔡英文', leave: true },
+                { year: 2017, name: '尼莎', term: '蔡英文', leave: true }, { year: 2017, name: '海棠', term: '蔡英文', leave: true },
+                { year: 2018, name: '瑪莉亞', term: '蔡英文', leave: true }, { year: 2018, name: '山神', term: '蔡英文', leave: false }, { year: 2018, name: '安比', term: '蔡英文', leave: false }, { year: 2018, name: '雲雀', term: '蔡英文', leave: false },
+                { year: 2019, name: '丹娜絲', term: '蔡英文', leave: false }, { year: 2019, name: '利奇馬', term: '蔡英文', leave: true }, { year: 2019, name: '白鹿', term: '蔡英文', leave: true }, { year: 2019, name: '米塔', term: '蔡英文', leave: true },
+                { year: 2020, name: '哈格比', term: '蔡英文', leave: false }, { year: 2020, name: '閃電', term: '蔡英文', leave: false },
+                { year: 2021, name: '盧碧', term: '蔡英文', leave: true }, { year: 2021, name: '璨樹', term: '蔡英文', leave: true }, { year: 2021, name: '圓規', term: '蔡英文', leave: true },
+                { year: 2022, name: '軒嵐諾', term: '蔡英文', leave: true },
+                { year: 2023, name: '杜蘇芮', term: '蔡英文', leave: true }, { year: 2023, name: '卡努', term: '蔡英文', leave: true }, { year: 2023, name: '海葵', term: '蔡英文', leave: true }
+            ];
+            const maData = typhoonRawData.filter(d => d.term === '馬英九');
+            const tsaiData = typhoonRawData.filter(d => d.term === '蔡英文');
+            const maTotal = maData.length;
+            const maLeave = maData.filter(d => d.leave).length;
+            const tsaiTotal = tsaiData.length;
+            const tsaiLeave = tsaiData.filter(d => d.leave).length;
+            
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            if (Chart.getChart('mainChart')) {
+                Chart.getChart('mainChart').destroy();
+            }
+            new Chart(ctx, { type: 'bar', data: { labels: [`馬英九任期 (共${maTotal}次)`, `蔡英文任期 (共${tsaiTotal}次)`], datasets: [{ label: '停班課次數', data: [maLeave, tsaiLeave], backgroundColor: ['rgba(59, 130, 246, 0.8)', 'rgba(16, 185, 129, 0.8)'], borderColor: ['#2563eb', '#059669'], borderWidth: 2, borderRadius: 5, }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } } });
+            
+            const tableBody = document.getElementById('raw-data-table');
+            const searchInput = document.getElementById('search-input');
+            const tableHeaders = document.querySelectorAll('#data-table th');
+            let sortState = { column: 'year', direction: 'desc' };
+            const renderTable = (data) => { tableBody.innerHTML = data.map(typhoon => `<tr class="border-t border-slate-200 hover:bg-slate-50"><td class="py-2 px-3">${typhoon.year}</td><td class="py-2 px-3">${typhoon.name}</td><td class="py-2 px-3">${typhoon.term}</td><td class="py-2 px-3 font-bold ${typhoon.leave ? 'text-green-600' : 'text-red-600'}">${typhoon.leave ? '是' : '否'}</td></tr>`).join(''); };
+            const sortData = (data, column, direction) => [...data].sort((a, b) => { let aVal = a[column], bVal = b[column]; return direction === 'asc' ? (typeof aVal === 'string' ? aVal.localeCompare(bVal, 'zh-Hant') : aVal - bVal) : (typeof bVal === 'string' ? bVal.localeCompare(aVal, 'zh-Hant') : bVal - aVal); });
+            const filterData = (data, query) => query ? data.filter(d => d.name.toLowerCase().includes(query.toLowerCase())) : data;
+            const updateTable = () => renderTable(sortData(filterData(typhoonRawData, searchInput.value), sortState.column, sortState.direction));
+            searchInput.addEventListener('input', updateTable);
+            tableHeaders.forEach(header => { header.addEventListener('click', () => { const column = header.dataset.sort; if (sortState.column === column) { sortState.direction = sortState.direction === 'asc' ? 'desc' : 'asc'; } else { sortState.column = column; sortState.direction = 'asc'; } tableHeaders.forEach(h => h.classList.remove('sorted-asc', 'sorted-desc')); header.classList.add(sortState.direction === 'asc' ? 'sorted-asc' : 'sorted-desc'); updateTable(); }); });
+            document.querySelector(`th[data-sort="${sortState.column}"]`).classList.add('sorted-desc');
+            updateTable();
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabButtons.forEach(button => { button.addEventListener('click', () => { tabButtons.forEach(btn => btn.classList.remove('active')); button.classList.add('active'); tabContents.forEach(content => content.classList.remove('active')); document.getElementById(button.dataset.tab).classList.add('active'); }); });
+        });
+    </script>
+
+</body>
+</html>
