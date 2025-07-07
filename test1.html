@@ -3,355 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>臺北市立聯合醫院收入分析</title>
+    <title>臺北市立聯合醫院收入分析簡報 (16:9)</title>
     <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 引入 Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- 引入 Chart.js Datalabels Plugin (用於在圖表上顯示數字) -->
+    <!-- 引入 Chart.js Datalabels Plugin -->
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
     <!-- 引入 Google Fonts - Noto Sans TC -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* 自訂樣式，應用 Noto Sans TC 字體 */
+        /* 全局字體設定 */
         body {
             font-family: 'Noto Sans TC', sans-serif;
         }
-        /* Chart.js 工具提示的字體 */
-        .chartjs-tooltip {
-            font-family: 'Noto Sans TC', sans-serif !important;
+        /*
+         * 簡報容器樣式
+         * aspect-[16/9] 是 Tailwind CSS 的一個功能，可以讓容器保持 16:9 的長寬比。
+         * 為了讓內容在不同尺寸下都能良好顯示，我們使用 flexbox 來排列內容。
+        */
+        .slide-content {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
     </style>
 </head>
-<body class="bg-gray-100 p-4 sm:p-6 md:p-8">
+<body class="bg-gray-800 flex items-center justify-center min-h-screen p-4">
 
-    <div class="max-w-7xl mx-auto">
-        <!-- 頁面標題 -->
-        <header class="text-center mb-8">
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-800">臺北市立聯合醫院各院區年度收入分析</h1>
-            <p class="text-gray-600 mt-2">視覺化圖表與資料</p>
-        </header>
+    <!-- 16:9 簡報容器 -->
+    <div id="presentation-slide" class="w-full max-w-6xl bg-gray-50 shadow-2xl aspect-[16/9] rounded-lg overflow-hidden">
+        <!-- 簡報內容，使用 flexbox 讓其填滿容器 -->
+        <div class="slide-content p-6 md:p-8 flex flex-col h-full">
+            
+            <!-- 簡報標題 -->
+            <header class="border-b-2 border-blue-600 pb-2 mb-4 flex-shrink-0">
+                <h1 class="text-2xl lg:text-3xl font-bold text-gray-800">臺北市立聯合醫院收入分析報告</h1>
+                <p class="text-sm lg:text-base text-gray-500">就醫年度：民國 108 - 110 年</p>
+            </header>
 
-        <!-- 圖表容器 -->
-        <div class="bg-white p-4 sm:p-6 rounded-xl shadow-lg mb-8">
-            <!-- 切換按鈕 -->
-            <div class="flex justify-center space-x-2 mb-6">
-                <button id="groupByYearBtn" class="bg-blue-600 text-white font-semibold py-2 px-5 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition-transform transform hover:scale-105">按年份分組</button>
-                <button id="groupByHospitalBtn" class="bg-gray-300 text-gray-800 font-semibold py-2 px-5 rounded-lg shadow-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75 transition-transform transform hover:scale-105">按院區分組</button>
-            </div>
-            <!-- Canvas 圖表繪製區 (增加高度) -->
-            <div class="relative h-96 md:h-[32rem]">
-                <canvas id="revenueChart"></canvas>
-            </div>
+            <!-- 主要內容區域 (圖表與洞察) -->
+            <main class="flex-grow flex flex-col md:flex-row gap-6 overflow-hidden">
+                
+                <!-- 左側：圖表與切換按鈕 -->
+                <div class="w-full md:w-3/5 flex flex-col">
+                    <section id="interactive-chart" class="flex-grow flex flex-col bg-white p-4 rounded-xl shadow-md">
+                         <div class="flex justify-center space-x-2 mb-2 flex-shrink-0">
+                            <button id="groupByYearBtn" class="bg-blue-600 text-white font-semibold py-1.5 px-4 rounded-lg shadow-sm text-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75">按年份</button>
+                            <button id="groupByHospitalBtn" class="bg-gray-300 text-gray-800 font-semibold py-1.5 px-4 rounded-lg shadow-sm text-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75">按院區</button>
+                        </div>
+                        <div class="relative flex-grow min-h-0">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- 右側：摘要與重點洞察 -->
+                <div class="w-full md:w-2/5 flex flex-col gap-4">
+                    <!-- 摘要總結 -->
+                    <section id="summary" class="bg-white p-4 rounded-lg shadow-md border-l-4 border-blue-500">
+                        <h2 class="text-lg font-bold text-gray-700 mb-2">摘要總結</h2>
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            仁愛院區為主要收入來源。忠孝院區於110年爆發性增長，而和平婦幼與林中昆院區則在109年有顯著下滑，呈現各院區的動態變化。
+                        </p>
+                    </section>
+                    <!-- 重點洞察 -->
+                    <section id="insights" class="flex-grow bg-white p-4 rounded-lg shadow-md border-l-4 border-green-500">
+                        <h2 class="text-lg font-bold text-gray-700 mb-3">重點洞察</h2>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex items-start">
+                                <span class="text-yellow-500 font-bold mr-2">●</span>
+                                <p class="text-gray-600"><strong class="text-gray-800">營收冠軍:</strong> 仁愛院區連續三年蟬聯冠軍。</p>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-green-500 font-bold mr-2">●</span>
+                                <p class="text-gray-600"><strong class="text-gray-800">顯著增長:</strong> 忠孝院區110年收入增長近4倍。</p>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-red-500 font-bold mr-2">●</span>
+                                <p class="text-gray-600"><strong class="text-gray-800">收入波動:</strong> 和平婦幼與林中昆109年衰退超50%。</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+            </main>
+            
+            <!-- 頁尾 -->
+            <footer class="text-center text-gray-400 text-xs pt-2 mt-2 flex-shrink-0">
+                <p>資料視覺化簡報 © 2024</p>
+            </footer>
         </div>
-
-        <!-- 資料表格容器 -->
-        <div class="bg-white p-4 sm:p-6 rounded-xl shadow-lg">
-            <h2 class="text-2xl font-bold text-gray-700 mb-4 text-center">原始資料表格</h2>
-            <div class="overflow-x-auto">
-                <table class="min-w-full text-sm text-left text-gray-600">
-                    <thead class="bg-gray-100 text-gray-700 uppercase font-semibold">
-                        <tr>
-                            <th scope="col" class="px-6 py-3 rounded-l-lg">就醫年度(民國)</th>
-                            <th scope="col" class="px-6 py-3">院區</th>
-                            <th scope="col" class="px-6 py-3 rounded-r-lg text-right">總收入(給付點數)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="dataTableBody">
-                        <!-- 資料將由 JavaScript 動態填入 -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        
-        <!-- 頁尾 -->
-        <footer class="text-center text-gray-500 mt-8 text-sm">
-            <p>資料視覺化呈現 © 2024</p>
-        </footer>
     </div>
 
     <script>
         // --- 原始資料 ---
         const rawData = [
-            { year: 108, hospital: '中興', revenue: 20388 },
-            { year: 108, hospital: '仁愛', revenue: 50080 },
-            { year: 108, hospital: '和平婦幼', revenue: 49139 },
-            { year: 108, hospital: '忠孝', revenue: 22863 },
-            { year: 108, hospital: '松德', revenue: 6240 },
-            { year: 108, hospital: '林中昆', revenue: 29555 },
-            { year: 108, hospital: '陽明', revenue: 11413 },
-            { year: 109, hospital: '中興', revenue: 29866 },
-            { year: 109, hospital: '仁愛', revenue: 51800 },
-            { year: 109, hospital: '和平婦幼', revenue: 20632 },
-            { year: 109, hospital: '忠孝', revenue: 7670 },
-            { year: 109, hospital: '松德', revenue: 1560 },
-            { year: 109, hospital: '林中昆', revenue: 12845 },
-            { year: 109, hospital: '陽明', revenue: 15331 },
-            { year: 110, hospital: '中興', revenue: 29719 },
-            { year: 110, hospital: '仁愛', revenue: 47160 },
-            { year: 110, hospital: '和平婦幼', revenue: 17646 },
-            { year: 110, hospital: '忠孝', revenue: 37570 },
-            { year: 110, hospital: '松德', revenue: 1560 },
-            { year: 110, hospital: '林中昆', revenue: 3350 },
+            { year: 108, hospital: '中興', revenue: 20388 }, { year: 108, hospital: '仁愛', revenue: 50080 },
+            { year: 108, hospital: '和平婦幼', revenue: 49139 }, { year: 108, hospital: '忠孝', revenue: 22863 },
+            { year: 108, hospital: '松德', revenue: 6240 }, { year: 108, hospital: '林中昆', revenue: 29555 },
+            { year: 108, hospital: '陽明', revenue: 11413 }, { year: 109, hospital: '中興', revenue: 29866 },
+            { year: 109, hospital: '仁愛', revenue: 51800 }, { year: 109, hospital: '和平婦幼', revenue: 20632 },
+            { year: 109, hospital: '忠孝', revenue: 7670 }, { year: 109, hospital: '松德', revenue: 1560 },
+            { year: 109, hospital: '林中昆', revenue: 12845 }, { year: 109, hospital: '陽明', revenue: 15331 },
+            { year: 110, hospital: '中興', revenue: 29719 }, { year: 110, hospital: '仁愛', revenue: 47160 },
+            { year: 110, hospital: '和平婦幼', revenue: 17646 }, { year: 110, hospital: '忠孝', revenue: 37570 },
+            { year: 110, hospital: '松德', revenue: 1560 }, { year: 110, hospital: '林中昆', revenue: 3350 },
             { year: 110, hospital: '陽明', revenue: 19000 },
         ];
 
         // --- DOM 元素 ---
-        const tableBody = document.getElementById('dataTableBody');
         const ctx = document.getElementById('revenueChart').getContext('2d');
         const groupByYearBtn = document.getElementById('groupByYearBtn');
         const groupByHospitalBtn = document.getElementById('groupByHospitalBtn');
 
-        let revenueChart; // 用於存放 Chart.js 實例
+        let revenueChart;
 
         // --- 顏色設定 ---
         const colors = {
-            year: {
-                108: 'rgba(54, 162, 235, 0.8)', // 藍色
-                109: 'rgba(255, 159, 64, 0.8)', // 橘色
-                110: 'rgba(75, 192, 192, 0.8)', // 綠色
-            },
-            hospital: [
-                'rgba(255, 99, 132, 0.8)', 'rgba(54, 162, 235, 0.8)', 'rgba(255, 206, 86, 0.8)',
-                'rgba(75, 192, 192, 0.8)', 'rgba(153, 102, 255, 0.8)', 'rgba(255, 159, 64, 0.8)',
-                'rgba(199, 199, 199, 0.8)'
-            ]
+            year: { 108: 'rgba(54, 162, 235, 0.8)', 109: 'rgba(255, 159, 64, 0.8)', 110: 'rgba(75, 192, 192, 0.8)' },
+            hospital: ['rgba(255, 99, 132, 0.8)', 'rgba(54, 162, 235, 0.8)', 'rgba(255, 206, 86, 0.8)', 'rgba(75, 192, 192, 0.8)', 'rgba(153, 102, 255, 0.8)', 'rgba(255, 159, 64, 0.8)', 'rgba(199, 199, 199, 0.8)']
         };
-        
         const borderColors = {
-            year: {
-                108: 'rgb(54, 162, 235)',
-                109: 'rgb(255, 159, 64)',
-                110: 'rgb(75, 192, 192)',
-            },
-            hospital: [
-                'rgb(255, 99, 132)', 'rgb(54, 162, 235)', 'rgb(255, 206, 86)',
-                'rgb(75, 192, 192)', 'rgb(153, 102, 255)', 'rgb(255, 159, 64)',
-                'rgb(199, 199, 199)'
-            ]
+            year: { 108: 'rgb(54, 162, 235)', 109: 'rgb(255, 159, 64)', 110: 'rgb(75, 192, 192)' },
+            hospital: ['rgb(255, 99, 132)', 'rgb(54, 162, 235)', 'rgb(255, 206, 86)', 'rgb(75, 192, 192)', 'rgb(153, 102, 255)', 'rgb(255, 159, 64)', 'rgb(199, 199, 199)']
         };
-
 
         // --- 功能函式 ---
-
-        /**
-         * 填入資料表格
-         */
-        function populateTable() {
-            tableBody.innerHTML = ''; // 清空表格
-            rawData.forEach((item, index) => {
-                const row = document.createElement('tr');
-                row.className = 'border-b border-gray-200 hover:bg-gray-50';
-                row.innerHTML = `
-                    <td class="px-6 py-4">${item.year}</td>
-                    <td class="px-6 py-4 font-medium text-gray-900">${item.hospital}</td>
-                    <td class="px-6 py-4 text-right">${item.revenue.toLocaleString()}</td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }
-
-        /**
-         * 繪製或更新圖表
-         * @param {string} groupBy - 分組方式 ('year' 或 'hospital')
-         */
         function drawChart(groupBy = 'year') {
-            if (revenueChart) {
-                revenueChart.destroy(); // 如果圖表已存在，先銷毀
-            }
+            if (revenueChart) revenueChart.destroy();
 
-            let labels, datasets, titleText;
-
+            let labels, datasets;
             if (groupBy === 'year') {
-                // 按年份分組
-                titleText = '各院區年度收入比較 (按年份)';
-                labels = [...new Set(rawData.map(d => d.hospital))]; // X軸: 院區
-                const years = [...new Set(rawData.map(d => d.year))].sort((a,b) => a-b);
-                
-                datasets = years.map(year => {
-                    return {
-                        label: `${year}年`,
-                        data: labels.map(hospital => {
-                            const record = rawData.find(d => d.year === year && d.hospital === hospital);
-                            return record ? record.revenue : 0;
-                        }),
-                        backgroundColor: colors.year[year],
-                        borderColor: borderColors.year[year],
-                        borderWidth: 1,
-                        borderRadius: 5,
-                    };
-                });
-
+                labels = [...new Set(rawData.map(d => d.hospital))];
+                const years = [...new Set(rawData.map(d => d.year))].sort((a, b) => a - b);
+                datasets = years.map(year => ({
+                    label: `${year}年`,
+                    data: labels.map(h => rawData.find(d => d.year === year && d.hospital === h)?.revenue || 0),
+                    backgroundColor: colors.year[year],
+                    borderColor: borderColors.year[year],
+                    borderWidth: 1,
+                    borderRadius: 3,
+                }));
             } else {
-                // 按院區分組
-                titleText = '各院區年度收入比較 (按院區)';
-                labels = [...new Set(rawData.map(d => d.year))].sort((a,b) => a-b).map(y => `${y}年`); // X軸: 年度
+                labels = [...new Set(rawData.map(d => d.year))].sort((a, b) => a - b).map(y => `${y}年`);
                 const hospitals = [...new Set(rawData.map(d => d.hospital))];
-
-                datasets = hospitals.map((hospital, index) => {
-                    return {
-                        label: hospital,
-                        data: labels.map(yearLabel => {
-                            const year = parseInt(yearLabel);
-                            const record = rawData.find(d => d.hospital === hospital && d.year === year);
-                            return record ? record.revenue : 0;
-                        }),
-                        backgroundColor: colors.hospital[index % colors.hospital.length],
-                        borderColor: borderColors.hospital[index % borderColors.hospital.length],
-                        borderWidth: 1,
-                        borderRadius: 5,
-                    };
-                });
+                datasets = hospitals.map((hospital, index) => ({
+                    label: hospital,
+                    data: labels.map(y => rawData.find(d => d.hospital === hospital && `${d.year}年` === y)?.revenue || 0),
+                    backgroundColor: colors.hospital[index % colors.hospital.length],
+                    borderColor: borderColors.hospital[index % borderColors.hospital.length],
+                    borderWidth: 1,
+                    borderRadius: 3,
+                }));
             }
 
             revenueChart = new Chart(ctx, {
                 type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: datasets
-                },
+                data: { labels, datasets },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        title: {
-                            display: true,
-                            text: titleText,
-                            font: {
-                                size: 18,
-                                family: "'Noto Sans TC', sans-serif",
-                                weight: 'bold',
-                            },
-                            color: '#334155',
-                            padding: {
-                                top: 10,
-                                bottom: 20
-                            }
-                        },
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                font: {
-                                    family: "'Noto Sans TC', sans-serif",
-                                    size: 14,
-                                }
-                            }
-                        },
-                        tooltip: {
-                            titleFont: { family: "'Noto Sans TC', sans-serif" },
-                            bodyFont: { family: "'Noto Sans TC', sans-serif" },
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.parsed.y !== null) {
-                                        label += context.parsed.y.toLocaleString() + ' 點';
-                                    }
-                                    return label;
-                                }
-                            }
-                        },
-                        // -- Datalabels Plugin 設定 --
+                        legend: { display: false },
+                        tooltip: { callbacks: { label: c => `${c.dataset.label || ''}: ${c.parsed.y.toLocaleString()} 點` } },
                         datalabels: {
-                            anchor: 'end',
-                            align: 'top',
-                            color: '#4b5563', // 深灰色字體
-                            font: {
-                                family: "'Noto Sans TC', sans-serif",
-                                weight: '500',
-                                size: 10,
-                            },
-                            formatter: (value) => {
-                                // 當數值為 0 時不顯示
-                                if (value === 0) return '';
-                                // 將數字格式化為千分位
-                                return value.toLocaleString();
-                            },
-                            // 微調數字與長條頂端的距離
-                            offset: 4,
+                            anchor: 'end', align: 'top', color: '#4b5563',
+                            font: { weight: 'bold', size: 9 },
+                            formatter: v => v > 1000 ? (v / 1000).toFixed(1) + 'k' : (v > 0 ? v : ''),
+                            offset: 2,
                         }
                     },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: '總收入 (給付點數)',
-                                font: {
-                                    size: 14,
-                                    family: "'Noto Sans TC', sans-serif",
-                                    weight: '500'
-                                },
-                                color: '#475569'
-                            },
-                            ticks: {
-                                callback: function(value) {
-                                    return value.toLocaleString();
-                                }
-                            },
-                            // 增加 Y 軸頂部空間，避免數字被截斷
-                            grace: '15%'
+                            ticks: { font: { size: 10 }, callback: v => (v / 1000) + 'k' }
                         },
-                        x: {
-                           ticks: {
-                                font: {
-                                    family: "'Noto Sans TC', sans-serif",
-                                }
-                           }
-                        }
+                        x: { ticks: { font: { size: 10 } } }
                     },
-                    interaction: {
-                        mode: 'index',
-                        intersect: false,
-                    },
+                    interaction: { mode: 'index', intersect: false },
                 }
             });
         }
         
-        /**
-         * 更新按鈕樣式
-         * @param {string} activeBtnId - 目前啟用的按鈕 ID
-         */
         function updateButtonStyles(activeBtnId) {
-            const buttons = [groupByYearBtn, groupByHospitalBtn];
-            buttons.forEach(btn => {
-                if (btn.id === activeBtnId) {
-                    btn.classList.remove('bg-gray-300', 'text-gray-800');
-                    btn.classList.add('bg-blue-600', 'text-white');
-                } else {
-                    btn.classList.remove('bg-blue-600', 'text-white');
-                    btn.classList.add('bg-gray-300', 'text-gray-800');
-                }
+            [groupByYearBtn, groupByHospitalBtn].forEach(btn => {
+                btn.classList.toggle('bg-blue-600', btn.id === activeBtnId);
+                btn.classList.toggle('text-white', btn.id === activeBtnId);
+                btn.classList.toggle('bg-gray-300', btn.id !== activeBtnId);
+                btn.classList.toggle('text-gray-800', btn.id !== activeBtnId);
             });
         }
 
-
-        // --- 事件監聽 ---
-        groupByYearBtn.addEventListener('click', () => {
+        // --- Event Listeners & Initial Load ---
+        document.addEventListener('DOMContentLoaded', () => {
+            Chart.register(ChartDataLabels);
             drawChart('year');
             updateButtonStyles('groupByYearBtn');
+            groupByYearBtn.addEventListener('click', () => { drawChart('year'); updateButtonStyles('groupByYearBtn'); });
+            groupByHospitalBtn.addEventListener('click', () => { drawChart('hospital'); updateButtonStyles('groupByHospitalBtn'); });
         });
-
-        groupByHospitalBtn.addEventListener('click', () => {
-            drawChart('hospital');
-            updateButtonStyles('groupByHospitalBtn');
-        });
-
-        // --- 初始載入 ---
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- 註冊 Datalabels 外掛 ---
-            // 將註冊程序移至此處，確保 Chart.js 函式庫已載入
-            Chart.register(ChartDataLabels);
-
-            populateTable();
-            drawChart('year'); // 預設按年份分組
-            updateButtonStyles('groupByYearBtn'); // 更新按鈕初始樣式
-        });
-
     </script>
 </body>
 </html>
