@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高風險員工健康數據簡報 (16:9)</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 引入 Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- 基礎與簡報容器樣式 --- */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* 隱藏滾動條 */
+            background-color: #111827; /* 深灰色背景 */
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+        }
+        /* 簡報主容器，強制 16:9 比例 */
+        #presentation-container {
+            position: relative;
+            width: 100vw;
+            height: 56.25vw; /* 16:9 Aspect Ratio */
+            max-height: 100vh;
+            max-width: 177.78vh; /* 16:9 Aspect Ratio */
+            margin: auto;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        /* --- 投影片樣式 --- */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f8fafc;
+            color: #1f2937;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease-in-out, visibility 0.6s;
+            box-sizing: border-box;
+        }
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            z-index: 1;
+        }
+        /* --- 導航按鈕樣式 --- */
+        .nav-btn {
+            position: absolute;
+            bottom: 20px;
+            z-index: 10;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 10px 20px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .nav-btn:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+        }
+        #prev-btn {
+            left: 20px;
+        }
+        #next-btn {
+            right: 20px;
+        }
+        /* --- 圖表容器 --- */
+        .chart-container {
+            position: relative;
+            width: 80%;
+            height: 70%;
+        }
+        /* --- 表格滾動條樣式 --- */
+        .table-wrapper::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .table-wrapper::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .table-wrapper::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        .table-wrapper::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="presentation-container">
+        <!-- 投影片 1: 封面 -->
+        <section class="slide active">
+            <div class="text-center">
+                <h1 class="text-6xl font-bold text-slate-800">高風險員工健康數據簡報</h1>
+                <p class="text-2xl text-slate-500 mt-4">分析報告: 60 歲以上且 BMI ≥ 30 員工</p>
+                <div class="mt-12 text-slate-400">
+                    <p>使用左右導航按鈕切換頁面</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 投影片 2: 核心指標 -->
+        <section class="slide">
+            <h2 class="text-4xl font-bold text-slate-800 absolute top-16">核心指標</h2>
+            <div class="text-center p-12 bg-blue-50 rounded-2xl shadow-lg">
+                <p class="text-2xl text-slate-600">總高風險員工人數</p>
+                <p id="total-employees" class="text-8xl font-bold text-blue-600 mt-4">0</p>
+            </div>
+        </section>
+
+        <!-- 投影片 3: 部門分佈 -->
+        <section class="slide">
+            <h2 class="text-4xl font-bold text-slate-800 absolute top-16">各部門高風險員工人數分佈</h2>
+            <div class="chart-container mt-8">
+                <canvas id="department-chart"></canvas>
+            </div>
+        </section>
+
+        <!-- 投影片 4: 年齡 vs. BMI -->
+        <section class="slide">
+            <h2 class="text-4xl font-bold text-slate-800 absolute top-16">年齡 vs. BMI 散佈圖</h2>
+            <div class="chart-container mt-8">
+                <canvas id="bmi-age-chart"></canvas>
+            </div>
+        </section>
+
+        <!-- 投影片 5: 詳細資料 -->
+        <section class="slide">
+            <div class="w-full h-full flex flex-col">
+                <div class="flex-shrink-0 flex justify-between items-center mb-4">
+                    <h2 class="text-4xl font-bold text-slate-800">詳細員工資料</h2>
+                    <input type="text" id="searchInput" placeholder="搜尋姓名或部門..." class="w-72 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="table-wrapper flex-grow overflow-auto">
+                    <table class="w-full text-base text-left text-slate-500">
+                        <thead class="text-sm text-slate-700 uppercase bg-slate-100 sticky top-0">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 rounded-l-lg">員工編號</th>
+                                <th scope="col" class="px-6 py-3">姓名</th>
+                                <th scope="col" class="px-6 py-3">部門</th>
+                                <th scope="col" class="px-6 py-3">年齡</th>
+                                <th scope="col" class="px-6 py-3">身高 (cm)</th>
+                                <th scope="col" class="px-6 py-3">體重 (kg)</th>
+                                <th scope="col" class="px-6 py-3 rounded-r-lg">BMI</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employee-table-body">
+                            <!-- Data will be populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 投影片 6: 結語 -->
+        <section class="slide">
+            <div class="text-center">
+                <h2 class="text-6xl font-bold text-slate-800">感謝觀看</h2>
+                <p class="text-2xl text-slate-500 mt-4">如有任何問題，請隨時提出。</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- 導航按鈕 -->
+    <button id="prev-btn" class="nav-btn">‹ 上一頁</button>
+    <button id="next-btn" class="nav-btn">下一頁 ›</button>
+
+    <script>
+        // --- 模擬數據 ---
+        const employeeData = [
+            { "員工編號": "E1023", "姓名": "王大明", "部門": "工程部", "年齡": 62, "身高cm": 170, "體重kg": 92, "BMI": 31.8 },
+            { "員工編號": "E2451", "姓名": "陳美麗", "部門": "行銷部", "年齡": 65, "身高cm": 160, "體重kg": 80, "BMI": 31.3 },
+            { "員工編號": "E1058", "姓名": "李國強", "部門": "工程部", "年齡": 68, "身高cm": 175, "體重kg": 100, "BMI": 32.7 },
+            { "員工編號": "E3112", "姓名": "林淑芬", "部門": "人資部", "年齡": 61, "身高cm": 155, "體重kg": 75, "BMI": 31.2 },
+            { "員工編號": "E4098", "姓名": "黃志明", "部門": "業務部", "年齡": 70, "身高cm": 168, "體重kg": 95, "BMI": 33.7 },
+            { "員工編號": "E1101", "姓名": "張雅婷", "部門": "工程部", "年齡": 63, "身高cm": 165, "體重kg": 85, "BMI": 31.2 },
+            { "員工編號": "E2503", "姓名": "吳俊彥", "部門": "行銷部", "年齡": 66, "身高cm": 172, "體重kg": 98, "BMI": 33.1 },
+            { "員工編號": "E4155", "姓名": "劉美玲", "部門": "業務部", "年齡": 64, "身高cm": 163, "體重kg": 82, "BMI": 30.9 },
+            { "員工編號": "E5001", "姓名": "蔡文雄", "部門": "管理部", "年齡": 67, "身高cm": 166, "體重kg": 90, "BMI": 32.6 },
+            { "員工編號": "E1234", "姓名": "鄭志偉", "部門": "工程部", "年齡": 60, "身高cm": 180, "體重kg": 100, "BMI": 30.9 },
+            { "員工編號": "E4200", "姓名": "許慧君", "部門": "業務部", "年齡": 62, "身高cm": 158, "體重kg": 78, "BMI": 31.2 },
+            { "員工編號": "E2601", "姓名": "楊宗憲", "部門": "行銷部", "年齡": 69, "身高cm": 177, "體重kg": 105, "BMI": 33.5 },
+        ];
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // --- 簡報導航邏輯 ---
+            const slides = document.querySelectorAll('.slide');
+            let currentSlide = 0;
+
+            function showSlide(index) {
+                slides.forEach((slide, i) => {
+                    slide.classList.toggle('active', i === index);
+                });
+            }
+
+            document.getElementById('next-btn').addEventListener('click', () => {
+                currentSlide = (currentSlide + 1) % slides.length;
+                showSlide(currentSlide);
+            });
+
+            document.getElementById('prev-btn').addEventListener('click', () => {
+                currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+                showSlide(currentSlide);
+            });
+            
+            showSlide(currentSlide);
+
+            // --- 圖表與資料渲染 ---
+            let chartsInitialized = false;
+
+            function initializeChartsAndData() {
+                if (chartsInitialized) return;
+
+                // 1. 更新核心指標
+                document.getElementById('total-employees').textContent = employeeData.length;
+
+                // 2. 渲染部門分佈長條圖
+                const departmentCounts = employeeData.reduce((acc, employee) => {
+                    acc[employee.部門] = (acc[employee.部門] || 0) + 1;
+                    return acc;
+                }, {});
+                const deptCtx = document.getElementById('department-chart').getContext('2d');
+                new Chart(deptCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(departmentCounts),
+                        datasets: [{
+                            label: '員工人數',
+                            data: Object.values(departmentCounts),
+                            backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            borderWidth: 1,
+                            borderRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+
+                // 3. 渲染年齡 vs. BMI 散佈圖
+                const ageBmiData = employeeData.map(e => ({ x: e.年齡, y: e.BMI }));
+                const bmiAgeCtx = document.getElementById('bmi-age-chart').getContext('2d');
+                new Chart(bmiAgeCtx, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [{
+                            label: '員工',
+                            data: ageBmiData,
+                            backgroundColor: 'rgba(239, 68, 68, 0.8)',
+                            borderColor: 'rgba(239, 68, 68, 1)',
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        scales: {
+                            x: { title: { display: true, text: '年齡' } },
+                            y: { title: { display: true, text: 'BMI' } }
+                        },
+                        plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => ` 年齡: ${c.parsed.x}, BMI: ${c.parsed.y}` } } }
+                    }
+                });
+
+                // 4. 填充詳細資料表
+                const tableBody = document.getElementById('employee-table-body');
+                function populateTable(data) {
+                    tableBody.innerHTML = '';
+                    if (data.length === 0) {
+                        tableBody.innerHTML = `<tr><td colspan="7" class="text-center px-6 py-4">找不到符合條件的資料</td></tr>`;
+                        return;
+                    }
+                    data.forEach(employee => {
+                        const row = document.createElement('tr');
+                        row.className = 'bg-white border-b hover:bg-slate-50';
+                        row.innerHTML = `
+                            <td class="px-6 py-4 font-medium text-slate-900">${employee.員工編號}</td>
+                            <td class="px-6 py-4">${employee.姓名}</td>
+                            <td class="px-6 py-4">${employee.部門}</td>
+                            <td class="px-6 py-4">${employee.年齡}</td>
+                            <td class="px-6 py-4">${employee.身高cm}</td>
+                            <td class="px-6 py-4">${employee.體重kg}</td>
+                            <td class="px-6 py-4 font-semibold text-red-600">${employee.BMI}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                }
+                populateTable(employeeData);
+
+                // 5. 設定搜尋功能
+                document.getElementById('searchInput').addEventListener('keyup', (e) => {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const filteredData = employeeData.filter(emp => emp.姓名.toLowerCase().includes(searchTerm) || emp.部門.toLowerCase().includes(searchTerm));
+                    populateTable(filteredData);
+                });
+                
+                chartsInitialized = true;
+            }
+
+            // 延遲載入圖表，避免在非 active slide 上渲染造成問題
+            // 第一次切換到非封面頁時，再初始化所有圖表
+            const observer = new MutationObserver((mutations) => {
+                for (let mutation of mutations) {
+                    if (mutation.attributeName === 'class' && !slides[0].classList.contains('active')) {
+                        initializeChartsAndData();
+                        observer.disconnect(); // 初始化後就停止觀察
+                        break;
+                    }
+                }
+            });
+            observer.observe(slides[0], { attributes: true });
+
+        });
+    </script>
+</body>
+</html>
