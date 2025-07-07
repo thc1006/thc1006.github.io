@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>員工健康數據視覺化簡報 (16:9版)</title>
+    <!-- 引入 Tailwind CSS 以美化頁面 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Chart.js 用於繪製圖表 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 引入 Heroicons 圖示庫 -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* 基本設定 */
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #333; /* 深色背景以凸顯簡報 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* 簡報主容器，強制 16:9 */
+        #presentation-container {
+            width: 100vw;
+            height: 56.25vw; /* 9 / 16 = 0.5625 */
+            max-height: 100vh;
+            max-width: 177.78vh; /* 16 / 9 = 1.7778 */
+            position: relative;
+            background-color: #f3f4f6; /* 簡報底色 */
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+
+        /* 每一頁投影片的樣式 */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 4%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+            visibility: hidden;
+        }
+
+        /* 當前顯示的投影片 */
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* 導覽按鈕 */
+        .nav-button {
+            position: absolute;
+            bottom: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+        .nav-button:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        #prev-btn {
+            left: 20px;
+        }
+        #next-btn {
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 簡報主容器 -->
+    <div id="presentation-container">
+
+        <!-- Slide 1: 封面頁 -->
+        <div class="slide active" id="slide-1">
+            <h1 class="text-6xl font-bold text-gray-800 tracking-wide text-center">員工健康檢查<br>數據分析報告</h1>
+            <p class="mt-6 text-2xl text-gray-600">深入解析男女員工主要健康議題與改善建議</p>
+            <div class="absolute bottom-10 text-gray-500">使用下方按鈕切換頁面</div>
+        </div>
+
+        <!-- Slide 2: 視覺化圖表 -->
+        <div class="slide" id="slide-2">
+             <h2 class="text-3xl font-bold text-gray-800 mb-4 w-full text-center">男女員工健康異常項目人數比較</h2>
+             <div class="w-full h-full flex-grow">
+                <canvas id="healthChart"></canvas>
+             </div>
+        </div>
+
+        <!-- Slide 3: 重點發現 -->
+        <div class="slide" id="slide-3">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 w-full text-center">主要健康洞察</h2>
+            <div class="w-full h-full flex-grow grid grid-cols-2 gap-8">
+                <!-- 男性健康洞察卡片 -->
+                <div class="bg-white rounded-lg shadow-md p-6 flex flex-col">
+                    <h3 class="text-2xl font-bold mb-4 flex items-center text-blue-600">
+                        <ion-icon name="male" class="mr-2"></ion-icon>男性主要發現
+                    </h3>
+                    <ul class="space-y-4 text-gray-700 text-lg flex-grow">
+                        <li class="flex items-start"><ion-icon name="ellipse" class="text-blue-500 mt-2 mr-3 flex-shrink-0"></ion-icon><div><strong class="font-semibold">高血脂 (152人):</strong> 最普遍的異常，為心血管疾病警訊。</div></li>
+                        <li class="flex items-start"><ion-icon name="ellipse" class="text-blue-500 mt-2 mr-3 flex-shrink-0"></ion-icon><div><strong class="font-semibold">脂肪肝 (118人):</strong> 與體重、飲酒及高熱量飲食相關。</div></li>
+                        <li class="flex items-start"><ion-icon name="ellipse" class="text-blue-500 mt-2 mr-3 flex-shrink-0"></ion-icon><div><strong class="font-semibold">體重過重 (95人):</strong> 許多代謝症候群的根源。</div></li>
+                    </ul>
+                </div>
+                <!-- 女性健康洞察卡片 -->
+                <div class="bg-white rounded-lg shadow-md p-6 flex flex-col">
+                    <h3 class="text-2xl font-bold mb-4 flex items-center text-pink-600">
+                        <ion-icon name="female" class="mr-2"></ion-icon>女性主要發現
+                    </h3>
+                    <ul class="space-y-4 text-gray-700 text-lg flex-grow">
+                        <li class="flex items-start"><ion-icon name="ellipse" class="text-pink-500 mt-2 mr-3 flex-shrink-0"></ion-icon><div><strong class="font-semibold">膽固醇過高 (105人):</strong> 同樣需注意心血管健康。</div></li>
+                        <li class="flex items-start"><ion-icon name="ellipse" class="text-pink-500 mt-2 mr-3 flex-shrink-0"></ion-icon><div><strong class="font-semibold">骨質密度異常 (88人):</strong> 骨質疏鬆風險，需注意鈣質攝取。</div></li>
+                        <li class="flex items-start"><ion-icon name="ellipse" class="text-pink-500 mt-2 mr-3 flex-shrink-0"></ion-icon><div><strong class="font-semibold">甲狀腺異常 (76人):</strong> 常見的女性內分泌問題。</div></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 4: 綜合建議 -->
+        <div class="slide" id="slide-4">
+            <h2 class="text-3xl font-bold text-center text-green-700 flex items-center justify-center mb-8">
+                <ion-icon name="heart-circle-outline" class="mr-3 text-4xl"></ion-icon>綜合健康促進建議
+            </h2>
+            <div class="w-full flex-grow grid grid-cols-3 gap-6 text-left">
+                <div class="bg-green-50 p-6 rounded-lg shadow">
+                    <h3 class="font-bold text-xl text-green-800 mb-2">飲食健康講座</h3>
+                    <p class="text-gray-600 text-base">針對高血脂、高膽固醇與脂肪肝問題，定期舉辦營養師講座，提供外食族健康飲食指南。</p>
+                </div>
+                <div class="bg-blue-50 p-6 rounded-lg shadow">
+                    <h3 class="font-bold text-xl text-blue-800 mb-2">推動體能活動</h3>
+                    <p class="text-gray-600 text-base">成立健走、瑜珈等運動社團，鼓勵員工利用午休或下班時間活動，改善體重與代謝問題。</p>
+                </div>
+                <div class="bg-yellow-50 p-6 rounded-lg shadow">
+                    <h3 class="font-bold text-xl text-yellow-800 mb-2">女性健康關懷</h3>
+                    <p class="text-gray-600 text-base">針對骨質密度與甲狀腺問題，可邀請專科醫師提供諮詢，並宣導定期追蹤的重要性。</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 導覽按鈕 -->
+    <button id="prev-btn" class="nav-button"><ion-icon name="chevron-back-outline"></ion-icon></button>
+    <button id="next-btn" class="nav-button"><ion-icon name="chevron-forward-outline"></ion-icon></button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- 簡報控制邏輯 ---
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            let currentSlide = 0;
+
+            function showSlide(index) {
+                // 隱藏當前的投影片
+                slides[currentSlide].classList.remove('active');
+                
+                // 計算新的投影片索引
+                currentSlide = (index + slides.length) % slides.length;
+                
+                // 顯示新的投影片
+                slides[currentSlide].classList.add('active');
+
+                // 更新按鈕的可見性
+                prevBtn.style.display = currentSlide === 0 ? 'none' : 'flex';
+                nextBtn.style.display = currentSlide === slides.length - 1 ? 'none' : 'flex';
+            }
+
+            prevBtn.addEventListener('click', () => showSlide(currentSlide - 1));
+            nextBtn.addEventListener('click', () => showSlide(currentSlide + 1));
+            
+            // 初始化，顯示第一頁並設定按鈕狀態
+            showSlide(0);
+
+            // --- 圖表繪製邏輯 ---
+            const ctx = document.getElementById('healthChart').getContext('2d');
+            const maleData = { '高血脂': 152, '脂肪肝': 118, '體重過重': 95 };
+            const femaleData = { '膽固醇過高': 105, '骨質密度異常': 88, '甲狀腺異常': 76 };
+            const allLabels = [...new Set([...Object.keys(maleData), ...Object.keys(femaleData)])];
+            const maleChartData = allLabels.map(label => maleData[label] || 0);
+            const femaleChartData = allLabels.map(label => femaleData[label] || 0);
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: allLabels,
+                    datasets: [
+                        {
+                            label: '男性員工人數',
+                            data: maleChartData,
+                            backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1,
+                            borderRadius: 5,
+                        },
+                        {
+                            label: '女性員工人數',
+                            data: femaleChartData,
+                            backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1,
+                            borderRadius: 5,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top', labels: { font: { size: 16 } } },
+                        title: { display: false }, // 標題已移至投影片標題
+                        tooltip: {
+                            titleFont: { size: 16 },
+                            bodyFont: { size: 14 },
+                            callbacks: {
+                                label: context => `${context.dataset.label || ''}: ${context.parsed.y || 0} 人`
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: '人數', font: { size: 16, weight: '500' } }
+                        },
+                        x: {
+                             title: { display: true, text: '健康異常項目', font: { size: 16, weight: '500' } }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
