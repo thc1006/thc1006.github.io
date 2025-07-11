@@ -1,59 +1,611 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Intent-Driven Closed-Loop Network Management Workflow</title>
-    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <title>Nephio 與生成式 AI：革新雲原生網路自動化</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        #workflow { max-width: 800px; margin: auto; }
-        .node { cursor: pointer; }
-        #details { margin-top: 20px; padding: 10px; border: 1px solid #ccc; display: none; }
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
+
+        :root {
+            --primary-color: #4285F4; /* Google Blue */
+            --background-color: #1e1e1e;
+            --text-color: #e0e0e0;
+            --header-color: #ffffff;
+            --accent-color: #00e676; /* Green Accent */
+            --slide-bg: linear-gradient(145deg, #2c2c2c, #1a1a1a);
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .presentation-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slides {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .slide {
+            box-sizing: border-box;
+            padding: 5vw;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease-in-out, visibility 0.6s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: var(--slide-bg);
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .slide-content {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .slide.title-slide {
+            justify-content: center;
+        }
+        
+        .slide.toc-slide, .slide.content-slide {
+            align-items: flex-start;
+            text-align: left;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: var(--header-color);
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(66, 133, 244, 0.5);
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            display: inline-block;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            margin-top: 2rem;
+        }
+
+        p, li {
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+
+        .authors {
+            margin-top: 30px;
+            font-style: italic;
+            color: #aaa;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        li {
+            padding-left: 1.5em;
+            text-indent: -1.5em;
+            margin-bottom: 15px;
+        }
+        
+        li::before {
+            content: '»';
+            color: var(--primary-color);
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .columns {
+            display: flex;
+            gap: 40px;
+            width: 100%;
+        }
+
+        .column {
+            flex: 1;
+        }
+
+        .nav-buttons {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .nav-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        
+        .nav-btn:hover {
+            background-color: #3367d6;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        #slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            z-index: 1000;
+            background-color: rgba(0,0,0,0.5);
+            padding: 8px 15px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .toc-menu {
+            position: fixed;
+            top: 0;
+            left: -350px;
+            width: 300px;
+            height: 100%;
+            background-color: #2a2a2a;
+            padding: 80px 25px 25px 25px;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+            transition: left 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            z-index: 1001;
+        }
+        
+        .toc-menu.open {
+            left: 0;
+        }
+
+        .toc-menu h3 {
+            color: var(--accent-color);
+            margin-top: 0;
+        }
+
+        .toc-menu ul {
+            padding: 0;
+            list-style: none;
+        }
+        
+        .toc-menu li {
+            padding: 0;
+            text-indent: 0;
+            margin-bottom: 15px;
+        }
+        
+        .toc-menu li::before {
+            content: '';
+            margin: 0;
+        }
+        
+        .toc-menu a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 1.1rem;
+            display: block;
+            padding: 8px 0;
+            transition: color 0.3s;
+        }
+        
+        .toc-menu a:hover {
+            color: var(--accent-color);
+        }
+        
+        #toc-toggle {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            z-index: 1002;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .hamburger {
+            width: 30px;
+            height: 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .hamburger span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: var(--text-color);
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+
+        .toc-menu.open + #toc-toggle .hamburger span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .toc-menu.open + #toc-toggle .hamburger span:nth-child(2) {
+            opacity: 0;
+        }
+        .toc-menu.open + #toc-toggle .hamburger span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+        
+        strong, code {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+        
+        .call-to-action {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: rgba(66, 133, 244, 0.1);
+            border-left: 4px solid var(--primary-color);
+            border-radius: 5px;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            h2 { font-size: 1.8rem; }
+            p, li { font-size: 1rem; }
+            .columns { flex-direction: column; }
+            .slide { padding: 8vw 5vw; }
+        }
+
     </style>
 </head>
 <body>
-    <h1>Intent-Driven Closed-Loop Network Management E2E Workflow</h1>
-    <div id="workflow" class="mermaid">
-graph TD
-    A[Express Intent] --> B[Translate Intent]
-    B --> C[Deploy/Configure Network]
-    C --> D[Observe: Monitor State & Performance]
-    D --> E[Analyze: Evaluate vs. Intent & SLA]
-    E --> F{Discrepancy?}
-    F -- Yes --> G[Act: Adjust Configuration]
-    G --> D
-    F -- No --> D
-    subgraph Closed Loop
-    D --> E --> F --> G
-    end
-    classDef node fill:#f9f,stroke:#333,stroke-width:2px;
-    class A,B,C,D,E,F,G node;
-    </div>
-    <div id="details">
-        <h2>Step Details</h2>
-        <p id="detail-text"></p>
+
+    <div class="presentation-container">
+        <div class="slides">
+            
+            <section class="slide active title-slide">
+                <div class="slide-content">
+                    <h1>Nephio 與生成式 AI</h1>
+                    <p style="font-size: 1.5rem;">革新雲原生網路自動化</p>
+                    <p class="authors">基於 Nephio WG6 白皮書製作</p>
+                </div>
+            </section>
+
+            <section class="slide toc-slide">
+                <div class="slide-content">
+                    <h2>簡報大綱</h2>
+                    <ul>
+                        <li><strong>內容摘要：</strong>為何這兩項技術的結合如此重要？</li>
+                        <li><strong>核心挑戰：</strong>現代網路自動化面臨什麼困境？</li>
+                        <li><strong>兩大主角：</strong>Nephio 與生成式 AI 簡介</li>
+                        <li><strong>天作之合：</strong>GitOps + GenAI 的綜效</li>
+                        <li><strong>實質好處：</strong>如何提升體驗與效率？</li>
+                        <li><strong>應用案例：</strong>從範本生成到 AI 助理</li>
+                        <li><strong>挑戰與未來：</strong>安全性、合規性與未來展望</li>
+                        <li><strong>行動呼籲：</strong>共同塑造網路自動化的未來</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="slide content-slide">
+                <div class="slide-content">
+                    <h2>內容摘要：為何重要？</h2>
+                    <p>本簡報旨在探索開源專案 <strong>Nephio</strong> 與<strong>生成式 AI (GenAI)</strong> 之間的強大潛力。</p>
+                    <ul>
+                        <li><strong>徹底改變管理</strong>：透過 AI 生成組態、自動化故障排除，大幅減少人為介入。</li>
+                        <li><strong>提升網路效率</strong>：實現動態的效能洞察與資源最佳化。</li>
+                        <li><strong>未來藍圖</strong>：描繪出由「意圖驅動」、可自我修復的「閉環式」網路管理新未來，為電信產業帶來革命性變革。</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="slide content-slide">
+                <div class="slide-content">
+                    <h2>核心挑戰：網路自動化的困境</h2>
+                    <p>在 5G、邊緣運算時代，傳統網路自動化方法已難以應對：</p>
+                    <ul>
+                        <li><strong>高度複雜性</strong>：跨越多家供應商、多雲環境的協調極為困難。</li>
+                        <li><strong>缺乏彈性</strong>：仍採用「命令式」方法，難以宣告網路的最終期望狀態。</li>
+                        - <li><strong>反應緩慢</strong>：面對網路變更與擴展需求，回應速度跟不上業務發展。</li>
+                        <li><strong>規模化難題</strong>：大規模管理互連的工作負載，成本高昂且容易出錯。</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="slide content-slide">
+                <div class="slide-content">
+                    <h2>主角一：Nephio 是什麼？</h2>
+                    <p>一個由 Linux 基金會與 Google Cloud 等夥伴共同發起的開源專案，專為**雲原生網路自動化**而生。</p>
+                    <div class="columns">
+                        <div class="column">
+                            <h3>核心理念</h3>
+                            <ul>
+                                <li>基於 <code>Kubernetes</code></li>
+                                <li>採用宣告式「意圖驅動」</li>
+                                <li>使用 <code>GitOps</code> 作為真理之源</li>
+                                <li>將資料與自動化邏輯解耦</li>
+                            </ul>
+                        </div>
+                        <div class="column">
+                            <h3>專案進展</h3>
+                            <ul>
+                                <li>社群貢獻者年增 <strong>40%</strong></li>
+                                <li>已被大型電信公司用於 <strong>5G 核心網路</strong></li>
+                                <li>範疇擴展至 <strong>RAN</strong> 與<strong>多雲框架</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="slide content-slide">
+                <div class="slide-content">
+                    <h2>主角二：生成式 AI (GenAI)</h2>
+                    <p>能夠理解人類意圖並**創造全新內容**（如文字、程式碼、組態）的 AI 系統，通常基於大型語言模型 (LLM)。</p>
+                    <h3>在 Nephio 中，GenAI 可以：</h3>
+                    <ul>
+                        <li><strong>提升體驗</strong>：簡化複雜任務，自動生成範本與程式碼。</li>
+                        <li><strong>最佳化網路</strong>：改善雲端容量、能源效率與 5G 效能。</li>
+                        <li><strong>進階自動化</strong>：將高階意圖轉譯為可執行的網路組態，並進行智慧故障排除。</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="slide content-slide">
+                <div class="slide-content">
+                    <h2>天作之合：Nephio GitOps + GenAI</h2>
+                    <p>兩者的結合，能打造出真正的「意圖驅動」與「閉環」自動化流程。</p>
+                    <h3>傳統流程 vs. AI 增強流程</h3>
+                    <div class="columns">
+                        <div class="column">
+                            <h3 style="color: #ffab00;">傳統 (人為驅動)</h3>
+                            <p>意圖 ➡️ 工程師手動撰寫 CRD/Operator ➡️ GitOps 部署 ➡️ 人工監控與分析 ➡️ 手動調整</p>
+                        </div>
+                        <div class="column">
+                            <h3 style="color: var(--accent-color);">AI 增強 (AI 輔助)</h3>
+                            <p>意圖 ➡️ <strong>GenAI</strong> 自動生成 CRD/Operator ➡️ GitOps 部署 ➡️ <strong>AI</strong> 驅動分析與洞察 ➡️ 自動調整</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="slide content-slide">
+                <div class="slide-content">
+                    <h2>實質好處：體驗與效率雙重提升</h2>
+                    <div class="columns">
+                        <div class="column">
+                            <h3>🚀 使用者體驗提升</h3>
+                            <ul>
+                                <li><strong>自動生成範本</strong>：將工程師從耗時約 80% 的範本工作中解放。</li>
+                                <li><strong>簡化開發</strong>：自動生成部分程式碼與 SDK，降低開發門檻。</li>
+                                <li><strong>自然語言互動</strong>：未來可用對話方式管理網路，無需記憶複雜指令。</li>
+                            </ul>
+                        </div>
+                        <div class="column">
+                            <h3>⚙️ 網路最佳化</h3>
+                            <ul>
+                                <li><strong>資源管理</strong>：最佳化雲端容量、成本與能源效率。</li>
+                                <li><strong>效能提升</strong>：改善 5G RAN 與邊緣運算的效能。</li>
+                                <li><strong>智慧營運</strong>：實現 AI 驅動的網路佈建、故障排除與預測性維護。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="slide content-slide">
+                <div class="slide-content">
+                    <h2>應用案例 1：範本自動化 (RAG)</h2>
+                    <p>利用**檢索增強生成 (Retrieval-Augmented Generation, RAG)** 技術，讓自動化更智慧。</p>
+                    <ul>
+                        <li><strong>LLM (大腦)</strong>：負責理解需求並生成內容。</li>
+                        <li><strong>RAG (知識庫)</strong>：將 LLM 與 Nephio 的特定資料（如 Git 儲存庫、組態資料、安全規範）連結。</li>
+                        <li><strong>應用</strong>：當使用者提出「我需要一個符合 A 規範的 5G UPF 範本」時，系統能自動從知識庫檢索相關資訊，並生成精確、合規的組態範本。</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="slide content-slide">
+                <div class="slide-content">
+                    <h2>應用案例 2：Nephio AI 助理</h2>
+                    <p>打造一個次世代的**指令列介面 (CLI)**，讓網路管理像對話一樣簡單。</p>
+                    <ul>
+                        <li><strong>語意理解</strong>：使用者可以用自然語言下指令，例如：「幫我在 A 地區建一個 Kubernetes 叢集，需要高可用性」。</li>
+                        <li><strong>自動轉譯</strong>：AI 助理會將指令轉譯為精確的 Nephio API 呼叫並執行。</li>
+                        <li><strong>降低門檻</strong>：技術人員無需精通所有 Nephio API 或複雜語法，大幅簡化操作與上手過程。</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="slide content-slide">
+                <div class="slide-content">
+                    <h2>挑戰與未來考量</h2>
+                    <p>在擁抱新技術的同時，我們也必須正視挑戰：</p>
+                    <div class="columns">
+                        <div class="column">
+                            <h3>🔒 安全性要求</h3>
+                            <ul>
+                                <li><strong>資料安全</strong>：防止透過提示注入或資料毒化等方式發動攻擊。</li>
+                                <li><strong>供應鏈安全</strong>：需謹慎選擇 LLM 模型及其來源。</li>
+                                <li><strong>防禦策略</strong>：考慮設置 LLM 閘道器等防禦措施。</li>
+                            </ul>
+                        </div>
+                        <div class="column">
+                            <h3>📜 開源合規性</h3>
+                            <ul>
+                                <li><strong>模型開放性</strong>：需遵循 LF AI & Data 的模型開放性框架 (MOF)。</li>
+                                <li><strong>授權一致性</strong>：確保所有 AI 相關產出物符合開源授權規範。</li>
+                                <li><strong>避免鎖定</strong>：與業界標準對齊，確保互通性。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="slide content-slide">
+                <div class="slide-content">
+                    <h2>結論與行動呼籲</h2>
+                    <p>Nephio 與生成式 AI 的結合，是網路自動化領域的革命性機會，能打造一個更智慧、高效且具韌性的電信基礎設施。</p>
+                    <div class="call-to-action">
+                        <h3>共同塑造網路自動化的未來</h3>
+                        <p>我們誠摯邀請電信營運商、供應商、AI 新創公司與所有技術專家加入 <strong>Nephio 專案</strong>，共同克服挑戰，釋放 AI 驅動網路自動化的全部潛力，一起打造一個更智慧、更具適應性的世界。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="slide title-slide">
+                <div class="slide-content">
+                    <h1>Q&A</h1>
+                    <p style="font-size: 1.5rem;">感謝聆聽</p>
+                </div>
+            </section>
+
+        </div>
+
+        <div class="nav-buttons">
+            <button id="prev-btn" class="nav-btn">上一張</button>
+            <button id="next-btn" class="nav-btn">下一張</button>
+        </div>
+        
+        <div id="slide-counter"></div>
+
+        <nav id="toc-menu" class="toc-menu">
+            <h3>目錄</h3>
+            <ul>
+                <li><a href="#" data-slide="1">簡報大綱</a></li>
+                <li><a href="#" data-slide="2">內容摘要</a></li>
+                <li><a href="#" data-slide="3">核心挑戰</a></li>
+                <li><a href="#" data-slide="4">主角一：Nephio</a></li>
+                <li><a href="#" data-slide="5">主角二：GenAI</a></li>
+                <li><a href="#" data-slide="6">天作之合</a></li>
+                <li><a href="#" data-slide="7">實質好處</a></li>
+                <li><a href="#" data-slide="8">應用案例 1: RAG</a></li>
+                <li><a href="#" data-slide="9">應用案例 2: AI 助理</a></li>
+                <li><a href="#" data-slide="10">挑戰與未來</a></li>
+                <li><a href="#" data-slide="11">結論與行動呼籲</a></li>
+                <li><a href="#" data-slide="12">Q&A</a></li>
+            </ul>
+        </nav>
+        <button id="toc-toggle">
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </button>
+
     </div>
 
     <script>
-        mermaid.initialize({startOnLoad:true});
-        const details = {
-            A: "User expresses high-level intent (e.g., create eMBB slice with SLA).",
-            B: "Translate intent into actionable configs using CRDs and operators.",
-            C: "Deploy network functions in multi-vendor/cloud env.",
-            D: "Continuously monitor network state and metrics.",
-            E: "Analyze data against intent and SLAs.",
-            F: "Check for discrepancies.",
-            G: "Automatically adjust to maintain desired state."
-        };
-        document.querySelector('#workflow').addEventListener('click', (e) => {
-            const node = e.target.closest('g[id]');
-            if (node) {
-                const id = node.id.split('-')[1];
-                document.getElementById('detail-text').textContent = details[id] || 'No details available.';
-                document.getElementById('details').style.display = 'block';
+    document.addEventListener('DOMContentLoaded', function () {
+        const slides = document.querySelectorAll('.slide');
+        const nextBtn = document.getElementById('next-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const slideCounter = document.getElementById('slide-counter');
+        const tocMenu = document.getElementById('toc-menu');
+        const tocToggle = document.getElementById('toc-toggle');
+        const tocLinks = document.querySelectorAll('.toc-menu a');
+
+        let currentSlideIndex = 0;
+        const totalSlides = slides.length;
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
+            currentSlideIndex = index;
+            updateUI();
+        }
+        
+        function updateUI() {
+            // Update counter
+            slideCounter.textContent = `${currentSlideIndex + 1} / ${totalSlides}`;
+            
+            // Update buttons
+            prevBtn.disabled = currentSlideIndex === 0;
+            nextBtn.disabled = currentSlideIndex === totalSlides - 1;
+        }
+
+        function nextSlide() {
+            if (currentSlideIndex < totalSlides - 1) {
+                showSlide(currentSlideIndex + 1);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlideIndex > 0) {
+                showSlide(currentSlideIndex - 1);
+            }
+        }
+        
+        function toggleToc() {
+            tocMenu.classList.toggle('open');
+        }
+
+        // Event Listeners
+        nextBtn.addEventListener('click', nextSlide);
+        prevBtn.addEventListener('click', prevSlide);
+        tocToggle.addEventListener('click', toggleToc);
+        
+        tocLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const slideIndex = parseInt(e.target.dataset.slide);
+                showSlide(slideIndex);
+                toggleToc();
+            });
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                prevSlide();
+            } else if (e.key.toLowerCase() === 'm') {
+                toggleToc();
+            } else if (e.key === 'Escape' && tocMenu.classList.contains('open')) {
+                toggleToc();
             }
         });
+
+        // Initial setup
+        showSlide(0);
+    });
     </script>
 </body>
 </html>
