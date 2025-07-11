@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intent-Driven Closed-Loop Network Management Workflow</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #workflow { max-width: 800px; margin: auto; }
+        .node { cursor: pointer; }
+        #details { margin-top: 20px; padding: 10px; border: 1px solid #ccc; display: none; }
+    </style>
+</head>
+<body>
+    <h1>Intent-Driven Closed-Loop Network Management E2E Workflow</h1>
+    <div id="workflow" class="mermaid">
+graph TD
+    A[Express Intent] --> B[Translate Intent]
+    B --> C[Deploy/Configure Network]
+    C --> D[Observe: Monitor State & Performance]
+    D --> E[Analyze: Evaluate vs. Intent & SLA]
+    E --> F{Discrepancy?}
+    F -- Yes --> G[Act: Adjust Configuration]
+    G --> D
+    F -- No --> D
+    subgraph Closed Loop
+    D --> E --> F --> G
+    end
+    classDef node fill:#f9f,stroke:#333,stroke-width:2px;
+    class A,B,C,D,E,F,G node;
+    </div>
+    <div id="details">
+        <h2>Step Details</h2>
+        <p id="detail-text"></p>
+    </div>
+
+    <script>
+        mermaid.initialize({startOnLoad:true});
+        const details = {
+            A: "User expresses high-level intent (e.g., create eMBB slice with SLA).",
+            B: "Translate intent into actionable configs using CRDs and operators.",
+            C: "Deploy network functions in multi-vendor/cloud env.",
+            D: "Continuously monitor network state and metrics.",
+            E: "Analyze data against intent and SLAs.",
+            F: "Check for discrepancies.",
+            G: "Automatically adjust to maintain desired state."
+        };
+        document.querySelector('#workflow').addEventListener('click', (e) => {
+            const node = e.target.closest('g[id]');
+            if (node) {
+                const id = node.id.split('-')[1];
+                document.getElementById('detail-text').textContent = details[id] || 'No details available.';
+                document.getElementById('details').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
