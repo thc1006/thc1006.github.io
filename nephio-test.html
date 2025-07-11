@@ -3,609 +3,440 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nephio 與生成式 AI：革新雲原生網路自動化</title>
+    <title>Nephio AI 網路維運中心 (NOC) 儀表板</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
-
         :root {
-            --primary-color: #4285F4; /* Google Blue */
-            --background-color: #1e1e1e;
-            --text-color: #e0e0e0;
-            --header-color: #ffffff;
-            --accent-color: #00e676; /* Green Accent */
-            --slide-bg: linear-gradient(145deg, #2c2c2c, #1a1a1a);
+            --bg-color: #0a0e17;
+            --panel-bg: #111827;
+            --border-color: #374151;
+            --text-primary: #e5e7eb;
+            --text-secondary: #9ca3af;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-yellow: #f59e0b;
+            --accent-red: #ef4444;
         }
-
         body {
             font-family: 'Noto Sans TC', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            margin: 0;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
         }
-
-        .presentation-container {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            overflow: hidden;
+        .dashboard-panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
-
-        .slides {
-            width: 100%;
-            height: 100%;
-            position: relative;
+        .font-mono {
+            font-family: 'Roboto Mono', monospace;
         }
-
-        .slide {
-            box-sizing: border-box;
-            padding: 5vw;
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.6s ease-in-out, visibility 0.6s;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            background: var(--slide-bg);
-        }
-
-        .slide.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .slide-content {
-            max-width: 900px;
-            width: 100%;
-        }
-
-        .slide.title-slide {
-            justify-content: center;
-        }
-        
-        .slide.toc-slide, .slide.content-slide {
-            align-items: flex-start;
-            text-align: left;
-        }
-
-        h1 {
-            font-size: 3rem;
-            color: var(--header-color);
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px rgba(66, 133, 244, 0.5);
-        }
-
-        h2 {
-            font-size: 2.2rem;
-            color: var(--primary-color);
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 10px;
-            margin-bottom: 30px;
+        .status-dot {
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
             display: inline-block;
         }
-        
-        h3 {
-            font-size: 1.5rem;
-            color: var(--accent-color);
-            margin-top: 2rem;
-        }
+        .status-dot.online { background-color: var(--accent-green); box-shadow: 0 0 8px var(--accent-green); }
+        .status-dot.warning { background-color: var(--accent-yellow); animation: pulse 1.5s infinite; }
+        .status-dot.error { background-color: var(--accent-red); animation: pulse 1s infinite; }
+        .status-dot.deploying { background-color: var(--accent-blue); animation: pulse 1.2s infinite; }
+        .status-dot.offline { background-color: #6b7280; }
 
-        p, li {
-            font-size: 1.2rem;
-            line-height: 1.8;
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
+        .console-line .prompt { color: var(--accent-green); }
+        .console-line .info { color: var(--accent-blue); }
+        .console-line .success { color: var(--accent-green); }
+        .console-line .warn { color: var(--accent-yellow); }
+        .console-line .error { color: var(--accent-red); }
 
-        .authors {
-            margin-top: 30px;
-            font-style: italic;
-            color: #aaa;
-        }
+        #map-container svg .land { fill: #374151; stroke: #4b5563; }
+        #map-container svg .node { fill: #6b7280; transition: all 0.3s ease; }
+        #map-container svg .node.active { fill: var(--accent-green); }
+        #map-container svg .node.warning { fill: var(--accent-yellow); }
+        #map-container svg .node.error { fill: var(--accent-red); }
+        #map-container svg .node-label { font-size: 10px; fill: white; font-weight: bold; pointer-events: none; }
 
-        ul {
-            list-style-type: none;
-            padding-left: 0;
+        .topology-node {
+            background-color: #374151;
+            border: 2px solid #6b7280;
         }
-
-        li {
-            padding-left: 1.5em;
-            text-indent: -1.5em;
-            margin-bottom: 15px;
+        .topology-node.active {
+            border-color: var(--accent-green);
         }
-        
-        li::before {
-            content: '»';
-            color: var(--primary-color);
-            margin-right: 10px;
-            font-weight: bold;
+        .topology-link {
+            border-top: 2px dashed #4b5563;
         }
-
-        .columns {
-            display: flex;
-            gap: 40px;
-            width: 100%;
-        }
-
-        .column {
-            flex: 1;
-        }
-
-        .nav-buttons {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 1000;
-            display: flex;
-            gap: 15px;
-        }
-        
-        .nav-btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            font-size: 1rem;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-        
-        .nav-btn:hover {
-            background-color: #3367d6;
-            transform: translateY(-2px);
-        }
-
-        .nav-btn:disabled {
-            background-color: #555;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        #slide-counter {
-            position: fixed;
-            bottom: 30px;
-            left: 30px;
-            z-index: 1000;
-            background-color: rgba(0,0,0,0.5);
-            padding: 8px 15px;
-            border-radius: 15px;
-            font-size: 0.9rem;
-        }
-        
-        .toc-menu {
-            position: fixed;
-            top: 0;
-            left: -350px;
-            width: 300px;
-            height: 100%;
-            background-color: #2a2a2a;
-            padding: 80px 25px 25px 25px;
-            box-shadow: 5px 0 15px rgba(0,0,0,0.5);
-            transition: left 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            z-index: 1001;
-        }
-        
-        .toc-menu.open {
-            left: 0;
-        }
-
-        .toc-menu h3 {
-            color: var(--accent-color);
-            margin-top: 0;
-        }
-
-        .toc-menu ul {
-            padding: 0;
-            list-style: none;
-        }
-        
-        .toc-menu li {
-            padding: 0;
-            text-indent: 0;
-            margin-bottom: 15px;
-        }
-        
-        .toc-menu li::before {
-            content: '';
-            margin: 0;
-        }
-        
-        .toc-menu a {
-            color: var(--text-color);
-            text-decoration: none;
-            font-size: 1.1rem;
-            display: block;
-            padding: 8px 0;
-            transition: color 0.3s;
-        }
-        
-        .toc-menu a:hover {
-            color: var(--accent-color);
-        }
-        
-        #toc-toggle {
-            position: fixed;
-            top: 25px;
-            left: 25px;
-            z-index: 1002;
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
-        
-        .hamburger {
-            width: 30px;
-            height: 22px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        
-        .hamburger span {
-            display: block;
-            height: 3px;
-            width: 100%;
-            background-color: var(--text-color);
-            border-radius: 3px;
-            transition: all 0.3s;
-        }
-
-        .toc-menu.open + #toc-toggle .hamburger span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
-        }
-        .toc-menu.open + #toc-toggle .hamburger span:nth-child(2) {
-            opacity: 0;
-        }
-        .toc-menu.open + #toc-toggle .hamburger span:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -6px);
-        }
-        
-        strong, code {
-            color: var(--accent-color);
-            font-weight: bold;
-        }
-        
-        .call-to-action {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: rgba(66, 133, 244, 0.1);
-            border-left: 4px solid var(--primary-color);
-            border-radius: 5px;
-        }
-
-        @media (max-width: 768px) {
-            h1 { font-size: 2.2rem; }
-            h2 { font-size: 1.8rem; }
-            p, li { font-size: 1rem; }
-            .columns { flex-direction: column; }
-            .slide { padding: 8vw 5vw; }
-        }
-
     </style>
 </head>
-<body>
-
-    <div class="presentation-container">
-        <div class="slides">
-            
-            <section class="slide active title-slide">
-                <div class="slide-content">
-                    <h1>Nephio 與生成式 AI</h1>
-                    <p style="font-size: 1.5rem;">革新雲原生網路自動化</p>
-                    <p class="authors">基於 Nephio WG6 白皮書製作</p>
-                </div>
-            </section>
-
-            <section class="slide toc-slide">
-                <div class="slide-content">
-                    <h2>簡報大綱</h2>
-                    <ul>
-                        <li><strong>內容摘要：</strong>為何這兩項技術的結合如此重要？</li>
-                        <li><strong>核心挑戰：</strong>現代網路自動化面臨什麼困境？</li>
-                        <li><strong>兩大主角：</strong>Nephio 與生成式 AI 簡介</li>
-                        <li><strong>天作之合：</strong>GitOps + GenAI 的綜效</li>
-                        <li><strong>實質好處：</strong>如何提升體驗與效率？</li>
-                        <li><strong>應用案例：</strong>從範本生成到 AI 助理</li>
-                        <li><strong>挑戰與未來：</strong>安全性、合規性與未來展望</li>
-                        <li><strong>行動呼籲：</strong>共同塑造網路自動化的未來</li>
-                    </ul>
-                </div>
-            </section>
-
-            <section class="slide content-slide">
-                <div class="slide-content">
-                    <h2>內容摘要：為何重要？</h2>
-                    <p>本簡報旨在探索開源專案 <strong>Nephio</strong> 與<strong>生成式 AI (GenAI)</strong> 之間的強大潛力。</p>
-                    <ul>
-                        <li><strong>徹底改變管理</strong>：透過 AI 生成組態、自動化故障排除，大幅減少人為介入。</li>
-                        <li><strong>提升網路效率</strong>：實現動態的效能洞察與資源最佳化。</li>
-                        <li><strong>未來藍圖</strong>：描繪出由「意圖驅動」、可自我修復的「閉環式」網路管理新未來，為電信產業帶來革命性變革。</li>
-                    </ul>
-                </div>
-            </section>
-
-            <section class="slide content-slide">
-                <div class="slide-content">
-                    <h2>核心挑戰：網路自動化的困境</h2>
-                    <p>在 5G、邊緣運算時代，傳統網路自動化方法已難以應對：</p>
-                    <ul>
-                        <li><strong>高度複雜性</strong>：跨越多家供應商、多雲環境的協調極為困難。</li>
-                        <li><strong>缺乏彈性</strong>：仍採用「命令式」方法，難以宣告網路的最終期望狀態。</li>
-                        - <li><strong>反應緩慢</strong>：面對網路變更與擴展需求，回應速度跟不上業務發展。</li>
-                        <li><strong>規模化難題</strong>：大規模管理互連的工作負載，成本高昂且容易出錯。</li>
-                    </ul>
-                </div>
-            </section>
-
-            <section class="slide content-slide">
-                <div class="slide-content">
-                    <h2>主角一：Nephio 是什麼？</h2>
-                    <p>一個由 Linux 基金會與 Google Cloud 等夥伴共同發起的開源專案，專為**雲原生網路自動化**而生。</p>
-                    <div class="columns">
-                        <div class="column">
-                            <h3>核心理念</h3>
-                            <ul>
-                                <li>基於 <code>Kubernetes</code></li>
-                                <li>採用宣告式「意圖驅動」</li>
-                                <li>使用 <code>GitOps</code> 作為真理之源</li>
-                                <li>將資料與自動化邏輯解耦</li>
-                            </ul>
-                        </div>
-                        <div class="column">
-                            <h3>專案進展</h3>
-                            <ul>
-                                <li>社群貢獻者年增 <strong>40%</strong></li>
-                                <li>已被大型電信公司用於 <strong>5G 核心網路</strong></li>
-                                <li>範疇擴展至 <strong>RAN</strong> 與<strong>多雲框架</strong></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="slide content-slide">
-                <div class="slide-content">
-                    <h2>主角二：生成式 AI (GenAI)</h2>
-                    <p>能夠理解人類意圖並**創造全新內容**（如文字、程式碼、組態）的 AI 系統，通常基於大型語言模型 (LLM)。</p>
-                    <h3>在 Nephio 中，GenAI 可以：</h3>
-                    <ul>
-                        <li><strong>提升體驗</strong>：簡化複雜任務，自動生成範本與程式碼。</li>
-                        <li><strong>最佳化網路</strong>：改善雲端容量、能源效率與 5G 效能。</li>
-                        <li><strong>進階自動化</strong>：將高階意圖轉譯為可執行的網路組態，並進行智慧故障排除。</li>
-                    </ul>
-                </div>
-            </section>
-
-            <section class="slide content-slide">
-                <div class="slide-content">
-                    <h2>天作之合：Nephio GitOps + GenAI</h2>
-                    <p>兩者的結合，能打造出真正的「意圖驅動」與「閉環」自動化流程。</p>
-                    <h3>傳統流程 vs. AI 增強流程</h3>
-                    <div class="columns">
-                        <div class="column">
-                            <h3 style="color: #ffab00;">傳統 (人為驅動)</h3>
-                            <p>意圖 ➡️ 工程師手動撰寫 CRD/Operator ➡️ GitOps 部署 ➡️ 人工監控與分析 ➡️ 手動調整</p>
-                        </div>
-                        <div class="column">
-                            <h3 style="color: var(--accent-color);">AI 增強 (AI 輔助)</h3>
-                            <p>意圖 ➡️ <strong>GenAI</strong> 自動生成 CRD/Operator ➡️ GitOps 部署 ➡️ <strong>AI</strong> 驅動分析與洞察 ➡️ 自動調整</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            
-            <section class="slide content-slide">
-                <div class="slide-content">
-                    <h2>實質好處：體驗與效率雙重提升</h2>
-                    <div class="columns">
-                        <div class="column">
-                            <h3>🚀 使用者體驗提升</h3>
-                            <ul>
-                                <li><strong>自動生成範本</strong>：將工程師從耗時約 80% 的範本工作中解放。</li>
-                                <li><strong>簡化開發</strong>：自動生成部分程式碼與 SDK，降低開發門檻。</li>
-                                <li><strong>自然語言互動</strong>：未來可用對話方式管理網路，無需記憶複雜指令。</li>
-                            </ul>
-                        </div>
-                        <div class="column">
-                            <h3>⚙️ 網路最佳化</h3>
-                            <ul>
-                                <li><strong>資源管理</strong>：最佳化雲端容量、成本與能源效率。</li>
-                                <li><strong>效能提升</strong>：改善 5G RAN 與邊緣運算的效能。</li>
-                                <li><strong>智慧營運</strong>：實現 AI 驅動的網路佈建、故障排除與預測性維護。</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            
-            <section class="slide content-slide">
-                <div class="slide-content">
-                    <h2>應用案例 1：範本自動化 (RAG)</h2>
-                    <p>利用**檢索增強生成 (Retrieval-Augmented Generation, RAG)** 技術，讓自動化更智慧。</p>
-                    <ul>
-                        <li><strong>LLM (大腦)</strong>：負責理解需求並生成內容。</li>
-                        <li><strong>RAG (知識庫)</strong>：將 LLM 與 Nephio 的特定資料（如 Git 儲存庫、組態資料、安全規範）連結。</li>
-                        <li><strong>應用</strong>：當使用者提出「我需要一個符合 A 規範的 5G UPF 範本」時，系統能自動從知識庫檢索相關資訊，並生成精確、合規的組態範本。</li>
-                    </ul>
-                </div>
-            </section>
-
-            <section class="slide content-slide">
-                <div class="slide-content">
-                    <h2>應用案例 2：Nephio AI 助理</h2>
-                    <p>打造一個次世代的**指令列介面 (CLI)**，讓網路管理像對話一樣簡單。</p>
-                    <ul>
-                        <li><strong>語意理解</strong>：使用者可以用自然語言下指令，例如：「幫我在 A 地區建一個 Kubernetes 叢集，需要高可用性」。</li>
-                        <li><strong>自動轉譯</strong>：AI 助理會將指令轉譯為精確的 Nephio API 呼叫並執行。</li>
-                        <li><strong>降低門檻</strong>：技術人員無需精通所有 Nephio API 或複雜語法，大幅簡化操作與上手過程。</li>
-                    </ul>
-                </div>
-            </section>
-
-            <section class="slide content-slide">
-                <div class="slide-content">
-                    <h2>挑戰與未來考量</h2>
-                    <p>在擁抱新技術的同時，我們也必須正視挑戰：</p>
-                    <div class="columns">
-                        <div class="column">
-                            <h3>🔒 安全性要求</h3>
-                            <ul>
-                                <li><strong>資料安全</strong>：防止透過提示注入或資料毒化等方式發動攻擊。</li>
-                                <li><strong>供應鏈安全</strong>：需謹慎選擇 LLM 模型及其來源。</li>
-                                <li><strong>防禦策略</strong>：考慮設置 LLM 閘道器等防禦措施。</li>
-                            </ul>
-                        </div>
-                        <div class="column">
-                            <h3>📜 開源合規性</h3>
-                            <ul>
-                                <li><strong>模型開放性</strong>：需遵循 LF AI & Data 的模型開放性框架 (MOF)。</li>
-                                <li><strong>授權一致性</strong>：確保所有 AI 相關產出物符合開源授權規範。</li>
-                                <li><strong>避免鎖定</strong>：與業界標準對齊，確保互通性。</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="slide content-slide">
-                <div class="slide-content">
-                    <h2>結論與行動呼籲</h2>
-                    <p>Nephio 與生成式 AI 的結合，是網路自動化領域的革命性機會，能打造一個更智慧、高效且具韌性的電信基礎設施。</p>
-                    <div class="call-to-action">
-                        <h3>共同塑造網路自動化的未來</h3>
-                        <p>我們誠摯邀請電信營運商、供應商、AI 新創公司與所有技術專家加入 <strong>Nephio 專案</strong>，共同克服挑戰，釋放 AI 驅動網路自動化的全部潛力，一起打造一個更智慧、更具適應性的世界。</p>
-                    </div>
-                </div>
-            </section>
-
-            <section class="slide title-slide">
-                <div class="slide-content">
-                    <h1>Q&A</h1>
-                    <p style="font-size: 1.5rem;">感謝聆聽</p>
-                </div>
-            </section>
-
-        </div>
-
-        <div class="nav-buttons">
-            <button id="prev-btn" class="nav-btn">上一張</button>
-            <button id="next-btn" class="nav-btn">下一張</button>
-        </div>
-        
-        <div id="slide-counter"></div>
-
-        <nav id="toc-menu" class="toc-menu">
-            <h3>目錄</h3>
-            <ul>
-                <li><a href="#" data-slide="1">簡報大綱</a></li>
-                <li><a href="#" data-slide="2">內容摘要</a></li>
-                <li><a href="#" data-slide="3">核心挑戰</a></li>
-                <li><a href="#" data-slide="4">主角一：Nephio</a></li>
-                <li><a href="#" data-slide="5">主角二：GenAI</a></li>
-                <li><a href="#" data-slide="6">天作之合</a></li>
-                <li><a href="#" data-slide="7">實質好處</a></li>
-                <li><a href="#" data-slide="8">應用案例 1: RAG</a></li>
-                <li><a href="#" data-slide="9">應用案例 2: AI 助理</a></li>
-                <li><a href="#" data-slide="10">挑戰與未來</a></li>
-                <li><a href="#" data-slide="11">結論與行動呼籲</a></li>
-                <li><a href="#" data-slide="12">Q&A</a></li>
-            </ul>
-        </nav>
-        <button id="toc-toggle">
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
+<body class="p-4">
+    <div class="max-w-screen-2xl mx-auto">
+        <header class="flex justify-between items-center mb-4 p-4 dashboard-panel">
+            <div>
+                <h1 class="text-2xl font-bold text-white"><i class="fas fa-satellite-dish text-blue-400"></i> Nephio AI 網路維運中心</h1>
+                <p class="text-sm text-gray-400">開源優先 E2E 自動化平台</p>
             </div>
-        </button>
+            <div class="text-right">
+                <p id="current-time" class="text-lg font-mono"></p>
+                <div class="flex items-center justify-end mt-1">
+                    <span class="text-sm mr-2">全域狀態:</span>
+                    <div id="global-status-dot" class="status-dot online"></div>
+                    <span id="global-status-text" class="text-sm ml-2 text-green-400">正常</span>
+                </div>
+            </div>
+        </header>
 
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <!-- Left Column: Control & Command -->
+            <div class="lg:col-span-1 space-y-4">
+                <div class="dashboard-panel p-4">
+                    <h2 class="text-lg font-semibold mb-3 border-b border-gray-700 pb-2"><i class="fas fa-keyboard mr-2"></i>指令與控制</h2>
+                    <label for="intent-input" class="block text-sm font-medium text-gray-300 mb-2">1. 下達網路意圖:</label>
+                    <textarea id="intent-input" class="w-full bg-gray-900 border border-gray-600 rounded-md p-2 text-sm focus:ring-2 focus:ring-blue-500" rows="3">在台北資料中心部署一個高可用性、具備 10Gbps 吞吐量的 5G UPF。</textarea>
+                    <button id="submit-intent-btn" class="w-full mt-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition">
+                        <i class="fas fa-play"></i> 啟動自動化流程
+                    </button>
+                </div>
+                <div class="dashboard-panel p-4">
+                    <h2 class="text-lg font-semibold mb-3 border-b border-gray-700 pb-2"><i class="fas fa-brain mr-2"></i>AI 指揮中心</h2>
+                    <div id="ai-command-center" class="text-sm space-y-2">
+                        <p class="text-gray-400">等待指令...</p>
+                    </div>
+                </div>
+                <div id="action-panel" class="dashboard-panel p-4 hidden">
+                    <h2 class="text-lg font-semibold mb-3 border-b border-gray-700 pb-2 text-yellow-400"><i class="fas fa-exclamation-triangle mr-2"></i>需要人工決策</h2>
+                    <div id="action-content" class="text-sm space-y-2"></div>
+                </div>
+            </div>
+
+            <!-- Center Column: Situational Awareness -->
+            <div class="lg:col-span-2 space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="dashboard-panel p-4 text-center">
+                        <h3 class="text-md font-semibold text-gray-400">平均延遲</h3>
+                        <p id="kpi-latency" class="text-4xl font-bold text-green-400">-- ms</p>
+                    </div>
+                    <div class="dashboard-panel p-4 text-center">
+                        <h3 class="text-md font-semibold text-gray-400">總吞吐量</h3>
+                        <p id="kpi-throughput" class="text-4xl font-bold">-- Gbps</p>
+                    </div>
+                    <div class="dashboard-panel p-4 text-center">
+                        <h3 class="text-md font-semibold text-gray-400">服務可用率</h3>
+                        <p id="kpi-uptime" class="text-4xl font-bold">-- %</p>
+                    </div>
+                </div>
+                <div class="dashboard-panel p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div id="map-container">
+                        <h2 class="text-lg font-semibold mb-3 border-b border-gray-700 pb-2"><i class="fas fa-map-marked-alt mr-2"></i>地理部署視圖</h2>
+                        <svg viewBox="0 0 200 250" class="w-full h-auto">
+                            <g id="taiwan-map">
+                                <path class="land" d="M120.3,2.5c-1.6-1.5-4.3-1.4-5.8,0.2l-2.8,2.8L111,6.1l-6.3,1.9L98,10.1l-4.5,3.3l-2.1,3.3l-2.4,4.2l-0.5,3.9l-1.9,4.7 l-1.9,3.3l-1.6,3.3l-2.1,5.2l-0.8,3.9l-1.3,4.7l-1.6,5.2l-0.5,3.3l-1.6,5.8l-1.3,4.7l-1.6,4.5l-1.3,4.7l-1.3,5.2l-0.5,2.6 l-1.3,5.8l-1.3,4.2l-1.3,4.5l-1,3.3l-1.3,4.5l-1.3,3.9l-1,3.9l-1.3,4.2l-1,3.9l-1.3,3.9l-1.3,3.9l-0.8,2.4l-1.3,3.9 l-1.3,3.6l-1.3,3.9l-1,3l-1,2.6l-1,3l-1,2.6l-1,2.6l-1,2.4l-0.8,2.1l-0.8,2.1l-0.8,2.1l-0.5,1.6l-0.5,1.6l-0.5,1.6 l-0.5,1.6l-0.5,1.6l-0.2,0.8l-0.2,0.8l-0.2,0.8l-0.2,0.8l-0.2,0.8l0,0.2l0,0.2l0,0.2l0,0.2l0,0.2l0.2,0.8l0.2,0.8 l0.2,0.8l0.2,0.8l0.5,1.6l0.5,1.6l0.5,1.6l0.5,1.6l0.8,2.1l0.8,2.1l0.8,2.1l1,2.4l1,2.6l1,2.6l1,2.6l1,3l1,3l1.3,3.6 l1.3,3.9l1.3,3.9l0.8,2.4l1.3,3.9l1,3.9l1.3,4.2l1,3.9l1.3,4.5l1,3.3l1.3,4.5l1.3,4.2l1.3,5.8l0.5,2.6l1.3,5.2 l1.3,4.7l1.3,4.7l1.6,4.5l1.3,4.7l1.6,5.8l0.5,3.3l1.6,5.2l1.3,4.7l0.8,3.9l2.1,5.2l1.6,3.3l1.9,3.3l1.9,4.7 l0.5,3.9l2.4,4.2l2.1,3.3l4.5,3.3l6.8,2.1l6.3,1.9l0.8,0.5l2.8,2.8c1.5,1.6,4.3,1.6,5.8,0.2l2.8-2.8l0.8-0.5l6.3-1.9 l6.8-2.1l4.5-3.3l2.1-3.3l2.4-4.2l0.5-3.9l1.9-4.7l1.9-3.3l1.6-3.3l2.1-5.2l0.8-3.9l1.3-4.7l1.6-5.2l0.5-3.3 l1.6-5.8l1.3-4.7l1.6-4.5l1.3-4.7l1.3-5.2l0.5-2.6l1.3-5.8l1.3-4.2l1.3-4.5l1-3.3l1.3-4.5l1.3-3.9l1-3.9 l1.3-4.2l1-3.9l1.3-3.9l1.3-3.9l0.8-2.4l1.3-3.9l1.3-3.6l1.3-3.9l1-3l1-2.6l1-3l1-2.6l1-2.6l1-2.4l0.8-2.1 l0.8-2.1l0.8-2.1l0.5-1.6l0.5-1.6l0.5-1.6l0.5-1.6l0.5-1.6l0.2-0.8l0.2-0.8l0.2-0.8l0.2-0.8l0.2-0.8l0-0.2 l0-0.2l0-0.2l0-0.2l0-0.2l-0.2-0.8l-0.2-0.8l-0.2-0.8l-0.2-0.8l-0.5-1.6l-0.5-1.6l-0.5-1.6l-0.5-1.6l-0.8-2.1 l-0.8-2.1l-0.8-2.1l-1-2.4l-1-2.6l-1-2.6l-1-2.6l-1-3l-1-3l-1.3-3.6l-1.3-3.9l-1.3-3.9l-0.8-2.4l-1.3-3.9 l-1-3.9l-1.3-4.2l-1-3.9l-1.3-4.5l-1-3.3l-1.3-4.5l-1.3-4.2l-1.3-5.8l-0.5-2.6l-1.3-5.2l-1.3-4.7l-1.3-4.7 l-1.6-4.5l-1.3-4.7l-1.6-5.8l-0.5-3.3l-1.6-5.2l-1.3-4.7l-0.8-3.9l-2.1-5.2l-1.6-3.3l-1.9-3.3l-1.9-4.7 l-0.5-3.9l-2.4-4.2l-2.1-3.3l-4.5-3.3l-6.8-2.1L121.1,2.7L120.3,2.5z"/>
+                                <g id="nodes">
+                                    <circle id="node-taipei" class="node" cx="115" cy="40" r="5"></circle>
+                                    <text class="node-label" x="122" y="44">台北</text>
+                                    <circle id="node-taichung" class="node" cx="95" cy="100" r="5"></circle>
+                                    <text class="node-label" x="102" y="104">台中</text>
+                                    <circle id="node-kaohsiung" class="node" cx="88" cy="180" r="5"></circle>
+                                    <text class="node-label" x="95" y="184">高雄</text>
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    <div id="component-status">
+                        <h2 class="text-lg font-semibold mb-3 border-b border-gray-700 pb-2"><i class="fas fa-cubes mr-2"></i>元件狀態</h2>
+                        <ul id="component-list" class="text-sm space-y-3">
+                            <!-- Components will be added here -->
+                        </ul>
+                    </div>
+                </div>
+                <div class="dashboard-panel p-4">
+                    <h2 class="text-lg font-semibold mb-3 border-b border-gray-700 pb-2"><i class="fas fa-chart-area mr-2"></i>即時效能監控 (平均延遲)</h2>
+                    <canvas id="performance-chart"></canvas>
+                </div>
+            </div>
+        </main>
     </div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const slides = document.querySelectorAll('.slide');
-        const nextBtn = document.getElementById('next-btn');
-        const prevBtn = document.getElementById('prev-btn');
-        const slideCounter = document.getElementById('slide-counter');
-        const tocMenu = document.getElementById('toc-menu');
-        const tocToggle = document.getElementById('toc-toggle');
-        const tocLinks = document.querySelectorAll('.toc-menu a');
-
-        let currentSlideIndex = 0;
-        const totalSlides = slides.length;
-
-        function showSlide(index) {
-            slides.forEach((slide, i) => {
-                slide.classList.toggle('active', i === index);
-            });
-            currentSlideIndex = index;
-            updateUI();
-        }
-        
-        function updateUI() {
-            // Update counter
-            slideCounter.textContent = `${currentSlideIndex + 1} / ${totalSlides}`;
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentTimeEl = document.getElementById('current-time');
+            const submitIntentBtn = document.getElementById('submit-intent-btn');
+            const intentInput = document.getElementById('intent-input');
+            const aiCommandCenter = document.getElementById('ai-command-center');
+            const actionPanel = document.getElementById('action-panel');
+            const actionContent = document.getElementById('action-content');
             
-            // Update buttons
-            prevBtn.disabled = currentSlideIndex === 0;
-            nextBtn.disabled = currentSlideIndex === totalSlides - 1;
-        }
+            const kpiLatency = document.getElementById('kpi-latency');
+            const kpiThroughput = document.getElementById('kpi-throughput');
+            const kpiUptime = document.getElementById('kpi-uptime');
+            
+            const globalStatusDot = document.getElementById('global-status-dot');
+            const globalStatusText = document.getElementById('global-status-text');
+            
+            const mapNodes = {
+                taipei: document.getElementById('node-taipei'),
+                taichung: document.getElementById('node-taichung'),
+                kaohsiung: document.getElementById('node-kaohsiung')
+            };
 
-        function nextSlide() {
-            if (currentSlideIndex < totalSlides - 1) {
-                showSlide(currentSlideIndex + 1);
-            }
-        }
+            const componentList = document.getElementById('component-list');
+            const chartCanvas = document.getElementById('performance-chart');
+            let performanceChart;
+            let chartInterval;
 
-        function prevSlide() {
-            if (currentSlideIndex > 0) {
-                showSlide(currentSlideIndex - 1);
-            }
-        }
-        
-        function toggleToc() {
-            tocMenu.classList.toggle('open');
-        }
+            const updateTime = () => {
+                const now = new Date();
+                currentTimeEl.textContent = now.toLocaleTimeString('zh-TW', { hour12: false });
+            };
+            setInterval(updateTime, 1000);
+            updateTime();
 
-        // Event Listeners
-        nextBtn.addEventListener('click', nextSlide);
-        prevBtn.addEventListener('click', prevSlide);
-        tocToggle.addEventListener('click', toggleToc);
-        
-        tocLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const slideIndex = parseInt(e.target.dataset.slide);
-                showSlide(slideIndex);
-                toggleToc();
-            });
+            const delay = (ms) => new Promise(res => setTimeout(res, ms));
+
+            const logToAIConsole = (message, type = 'info') => {
+                const line = document.createElement('p');
+                line.className = `console-line font-mono text-xs ${type}`;
+                line.innerHTML = `<i class="fas fa-angle-right prompt"></i> ${message}`;
+                aiCommandCenter.appendChild(line);
+                aiCommandCenter.scrollTop = aiCommandCenter.scrollHeight;
+            };
+
+            const createComponentStatus = (id, name, icon) => {
+                const li = document.createElement('li');
+                li.id = `comp-${id}`;
+                li.className = 'flex items-center justify-between';
+                li.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="${icon} mr-3 text-gray-400"></i>
+                        <span>${name}</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="status-text mr-2 text-gray-500 text-xs">離線</span>
+                        <span class="status-dot offline"></span>
+                    </div>
+                `;
+                componentList.appendChild(li);
+            };
+            
+            const updateComponentStatus = (id, status, text) => {
+                const comp = document.getElementById(`comp-${id}`);
+                if(comp) {
+                    const dot = comp.querySelector('.status-dot');
+                    const statusText = comp.querySelector('.status-text');
+                    dot.className = `status-dot ${status}`;
+                    statusText.textContent = text;
+                    statusText.className = `status-text mr-2 text-xs text-${status === 'online' ? 'green' : status === 'warning' || status === 'error' ? 'red' : 'blue'}-400`;
+                }
+            };
+
+            const initChart = () => {
+                if (performanceChart) {
+                    performanceChart.destroy();
+                }
+                const ctx = chartCanvas.getContext('2d');
+                performanceChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: '平均延遲 (ms)',
+                            data: [],
+                            borderColor: 'rgba(59, 130, 246, 0.8)',
+                            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { color: 'white' },
+                                grid: { color: 'rgba(255,255,255,0.1)' }
+                            },
+                            x: {
+                                ticks: { color: 'white' },
+                                grid: { color: 'rgba(255,255,255,0.1)' }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: { color: 'white' }
+                            }
+                        }
+                    }
+                });
+            };
+
+            const addChartData = (label, data) => {
+                performanceChart.data.labels.push(label);
+                performanceChart.data.datasets[0].data.push(data);
+                if (performanceChart.data.labels.length > 15) {
+                    performanceChart.data.labels.shift();
+                    performanceChart.data.datasets[0].data.shift();
+                }
+                performanceChart.update();
+            };
+
+            const resetUI = () => {
+                aiCommandCenter.innerHTML = '<p class="text-gray-400">等待指令...</p>';
+                actionPanel.classList.add('hidden');
+                componentList.innerHTML = '';
+                Object.values(mapNodes).forEach(node => node.className.baseVal = 'node');
+                kpiLatency.textContent = '-- ms';
+                kpiLatency.className = 'text-4xl font-bold';
+                kpiThroughput.textContent = '-- Gbps';
+                kpiUptime.textContent = '-- %';
+                globalStatusDot.className = 'status-dot online';
+                globalStatusText.textContent = '正常';
+                globalStatusText.className = 'text-sm ml-2 text-green-400';
+                if (chartInterval) clearInterval(chartInterval);
+                initChart();
+            };
+            
+            const startSimulation = async () => {
+                submitIntentBtn.disabled = true;
+                submitIntentBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 處理中...';
+                resetUI();
+
+                // 1. AI Analysis
+                aiCommandCenter.innerHTML = '';
+                logToAIConsole('接收到使用者意圖...', 'info');
+                await delay(1000);
+                logToAIConsole(`分析中: "${intentInput.value}"`, 'info');
+                await delay(2000);
+                logToAIConsole('意圖轉譯完成，正在生成Nephio Package...', 'success');
+                aiCommandCenter.innerHTML += `<div class="mt-2 p-2 bg-gray-900 rounded text-xs font-mono">
+                    <p><span class="text-blue-300">apiVersion:</span> nephio.org/v1alpha1</p>
+                    <p><span class="text-blue-300">kind:</span> UPFPackage</p>
+                    <p><span class="text-blue-300">spec:</span></p>
+                    <p class="ml-4"><span class="text-green-300">redundancy:</span> high-availability</p>
+                    <p class="ml-4"><span class="text-green-300">capacity:</span> 10Gbps</p>
+                    <p class="ml-4"><span class="text-green-300">location:</span> taipei-dc</p>
+                </div>`;
+
+                // 2. Deployment
+                await delay(1500);
+                logToAIConsole('組態已提交至 Git，Argo CD 開始同步...', 'info');
+                createComponentStatus('core', '5G 核心網 (AMF/SMF)', 'fas fa-network-wired');
+                createComponentStatus('upf', '使用者平面功能 (UPF)', 'fas fa-server');
+                createComponentStatus('ran', '無線接取網 (gNB)', 'fas fa-broadcast-tower');
+                
+                updateComponentStatus('core', 'deploying', '部署中');
+                await delay(1000);
+                updateComponentStatus('core', 'online', '在線');
+                updateComponentStatus('upf', 'deploying', '部署中');
+                mapNodes.taipei.className.baseVal = 'node active';
+                await delay(1500);
+                updateComponentStatus('upf', 'online', '在線');
+                updateComponentStatus('ran', 'deploying', '部署中');
+                await delay(1000);
+                updateComponentStatus('ran', 'online', '在線');
+                logToAIConsole('E2E 服務部署成功！', 'success');
+
+                // 3. Monitoring
+                kpiUptime.textContent = '100 %';
+                let latency = 15;
+                let throughput = 9.8;
+                let time = 0;
+                chartInterval = setInterval(() => {
+                    time++;
+                    latency = 15 + (Math.random() - 0.5) * 4;
+                    throughput = 9.8 + (Math.random() - 0.5) * 0.5;
+                    
+                    addChartData(`${time}s`, latency);
+                    kpiLatency.textContent = `${latency.toFixed(1)} ms`;
+                    kpiThroughput.textContent = `${throughput.toFixed(2)} Gbps`;
+
+                    // 4. Anomaly Simulation
+                    if (time === 8) {
+                        logToAIConsole('模擬：台北地區流量突增...', 'warn');
+                    }
+                    if (time > 8) {
+                        latency = 80 + Math.random() * 10;
+                        if (time === 9) {
+                            globalStatusDot.className = 'status-dot error';
+                            globalStatusText.textContent = '效能異常';
+                            globalStatusText.className = 'text-sm ml-2 text-red-400';
+                            mapNodes.taipei.className.baseVal = 'node error animate-pulse';
+                            updateComponentStatus('upf', 'error', '高延遲');
+                            kpiLatency.className = 'text-4xl font-bold text-red-400';
+                        }
+                    }
+                    
+                    // 5. Closed-Loop AI
+                    if (time === 12) {
+                        clearInterval(chartInterval);
+                        triggerAIIntervention();
+                    }
+                }, 1000);
+            };
+            
+            const triggerAIIntervention = async () => {
+                logToAIConsole('警報：UPF 延遲超過 SLA 閾值！', 'error');
+                await delay(1000);
+                logToAIConsole('閉迴路 AI 啟動，分析根本原因...', 'info');
+                await delay(2500);
+                logToAIConsole('分析完成：UPF 資源不足以應對當前流量。', 'info');
+                logToAIConsole('AI 建議：為台北 UPF 增加 CPU 與記憶體資源。', 'success');
+                
+                actionPanel.classList.remove('hidden');
+                actionContent.innerHTML = `
+                    <p class="mb-2">AI 偵測到效能瓶頸，建議執行以下優化：</p>
+                    <div class="p-2 bg-gray-900 rounded font-mono text-xs">
+                        <p><strong>目標:</strong> UPF/taipei-dc</p>
+                        <p><strong>動作:</strong> 增加資源</p>
+                        <p><strong>CPU:</strong> 8 -> 12 cores</p>
+                        <p><strong>Memory:</strong> 16Gi -> 24Gi</p>
+                    </div>
+                    <button id="approve-fix-btn" class="w-full mt-3 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition">
+                        <i class="fas fa-check"></i> 核准並執行優化
+                    </button>
+                `;
+                document.getElementById('approve-fix-btn').addEventListener('click', applyFix);
+            };
+            
+            const applyFix = async () => {
+                actionPanel.classList.add('hidden');
+                logToAIConsole('已核准。AI 正在生成新的優化組態...', 'info');
+                await delay(1500);
+                logToAIConsole('新組態已提交至 Git，觸發 GitOps 流程...', 'success');
+                updateComponentStatus('upf', 'deploying', '優化中');
+                await delay(2500);
+                
+                updateComponentStatus('upf', 'online', '在線');
+                mapNodes.taipei.className.baseVal = 'node active';
+                globalStatusDot.className = 'status-dot online';
+                globalStatusText.textContent = '正常';
+                globalStatusText.className = 'text-sm ml-2 text-green-400';
+                kpiLatency.className = 'text-4xl font-bold text-green-400';
+                
+                logToAIConsole('優化完成，系統效能已恢復正常。', 'success');
+                
+                let time = 12;
+                let latency = 18;
+                chartInterval = setInterval(() => {
+                    time++;
+                    latency = 18 + (Math.random() - 0.5) * 5;
+                    addChartData(`${time}s`, latency);
+                    kpiLatency.textContent = `${latency.toFixed(1)} ms`;
+                    if (time > 20) clearInterval(chartInterval);
+                }, 1000);
+                
+                submitIntentBtn.disabled = false;
+                submitIntentBtn.innerHTML = '<i class="fas fa-play"></i> 啟動自動化流程';
+            };
+
+            submitIntentBtn.addEventListener('click', startSimulation);
+            initChart();
         });
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight' || e.key === 'PageDown') {
-                nextSlide();
-            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
-                prevSlide();
-            } else if (e.key.toLowerCase() === 'm') {
-                toggleToc();
-            } else if (e.key === 'Escape' && tocMenu.classList.contains('open')) {
-                toggleToc();
-            }
-        });
-
-        // Initial setup
-        showSlide(0);
-    });
     </script>
 </body>
 </html>
