@@ -43,6 +43,13 @@
         details > summary::-webkit-details-marker {
             display: none;
         }
+        /* Style for the rotating chevron on accordion */
+        details summary .chevron {
+            transition: transform 0.2s ease-in-out;
+        }
+        details[open] summary .chevron {
+            transform: rotate(90deg);
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -53,7 +60,7 @@
         <div class="relative py-12 md:py-20">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <div class="flex justify-center items-center space-x-2 mb-4">
-                    <a href="https://github.com/thc1006/colosseum-oran-federated-slicing/releases" target="_blank"><img alt="GitHub release" src="https://img.shields.io/github/v/release/thc1006/colosseum-oran-federated-slicing?style=for-the-badge&color=4f46e5"></a>
+                    <a href="https://github.com/thc1006/colosseum-oran-federated-slicing/releases/latest" target="_blank"><img alt="GitHub release" src="https://img.shields.io/github/v/release/thc1006/colosseum-oran-federated-slicing?display_name=tag&style=for-the-badge&color=4f46e5"></a>
                     <a href="https://doi.org/10.5281/zenodo.15849833" target="_blank"><img alt="DOI" src="https://img.shields.io/badge/DOI-10.5281/zenodo.15849833-blue?logo=zenodo&style=for-the-badge"></a>
                     <a href="https://github.com/thc1006/colosseum-oran-federated-slicing/blob/main/LICENSE" target="_blank"><img alt="Licence" src="https://img.shields.io/github/license/thc1006/colosseum-oran-federated-slicing?style=for-the-badge&color=d97706"></a>
                 </div>
@@ -61,14 +68,14 @@
                     Colosseum-ORAN <span class="gradient-text-light">Federated Slicing</span>
                 </h1>
                 <p class="mt-4 max-w-3xl mx-auto text-lg md:text-xl text-gray-600">
-                    一個端到端的專案，旨在使用聯邦學習與差分隱私技術，並基於真實世界的 RAN 軌跡數據，來優化 5G/6G 無線接取網路 (RAN) 的資源分配。
+                    這是一個從頭到尾都幫你做好的專案，用聯邦學習和差分隱私技術，加上真實世界的 RAN 軌跡數據，來優化 5G/6G 無線網路的資源要怎麼分才最好。
                 </p>
                 <div class="mt-8 flex justify-center items-center space-x-4">
-                    <a href="https://colab.research.google.com/drive/14fACJjqyXi9PgG0icLTjNIH9B0-SjBEw" target="_blank" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition shadow-sm">
-                        <i data-lucide="play-circle" class="w-5 h-5 mr-2"></i> 用 Colab 開啟 v1.0.4
+                    <a href="https://github.com/thc1006/colosseum-oran-federated-slicing/releases/tag/v1.0.6" target="_blank" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition shadow-sm">
+                        <i data-lucide="play-circle" class="w-5 h-5 mr-2"></i> 來玩玩看最新版 v1.0.6
                     </a>
                     <a href="https://github.com/thc1006/colosseum-oran-federated-slicing" target="_blank" class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-100 transition shadow-sm">
-                        <i data-lucide="github" class="w-5 h-5 mr-2"></i> 查看 GitHub Repo
+                        <i data-lucide="github" class="w-5 h-5 mr-2"></i> 看 GitHub 原始碼
                     </a>
                 </div>
             </div>
@@ -80,35 +87,35 @@
         <section id="features" class="py-16 md:py-24 bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                  <h2 class="section-title">專案亮點</h2>
-                <p class="section-subtitle">這個專案結合了尖端技術和真實數據，提供了一個可重現、可擴展的研究框架。</p>
+                 <p class="section-subtitle">我們把最潮的技術跟真實數據結合，打造出一個可以重現、擴充，又兼顧隱私保護的 AI 研究框架。</p>
                 <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     <div class="text-center p-6">
                         <div class="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 text-blue-600 mb-4 mx-auto">
                             <i data-lucide="bar-chart-horizontal-big"></i>
                         </div>
                         <h3 class="text-lg font-medium text-gray-900">真實 RAN 軌跡數據</h3>
-                        <p class="mt-2 text-base text-gray-600">採用 Colosseum/ORAN 的「ColO-RAN」公開資料集，模擬真實世界的運作場景。</p>
+                        <p class="mt-2 text-base text-gray-600">採用 Colosseum/ORAN 的「ColO-RAN」公開資料集，模擬真實世界網路的運作狀況。</p>
                     </div>
                     <div class="text-center p-6">
                         <div class="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 text-blue-600 mb-4 mx-auto">
-                            <i data-lucide="box"></i>
+                            <i data-lucide="layout-dashboard"></i>
                         </div>
-                        <h3 class="text-lg font-medium text-gray-900">一鍵在 Colab 執行</h3>
-                        <p class="mt-2 text-base text-gray-600">不用自己搞定複雜的 CUDA 環境，直接在瀏覽器裡就能跑訓練、做實驗。</p>
+                        <h3 class="text-lg font-medium text-gray-900">專業級監控儀表板</h3>
+                        <p class="mt-2 text-base text-gray-600">最新版有個四合一的超猛儀表板，把資源效率、網路負載、用戶行為跟服務品質（QoS）的狀況全都畫給你看，監控起來一清二楚。</p>
                     </div>
                     <div class="text-center p-6">
                          <div class="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 text-blue-600 mb-4 mx-auto">
                             <i data-lucide="lock-keyhole"></i>
                         </div>
-                        <h3 class="text-lg font-medium text-gray-900">Differential Privacy</h3>
-                        <p class="mt-2 text-base text-gray-600">我們實作了穩健、可調整的差分隱私 (DP) 機制，在訓練過程中保護客戶端的資料安全。</p>
+                        <h3 class="text-lg font-medium text-gray-900">可靠的差分隱私</h3>
+                        <p class="mt-2 text-base text-gray-600">我們做出了超穩、可以自己調整的差分隱私 (DP) 機制，還能追蹤隱私預算花了多少，保護你的資料安全。</p>
                     </div>
                     <div class="text-center p-6">
                          <div class="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 text-blue-600 mb-4 mx-auto">
-                            <i data-lucide="rotate-cw"></i>
+                            <i data-lucide="box"></i>
                         </div>
-                        <h3 class="text-lg font-medium text-gray-900">可完整重現</h3>
-                        <p class="mt-2 text-base text-gray-600">透過固定隨機種子與序列化的產出檔案，確保每次執行結果都一模一樣。</p>
+                        <h3 class="text-lg font-medium text-gray-900">Colab 一鍵啟動</h3>
+                        <p class="mt-2 text-base text-gray-600">不用再自己搞那些複雜的 CUDA 環境，在瀏覽器裡點一下，就能直接跑訓練、做實驗。</p>
                     </div>
                 </div>
             </div>
@@ -118,23 +125,23 @@
         <section id="quick-start" class="py-16 md:py-24">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h2 class="section-title">快速上手</h2>
-                <p class="section-subtitle">跟著下面幾個簡單步驟，你就能跑起一整個聯邦學習的流程。</p>
+                <p class="section-subtitle">只要跟著下面幾個簡單步驟，你也可以輕鬆跑完一整個聯盤學習流程。</p>
                 <div class="mt-12">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                         <div class="p-4">
                             <div class="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-blue-600 text-white rounded-full text-2xl font-bold">1</div>
-                            <h3 class="text-xl font-semibold text-gray-900">用 Colab 開啟</h3>
-                            <p class="mt-2 text-gray-600">點一下按鈕，就能直接在 Google Colab 裡打開最穩定、最好用的 v1.0.4 版筆記本。</p>
+                            <h3 class="text-xl font-semibold text-gray-900">點開 Colab 筆記本</h3>
+                            <p class="mt-2 text-gray-600">點個按鈕，最新的筆記本就會直接在 Google Colab 裡打開，馬上就能用。</p>
                         </div>
                         <div class="p-4">
                             <div class="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-blue-600 text-white rounded-full text-2xl font-bold">2</div>
-                            <h3 class="text-xl font-semibold text-gray-900">上傳資料集</h3>
-                            <p class="mt-2 text-gray-600">下載我們處理好的資料集（大概 400MB），然後上傳到你的 Colab 工作階段裡。</p>
+                            <h3 class="text-xl font-semibold text-gray-900">上傳資料</h3>
+                            <p class="mt-2 text-gray-600">先把我們處理好的資料集（大概 400MB）下載下來，再把它丟到你的 Colab 環境裡。</p>
                         </div>
                         <div class="p-4">
                             <div class="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-blue-600 text-white rounded-full text-2xl font-bold">3</div>
-                            <h3 class="text-xl font-semibold text-gray-900">執行全部儲存格</h3>
-                            <p class="mt-2 text-gray-600">在 Colab 選單點選「執行階段」>「全部執行」，程式就會開始訓練，超簡單。</p>
+                            <h3 class="text-xl font-semibold text-gray-900">一鍵執行</h3>
+                            <p class="mt-2 text-gray-600">在 Colab 上方選單找到「執行階段」，然後點「全部執行」，程式就會自己開始跑訓練，是不是超簡單？</p>
                         </div>
                     </div>
                 </div>
@@ -144,49 +151,92 @@
         <!-- Project Evolution Section -->
         <section id="evolution" class="py-16 md:py-24 bg-white">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="section-title">專案的演進史</h2>
-                <p class="section-subtitle">從最基本的原型，到一個功能穩健、又能保護隱私的最終版。這裡記錄了我們一步步把這個專案打造出來的故事。</p>
+                <h2 class="section-title">專案是怎麼長大的</h2>
+                <p class="section-subtitle">從一開始的點子，到現在這個功能完整、又可以保護隱私的最終版，這裡記錄了我們把這個專案一步步生出來的血淚史。</p>
                 <div class="mt-12 space-y-4">
-                    <!-- Version 1.0.4 -->
+                    <!-- Version 1.0.6 -->
                     <details class="border border-gray-200 p-6 rounded-lg shadow-sm" open>
                         <summary class="flex justify-between items-center cursor-pointer">
                             <div class="flex items-center">
                                 <span class="text-blue-600 mr-4"><i data-lucide="sparkles"></i></span>
-                                <h3 class="text-lg font-semibold text-gray-900">v1.0.4: 穩健的 DP 與最終優化</h3>
+                                <h3 class="text-lg font-semibold text-gray-900">v1.0.6: 專業監控與物件導向大升級</h3>
                             </div>
-                            <span class="text-xs font-bold text-green-800 bg-green-100 px-2 py-1 rounded-full">穩定版</span>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-xs font-bold text-green-800 bg-green-100 px-2 py-1 rounded-full">最新推薦版</span>
+                                <i data-lucide="chevron-right" class="chevron w-5 h-5 text-gray-500"></i>
+                            </div>
                         </summary>
                         <div class="mt-4 text-gray-600 space-y-2 pl-10">
-                            <p>這是目前功能最完整、最穩定的版本。我們透過自幹一個梯度處理函數，成功地把差分隱私（DP）整合進來，不但有彈性，也解決了套件相容性問題。另外還加入了 Early Stopping 和儲存最佳模型的功能。</p>
-                            <a href="https://colab.research.google.com/drive/14fACJjqyXi9PgG0icLTjNIH9B0-SjBEw" target="_blank" class="text-blue-600 hover:text-blue-500 font-semibold">在 Colab 中開啟 &rarr;</a>
+                            <p>這個版本我們導入了物件導向的 `FederatedPredictionSystem` Class，把訓練、預測跟監控的邏輯都包起來。模擬數據也延長到 24 小時，還升級成專業的四合一儀表板，可以說是目前功能最完整、架構也最清楚的版本。</p>
+                            <a href="https://github.com/thc1006/colosseum-oran-federated-slicing/releases/tag/v1.0.6" target="_blank" class="text-blue-600 hover:text-blue-500 font-semibold inline-flex items-center">看看 Release Note <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i></a>
+                        </div>
+                    </details>
+                    <!-- Version 1.0.5 -->
+                    <details class="border border-gray-200 p-6 rounded-lg shadow-sm">
+                        <summary class="flex justify-between items-center cursor-pointer">
+                            <div class="flex items-center">
+                                <span class="text-blue-600 mr-4"><i data-lucide="shield-check"></i></span>
+                                <h3 class="text-lg font-semibold text-gray-900">v1.0.5: 差分隱私強化，穩到不行</h3>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-xs font-bold text-blue-800 bg-blue-100 px-2 py-1 rounded-full">功能增強</span>
+                                <i data-lucide="chevron-right" class="chevron w-5 h-5 text-gray-500"></i>
+                            </div>
+                        </summary>
+                        <div class="mt-4 text-gray-600 space-y-2 pl-10">
+                            <p>這個版本專門來「強化」我們的差分隱私。用了 `RobustScaler` 讓模型比較不怕奇怪的資料，也把隱私噪音調高。同時還加了些方便除錯的小工具，並改善記憶體問題，讓整個訓練過程更穩、更可靠。</p>
+                            <a href="https://github.com/thc1006/colosseum-oran-federated-slicing/releases/tag/v1.0.5" target="_blank" class="text-blue-600 hover:text-blue-500 font-semibold inline-flex items-center">看看 Release Note <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i></a>
+                        </div>
+                    </details>
+                    <!-- Version 1.0.4 -->
+                    <details class="border border-gray-200 p-6 rounded-lg shadow-sm">
+                        <summary class="flex justify-between items-center cursor-pointer">
+                            <div class="flex items-center">
+                                <span class="text-blue-600 mr-4"><i data-lucide="milestone"></i></span>
+                                <h3 class="text-lg font-semibold text-gray-900">v1.0.4: 搞定！穩定的自訂 DP 實作</h3>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-xs font-bold text-yellow-800 bg-yellow-100 px-2 py-1 rounded-full">重要里程碑</span>
+                                <i data-lucide="chevron-right" class="chevron w-5 h-5 text-gray-500"></i>
+                            </div>
+                        </summary>
+                        <div class="mt-4 text-gray-600 space-y-2 pl-10">
+                            <p>這是我們第一個功能完整又穩定的版本。我們自己寫了一個梯度處理的函式，成功把差分隱私加進來，順便解決了套件不合的問題。另外還加了 Early Stopping 和自動存最佳模型的功能，為之後的研究打下了穩固的基礎。</p>
+                            <a href="https://colab.research.google.com/drive/14fACJjqyXi9PgG0icLTjNIH9B0-SjBEw" target="_blank" class="text-blue-600 hover:text-blue-500 font-semibold inline-flex items-center">在 Colab 中開啟 <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i></a>
                         </div>
                     </details>
                     <!-- Version 1.0.3 -->
-                    <details class="border border-gray-200 p-6 rounded-lg shadow-sm">
+                     <details class="border border-gray-200 p-6 rounded-lg shadow-sm">
                         <summary class="flex justify-between items-center cursor-pointer">
                              <div class="flex items-center">
                                 <span class="text-blue-600 mr-4"><i data-lucide="wrench"></i></span>
-                                <h3 class="text-lg font-semibold text-gray-900">v1.0.3: 修復 TFF API 相容性</h3>
+                                <h3 class="text-lg font-semibold text-gray-900">v1.0.3: 修好 TFF API 的相容性問題</h3>
                             </div>
-                            <span class="text-xs font-bold text-yellow-800 bg-yellow-100 px-2 py-1 rounded-full">修復版</span>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-xs font-bold text-gray-800 bg-gray-200 px-2 py-1 rounded-full">修復版</span>
+                                <i data-lucide="chevron-right" class="chevron w-5 h-5 text-gray-500"></i>
+                            </div>
                         </summary>
                         <div class="mt-4 text-gray-600 space-y-2 pl-10">
-                            <p>這個版本的主要目標，是為了解決 v1.0.2 版遇到的 TFF API 嚴重衝突。我們把所有套件的版本都固定下來，並改用官方推薦的新版 API，總算把路鋪平，讓後面能正確地導入差分隱私。</p>
-                            <a href="https://colab.research.google.com/drive/1K9-dCreaXi6Y6ZwHnXLIn6faK_O6qKVR" target="_blank" class="text-blue-600 hover:text-blue-500 font-semibold">在 Colab 中開啟 &rarr;</a>
+                            <p>這個版本主要在救火，為了解決 v1.0.2 版 TFF API 整個炸掉的問題。我們把所有套件的版本都鎖死，換成官方推薦的新 API，總算把路鋪好，讓後面可以順利把差分隱私加進來。</p>
+                            <a href="https://github.com/thc1006/colosseum-oran-federated-slicing/releases/tag/v1.0.3" target="_blank" class="text-blue-600 hover:text-blue-500 font-semibold inline-flex items-center">看看 Release Note <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i></a>
                         </div>
                     </details>
-                     <!-- Version 1.0.2 -->
+                    <!-- Version 1.0.1 & 1.0.2 -->
                     <details class="border border-gray-200 p-6 rounded-lg shadow-sm">
                         <summary class="flex justify-between items-center cursor-pointer">
-                             <div class="flex items-center">
-                                <span class="text-blue-600 mr-4"><i data-lucide="flask-conical"></i></span>
-                                <h3 class="text-lg font-semibold text-gray-900">v1.0.2: 首次 DP 整合嘗試</h3>
+                            <div class="flex items-center">
+                                <span class="text-blue-600 mr-4"><i data-lucide="rocket"></i></span>
+                                <h3 class="text-lg font-semibold text-gray-900">v1.0.1 - v1.0.2: 專案啟動與早期踩雷</h3>
                             </div>
-                            <span class="text-xs font-bold text-red-800 bg-red-100 px-2 py-1 rounded-full">已棄用</span>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-xs font-bold text-red-800 bg-red-100 px-2 py-1 rounded-full">早期版本</span>
+                                <i data-lucide="chevron-right" class="chevron w-5 h-5 text-gray-500"></i>
+                            </div>
                         </summary>
                         <div class="mt-4 text-gray-600 space-y-2 pl-10">
-                            <p>這是我們第一次嘗試把差分隱私加進來，雖然方向對了，但因為用到一個已經被 TFF 官方棄用的 API，所以整個程式跑不起來。這算是一次寶貴的「踩雷」經驗。</p>
-                             <a href="https://colab.research.google.com/drive/1l_sfn29npZRbG6vuYu2amyAkt1vie4Jk" target="_blank" class="text-blue-600 hover:text-blue-500 font-semibold">在 Colab 中開啟 &rarr;</a>
+                            <p>一切的起點 (v1.0.1)，目標是讓大家在 Colab 上能「無痛」上手，解決了超煩的環境問題。接著在 v1.0.2，我們第一次試著自己做 DP-FedAvg，雖然因為 API 太舊而失敗，但也算是累積了寶貴的「踩雷」經驗啦。</p>
+                             <a href="https://github.com/thc1006/colosseum-oran-federated-slicing/releases?page=1" target="_blank" class="text-blue-600 hover:text-blue-500 font-semibold inline-flex items-center">看看早期版本 <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i></a>
                         </div>
                     </details>
                 </div>
@@ -196,31 +246,39 @@
         <!-- Technical Deep Dive -->
         <section id="tech-details" class="py-16 md:py-24">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="section-title">技術深入探討 (v1.0.4)</h2>
-                <p class="section-subtitle">帶你深入了解最終版的模型架構、差分隱私是怎麼做的，還有重要的超參數設定。</p>
+                <h2 class="section-title">技術細節大公開 (v1.0.6)</h2>
+                <p class="section-subtitle">帶你來看看最新版的架構、那個很酷的儀表板，還有我們是怎麼搞定差分隱私的。</p>
                 <div class="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
                     <div class="bg-white p-8 rounded-lg border border-gray-200 shadow-sm">
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4">模型與 DP 架構</h3>
-                        <p class="text-gray-600 mb-6">我們的模型是一個 4 層的全連接神經網路，用來預測 (迴歸) `allocation_efficiency` 這個數值。為了穩健地導入差分隱私，我們不直接用現成的 DP 優化器，而是自己寫了一個函數來包裝標準的客戶端優化器。這個函數會在模型更新被送到伺服器聚合之前，做下面兩件重要的事：</p>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">架構與監控儀表板</h3>
+                        <p class="text-gray-600 mb-6">v1.0.6 版我們弄了一個 `FederatedPredictionSystem` 核心 Class，把資料處理、模型訓練、隱私計算、到最後畫圖的功能全都包進去，大大提升了程式碼的模組化跟維護的方便性。最屌的亮點就是那個全新的四合一儀表板：</p>
                         <ul class="space-y-4 text-gray-700">
                             <li class="flex items-start">
-                                <i data-lucide="scissors" class="w-5 h-5 mr-3 mt-1 text-blue-600 shrink-0"></i>
-                                <span><strong class="text-gray-900">梯度裁剪 (Gradient Clipping):</strong> 設定一個上限，把每個梯度更新的 L2 範數 (你可以想像成它的「強度」) 限制住，避免單一筆異常資料對模型造成太大的影響。</span>
+                                <i data-lucide="pie-chart" class="w-5 h-5 mr-3 mt-1 text-blue-600 shrink-0"></i>
+                                <span><strong class="text-gray-900">資源分配效率:</strong> 把模型預測的資源分配效率畫出來給你看。</span>
+                            </li>
+                             <li class="flex items-start">
+                                <i data-lucide="line-chart" class="w-5 h-5 mr-3 mt-1 text-blue-600 shrink-0"></i>
+                                <span><strong class="text-gray-900">網路負載關聯:</strong> 分析網路用量跟服務品質（QoS）之間有什麼關係。</span>
                             </li>
                             <li class="flex items-start">
-                                <i data-lucide="waves" class="w-5 h-5 mr-3 mt-1 text-blue-600 shrink-0"></i>
-                                <span><strong class="text-gray-900">添加雜訊 (Noise Addition):</strong> 在裁剪過的梯度上，加入經過精密計算的高斯雜訊，這一步提供了數學上可證明的隱私保障。</span>
+                                <i data-lucide="users" class="w-5 h-5 mr-3 mt-1 text-blue-600 shrink-0"></i>
+                                <span><strong class="text-gray-900">用戶活動模式:</strong> 秀出 24 小時內，大家都在什麼時候上網。</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i data-lucide="gauge-circle" class="w-5 h-5 mr-3 mt-1 text-blue-600 shrink-0"></i>
+                                <span><strong class="text-gray-900">QoS 分數趨勢:</strong> 追蹤服務品質分數是變好還是變壞。</span>
                             </li>
                         </ul>
                     </div>
                     <div class="bg-white p-8 rounded-lg border border-gray-200 shadow-sm">
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4">訓練超參數</h3>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">訓練與差分隱私</h3>
                         <div class="overflow-x-auto">
                             <table class="min-w-full text-left">
                                 <thead class="border-b border-gray-200">
                                     <tr>
                                         <th class="py-2 text-sm font-medium text-gray-500">超參數</th>
-                                        <th class="py-2 text-sm font-medium text-gray-500">預設值</th>
+                                        <th class="py-2 text-sm font-medium text-gray-500">v1.0.6 預設值</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200">
@@ -228,10 +286,11 @@
                                     <tr><td class="py-3 whitespace-nowrap text-gray-800">訓練輪數</td><td class="py-3 text-gray-800">30</td></tr>
                                     <tr><td class="py-3 whitespace-nowrap text-gray-800">每輪客戶端數</td><td class="py-3 text-gray-800">7</td></tr>
                                     <tr><td class="py-3 whitespace-nowrap text-gray-800">本地訓練週期</td><td class="py-3 text-gray-800">2</td></tr>
+                                    <tr><td class="py-3 whitespace-nowrap text-gray-800">批次大小 (Batch Size)</td><td class="py-3 text-gray-800">64</td></tr>
                                     <tr><td class="py-3 whitespace-nowrap text-gray-800">客戶端學習率</td><td class="py-3 text-gray-800">5e-4</td></tr>
-                                    <tr><td class="py-3 whitespace-nowrap text-gray-800">伺服器學習率 (Adam)</td><td class="py-3 text-gray-800">0.01</td></tr>
-                                    <tr><td class="py-3 whitespace-nowrap text-gray-800">裁剪範數 (DP)</td><td class="py-3 text-gray-800">1.0 (可配置)</td></tr>
-                                    <tr><td class="py-3 whitespace-nowrap text-gray-800">噪聲乘數 (DP)</td><td class="py-3 text-gray-800">0.0 (預設禁用)</td></tr>
+                                    <tr><td class="py-3 whitespace-nowrap text-gray-800">伺服器學習率</td><td class="py-3 text-gray-800">0.01</td></tr>
+                                    <tr><td class="py-3 whitespace-nowrap text-gray-800">裁剪範數 (DP)</td><td class="py-3 text-gray-800">1.0 (可調整)</td></tr>
+                                    <tr><td class="py-3 whitespace-nowrap text-gray-800">噪聲乘數 (DP)</td><td class="py-3 text-gray-800">1.5 (可調整)</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -243,15 +302,15 @@
         <!-- Acknowledgements & Citation -->
         <footer class="pt-16 pb-8 bg-white border-t border-gray-200">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-500">
-                <h3 class="text-xl font-semibold text-gray-900 mb-4">致謝與引用方式</h3>
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">感謝與如何引用</h3>
                 <p class="max-w-3xl mx-auto">
-                    這個專案的完成，要感謝許多前人的研究基礎。我們使用的資料集是由東北大學 WINES 實驗室所提供。如果您在您的研究中使用了我們的程式碼或原始資料集，請務必引用他們的研究成果：
+                    這個專案能完成，真的要感謝很多前人的研究。我們用的資料集是東北大學 WINES 實驗室提供的。如果你的研究有用到我們的程式碼或資料集，也請記得要引用他們的論文喔：
                 </p>
                 <div class="my-6 p-4 bg-gray-100 rounded-lg text-left text-sm max-w-2xl mx-auto">
                     <p class="text-gray-800">M. Polese et al., “ColO-RAN: Developing Machine Learning-based xApps for Open RAN Closed-loop Control,” IEEE TMC, 2022.</p>
-                    <a href="https://github.com/wineslab/colosseum-oran-coloran-dataset" target="_blank" class="text-blue-600 hover:underline font-semibold">資料集 Repo &rarr;</a>
+                    <a href="https://github.com/wineslab/colosseum-oran-coloran-dataset" target="_blank" class="text-blue-600 hover:underline font-semibold">資料集 Repo 在這 &rarr;</a>
                 </div>
-                <p>如果您想引用這個 GitHub 專案本身，請使用以下的 Zenodo DOI： <a href="https://doi.org/10.5281/zenodo.15849833" class="text-blue-600 hover:underline">10.5281/zenodo.15849833</a></p>
+                <p>如果你想引用這個 GitHub 專案，請用下面的 Zenodo DOI： <a href="https://doi.org/10.5281/zenodo.15849833" class="text-blue-600 hover:underline">10.5281/zenodo.15849833</a></p>
                  <p class="mt-4">特別感謝 NTSC 和我的肝。</p>
                 <div class="mt-8 border-t border-gray-200 pt-8">
                     <p>本專案採用 AGPL-3.0 授權條款釋出。</p>
@@ -264,10 +323,10 @@
     <script>
         lucide.createIcons();
         
-        // Simple accordion logic
+        // Simple accordion logic to only allow one item open at a time
         const detailsElements = document.querySelectorAll('#evolution details');
         detailsElements.forEach(details => {
-            details.addEventListener('toggle', () => {
+            details.addEventListener('toggle', (event) => {
                 if (details.open) {
                     detailsElements.forEach(otherDetails => {
                         if (otherDetails !== details) {
