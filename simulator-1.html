@@ -1,0 +1,303 @@
+import React, { useState, useEffect } from 'react';
+
+// --- 初始資料設定 ---
+
+// 用於分類遊戲的物品列表
+const initialSortableItems = [
+  { id: 'item-1', emoji: '🍎', name: '蘋果', use: '食物', color: '紅色' },
+  { id: 'item-2', emoji: '🍌', name: '香蕉', use: '食物', color: '黃色' },
+  { id: 'item-3', emoji: '🚗', name: '汽車', use: '交通', color: '紅色' },
+  { id: 'item-4', emoji: '🚲', name: '腳踏車', use: '交通', color: '藍色' },
+  { id: 'item-5', emoji: '🐈', name: '貓', use: '動物', color: '橘色' },
+  { id: 'item-6', emoji: '🐕', name: '狗', use: '動物', color: '棕色' },
+  { id: 'item-7', emoji: '🍓', name: '草莓', use: '食物', color: '紅色' },
+  { id: 'item-8', emoji: '🚌', name: '巴士', use: '交通', color: '黃色' },
+  { id: 'item-9', emoji: '🐘', name: '大象', use: '動物', color: '灰色' },
+  { id: 'item-10', emoji: '🍇', name: '葡萄', use: '食物', color: '紫色' },
+  { id: 'item-11', emoji: '✈️', name: '飛機', use: '交通', color: '白色' },
+  { id: 'item-12', emoji: '🐒', name: '猴子', use: '動物', color: '棕色' },
+];
+
+// 用於「挑出不同」遊戲的題組
+const oddOneOutSets = [
+  {
+    id: 'set-1',
+    items: [
+      { id: 'crab', emoji: '🦀', name: '螃蟹' },
+      { id: 'dolphin', emoji: '🐬', name: '海豚' },
+      { id: 'fishbowl', emoji: '🐠', name: '魚缸裡的魚' },
+    ],
+    correctId: 'fishbowl',
+    explanation: '螃蟹和海豚是生活在自然海洋中的動物，而魚缸是人造容器。'
+  },
+  {
+    id: 'set-2',
+    items: [
+      { id: 'apple', emoji: '🍎', name: '蘋果' },
+      { id: 'banana', emoji: '🍌', name: '香蕉' },
+      { id: 'car', emoji: '🚗', name: '汽車' },
+    ],
+    correctId: 'car',
+    explanation: '蘋果和香蕉是水果，汽車是交通工具。'
+  },
+  {
+    id: 'set-3',
+    items: [
+      { id: 'book', emoji: '📖', name: '書' },
+      { id: 'pencil', emoji: '✏️', name: '鉛筆' },
+      { id: 'bed', emoji: '🛏️', name: '床' },
+    ],
+    correctId: 'bed',
+    explanation: '書和鉛筆是文具，床是傢俱。'
+  },
+    {
+    id: 'set-4',
+    items: [
+      { id: 'shirt', emoji: '👕', name: 'T恤' },
+      { id: 'pants', emoji: '👖', name: '褲子' },
+      { id: 'sun', emoji: '☀️', name: '太陽' },
+    ],
+    correctId: 'sun',
+    explanation: 'T恤和褲子是衣物，太陽是天體。'
+  }
+];
+
+// 分類遊戲的目標分類
+const categories = {
+  use: ['食物', '交通', '動物'],
+  // 可以擴充更多分類方式，例如顏色
+  // color: ['紅色', '黃色', '藍色', '橘色', '棕色', '灰色', '紫色', '白色']
+};
+
+// --- 元件定義 ---
+
+// 可拖曳的物品元件
+const DraggableItem = ({ item, onDragStart }) => (
+  <div
+    draggable
+    onDragStart={(e) => onDragStart(e, item.id)}
+    className="flex flex-col items-center p-3 m-2 bg-white rounded-xl shadow-md cursor-grab active:cursor-grabbing transition-transform duration-200 hover:scale-110"
+  >
+    <span className="text-5xl md:text-6xl">{item.emoji}</span>
+    <span className="mt-2 text-sm text-gray-700">{item.name}</span>
+  </div>
+);
+
+// 放置物品的分類盒子元件
+const DropZone = ({ categoryName, items, onDrop, onDragOver }) => (
+  <div
+    onDrop={onDrop}
+    onDragOver={onDragOver}
+    className="w-full md:w-1/3 bg-blue-100 border-2 border-dashed border-blue-400 rounded-xl p-4 m-2 min-h-[200px] transition-colors duration-300"
+  >
+    <h3 className="text-center text-lg font-semibold text-blue-800 mb-3">{categoryName}</h3>
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+      {items.map(item => (
+        <div key={item.id} className="flex flex-col items-center p-2 bg-white/70 rounded-lg shadow-sm">
+          <span className="text-4xl">{item.emoji}</span>
+          <span className="mt-1 text-xs text-gray-600">{item.name}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+// 分類遊戲主元件
+const SortingGame = () => {
+  const [unsortedItems, setUnsortedItems] = useState(initialSortableItems);
+  const [sortedItems, setSortedItems] = useState({
+    '食物': [],
+    '交通': [],
+    '動物': [],
+  });
+
+  const handleDragStart = (e, id) => {
+    e.dataTransfer.setData('itemId', id);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e, category) => {
+    const itemId = e.dataTransfer.getData('itemId');
+    const itemToMove = unsortedItems.find(item => item.id === itemId);
+
+    if (itemToMove) {
+      // 從未分類區移除
+      setUnsortedItems(prev => prev.filter(item => item.id !== itemId));
+      // 加入到對應的分類區
+      setSortedItems(prev => ({
+        ...prev,
+        [category]: [...prev[category], itemToMove]
+      }));
+    }
+  };
+  
+  const resetGame = () => {
+    setUnsortedItems(initialSortableItems);
+    setSortedItems({ '食物': [], '交通': [], '動物': [] });
+  };
+
+  return (
+    <div className="p-4 md:p-6">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold text-gray-800">活動一：分類遊戲</h2>
+        <button 
+          onClick={resetGame}
+          className="px-4 py-2 bg-indigo-500 text-white rounded-lg shadow hover:bg-indigo-600 transition-colors"
+        >
+          重新開始
+        </button>
+      </div>
+      <p className="mb-6 text-gray-600">請將下方的物品拖曳到對應的「用途」分類中。</p>
+      
+      {/* 分類放置區 */}
+      <div className="flex flex-col md:flex-row justify-center gap-4 mb-8">
+        {categories.use.map(catName => (
+          <DropZone
+            key={catName}
+            categoryName={catName}
+            items={sortedItems[catName]}
+            onDrop={(e) => handleDrop(e, catName)}
+            onDragOver={handleDragOver}
+          />
+        ))}
+      </div>
+
+      {/* 未分類物品區 */}
+      <div className="bg-gray-200 rounded-xl p-4">
+        <h3 className="text-center text-lg font-semibold text-gray-700 mb-4">待分類物品</h3>
+        {unsortedItems.length > 0 ? (
+          <div className="flex flex-wrap justify-center items-start">
+            {unsortedItems.map(item => (
+              <DraggableItem key={item.id} item={item} onDragStart={handleDragStart} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-green-600 font-bold py-8">恭喜！所有物品都分類完成！</p>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// 「挑出不同」遊戲主元件
+const OddOneOutGame = () => {
+  const [currentSetIndex, setCurrentSetIndex] = useState(0);
+  const [feedback, setFeedback] = useState({ message: '', type: '' });
+  const [showExplanation, setShowExplanation] = useState(false);
+
+  const currentSet = oddOneOutSets[currentSetIndex];
+
+  const handleItemClick = (selectedId) => {
+    if (showExplanation) return; // 如果已經顯示答案，則不重複觸發
+
+    if (selectedId === currentSet.correctId) {
+      setFeedback({ message: '答對了！', type: 'success' });
+    } else {
+      setFeedback({ message: '再想一想喔！', type: 'error' });
+    }
+    setShowExplanation(true);
+  };
+
+  const goToNextSet = () => {
+    setCurrentSetIndex((prevIndex) => (prevIndex + 1) % oddOneOutSets.length);
+    setFeedback({ message: '', type: '' });
+    setShowExplanation(false);
+  };
+
+  return (
+    <div className="p-4 md:p-6 flex flex-col items-center">
+      <h2 className="text-2xl font-bold text-gray-800 mb-4">活動二：挑出不同的</h2>
+      <p className="mb-8 text-gray-600">從下面三樣東西中，選出一個跟其他兩個不一樣的。</p>
+      
+      {/* 物品選擇區 */}
+      <div className="flex justify-center items-center gap-4 md:gap-8 mb-6">
+        {currentSet.items.map(item => (
+          <div
+            key={item.id}
+            onClick={() => handleItemClick(item.id)}
+            className={`flex flex-col items-center p-4 md:p-6 bg-white rounded-2xl shadow-lg cursor-pointer transition-all duration-300 transform hover:scale-105 hover:shadow-xl
+              ${showExplanation && item.id === currentSet.correctId ? 'border-4 border-green-500' : ''}
+              ${showExplanation && feedback.type === 'error' && item.id !== currentSet.correctId ? '' : ''}
+            `}
+          >
+            <span className="text-6xl md:text-8xl">{item.emoji}</span>
+            <span className="mt-3 text-base md:text-lg text-gray-800">{item.name}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* 反饋訊息區 */}
+      <div className="h-24 flex flex-col items-center justify-center text-center">
+        {feedback.message && (
+          <p className={`text-xl font-bold ${feedback.type === 'success' ? 'text-green-600' : 'text-red-500'}`}>
+            {feedback.message}
+          </p>
+        )}
+        {showExplanation && (
+          <div className="mt-2 text-gray-700 bg-yellow-100 p-3 rounded-lg">
+            <p><span className="font-bold">為什麼呢？</span> {currentSet.explanation}</p>
+          </div>
+        )}
+      </div>
+
+      {/* 下一題按鈕 */}
+      {showExplanation && (
+        <button
+          onClick={goToNextSet}
+          className="mt-4 px-6 py-3 bg-green-500 text-white font-bold rounded-lg shadow-md hover:bg-green-600 transition-transform transform hover:scale-105"
+        >
+          下一題
+        </button>
+      )}
+    </div>
+  );
+};
+
+// 主應用程式元件
+export default function App() {
+  const [activeTab, setActiveTab] = useState('sorting');
+
+  const TabButton = ({ tabName, displayName }) => (
+    <button
+      onClick={() => setActiveTab(tabName)}
+      className={`px-4 py-2 text-lg font-semibold rounded-t-lg transition-colors duration-200 focus:outline-none
+        ${activeTab === tabName 
+          ? 'bg-white text-blue-600 shadow-md' 
+          : 'bg-blue-500 text-white hover:bg-blue-600'
+        }`}
+    >
+      {displayName}
+    </button>
+  );
+
+  return (
+    <div className="min-h-screen bg-gray-100 font-sans">
+      <div className="container mx-auto p-4 md:p-8">
+        <header className="text-center mb-8">
+          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-800">失智友善活動模擬器</h1>
+          <p className="text-md text-gray-500 mt-2">一個向志工展示活動設計的互動工具</p>
+        </header>
+        
+        <div className="w-full max-w-4xl mx-auto">
+          {/* 活頁籤 */}
+          <div className="flex justify-center border-b-2 border-gray-300">
+            <TabButton tabName="sorting" displayName="分類遊戲" />
+            <TabButton tabName="oddOneOut" displayName="挑出不同" />
+          </div>
+          
+          {/* 內容區 */}
+          <div className="bg-white rounded-b-xl shadow-2xl">
+            {activeTab === 'sorting' ? <SortingGame /> : <OddOneOutGame />}
+          </div>
+        </div>
+        
+        <footer className="text-center mt-8 text-sm text-gray-400">
+          <p>此工具旨在視覺化活動流程，可根據實際需求調整物品與分類。</p>
+        </footer>
+      </div>
+    </div>
+  );
+}
