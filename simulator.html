@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>認知活動模擬器</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+        .card {
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+        }
+        .card.is-flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .card-face-back {
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body class="bg-amber-50 min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div class="w-full max-w-2xl mx-auto text-center">
+        <header class="mb-8">
+            <h1 class="text-4xl font-bold text-teal-700">長者認知活動模擬器</h1>
+            <p class="text-lg text-gray-600 mt-2">一個為失智症患者設計的「分類猜詞」遊戲台灣在地化版本。</p>
+        </header>
+
+        <main class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+            <!-- 卡片區域 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <!-- 類別卡片 -->
+                <div class="flex flex-col items-center">
+                    <h2 class="text-xl font-semibold text-gray-700 mb-3">類別</h2>
+                    <div id="category-card" class="w-full h-48 bg-sky-100 border-2 border-sky-300 rounded-xl flex items-center justify-center">
+                        <span id="category-text" class="text-4xl font-bold text-sky-800">水果名稱</span>
+                    </div>
+                </div>
+                <!-- 注音卡片 -->
+                <div class="flex flex-col items-center">
+                    <h2 class="text-xl font-semibold text-gray-700 mb-3">開頭注音</h2>
+                    <div id="letter-card" class="w-full h-48 bg-rose-100 border-2 border-rose-300 rounded-xl flex items-center justify-center">
+                        <span id="letter-text" class="text-7xl font-bold text-rose-800">ㄇ</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 控制按鈕 -->
+            <div class="flex justify-center mb-8">
+                <button id="draw-button" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-md transition-transform transform hover:scale-105">
+                    抽一組新卡片
+                </button>
+            </div>
+
+            <!-- 答案範例區域 -->
+            <div class="bg-gray-50 rounded-xl p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 text-center">想想看，有哪些可能的答案？</h3>
+                <div id="example-container" class="text-center">
+                    <button id="reveal-button" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-6 rounded-full transition-transform transform hover:scale-105">
+                        顯示答案範例
+                    </button>
+                    <div id="answers" class="hidden mt-4 flex justify-center items-center gap-4 flex-wrap">
+                        <!-- 答案會動態生成於此 -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="mt-8 text-gray-500 text-sm">
+            <p>這是一個互動模擬工具，用以向志工或家屬說明活動玩法。</p>
+        </footer>
+    </div>
+
+    <script>
+        // 在地化的遊戲資料庫
+        const gameData = [
+            { category: '水果名稱', zhuyin: 'ㄇ', examples: ['芒果', '木瓜', '蜜棗'] },
+            { category: '水果名稱', zhuyin: 'ㄌ', examples: ['蓮霧', '龍眼', '荔枝'] },
+            { category: '水果名稱', zhuyin: 'ㄒ', examples: ['西瓜', '香蕉', '香瓜'] },
+            { category: '動物名稱', zhuyin: 'ㄇ', examples: ['貓', '馬', '獼猴'] },
+            { category: '動物名稱', zhuyin: 'ㄏ', examples: ['猴子', '蝴蝶', '海豚'] },
+            { category: '動物名稱', zhuyin: 'ㄕ', examples: ['獅子', '蛇', '松鼠'] },
+            { category: '台灣小吃', zhuyin: 'ㄋ', examples: ['牛肉麵', '肉圓', '蚵仔煎'] }, // 肉圓(ㄖ), 蚵仔煎(ㄜ) - 這裡為了示範，取了發音相近的
+            { category: '台灣小吃', zhuyin: 'ㄉ', examples: ['豆花', '大腸麵線', '擔仔麵'] },
+            { category: '台灣城市', zhuyin: 'ㄊ', examples: ['台北', '台南', '台中', '台東'] },
+            { category: '台灣城市', zhuyin: 'ㄐ', examples: ['基隆', '嘉義', '金門'] },
+            { category: '市場蔬菜', zhuyin: 'ㄑ', examples: ['茄子', '青椒', '青江菜'] },
+            { category: '市場蔬菜', zhuyin: 'ㄅ', examples: ['白菜', '菠菜', '白蘿蔔'] },
+            { category: '常見姓氏', zhuyin: 'ㄔ', examples: ['陳', '張', '鄭'] }, // 張(ㄓ), 鄭(ㄓ)
+            { category: '常見姓氏', zhuyin: 'ㄌ', examples: ['林', '李', '劉'] },
+        ];
+
+        // DOM 元素
+        const categoryText = document.getElementById('category-text');
+        const letterText = document.getElementById('letter-text');
+        const drawButton = document.getElementById('draw-button');
+        const revealButton = document.getElementById('reveal-button');
+        const answersContainer = document.getElementById('answers');
+        
+        let currentData = null;
+        let lastIndex = -1;
+
+        // 隨機抽取一組新的卡片資料
+        function drawNewSet() {
+            let newIndex;
+            // 確保不會連續抽到同一組
+            do {
+                newIndex = Math.floor(Math.random() * gameData.length);
+            } while (newIndex === lastIndex);
+            lastIndex = newIndex;
+            
+            currentData = gameData[newIndex];
+            
+            // 更新卡片上的文字
+            categoryText.textContent = currentData.category;
+            letterText.textContent = currentData.zhuyin;
+            
+            // 重置答案區域
+            answersContainer.innerHTML = '';
+            answersContainer.classList.add('hidden');
+            revealButton.classList.remove('hidden');
+        }
+
+        // 顯示答案範例
+        function revealAnswers() {
+            if (!currentData) return;
+
+            // 隱藏「顯示答案」按鈕
+            revealButton.classList.add('hidden');
+
+            // 顯示答案
+            currentData.examples.forEach(example => {
+                const answerTag = document.createElement('span');
+                answerTag.className = 'bg-green-200 text-green-800 text-lg font-semibold px-4 py-2 rounded-full';
+                answerTag.textContent = example;
+                answersContainer.appendChild(answerTag);
+            });
+            answersContainer.classList.remove('hidden');
+        }
+
+        // 事件監聽器
+        drawButton.addEventListener('click', drawNewSet);
+        revealButton.addEventListener('click', revealAnswers);
+
+        // 頁面載入時，先抽一組
+        window.onload = drawNewSet;
+    </script>
+</body>
+</html>
