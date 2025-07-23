@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>錢，的趣味</title>
+    <!-- 引入 Tailwind CSS 框架 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Google Fonts 的 Noto Sans TC (思源黑體) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* --- 全域與基本樣式 --- */
+        body {
+            font-family: 'Noto Sans TC', sans-serif; /* 設定網站字體 */
+            touch-action: manipulation; /* 提升行動裝置觸控體驗，防止點擊延遲 */
+            background-color: #f3f4f6; /* 設定背景色為淺灰色 */
+        }
+
+        /* --- 按鈕統一樣式 --- */
+        .btn {
+            transition: all 0.2s ease; /* 所有屬性變化都有 0.2 秒的過渡動畫 */
+            font-weight: 700; /* 粗體字 */
+        }
+
+        /* 按鈕被點擊時的互動效果 */
+        .btn:active {
+            transform: scale(0.97); /* 輕微縮小，產生按下的感覺 */
+        }
+
+        /* 按鈕被禁用時的樣式 */
+        .btn:disabled {
+            opacity: 0.5; /* 半透明 */
+            cursor: not-allowed; /* 滑鼠指標變為禁止圖示 */
+        }
+
+        /* --- 選項按鈕的專屬樣式 --- */
+        .option-btn {
+            transition: background-color 0.2s ease, transform 0.2s ease; /* 指定過渡動畫的屬性 */
+            border-width: 3px; /* 邊框寬度 */
+        }
+
+        /* 選項按鈕被點擊時的互動效果 (僅限未禁用時) */
+        .option-btn:not([disabled]):active {
+            transform: scale(0.97);
+        }
+
+        /* 答對時的樣式 */
+        .option-btn.correct {
+            background-color: #16a34a !important; /* 綠色背景 */
+            color: white !important; /* 白色文字 */
+            border-color: #15803d !important; /* 深綠色邊框 */
+        }
+
+        /* 答錯時的樣式 */
+        .option-btn.wrong {
+            background-color: #dc2626 !important; /* 紅色背景 */
+            color: white !important; /* 白色文字 */
+            border-color: #b91c1c !important; /* 深紅色邊框 */
+        }
+
+        /* --- 動畫定義 --- */
+        /* 淡入動畫 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        /* 彈出動畫 */
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .pop-in {
+            animation: popIn 0.3s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900 flex items-center justify-center min-h-screen p-4">
+
+    <!-- 主應用程式容器 -->
+    <div id="app" class="w-full max-w-3xl mx-auto bg-white rounded-3xl shadow-2xl p-6 md:p-10">
+
+        <!-- 1. 首頁畫面 -->
+        <div id="home-screen" class="text-center py-12">
+            <h1 class="text-6xl md:text-7xl font-bold text-amber-600 mb-12">錢，的趣味</h1>
+            <button id="start-btn" class="btn w-full text-3xl bg-amber-500 hover:bg-amber-600 text-white py-5 px-6 rounded-xl shadow-lg">
+                開始遊戲
+            </button>
+        </div>
+
+        <!-- 2. 選擇模組畫面 -->
+        <div id="module-selection-screen" class="hidden">
+            <h2 class="text-5xl font-bold text-center mb-8">今天想聊什麼？</h2>
+            <div class="space-y-5">
+                <button data-module="market" class="module-btn btn w-full text-left p-6 bg-green-100 hover:bg-green-200 rounded-xl flex items-center space-x-6 shadow-sm border-2 border-green-200">
+                    <span class="text-5xl">🥬</span>
+                    <div>
+                        <p class="text-3xl font-bold text-green-800">熱鬧菜市場</p>
+                        <p class="text-xl text-gray-600">猜猜現在的菜價、肉價。</p>
+                    </div>
+                </button>
+                <button data-module="food" class="module-btn btn w-full text-left p-6 bg-red-100 hover:bg-red-200 rounded-xl flex items-center space-x-6 shadow-sm border-2 border-red-200">
+                    <span class="text-5xl">🍜</span>
+                    <div>
+                        <p class="text-3xl font-bold text-red-800">廟口小吃攤</p>
+                        <p class="text-xl text-gray-600">蚵仔麵線、臭豆腐，想吃什麼？</p>
+                    </div>
+                </button>
+                 <button data-module="nostalgia" class="module-btn btn w-full text-left p-6 bg-yellow-100 hover:bg-yellow-200 rounded-xl flex items-center space-x-6 shadow-sm border-2 border-yellow-200">
+                    <span class="text-5xl">🍬</span>
+                    <div>
+                        <p class="text-3xl font-bold text-yellow-800">懷舊柑仔店</p>
+                        <p class="text-xl text-gray-600">回味民國七十年代的滋味！</p>
+                    </div>
+                </button>
+                <button data-module="home" class="module-btn btn w-full text-left p-6 bg-blue-100 hover:bg-blue-200 rounded-xl flex items-center space-x-6 shadow-sm border-2 border-blue-200">
+                    <span class="text-5xl">🏠</span>
+                    <div>
+                        <p class="text-3xl font-bold text-blue-800">生活大小事</p>
+                        <p class="text-xl text-gray-600">繳水電費、看電影、包紅包！</p>
+                    </div>
+                </button>
+                 <button data-module="old_money" class="module-btn btn w-full text-left p-6 bg-purple-100 hover:bg-purple-200 rounded-xl flex items-center space-x-6 shadow-sm border-2 border-purple-200">
+                    <span class="text-5xl">🪙</span>
+                    <div>
+                        <p class="text-3xl font-bold text-purple-800">舊時光的薪水袋</p>
+                        <p class="text-xl text-gray-600">聊聊以前的薪水和快樂時光。</p>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- 3. 問答畫面 (選擇題) -->
+        <div id="quiz-screen" class="hidden">
+            <h2 id="quiz-module-title" class="text-4xl font-bold text-center mb-1 text-gray-600"></h2>
+            <p id="quiz-progress-text" class="text-xl text-center text-gray-500 mb-6"></p>
+            
+            <div class="text-center p-6 bg-gray-50 rounded-xl mb-6 border">
+                <img id="quiz-item-image" src="" class="w-full max-w-sm mx-auto rounded-lg mb-4 shadow-md" alt="題目圖片">
+                <p id="quiz-item-name" class="text-4xl font-bold"></p>
+                <p id="quiz-item-desc" class="text-xl text-gray-600 mt-2"></p>
+            </div>
+            
+            <div id="options-area">
+                <p class="text-2xl text-center text-gray-800 mb-4">請猜猜看，下面哪一個價格比較接近？</p>
+                <div id="price-options" class="grid grid-cols-2 gap-4"></div>
+            </div>
+
+            <div id="result-area" class="hidden text-center mt-6 p-6 rounded-xl">
+                <p id="result-text" class="text-4xl font-bold mb-3"></p>
+                <p id="explanation-text" class="text-2xl text-gray-800 mb-6"></p>
+                <button id="next-question-btn" class="btn bg-amber-500 hover:bg-amber-600 text-white text-2xl py-4 px-8 rounded-lg shadow-md">下一題</button>
+            </div>
+            
+            <button id="back-to-menu-quiz-btn" class="btn w-full mt-8 bg-gray-300 hover:bg-gray-400 text-gray-800 py-3 px-4 rounded-lg">返回主選單</button>
+        </div>
+
+        <!-- 4. 故事畫面 (引導式問答) -->
+        <div id="story-screen" class="hidden">
+            <h2 id="story-module-title" class="text-4xl font-bold text-center mb-6 text-gray-600"></h2>
+             <div class="text-center p-6 bg-gray-50 rounded-xl mb-6 border">
+                <img id="story-item-image" src="" class="w-full max-w-md mx-auto rounded-lg mb-4 shadow-md" alt="故事圖片">
+                <p id="story-item-name" class="text-4xl font-bold"></p>
+                <p id="story-item-desc" class="text-xl text-gray-600 mt-2"></p>
+            </div>
+            <button id="next-story-btn" class="btn bg-purple-500 hover:bg-purple-600 text-white text-2xl w-full py-4 px-8 rounded-lg shadow-md">下一頁</button>
+            <button id="back-to-menu-story-btn" class="btn w-full mt-4 bg-gray-300 hover:bg-gray-400 text-gray-800 py-3 px-4 rounded-lg">返回主選單</button>
+        </div>
+        
+        <!-- 5. 結束畫面 -->
+        <div id="end-screen" class="hidden text-center py-12">
+            <h1 class="text-6xl font-bold text-purple-600 mb-6">感謝大家的參與！</h1>
+            <p class="text-3xl text-gray-700 mb-12">希望您今天都有開心！</p>
+            <!-- 【已移除】這裡原本的結束圖片已被移除 -->
+            <button id="restart-btn" class="btn w-full text-3xl bg-amber-500 hover:bg-amber-600 text-white py-5 px-6 rounded-xl shadow-lg">
+                重新開始
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // --- 資料庫 ---
+        // 【關鍵修正】將圖片的基礎路徑更新為您提供的 GitHub repo 路徑
+        const image_base_url = "https://raw.githubusercontent.com/thc1006/taiwan-dementia-money-game/main/images/";
+        
+        const database = {
+            market: { 
+                name: "熱鬧菜市場", 
+                items: [
+                    { name: "空心菜", price: 30, image: image_base_url + "空心菜.jpg", desc: "現在市場青菜一把差不多這個價錢。" },
+                    { name: "豬肉 (一台斤)", price: 160, image: image_base_url + "豬肉 (一台斤).jpg", desc: "現在的豬肉越來越貴囉！" },
+                    { name: "虱目魚", price: 90, image: image_base_url + "虱目魚.jpg", desc: "煮湯、乾煎都很好吃！" },
+                    { name: "雞蛋 (一盒10粒)", price: 65, image: image_base_url + "一盒雞蛋.jpg", desc: "現在雞蛋不便宜，以前一顆才幾角銀。" },
+                    { name: "豆腐 (一塊)", price: 15, image: image_base_url + "豆腐 (一塊).jpg", desc: "便宜又營養的好東西。" }
+                ] 
+            },
+            food: { 
+                name: "廟口小吃攤", 
+                items: [
+                    { name: "蚵仔麵線 (大碗)", price: 70, image: image_base_url + "蚵仔麵線.jpg", desc: "以前一碗只要十幾塊錢呢！" },
+                    { name: "臭豆腐 (一份)", price: 60, image: image_base_url + "臭豆腐.jpg", desc: "配上泡菜，真是人間美味。" },
+                    { name: "肉圓", price: 45, image: image_base_url + "肉圓.jpg", desc: "清蒸的、油炸的，都很好吃。" },
+                    { name: "大腸包小腸", price: 65, image: image_base_url + "大腸包小腸.jpg", desc: "夜市的代表小吃之一。" },
+                    { name: "山東大饅頭", price: 25, image: image_base_url + "山東大饅頭.jpg", desc: "又大又紮實，吃一顆就很飽！" },
+                    { name: "鍋盔", price: 50, image: image_base_url + "鍋盔.jpg", desc: "烤得酥酥脆脆的，像大餅一樣。" },
+                    { name: "水餃 (10顆)", price: 70, image: image_base_url + "水餃 (10顆).jpg", desc: "高麗菜豬肉餡，沾醬油最好吃。" }
+                ] 
+            },
+            nostalgia: { 
+                name: "懷舊柑仔店", 
+                items: [
+                    { name: "王子麵", price: 10, image: image_base_url + "王子麵.jpg", desc: "以前一包才1塊、2塊錢，是小孩子的零食。" },
+                    { name: "黑松汽水", price: 30, image: image_base_url + "黑松汽水.png", desc: "辦桌、請客一定要有的飲料！" },
+                    { name: "明星花露水", price: 120, image: image_base_url + "明星花露水.jpg", desc: "以前的阿嬤都用這個，香噴噴！還可以防蚊蟲。" },
+                    { name: "民國七十年 一張「愛國獎券」", price: 100, image: image_base_url + "民國七十年 一張「愛國獎券」.jpg", desc: "在民國七十年代末期，獎金高的愛國獎券一張要價不菲。" },
+                    { name: "彈珠汽水", price: 35, image: image_base_url + "彈珠汽水.jpg", desc: "要用力把彈珠壓下去，喝完還要蒐集彈珠！" },
+                    { name: "綠油精", price: 50, image: image_base_url + "綠油精.jpg", desc: "頭暈、蚊子咬，什麼都能擦，是家庭必備良藥。" }
+                ] 
+            },
+            home: { 
+                name: "生活大小事", 
+                items: [
+                    { name: "電影票 (一張)", price: 300, image: image_base_url + "電影票.jpg", desc: "現在看電影很貴，以前看一場二輪片才幾十塊。" },
+                    { name: "過年紅包 (一包)", price: 600, image: image_base_url + "包紅包.jpg", desc: "包給孫子的吉利數字，希望他平安長大。" },
+                    { name: "大同電鍋 (10人份)", price: 2800, image: image_base_url + "大同電鍋 (10人份).jpg", desc: "每個家庭都有一台，從年輕用到老都不會壞！" },
+                    { name: "藍白拖", price: 80, image: image_base_url + "藍白拖.jpg", desc: "台灣最有代表性的拖鞋，便宜又好穿。" },
+                    { name: "公路局車票 (台北到高雄)", price: 550, image: image_base_url + "公路局車票 (台北到高雄).jpg", desc: "以前叫『金馬號』，坐長途車的回憶。" }
+                ] 
+            },
+            old_money: {
+                name: "舊時光的薪水袋",
+                type: "story", // 標記這個模組為故事類型
+                items: [
+                    { name: "這是以前的錢，您有看過嗎？", image: image_base_url + "舊台幣.jpg", desc: "這些是民國五十、六十年代在用的錢喔！" },
+                    { name: "這是幾元？上面的人是誰？", image: image_base_url + "蔣中正.jpg", desc: "提示：這是以前很常見的十元紙鈔，上面是蔣中正總統。" },
+                    { name: "您還記得第一份工作，一個月領多少錢嗎？", image: image_base_url + "薪水袋.webp", desc: "以前的薪水都是用薪水袋發現金的！" },
+                    { name: "那時候，領到薪水最想買什麼？", image: image_base_url + "PXL_20220207_062423742-EDIT.jpg", desc: "是買新衣、新鞋，還是帶家人去吃好料的？" },
+                    { name: "賺錢了後，最大的快樂是什麼？", image: image_base_url + "鵝鑾鼻燈塔.jpg", desc: "是為家人付出，還是買自己喜歡的東西？" }
+                ]
+            }
+        };
+
+        // --- 狀態管理 (State Management) ---
+        let currentModuleKey = null;
+        let currentItemIndex = 0;
+        let currentModuleItems = [];
+        let isTransitioning = false;
+
+        // --- DOM 元素 ---
+        const screens = {
+            home: document.getElementById('home-screen'),
+            moduleSelection: document.getElementById('module-selection-screen'),
+            quiz: document.getElementById('quiz-screen'),
+            story: document.getElementById('story-screen'),
+            end: document.getElementById('end-screen'),
+        };
+        const startBtn = document.getElementById('start-btn');
+        const moduleBtns = document.querySelectorAll('.module-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        
+        const backToMenuQuizBtn = document.getElementById('back-to-menu-quiz-btn');
+        const quizModuleTitle = document.getElementById('quiz-module-title');
+        const quizProgressText = document.getElementById('quiz-progress-text');
+        const quizItemImage = document.getElementById('quiz-item-image');
+        const quizItemName = document.getElementById('quiz-item-name');
+        const quizItemDesc = document.getElementById('quiz-item-desc');
+        const optionsArea = document.getElementById('options-area');
+        const priceOptions = document.getElementById('price-options');
+        const resultArea = document.getElementById('result-area');
+        const resultText = document.getElementById('result-text');
+        const explanationText = document.getElementById('explanation-text');
+        const nextQuestionBtn = document.getElementById('next-question-btn');
+        
+        const backToMenuStoryBtn = document.getElementById('back-to-menu-story-btn');
+        const storyModuleTitle = document.getElementById('story-module-title');
+        const storyItemImage = document.getElementById('story-item-image');
+        const storyItemName = document.getElementById('story-item-name');
+        const storyItemDesc = document.getElementById('story-item-desc');
+        const nextStoryBtn = document.getElementById('next-story-btn');
+
+
+        // --- 核心函數 ---
+        function showScreen(screenId) {
+            Object.values(screens).forEach(s => s.classList.add('hidden'));
+            const screenToShow = screens[screenId];
+            screenToShow.classList.remove('hidden');
+            
+            screenToShow.classList.remove('fade-in');
+            void screenToShow.offsetWidth;
+            screenToShow.classList.add('fade-in');
+            
+            const onAnimationEnd = () => {
+                isTransitioning = false;
+                screenToShow.removeEventListener('animationend', onAnimationEnd);
+            };
+            screenToShow.addEventListener('animationend', onAnimationEnd);
+        }
+
+        function selectQuizModule(moduleKey) {
+            if (isTransitioning) return;
+            isTransitioning = true;
+            currentModuleKey = moduleKey;
+            currentItemIndex = 0;
+            currentModuleItems = [...database[moduleKey].items].sort(() => 0.5 - Math.random());
+            displayQuizQuestion();
+            showScreen('quiz');
+        }
+        
+        function selectStoryModule(moduleKey) {
+            if (isTransitioning) return;
+            isTransitioning = true;
+            currentModuleKey = moduleKey;
+            currentItemIndex = 0;
+            currentModuleItems = database[moduleKey].items;
+            displayStoryItem();
+            showScreen('story');
+        }
+
+        function displayQuizQuestion() {
+            const item = currentModuleItems[currentItemIndex];
+            quizModuleTitle.textContent = database[currentModuleKey].name;
+            quizProgressText.textContent = `第 ${currentItemIndex + 1} 題 / 共 ${currentModuleItems.length} 題`;
+            quizItemImage.src = item.image;
+            quizItemImage.alt = item.name;
+            quizItemName.textContent = item.name;
+            quizItemDesc.textContent = item.desc;
+            
+            priceOptions.innerHTML = '';
+            
+            const options = generatePriceOptions(item.price);
+
+            options.forEach(price => {
+                const btn = document.createElement('button');
+                btn.textContent = `${price} 元`;
+                btn.dataset.price = price;
+                btn.classList.add('option-btn', 'btn', 'w-full', 'text-3xl', 'py-8', 'rounded-xl', 'bg-amber-100', 'hover:bg-amber-200', 'border-amber-200');
+                btn.addEventListener('click', () => checkGuess(price, item.price));
+                priceOptions.appendChild(btn);
+            });
+
+            optionsArea.classList.remove('hidden');
+            resultArea.classList.add('hidden');
+        }
+        
+        function displayStoryItem() {
+            const item = currentModuleItems[currentItemIndex];
+            storyModuleTitle.textContent = database[currentModuleKey].name;
+            storyItemImage.src = item.image;
+            storyItemImage.alt = item.name;
+            storyItemName.textContent = item.name;
+            storyItemDesc.textContent = item.desc;
+
+            if (currentItemIndex >= currentModuleItems.length - 1) {
+                nextStoryBtn.textContent = "今天辛苦了！";
+            } else {
+                nextStoryBtn.textContent = "下一頁";
+            }
+        }
+        
+        function generatePriceOptions(correctPrice) {
+            let options = new Set([correctPrice]);
+            while (options.size < 4) {
+                const factor = 0.5 + Math.random(); 
+                let distractor = Math.round((correctPrice * factor) / 5) * 5;
+                if (distractor <= 0) distractor = 5;
+                
+                if (distractor !== correctPrice) {
+                    options.add(distractor);
+                }
+            }
+            return Array.from(options).sort(() => Math.random() - 0.5);
+        }
+
+        function checkGuess(chosenPrice, correctPrice) {
+            document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+            
+            const chosenBtn = document.querySelector(`.option-btn[data-price='${chosenPrice}']`);
+            const correctBtn = document.querySelector(`.option-btn[data-price='${correctPrice}']`);
+
+            if (chosenPrice === correctPrice) {
+                chosenBtn.classList.add('correct');
+                resultArea.classList.add('bg-green-50');
+                resultArea.classList.remove('bg-red-50');
+                resultText.textContent = "完全正確！太厲害了！";
+                explanationText.textContent = `沒錯，現在差不多就是 ${correctPrice} 元左右。`;
+            } else {
+                if(chosenBtn) chosenBtn.classList.add('wrong');
+                if(correctBtn) correctBtn.classList.add('correct');
+                resultArea.classList.add('bg-red-50');
+                resultArea.classList.remove('bg-green-50');
+                resultText.textContent = "沒關係，再試試看！";
+                explanationText.textContent = `正確的價錢大約是 ${correctPrice} 元喔。`;
+            }
+            
+            optionsArea.classList.add('hidden');
+            resultArea.classList.remove('hidden');
+            resultArea.classList.add('pop-in');
+
+            if (currentItemIndex >= currentModuleItems.length - 1) {
+                nextQuestionBtn.textContent = "完成！返回選單";
+            } else {
+                nextQuestionBtn.textContent = "下一題";
+            }
+        }
+
+        function handleNextQuestion() {
+            if (isTransitioning) return;
+            isTransitioning = true;
+
+            currentItemIndex++;
+            if (currentItemIndex < currentModuleItems.length) {
+                displayQuizQuestion();
+                isTransitioning = false; 
+            } else {
+                showScreen('moduleSelection');
+            }
+        }
+        
+        function handleNextStoryItem() {
+            if (isTransitioning) return;
+            isTransitioning = true;
+
+            if (currentItemIndex >= currentModuleItems.length - 1) {
+                showScreen('end');
+            } else {
+                currentItemIndex++;
+                displayStoryItem();
+                isTransitioning = false;
+            }
+        }
+
+        // --- 事件監聽 ---
+        startBtn.addEventListener('click', () => {
+            if (isTransitioning) return;
+            isTransitioning = true;
+            showScreen('moduleSelection');
+        });
+
+        restartBtn.addEventListener('click', () => {
+            if (isTransitioning) return;
+            isTransitioning = true;
+            showScreen('home');
+        });
+
+        moduleBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const moduleKey = btn.dataset.module;
+                if (database[moduleKey].type === 'story') {
+                    selectStoryModule(moduleKey);
+                } else {
+                    selectQuizModule(moduleKey);
+                }
+            });
+        });
+
+        backToMenuQuizBtn.addEventListener('click', () => {
+            if (isTransitioning) return;
+            isTransitioning = true;
+            showScreen('moduleSelection');
+        });
+        backToMenuStoryBtn.addEventListener('click', () => {
+            if (isTransitioning) return;
+            isTransitioning = true;
+            showScreen('moduleSelection');
+        });
+        
+        nextQuestionBtn.addEventListener('click', handleNextQuestion);
+        nextStoryBtn.addEventListener('click', handleNextStoryItem);
+
+    </script>
+</body>
+</html>
