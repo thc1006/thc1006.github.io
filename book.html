@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>個案報告：非典型輕度認知障礙 (全新高對比設計)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #e2e8f0; /* 使用淺灰色背景 */
+        }
+        .slide-container {
+            background-color: #f8fafc; /* 使用高亮度的白色背景 */
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+            border: 1px solid #cbd5e1;
+            display: flex;
+            flex-direction: column;
+            padding: 3rem;
+        }
+        .card {
+            background-color: #ffffff; /* 卡片使用純白 */
+            border-radius: 1rem;
+            border: 1px solid #d1d5db;
+            padding: 1.5rem;
+            height: 100%;
+        }
+        .vs-circle {
+            background-color: #1e293b; /* 加深VS圓圈顏色 */
+            color: white;
+            border-radius: 50%;
+            width: 4rem;
+            height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.5rem;
+            box-shadow: 0 0 0 8px #f8fafc;
+            z-index: 10;
+        }
+        .hypothesis-card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            text-align: center;
+            border: 1px solid #e5e7eb;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .hypothesis-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border-color: #4f46e5;
+        }
+        /* 提高文字對比度 */
+        .high-contrast-title { color: #111827; }
+        .high-contrast-subtitle { color: #4b5563; }
+        .high-contrast-text { color: #374151; }
+        .high-contrast-strong { color: #be123c; } /* 使用更醒目的紅色 */
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="w-full max-w-7xl aspect-video slide-container">
+        
+        <!-- 1. 標題 -->
+        <header class="text-center mb-8">
+            <h1 class="text-4xl lg:text-5xl font-black high-contrast-title">臨床觀察的矛盾點</h1>
+            <p class="mt-2 text-lg lg:text-xl high-contrast-subtitle">當個案表現與典型失智模型產生衝突</p>
+        </header>
+
+        <!-- 2. 內容：呈現矛盾的兩端 -->
+        <main class="flex-grow grid grid-cols-1 lg:grid-cols-2 items-center gap-8 relative">
+            <!-- 左側：個案的實際狀況 -->
+            <div class="card flex flex-col items-center text-center">
+                <h2 class="text-2xl font-bold text-red-700 mb-3">個案臨床表現</h2>
+                <span class="bg-red-100 text-red-800 text-md font-semibold px-4 py-1 rounded-full mb-4">CDR: 0.5 (輕度認知障礙)</span>
+                <div class="flex-grow flex flex-col items-center justify-center">
+                    <!-- 全新圖示：手部顫抖地描繪圖形 -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-red-500 mb-4" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M40.3 21.8c-2.3-2.3-5.5-3.8-9-3.8s-6.7 1.5-9 3.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.5" stroke-dasharray="3 3"/>
+                        <path d="M22.3 42.2c2.3 2.3 5.5 3.8 9 3.8s6.7-1.5 9-3.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.5" stroke-dasharray="3 3"/>
+                        <path d="M22.3 21.8l-4.6 4.6c-2.5 2.5-2.5 6.6 0 9.2l4.6 4.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.5" stroke-dasharray="3 3"/>
+                        <path d="M40.3 42.2l4.6-4.6c2.5-2.5 2.5-6.6 0-9.2l-4.6-4.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.5" stroke-dasharray="3 3"/>
+                        <path d="M45 48l-6-4-3 7" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M42 45c-1-1-1.5-2.5-1.5-4s.5-3 1.5-4" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M45 37c1-1 1.5-2.5 1.5-4s-.5-3-1.5-4" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <p class="text-lg high-contrast-text leading-relaxed">
+                        出現<strong class="high-contrast-strong font-bold">嚴重</strong>的視覺空間建構障礙，<br>連圖形描邊都極為困難。
+                    </p>
+                </div>
+            </div>
+
+            <!-- 中間的 VS 標誌 -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden lg:flex">
+                <div class="vs-circle">VS</div>
+            </div>
+
+            <!-- 右側：教科書的典型模型 -->
+            <div class="card flex flex-col items-center text-center">
+                <h2 class="text-2xl font-bold text-blue-700 mb-3">教科書典型模型</h2>
+                 <span class="bg-blue-100 text-blue-800 text-md font-semibold px-4 py-1 rounded-full mb-4">CDR: 0.5 (輕度認知障礙)</span>
+                <div class="flex-grow flex flex-col items-center justify-center">
+                    <!-- 全新圖示：大腦與海馬迴 -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-blue-500 mb-4" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <path d="M32 52c-7.2 0-13-5.8-13-13s5.8-13 13-13" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M32 26c7.2 0 13 5.8 13 13s-5.8 13-13 13" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M26 39a6 6 0 006-6" stroke="#60a5fa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+                      <path d="M38 26a6 6 0 00-6 6" stroke="#60a5fa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+                      <path d="M22 18c-4.4 0-8 3.6-8 8s3.6 8 8 8" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M42 38c4.4 0 8-3.6 8-8s-3.6-8-8-8" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M22 18c0-5.5 4.5-10 10-10s10 4.5 10 10" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M22 34c0 5.5 4.5 10 10 10s10-4.5 10-10" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <p class="text-lg high-contrast-text leading-relaxed">
+                        病理主要影響<strong class="font-bold text-blue-800">海馬迴</strong>，<br>核心症狀為<strong class="font-bold text-blue-800">記憶力衰退</strong>，視覺功能相對保留。
+                    </p>
+                </div>
+            </div>
+        </main>
+
+        <!-- 3. 底部：提出可能的解釋 -->
+        <footer class="mt-8">
+            <h3 class="text-center text-2xl font-bold high-contrast-title mb-4">潛在成因探討：三大可能性</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="hypothesis-card">
+                    <h4 class="text-lg font-bold text-gray-900">非典型病理路徑</h4>
+                    <p class="high-contrast-text mt-1">病理優先影響<strong class="text-indigo-700">頂/枕葉</strong>，而非海馬迴。 (如PCA, LBD)</p>
+                </div>
+                <div class="hypothesis-card">
+                    <h4 class="text-lg font-bold text-gray-900">混合型腦部病理</h4>
+                    <p class="high-contrast-text mt-1">合併<strong class="text-indigo-700">腦血管病變</strong>，選擇性破壞視覺空間功能的神經迴路。</p>
+                </div>
+                <div class="hypothesis-card">
+                    <h4 class="text-lg font-bold text-gray-900">認知儲備差異</h4>
+                    <p class="high-contrast-text mt-1">高記憶儲備代償了記憶缺損，反而突顯了相對較弱的<strong class="text-indigo-700">視覺功能障礙</strong>。</p>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+</body>
+</html>
