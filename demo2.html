@@ -29,12 +29,12 @@
         /* --- 簡報容器 (16:9) --- */
         .slide-container {
             width: 100%;
-            max-width: 1600px; /* 增加最大寬度以容納更大字體 */
+            max-width: 1280px; /* 標準16:9簡報寬度 (33.867cm) */
             aspect-ratio: 16 / 9;
             background: linear-gradient(135deg, #ffffff 0%, #f7f8fa 100%);
-            border-radius: 32px;
-            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.15);
-            padding: 4vw;
+            border-radius: 24px; /* 調整圓角以適應新尺寸 */
+            box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.15);
+            padding: 3.5vw; /* 調整內邊距 */
             display: flex;
             flex-direction: column;
             color: #334155;
@@ -43,7 +43,7 @@
 
         /* --- 標題樣式 --- */
         .main-title {
-            font-size: 4.2vw; /* 再次放大 */
+            font-size: 4.2vw;
             font-weight: 900;
             text-align: center;
             color: #1e293b;
@@ -51,7 +51,7 @@
         }
 
         .subtitle {
-            font-size: 2vw; /* 再次放大 */
+            font-size: 2vw;
             font-weight: 500;
             text-align: center;
             color: #475569;
@@ -64,14 +64,14 @@
             display: grid;
             grid-template-columns: 1fr 1.1fr 1fr; /* 中間欄位稍微寬一點，作為視覺重心 */
             align-items: stretch;
-            gap: 2.5vw;
+            gap: 2vw; /* 調整間距 */
             margin-top: 2.5vw;
         }
 
         .content-column {
             background-color: #ffffff;
             border-radius: 20px;
-            padding: 2.2vw;
+            padding: 2vw; /* 調整內邊距 */
             border: 1px solid #e5e7eb;
             display: flex;
             flex-direction: column;
@@ -84,7 +84,7 @@
         }
 
         .column-title {
-            font-size: 2.2vw; /* 再次放大 */
+            font-size: 2.2vw;
             font-weight: 700;
             margin-bottom: 2vw;
             display: flex;
@@ -117,8 +117,8 @@
         #insight-col .icon { background-color: #dbeafe; color: #2563eb; }
 
         .column-content {
-            font-size: 1.6vw; /* 再次放大 */
-            line-height: 1.9;
+            font-size: 1.6vw;
+            line-height: 1.8; /* 調整行高以優化閱讀 */
             color: #4b5563;
         }
         
@@ -142,9 +142,9 @@
         /* --- 頁尾總結 --- */
         .footer-summary {
             text-align: center;
-            font-size: 1.6vw; /* 再次放大 */
-            margin-top: 3vw;
-            padding-top: 2vw;
+            font-size: 1.6vw;
+            margin-top: 2.5vw; /* 調整邊距 */
+            padding-top: 2.5vw;
             border-top: 2px solid #f3f4f6;
             color: #4b5563;
             font-weight: 500;
