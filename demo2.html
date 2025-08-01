@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>實習成果心得簡報</title>
+    <!-- 引入 Tailwind CSS 框架 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Google Fonts 的 Noto Sans TC (思源黑體) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- 引入 Font Awesome 圖示庫 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- 全域與基本樣式 --- */
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f8f9fa; /* 乾淨的淺灰色背景 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* --- 簡報容器 (16:9) --- */
+        .slide-container {
+            width: 100%;
+            max-width: 1600px; /* 增加最大寬度以容納更大字體 */
+            aspect-ratio: 16 / 9;
+            background: linear-gradient(135deg, #ffffff 0%, #f7f8fa 100%);
+            border-radius: 32px;
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.15);
+            padding: 4vw;
+            display: flex;
+            flex-direction: column;
+            color: #334155;
+            border: 1px solid #e5e7eb;
+        }
+
+        /* --- 標題樣式 --- */
+        .main-title {
+            font-size: 4.2vw; /* 再次放大 */
+            font-weight: 900;
+            text-align: center;
+            color: #1e293b;
+            letter-spacing: 0.05em;
+        }
+
+        .subtitle {
+            font-size: 2vw; /* 再次放大 */
+            font-weight: 500;
+            text-align: center;
+            color: #475569;
+            margin-top: 1rem;
+        }
+        
+        /* --- 內容區塊：三欄式佈局 --- */
+        .content-grid {
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: 1fr 1.1fr 1fr; /* 中間欄位稍微寬一點，作為視覺重心 */
+            align-items: stretch;
+            gap: 2.5vw;
+            margin-top: 2.5vw;
+        }
+
+        .content-column {
+            background-color: #ffffff;
+            border-radius: 20px;
+            padding: 2.2vw;
+            border: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .content-column:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.1);
+        }
+
+        .column-title {
+            font-size: 2.2vw; /* 再次放大 */
+            font-weight: 700;
+            margin-bottom: 2vw;
+            display: flex;
+            flex-direction: column; /* 圖示在上，文字在下 */
+            align-items: center;
+            gap: 1rem;
+            text-align: center;
+        }
+        
+        .column-title .icon {
+            font-size: 3.5vw;
+            width: 6vw;
+            height: 6vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin-bottom: 0.5rem;
+        }
+
+        /* 欄位主題色 */
+        #idea-col .column-title { color: #059669; }
+        #idea-col .icon { background-color: #d1fae5; color: #059669; }
+
+        #clash-col { border-color: #f87171; background-color: #fff1f2; }
+        #clash-col .column-title { color: #b91c1c; }
+        #clash-col .icon { background-color: #fee2e2; color: #b91c1c; }
+
+        #insight-col .column-title { color: #2563eb; }
+        #insight-col .icon { background-color: #dbeafe; color: #2563eb; }
+
+        .column-content {
+            font-size: 1.6vw; /* 再次放大 */
+            line-height: 1.9;
+            color: #4b5563;
+        }
+        
+        .column-content strong {
+            font-weight: 700;
+            color: #1e293b;
+        }
+        
+        .highlight-yellow {
+            background: linear-gradient(180deg, transparent 65%, #fcd34d 65%);
+            padding: 0 0.2rem;
+            font-weight: 700;
+        }
+        
+        .point {
+            margin-top: 1.5vw;
+            padding-left: 1.2rem;
+            border-left: 4px solid #d1d5db;
+        }
+
+        /* --- 頁尾總結 --- */
+        .footer-summary {
+            text-align: center;
+            font-size: 1.6vw; /* 再次放大 */
+            margin-top: 3vw;
+            padding-top: 2vw;
+            border-top: 2px solid #f3f4f6;
+            color: #4b5563;
+            font-weight: 500;
+        }
+        
+        .footer-summary strong {
+            color: #1e293b;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- 標題區 -->
+        <header>
+            <h1 class="main-title">神經內科實習成果與反思</h1>
+            <p class="subtitle">CST認知刺激活動設計：「錢，的趣味」與「懷舊話匣子」</p>
+        </header>
+
+        <!-- 內容網格 -->
+        <main class="content-grid">
+            <!-- 左欄：初始構想 -->
+            <section id="idea-col" class="content-column">
+                <h3 class="column-title">
+                    <div class="icon"><i class="fas fa-lightbulb"></i></div>
+                    初始構想
+                </h3>
+                <div class="column-content">
+                    <p>依據實習計畫，設計了「菜市場物價」與「昔日薪水」等主題，期望能透過大眾化的懷舊元素，有效引發長輩共鳴，藉此促進認知功能與團體社交。</p>
+                </div>
+            </section>
+
+            <!-- 中間欄：臨床衝擊 -->
+            <section id="clash-col" class="content-column">
+                <h3 class="column-title">
+                    <div class="icon"><i class="fas fa-bolt"></i></div>
+                    臨床衝擊
+                </h3>
+                <div class="column-content">
+                    <p><strong>假設與現實的巨大落差：</strong></p>
+                    <div class="point"><strong>情境一：</strong>長輩因失智症已數年未出門，對「目前市價」完全無感，甚至因挫折而不願回答。</div>
+                    <div class="point"><strong>情境二：</strong>部分長輩（如家管）無領薪經驗，使「第一份薪水」話題難以產生連結，導致互動僵局。</div>
+                </div>
+            </section>
+
+            <!-- 右欄：學習洞見 -->
+            <section id="insight-col" class="content-column">
+                <h3 class="column-title">
+                    <div class="icon"><i class="fas fa-seedling"></i></div>
+                    學習洞見
+                </h3>
+                <div class="column-content">
+                    <p>我們<span class="highlight-yellow">以為</span>的，不等於他們<span class="highlight-yellow">真正</span>需要的。</p>
+                    <div class="point"><strong>核心體悟：</strong>絕不能按圖索驥。教案設計需深度客製化，並圍繞群體真實的生活經驗。</div>
+                    <div class="point"><strong>實務反思：</strong>一個月的實習期過短，難以建立完整的「設計→觀察→回饋→修正」迭代循環。</div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 頁尾總結 -->
+        <footer class="footer-summary">
+            <p><strong>總結：</strong>從臨床的「不如預期」中，深刻學習到將理論落地於實務的挑戰與必要性，為未來研究奠定更貼近真實需求的基石。</p>
+        </footer>
+    </div>
+</body>
+</html>
