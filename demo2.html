@@ -22,28 +22,29 @@
             align-items: center;
             min-height: 100vh;
             padding: 2rem;
+            margin: 0;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* --- 簡報容器 (16:9) --- */
+        /* --- 簡報容器 (固定尺寸) --- */
         .slide-container {
-            width: 100%;
-            max-width: 1280px; /* 標準16:9簡報寬度 (33.867cm) */
-            aspect-ratio: 16 / 9;
+            width: 1280px; /* 固定寬度 */
+            height: 720px; /* 固定高度，維持16:9 */
             background: linear-gradient(135deg, #ffffff 0%, #f7f8fa 100%);
-            border-radius: 24px; /* 調整圓角以適應新尺寸 */
-            box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.15);
-            padding: 3.5vw; /* 調整內邊距 */
+            border-radius: 24px;
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.15);
+            padding: 45px; /* 固定內邊距 */
             display: flex;
             flex-direction: column;
             color: #334155;
             border: 1px solid #e5e7eb;
+            transform-origin: top center; /* 確保縮放時中心點正確 */
         }
 
         /* --- 標題樣式 --- */
         .main-title {
-            font-size: 4.2vw;
+            font-size: 54px; /* 固定字體大小 */
             font-weight: 900;
             text-align: center;
             color: #1e293b;
@@ -51,7 +52,7 @@
         }
 
         .subtitle {
-            font-size: 2vw;
+            font-size: 26px; /* 固定字體大小 */
             font-weight: 500;
             text-align: center;
             color: #475569;
@@ -62,16 +63,16 @@
         .content-grid {
             flex-grow: 1;
             display: grid;
-            grid-template-columns: 1fr 1.1fr 1fr; /* 中間欄位稍微寬一點，作為視覺重心 */
+            grid-template-columns: 1fr 1.1fr 1fr;
             align-items: stretch;
-            gap: 2vw; /* 調整間距 */
-            margin-top: 2.5vw;
+            gap: 25px; /* 固定間距 */
+            margin-top: 32px; /* 固定邊距 */
         }
 
         .content-column {
             background-color: #ffffff;
             border-radius: 20px;
-            padding: 2vw; /* 調整內邊距 */
+            padding: 26px; /* 固定內邊距 */
             border: 1px solid #e5e7eb;
             display: flex;
             flex-direction: column;
@@ -84,20 +85,20 @@
         }
 
         .column-title {
-            font-size: 2.2vw;
+            font-size: 28px; /* 固定字體大小 */
             font-weight: 700;
-            margin-bottom: 2vw;
+            margin-bottom: 26px; /* 固定邊距 */
             display: flex;
-            flex-direction: column; /* 圖示在上，文字在下 */
+            flex-direction: column;
             align-items: center;
             gap: 1rem;
             text-align: center;
         }
         
         .column-title .icon {
-            font-size: 3.5vw;
-            width: 6vw;
-            height: 6vw;
+            font-size: 45px; /* 固定圖示大小 */
+            width: 77px; /* 固定寬度 */
+            height: 77px; /* 固定高度 */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -117,8 +118,8 @@
         #insight-col .icon { background-color: #dbeafe; color: #2563eb; }
 
         .column-content {
-            font-size: 1.6vw;
-            line-height: 1.8; /* 調整行高以優化閱讀 */
+            font-size: 21px; /* 固定字體大小 */
+            line-height: 1.8;
             color: #4b5563;
         }
         
@@ -134,7 +135,7 @@
         }
         
         .point {
-            margin-top: 1.5vw;
+            margin-top: 20px; /* 固定邊距 */
             padding-left: 1.2rem;
             border-left: 4px solid #d1d5db;
         }
@@ -142,9 +143,9 @@
         /* --- 頁尾總結 --- */
         .footer-summary {
             text-align: center;
-            font-size: 1.6vw;
-            margin-top: 2.5vw; /* 調整邊距 */
-            padding-top: 2.5vw;
+            font-size: 20px; /* 固定字體大小 */
+            margin-top: 32px; /* 固定邊距 */
+            padding-top: 32px; /* 固定邊距 */
             border-top: 2px solid #f3f4f6;
             color: #4b5563;
             font-weight: 500;
