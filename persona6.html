@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>設計策略白板：在地化認知刺激工具開發</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Google Fonts: Noto Sans TC -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- 引入 Font Awesome 圖示庫 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #dee2e6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .presentation-slide {
+            width: 100%;
+            max-width: 1600px;
+            aspect-ratio: 16 / 9;
+            background-color: #f8f9fa;
+            border: 1px solid #adb5bd;
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .main-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #212529;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .whiteboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 0.1fr 1fr;
+            gap: 1rem;
+            flex-grow: 1;
+        }
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .card {
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            border-radius: 0.25rem;
+            padding: 1.25rem;
+        }
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid;
+        }
+        .list > div {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+        }
+        .label {
+            font-weight: 700;
+            color: #495057;
+            margin-right: 0.5rem;
+            white-space: nowrap;
+        }
+        .highlight-yellow {
+            background-color: #fff3bf;
+            padding: 0.1rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+        .highlight-red {
+            color: #d9480f;
+            font-weight: 900;
+        }
+        .highlight-blue {
+            color: #1c7ed6;
+            font-weight: 700;
+        }
+        .arrow-column {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .arrow {
+            font-size: 4rem;
+            color: #868e96;
+        }
+        .goal-card {
+            background-color: #212529;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-slide">
+        <h1 class="main-title">設計策略白板：在地化認知刺激工具開發</h1>
+        <div class="whiteboard-grid">
+            <!-- Left Column: Input & Strategy -->
+            <div class="column">
+                <div class="card">
+                    <h2 class="card-title border-blue-500 text-blue-700"><i class="fas fa-sign-in-alt"></i>INPUT / 基礎</h2>
+                    <div class="list">
+                        <div><span class="label">理論框架:</span> <span class="highlight-blue">CST 實證手冊</span></div>
+                        <div><span class="label">目標對象:</span> 據點失智症長者 (含個案輪廓)</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h2 class="card-title border-green-500 text-green-700"><i class="fas fa-cogs"></i>STRATEGY / 策略</h2>
+                    <div class="list">
+                        <div><span class="label">核心原則:</span> <span class="highlight-yellow">意見 > 事實</span></div>
+                        <div><span class="label">在地化:</span> 文化、語言、共同記憶</div>
+                        <div><span class="label">差異化:</span> <span class="highlight-red">功能分層</span>、對應興趣、<span class="highlight-red">AI擴充</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Arrow Column -->
+            <div class="arrow-column">
+                <i class="fas fa-long-arrow-alt-right arrow"></i>
+            </div>
+
+            <!-- Right Column: Output & Goal -->
+            <div class="column">
+                <div class="card flex-grow">
+                    <h2 class="card-title border-purple-500 text-purple-700"><i class="fas fa-gamepad"></i>OUTPUT / 產出</h2>
+                    <div class="list">
+                        <div>
+                            <span class="label">遊戲一:</span>
+                            <div>
+                                <div class="font-bold">錢，的趣味</div>
+                                <div class="text-sm text-gray-600 ml-2">(核心: 數字概念、現實導向)</div>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="label">遊戲二:</span>
+                            <div>
+                                <div class="font-bold">懷舊話匣子</div>
+                                <div class="text-sm text-gray-600 ml-2">(核心: 多元刺激、感官整合、AI互動)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card goal-card">
+                    <h2 class="card-title border-yellow-400 text-yellow-400"><i class="fas fa-bullseye"></i>GOAL / 最終目標</h2>
+                    <div class="list text-white text-lg">
+                        <div>▶ <span class="highlight-red">延緩病程惡化</span></div>
+                        <div>▶ 提升<span class="highlight-blue ml-2">生活品質 (QoL)</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
