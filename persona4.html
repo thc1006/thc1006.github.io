@@ -3,271 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>實習簡報：UX案例分析</title>
+    <title>使用者輪廓 (16:9 簡報專用版)</title>
     <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 引入 Google Fonts: Inter -->
+    <!-- 引入 Google Fonts: Inter & Noto Sans TC -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
     <!-- 引入 Font Awesome 圖示庫 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             font-family: 'Inter', 'Noto Sans TC', sans-serif;
-            background-color: #F8F9FA; /* 明亮、乾淨的背景 */
-            color: #212529;
-            overflow: hidden;
-        }
-
-        /* --- 投影片通用樣式 --- */
-        .slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            background-color: #E9E9E9; /* 淺灰色背景，適合投影 */
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 3rem 5rem;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
-            transform: translateY(20px);
+            min-height: 100vh;
+            padding: 2rem;
         }
-        .slide.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-        
-        .slide-content {
+        .presentation-slide {
             width: 100%;
-            max-width: 1200px;
-        }
-
-        /* --- 導航與進度條 --- */
-        #progress-bar-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 6px;
-            background-color: #E9ECEF;
-        }
-        #progress-bar {
-            width: 20%;
-            height: 100%;
-            background-color: #007BFF;
-            transition: width 0.4s ease-out;
-        }
-        .nav-btn {
-            position: absolute;
-            bottom: 2rem;
-            background-color: #fff;
-            color: #343A40;
-            border: 1px solid #DEE2E6;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            z-index: 100;
-        }
-        .nav-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-            color: #007BFF;
-        }
-        #prev-btn { right: 8rem; }
-        #next-btn { right: 2rem; }
-
-        /* --- 特定元素樣式 --- */
-        .tag {
-            display: inline-block;
-            background-color: #E7F3FF;
-            color: #007BFF;
-            padding: 0.25rem 0.75rem;
-            border-radius: 99px;
-            font-weight: 500;
-            font-size: 0.9rem;
+            max-width: 1600px; /* 限制最大寬度 */
+            aspect-ratio: 16 / 9; /* 強制16:9比例 */
+            background-color: #F8F9FA; /* 乾淨的白色畫布 */
+            border-radius: 1rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            padding: 4rem;
+            display: flex;
+            flex-direction: column;
         }
         .card {
             background-color: white;
-            border-radius: 1.5rem;
-            padding: 2.5rem;
-            border: 1px solid #E9ECEF;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.03);
+            border-radius: 1.25rem;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
-        .big-number {
-            font-size: 5rem;
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+        }
+        
+        .persona-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .persona-level-tag {
+            padding: 0.25rem 1rem;
+            border-radius: 99px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-top: 0.75rem;
+            border-width: 1px;
+        }
+        .level-good { background-color: #E6F7F0; color: #059669; border-color: #A7F3D0;}
+        .level-medium { background-color: #FFFBEB; color: #D97706; border-color: #FDE68A;}
+        .level-weak { background-color: #FEF2F2; color: #DC2626; border-color: #FECACA;}
+        
+        .info-section {
+            text-align: left;
+            padding: 1rem;
+            border-radius: 0.75rem;
+        }
+        .info-section h4 {
+            font-size: 1.3rem; /* 標題字體再放大 */
             font-weight: 900;
-            color: #E9ECEF;
+            margin-bottom: 0.75rem; /* 增加與下方文字的間距 */
+            display: flex;
+            align-items: center;
+        }
+        .info-section ul {
+            font-size: 1.2rem; /* 內文字體再放大 */
+            line-height: 1.75; /* 增加行高以優化閱讀性 */
+            color: #4B5563;
         }
     </style>
 </head>
 <body>
-
-    <!-- 進度條 -->
-    <div id="progress-bar-container">
-        <div id="progress-bar"></div>
-    </div>
-
-    <!-- 導航按鈕 -->
-    <button id="prev-btn" class="nav-btn"><i class="fas fa-arrow-left"></i></button>
-    <button id="next-btn" class="nav-btn"><i class="fas fa-arrow-right"></i></button>
-
-    <!-- 投影片容器 -->
-    <main id="presentation-container">
-
-        <!-- Slide 1: The Challenge -->
-        <div class="slide active" id="slide-1">
-            <div class="slide-content text-left">
-                <div class="tag mb-4">UX CASE STUDY: 幸福小棧</div>
-                <h1 class="text-5xl md:text-6xl font-bold tracking-tight leading-tight">如何將實證理論，<br>轉化為有意義的在地化體驗？</h1>
-                <p class="mt-6 text-xl text-gray-600 max-w-3xl">一份關於在社區失智據點導入認知刺激治療(CST)的設計、測試與迭代反思。</p>
-            </div>
-        </div>
-
-        <!-- Slide 2: The Approach -->
-        <div class="slide" id="slide-2">
-            <div class="slide-content">
-                <div class="grid md:grid-cols-2 gap-10 items-center">
-                    <div class="text-left">
-                        <div class="flex items-center">
-                            <span class="big-number mr-4">01</span>
-                            <h2 class="text-4xl font-bold">The Approach:<br>研究與原型設計</h2>
-                        </div>
-                        <p class="mt-4 text-lg text-gray-600">基於英國CST實證框架，並針對據點成員的多元背景（外省、本省、腦傷等）進行深度分析，開發出兩大原型：</p>
-                        <ul class="mt-6 space-y-4 text-lg">
-                            <li><i class="fas fa-book text-blue-500 mr-3"></i> <span class="font-bold">台灣在地化CST活動庫：</span>涵蓋懷舊、音樂、藝術等主題。</li>
-                            <li><i class="fas fa-mobile-alt text-blue-500 mr-3"></i> <span class="font-bold">互動遊戲「錢，的趣味」：</span>旨在透過生活化主題引發互動。</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <img src="https://placehold.co/800x600/FFFFFF/212529?text=「錢，的趣味」遊戲UI原型" alt="遊戲UI原型" class="rounded-xl shadow-lg">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 3: The Reality -->
-        <div class="slide" id="slide-3">
-            <div class="slide-content">
-                <div class="text-center mb-10">
-                    <div class="flex items-center justify-center">
-                        <span class="big-number mr-4">02</span>
-                        <h2 class="text-4xl font-bold text-left">The Reality:<br>易用性測試與使用者回饋</h2>
-                    </div>
-                </div>
-                <div class="grid md:grid-cols-2 gap-8">
-                    <div class="card bg-red-50 border-red-200">
-                        <h3 class="text-2xl font-bold text-red-800 mb-3 flex items-center"><i class="fas fa-exclamation-circle mr-3"></i>關鍵發現 #1</h3>
-                        <p class="text-lg font-bold">情境脫節</p>
-                        <p class="text-gray-700 mt-2">「菜價」主題對多年未上市場的長輩，造成了認知負荷而非連結。他們不是「想不起來」，而是真的「不知道」。</p>
-                        <p class="mt-4 text-red-700 font-bold text-lg">"我很久沒出門了，不知道啦！"</p>
-                    </div>
-                    <div class="card bg-red-50 border-red-200">
-                        <h3 class="text-2xl font-bold text-red-800 mb-3 flex items-center"><i class="fas fa-exclamation-circle mr-3"></i>關鍵發現 #2</h3>
-                        <p class="text-lg font-bold">假設謬誤</p>
-                        <p class="text-gray-700 mt-2">「第一份薪水」的提問，忽略了據點內有多位終身奉獻家庭的女性，她們的生命價值無法用「薪資」來衡量。</p>
-                        <p class="mt-4 text-red-700 font-bold text-lg">"我沒有領過薪水..."</p>
-                    </div>
-                </div>
-            </div>
+    <div class="presentation-slide">
+        <div class="text-center mb-10">
+            <h1 class="text-5xl font-black tracking-tight text-gray-900">使用者輪廓</h1>
+            <p class="text-xl text-gray-500 mt-2">深入理解每一位獨特的個體，是有效設計的基石。</p>
         </div>
         
-        <!-- Slide 4: The Pivot -->
-        <div class="slide" id="slide-4">
-            <div class="slide-content text-center">
-                 <div class="flex items-center justify-center mb-10">
-                    <span class="big-number mr-4">03</span>
-                    <h2 class="text-4xl font-bold text-left">The Pivot:<br>從設計到傾聽的策略轉向</h2>
-                </div>
-                <div class="grid md:grid-cols-2 gap-8 items-center">
-                    <div class="card text-left p-8">
-                        <p class="text-lg text-gray-500">舊有思維</p>
-                        <p class="text-3xl font-bold mt-2">設計「給」他們</p>
-                        <ul class="mt-4 space-y-2 text-gray-600">
-                            <li><i class="fas fa-times text-red-500 mr-2"></i> 以「失智症患者」為標籤</li>
-                            <li><i class="fas fa-times text-red-500 mr-2"></i> 追求活動的「功能性」</li>
-                            <li><i class="fas fa-times text-red-500 mr-2"></i> 預設通用的生命經驗</li>
-                        </ul>
-                    </div>
-                    <div class="card text-left p-8 bg-blue-50 border-blue-200">
-                        <p class="text-lg text-blue-800">策略轉向</p>
-                        <p class="text-3xl font-bold mt-2 text-blue-900">傾聽「他們的」故事</p>
-                         <ul class="mt-4 space-y-2 text-blue-900">
-                            <li><i class="fas fa-check text-green-500 mr-2"></i> 以「獨特的個體」為核心</li>
-                            <li><i class="fas fa-check text-green-500 mr-2"></i> 尋求互動的「意義感」</li>
-                            <li><i class="fas fa-check text-green-500 mr-2"></i> 發掘個人化的生命故事</li>
-                        </ul>
+        <div class="grid grid-cols-2 grid-rows-2 gap-8 flex-grow">
+            <!-- Persona 1: 江婆婆 -->
+            <div class="card">
+                <div class="p-6 flex items-center gap-6">
+                    <img src="https://raw.githubusercontent.com/thc1006/thc1006.github.io/main/images/%E6%B1%9F%E5%A9%86%E5%A9%86.png?raw=true" class="persona-avatar" alt="江婆婆">
+                    <div>
+                        <h3 class="text-4xl font-bold text-gray-900">江婆婆</h3>
+                        <p class="text-lg text-gray-500">60多歲 / 榮民 / 曾任教師</p>
+                        <div class="persona-level-tag level-good">認知能力: 佳</div>
                     </div>
                 </div>
-                <p class="mt-8 text-xl text-gray-700 font-bold">核心洞見：我們的使用者畫像 (Persona) 是錯的。問題不在於原型，而在於我們從未真正理解使用者。</p>
+                <div class="px-6 pb-6 grid grid-cols-2 gap-4 flex-grow">
+                    <div class="info-section bg-blue-50">
+                        <h4 class="text-blue-800"><i class="fas fa-lightbulb w-6 mr-3"></i>設計機會點</h4>
+                        <ul>
+                            <li>導入具辯論性或價值判斷的議題。</li>
+                            <li>歷史、地理相關主題能引發其興趣。</li>
+                        </ul>
+                    </div>
+                    <div class="info-section bg-red-50">
+                        <h4 class="text-red-800"><i class="fas fa-notes-medical w-6 mr-3"></i>健康備註</h4>
+                        <ul>
+                            <li>WBC高，注意感染風險；長期CV追蹤。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- Persona 2: 李大哥 -->
+            <div class="card">
+                <div class="p-6 flex items-center gap-6">
+                    <img src="https://raw.githubusercontent.com/thc1006/thc1006.github.io/main/images/%E6%9D%8E%E5%A4%A7%E5%93%A5.png?raw=true" class="persona-avatar" alt="李大哥">
+                    <div>
+                        <h3 class="text-4xl font-bold text-gray-900">李大哥</h3>
+                        <p class="text-lg text-gray-500">50多歲 / 公務員 / 後天腦傷(TBI)</p>
+                        <div class="persona-level-tag level-good">認知能力: 佳</div>
+                    </div>
+                </div>
+                <div class="px-6 pb-6 grid grid-cols-2 gap-4 flex-grow">
+                    <div class="info-section bg-blue-50">
+                         <h4 class="text-blue-800"><i class="fas fa-lightbulb w-6 mr-3"></i>設計機會點</h4>
+                         <ul>
+                            <li>校園民歌、國語老歌是極佳的互動媒介。</li>
+                            <li>可設計需邏輯推理或規劃的活動。</li>
+                        </ul>
+                    </div>
+                    <div class="info-section bg-red-50">
+                        <h4 class="text-red-800"><i class="fas fa-notes-medical w-6 mr-3"></i>健康備註</h4>
+                        <ul>
+                            <li>因TBI s/p來到據點，非典型退化路徑。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- Persona 3: 陳阿嬤 -->
+            <div class="card">
+                <div class="p-6 flex items-center gap-6">
+                    <img src="https://raw.githubusercontent.com/thc1006/thc1006.github.io/main/images/%E9%99%B3%E9%98%BF%E5%AC%A4.png?raw=true" class="persona-avatar" alt="陳阿嬤">
+                    <div>
+                        <h3 class="text-4xl font-bold text-gray-900">陳阿嬤</h3>
+                        <p class="text-lg text-gray-500">92歲 / 曾受日本教育</p>
+                        <div class="persona-level-tag level-medium">認知能力: 中等</div>
+                    </div>
+                </div>
+                <div class="px-6 pb-6 grid grid-cols-2 gap-4 flex-grow">
+                    <div class="info-section bg-blue-50">
+                        <h4 class="text-blue-800"><i class="fas fa-lightbulb w-6 mr-3"></i>設計機會點</h4>
+                        <ul>
+                            <li>日本老歌、懷舊物品是絕佳的記憶鑰匙。</li>
+                            <li>輕鬆、幽默的互動方式能提升其參與度。</li>
+                        </ul>
+                    </div>
+                    <div class="info-section bg-red-50">
+                         <h4 class="text-red-800"><i class="fas fa-notes-medical w-6 mr-3"></i>健康備註</h4>
+                         <ul>
+                            <li>高齡(92歲)，需注意活動強度與時間。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- Persona 4: 李伯伯 -->
+            <div class="card">
+                <div class="p-6 flex items-center gap-6">
+                    <img src="https://raw.githubusercontent.com/thc1006/thc1006.github.io/main/images/%E6%9D%8E%E4%BC%AF%E4%BC%AF.png?raw=true" class="persona-avatar" alt="李伯伯">
+                    <div>
+                        <h3 class="text-4xl font-bold text-gray-900">李伯伯</h3>
+                        <p class="text-lg text-gray-500">70多歲 / 曾任理工科教師</p>
+                        <div class="persona-level-tag level-weak">認知能力: 較弱</div>
+                    </div>
+                </div>
+                <div class="px-6 pb-6 grid grid-cols-2 gap-4 flex-grow">
+                    <div class="info-section bg-blue-50">
+                         <h4 class="text-blue-800"><i class="fas fa-lightbulb w-6 mr-3"></i>設計機會點</h4>
+                         <ul>
+                            <li>感官刺激（聽覺、觸覺）比語言指令更有效。</li>
+                            <li>節奏性、重複性的音樂活動是互動突破口。</li>
+                        </ul>
+                    </div>
+                    <div class="info-section bg-red-50">
+                        <h4 class="text-red-800"><i class="fas fa-notes-medical w-6 mr-3"></i>健康備註</h4>
+                        <ul>
+                            <li>R/O 路易氏體失智症(DLB)，狀況時好時壞。</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <!-- Slide 5: The Next Iteration -->
-        <div class="slide" id="slide-5">
-            <div class="slide-content text-left">
-                <div class="flex items-center mb-6">
-                    <span class="big-number mr-4">04</span>
-                    <h2 class="text-4xl font-bold">The Next Iteration:<br>未來的研究方向</h2>
-                </div>
-                <p class="text-xl text-gray-600 max-w-4xl">這次實習最大的價值，是從一場「產品開發」的失敗中，確立了更具人性溫度的研究道路。我未來的目標，將從「活動設計師」轉變為「故事轉譯者」。</p>
-                <div class="mt-10 card">
-                     <h3 class="text-2xl font-bold mb-4">新研究課題 (HMW)</h3>
-                     <p class="text-3xl text-blue-600 leading-normal">"我們該如何 (How Might We) 打造一個能將個人獨特的生命故事，『轉譯』成有意義、有尊嚴的互動體驗的科技工具？"</p>
-                </div>
-            </div>
-        </div>
-
-    </main>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const slides = document.querySelectorAll('.slide');
-            const progressBar = document.getElementById('progress-bar');
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
-            let currentSlide = 0;
-
-            function showSlide(index) {
-                if (index < 0 || index >= slides.length) return;
-
-                slides.forEach((slide, i) => {
-                    slide.classList.toggle('active', i === index);
-                });
-                currentSlide = index;
-                updateUI();
-            }
-
-            function updateUI() {
-                const progress = ((currentSlide + 1) / slides.length) * 100;
-                progressBar.style.width = `${progress}%`;
-
-                prevBtn.style.display = currentSlide === 0 ? 'none' : 'block';
-                nextBtn.style.display = currentSlide === slides.length - 1 ? 'none' : 'block';
-            }
-
-            prevBtn.addEventListener('click', () => showSlide(currentSlide - 1));
-            nextBtn.addEventListener('click', () => showSlide(currentSlide + 1));
-
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowRight') {
-                    showSlide(currentSlide + 1);
-                } else if (e.key === 'ArrowLeft') {
-                    showSlide(currentSlide - 1);
-                }
-            });
-
-            // 初始化
-            showSlide(0);
-        });
-    </script>
+    </div>
 </body>
 </html>
