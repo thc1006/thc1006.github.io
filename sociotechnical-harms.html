@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>演講簡報：媒體內容用於大型語言模型的訓練</title>
+    <title>演講簡報：媒體內容用於大型語言模型的訓練 (黑體版 v2)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@
             --main-yellow: #fdcb6e;
             --text-color: #ffffff;
             --font-title: 'Press Start 2P', cursive;
-            --font-body: 'Noto Sans TC', sans-serif;
+            --font-body: 'Microsoft JhengHei', 'PingFang TC', 'Heiti TC', 'Noto Sans TC', sans-serif;
         }
 
         body, html {
@@ -28,7 +28,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             font-family: var(--font-body);
-            overflow: hidden; /* 避免捲動 */
+            overflow: hidden;
         }
 
         /* --- 簡報容器 (維持16:9) --- */
@@ -43,7 +43,25 @@
             transform: translate(-50%, -50%);
             background-color: #2d205a;
             box-shadow: 0 0 30px rgba(0,0,0,0.5);
-            overflow: hidden; /* 隱藏超出範圍的投影片 */
+            overflow: hidden;
+        }
+
+        /* --- 動畫效果 --- */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes glitch {
+            2%,64% { transform: translate(2px,0) skew(0deg); }
+            4%,60% { transform: translate(-2px,0) skew(0deg); }
+            62% { transform: translate(0,0) skew(5deg); }
         }
 
         /* --- 投影片通用樣式 --- */
@@ -51,7 +69,7 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            padding: 4% 5%;
+            padding: 5% 6%;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
@@ -76,13 +94,19 @@
             opacity: 0;
         }
 
+        .slide.active h2 {
+            animation: glitch 1s linear infinite;
+        }
+        
+        .slide.active .animated-li {
+            opacity: 0; /* 預設隱藏 */
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+
         /* --- 復古視窗裝飾 --- */
         .window-frame {
             position: absolute;
-            top: 2%;
-            left: 2%;
-            right: 2%;
-            bottom: 2%;
+            top: 2%; left: 2%; right: 2%; bottom: 2%;
             border: 3px solid var(--main-blue);
             border-radius: 15px;
             box-shadow: inset 0 0 15px rgba(116, 185, 255, 0.3);
@@ -91,9 +115,7 @@
 
         .window-header {
             position: absolute;
-            top: 2%;
-            left: 2%;
-            right: 2%;
+            top: 2%; left: 2%; right: 2%;
             height: 35px;
             background: linear-gradient(90deg, var(--main-purple), var(--main-pink));
             border-top-left-radius: 12px;
@@ -107,17 +129,11 @@
         }
         
         .window-controls {
-            position: absolute;
-            right: 15px;
-            display: flex;
-            gap: 8px;
+            position: absolute; right: 15px; display: flex; gap: 8px;
         }
 
         .window-controls span {
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
-            background-color: var(--main-yellow);
+            width: 15px; height: 15px; border-radius: 50%; background-color: var(--main-yellow);
         }
         .window-controls span:nth-child(2) { background-color: #2ed573; }
         .window-controls span:nth-child(3) { background-color: #ff4757; }
@@ -134,38 +150,31 @@
         h2 { font-size: 2.5vw; }
         h3 { font-size: 1.8vw; }
 
-        p, li {
+        p, li, td, th {
             font-size: 1.5vw;
             line-height: 1.8;
-            max-width: 80%;
+            max-width: 85%;
         }
 
         ul {
-            list-style: none;
-            padding: 0;
-            text-align: left;
-            width: 80%;
+            list-style: none; padding: 0; text-align: left; width: 85%;
         }
         
         li {
-            margin-bottom: 0.8em;
-            padding-left: 2em;
-            position: relative;
+            margin-bottom: 0.8em; padding-left: 2em; position: relative;
         }
 
         li::before {
             content: '>';
             font-family: var(--font-title);
             color: var(--main-pink);
-            position: absolute;
-            left: 0;
-            top: 0;
+            position: absolute; left: 0; top: 0;
         }
         
         .content-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
             width: 90%;
             margin-top: 2rem;
         }
@@ -176,81 +185,72 @@
             border-radius: 10px;
             padding: 1.5rem;
         }
-        .grid-item h3 {
-            font-size: 1.5vw;
-            margin-top: 0;
-        }
-        .grid-item p {
-            font-size: 1.2vw;
-            max-width: 100%;
-        }
+        .grid-item h3 { font-size: 1.5vw; margin-top: 0; }
+        .grid-item p { font-size: 1.2vw; max-width: 100%; }
 
         .quote {
             font-style: italic;
             border-left: 4px solid var(--main-yellow);
-            padding-left: 1.5rem;
+            padding: 0.5rem 1.5rem;
             margin: 1rem 0;
             font-size: 1.4vw;
             color: #dfe6e9;
+            background-color: rgba(0,0,0,0.1);
+        }
+        
+        table {
+            width: 90%;
+            margin-top: 1rem;
+            border-collapse: collapse;
+            font-size: 1.2vw;
+        }
+        th, td {
+            border: 2px solid var(--main-blue);
+            padding: 0.8rem;
+            text-align: left;
+            font-size: 1.1vw;
+            line-height: 1.6;
+        }
+        th {
+            background-color: var(--main-purple);
+            font-family: var(--font-body);
+            font-weight: bold;
+        }
+        td {
+            vertical-align: top;
         }
 
         /* --- 裝飾性元素 --- */
         .mascot {
-            width: 10vw;
-            height: 10vw;
-            position: absolute;
-            bottom: 3%;
-            right: 3%;
+            width: 10vw; height: 10vw;
+            position: absolute; bottom: 3%; right: 3%;
             z-index: 10;
-        }
-
-        .lightning {
-            position: absolute;
-            width: 5vw;
-            height: 5vw;
-            fill: var(--main-yellow);
-            filter: drop-shadow(0 0 5px var(--main-yellow));
         }
 
         /* --- 導航控制 --- */
         .nav-arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 50px;
-            height: 50px;
+            position: absolute; top: 50%; transform: translateY(-50%);
+            width: 50px; height: 50px;
             background-color: rgba(255, 255, 255, 0.1);
-            border: 2px solid var(--main-blue);
-            border-radius: 50%;
-            cursor: pointer;
-            z-index: 100;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            color: var(--main-blue);
+            border: 2px solid var(--main-blue); border-radius: 50%;
+            cursor: pointer; z-index: 100;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 24px; color: var(--main-blue);
             transition: all 0.2s ease;
         }
         .nav-arrow:hover {
-            background-color: var(--main-blue);
-            color: var(--bg-color);
+            background-color: var(--main-blue); color: var(--bg-color);
         }
         #prev { left: 20px; }
         #next { right: 20px; }
         
-        /* 頁碼 */
         #slide-counter {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
+            position: absolute; bottom: 20px; left: 50%;
             transform: translateX(-50%);
             background-color: rgba(0,0,0,0.3);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-family: var(--font-body);
-            z-index: 50;
+            padding: 5px 15px; border-radius: 20px;
+            font-family: var(--font-body); z-index: 50;
         }
-
     </style>
 </head>
 <body>
@@ -317,7 +317,7 @@
                 </div>
                 <div class="grid-item">
                     <h3>例外：合理/轉化性使用</h3>
-                    <p>AI開發者主張訓練目的並非複製，而是提取模式以創造功能完全不同的新工具，屬於高度的「轉化性使用」。</p>
+                    <p>AI開發者主張訓練目的並非複製，而是提取模式以創造功能完全不同的新工具，屬於高度的「轉化性使用」(Transformative Use)。</p>
                 </div>
             </div>
              <p style="margin-top: 2rem;">這是一場「保障創作誘因」與「促進科技創新」的法律攻防戰。</p>
@@ -328,7 +328,7 @@
             <div class="window-header">5_Antitrust.dll</div>
             <h2>反托拉斯法的介入</h2>
             <h3>濫用市場力量 vs. 必要設施原則</h3>
-            <p>當高品質媒體內容成為發展AI的「必要設施」(Essential Facility)，而媒體方「集體」拒絕授權的目的是為了「消滅市場競爭」時...</p>
+            <p>當高品質媒體內容成為發展AI的「必要設施原則」(Essential Facility Doctrine)，而媒體方「集體」拒絕授權的目的是為了「消滅市場競爭」時...</p>
             <p class="quote">這種看似合法的「拒絕交易」，就可能構成權利濫用，從而引發政府介入「強制授權」的可能。</p>
         </div>
 
@@ -357,7 +357,7 @@
             <div class="content-grid">
                 <div class="grid-item">
                     <h3>歐盟模式</h3>
-                    <p>由上而下的嚴格立法 (如AI法案)，強調事前監管。以捷克的「TDM例外」為例，允許研究性質的文本與資料探勘。</p>
+                    <p>由上而下的嚴格立法 (如AI法案)，強調事前監管，以保障基本權利。</p>
                 </div>
                 <div class="grid-item">
                     <h3>美國模式</h3>
@@ -365,26 +365,62 @@
                 </div>
                  <div class="grid-item">
                     <h3>新興市場解方</h3>
-                    <p>歐洲出現「集體授權機制」，由組織統一向AI公司收費並分潤給內容創作者，在原則與例外間尋找務實出路。</p>
+                    <p>歐洲出現「集體授權機制」，由組織統一向AI公司收費並分潤，在原則與例外間尋找務實出路。</p>
                 </div>
             </div>
         </div>
 
         <div class="slide">
+             <div class="window-frame"></div>
+            <div class="window-header">9_Global_Comparison.dat</div>
+            <h2>全球路徑比較</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>面向</th>
+                        <th>歐盟模式</th>
+                        <th>美國模式</th>
+                        <th>台灣現況與挑戰</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>核心原則</strong></td>
+                        <td>事前監管、風險分級</td>
+                        <td>市場驅動、事後究責</td>
+                        <td>跟進國際、發展主權AI</td>
+                    </tr>
+                    <tr>
+                        <td><strong>關鍵法規</strong></td>
+                        <td>AI Act, DSM Directive (TDM例外)</td>
+                        <td>判例法 (Case Law), 著作權法 (合理使用)</td>
+                        <td>AI基本法(草案), 著作權法(合理使用)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>主要機制</strong></td>
+                        <td>透明度義務、集體授權協商</td>
+                        <td>法院訴訟、企業間自願授權</td>
+                        <td>建置TAIDE、產業自律、法規研議</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="slide">
             <div class="window-frame"></div>
-            <div class="window-header">9_Solutions_Taiwan.ini</div>
+            <div class="window-header">10_Solutions_Taiwan.ini</div>
             <h2>前瞻與解方：台灣實踐</h2>
             <ul>
-                <li><strong>法規現況：</strong>尚無TDM專法，仰賴「合理使用」原則個案判斷。</li>
+                <li><strong>法規現況：</strong>尚未設置專門的TDM法定例外，仰賴「合理使用」原則個案判斷。</li>
                 <li><strong>政府作為：</strong>推動《AI基本法》草案、建置「主權AI語料庫」(TAIDE)。</li>
-                <li><strong>產業實踐：</strong>鴻海(FoxBrain)、台大(Taiwan-LLM)等投入本地模型開發，並強調訓練資料的合規性。</li>
+                <li><strong>產業實踐：</strong>鴻海(FoxBrain)、台大(MiuLab/Taiwan-LLM)等投入本地模型開發，並強調訓練資料的合規性。</li>
                 <li><strong>未來挑戰：</strong>建立授權機制、資料透明、以及與國際法規（如EU AI Act）協調，以「減少跨境訓練與部署障礙」。</li>
             </ul>
         </div>
         
         <div class="slide">
             <div class="window-frame"></div>
-            <div class="window-header">10_Conclusion.sh</div>
+            <div class="window-header">11_Conclusion.sh</div>
             <h2>結論：在原則與例外之間尋找平衡</h2>
             <p>這並非「媒體 vs. AI」的零和遊戲。</p>
             <p class="quote">而是在「保護創作誘因」與「促進科技創新」兩大公共利益之間，尋求精巧平衡的艱難過程。</p>
@@ -393,7 +429,7 @@
 
         <div class="slide">
             <div class="window-frame"></div>
-            <div class="window-header">11_QA.exe</div>
+            <div class="window-header">12_QA.exe</div>
             <svg class="mascot" viewBox="0 0 100 100" style="width:15vw; height:15vw;">
                 <path fill="#ff7675" d="M50,10 C70,10 85,30 85,50 C85,75 70,95 50,95 C30,95 15,75 15,50 C15,30 30,10 50,10 Z"></path>
                 <path fill="#fdcb6e" d="M45,60 Q50,70 55,60 L50,50 Z"></path>
@@ -412,29 +448,39 @@
     <div id="next" class="nav-arrow">&gt;</div>
     
     <!-- 頁碼計數器 -->
-    <div id="slide-counter">1 / 12</div>
+    <div id="slide-counter">1 / 13</div>
 
     <script>
-        // 取得所有投影片和導航元素
         const slides = document.querySelectorAll('.slide');
         const prevBtn = document.getElementById('prev');
         const nextBtn = document.getElementById('next');
         const slideCounter = document.getElementById('slide-counter');
         let currentSlide = 0;
 
-        // 更新投影片顯示的函式
+        function animateListItems(slide) {
+            const listItems = slide.querySelectorAll('li');
+            if (listItems.length > 0) {
+                listItems.forEach((item, index) => {
+                    item.classList.remove('animated-li');
+                    // 為了重新觸發動畫
+                    void item.offsetWidth; 
+                    item.style.animationDelay = `${index * 0.2}s`;
+                    item.classList.add('animated-li');
+                });
+            }
+        }
+
         function updateSlides() {
             slides.forEach((slide, index) => {
                 slide.classList.remove('active', 'exiting');
                 if (index === currentSlide) {
                     slide.classList.add('active');
+                    animateListItems(slide);
                 }
             });
-            // 更新頁碼
             slideCounter.textContent = `${currentSlide + 1} / ${slides.length}`;
         }
 
-        // 顯示下一張投影片
         function showNextSlide() {
             if (currentSlide < slides.length - 1) {
                 slides[currentSlide].classList.add('exiting');
@@ -443,28 +489,20 @@
             }
         }
 
-        // 顯示上一張投影片
         function showPrevSlide() {
             if (currentSlide > 0) {
-                // 為了讓動畫方向正確，我們需要一點小技巧
-                slides[currentSlide].style.transition = 'none'; // 暫時關閉動畫
-                slides[currentSlide].style.transform = 'translateX(100%)'; // 瞬間移到右邊
-                
-                // 強制瀏覽器重繪
-                slides[currentSlide].offsetHeight; 
-
-                slides[currentSlide].style.transition = 'transform 0.6s ease-in-out, opacity 0.6s ease-in-out'; // 重新開啟動畫
-                
+                slides[currentSlide].style.transition = 'none';
+                slides[currentSlide].style.transform = 'translateX(100%)';
+                void slides[currentSlide].offsetHeight;
+                slides[currentSlide].style.transition = 'transform 0.6s ease-in-out, opacity 0.6s ease-in-out';
                 currentSlide--;
                 updateSlides();
             }
         }
 
-        // 綁定事件監聽器
         nextBtn.addEventListener('click', showNextSlide);
         prevBtn.addEventListener('click', showPrevSlide);
 
-        // 鍵盤導航
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowRight') {
                 showNextSlide();
@@ -473,7 +511,6 @@
             }
         });
 
-        // 初始設定
         updateSlides();
     </script>
 
