@@ -3,515 +3,529 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>演講簡報：媒體內容用於大型語言模型的訓練 (黑體版 v2)</title>
+    <title>演講簡報：媒體內容作為大型語言模型的訓練資料</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* --- 基礎與主題設定 --- */
+        /* 自定義主題顏色 */
         :root {
-            --bg-color: #1a103c;
-            --main-purple: #6c5ce7;
-            --main-pink: #ff7675;
-            --main-blue: #74b9ff;
-            --main-yellow: #fdcb6e;
-            --text-color: #ffffff;
-            --font-title: 'Press Start 2P', cursive;
-            --font-body: 'Microsoft JhengHei', 'PingFang TC', 'Heiti TC', 'Noto Sans TC', sans-serif;
+            --theme-pink: #FAD1E8;
+            --theme-purple: #D6BCFA;
+            --theme-blue: #A7C7E7;
+            --theme-dark-purple: #4C1D95;
+            --theme-bg: #F3E8FF;
+            --font-pixel: 'Pixelify Sans', sans-serif;
+            --font-body: 'Noto Sans TC', sans-serif;
         }
 
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            width: 100%;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+        body {
+            background-color: var(--theme-bg);
             font-family: var(--font-body);
-            overflow: hidden;
-        }
-
-        /* --- 簡報容器 (維持16:9) --- */
-        #presentation-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 100vw;
-            height: 56.25vw; /* 16:9 Aspect Ratio */
-            max-height: 100vh;
-            max-width: 177.78vh; /* 16:9 Aspect Ratio */
-            transform: translate(-50%, -50%);
-            background-color: #2d205a;
-            box-shadow: 0 0 30px rgba(0,0,0,0.5);
-            overflow: hidden;
-        }
-
-        /* --- 動畫效果 --- */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes glitch {
-            2%,64% { transform: translate(2px,0) skew(0deg); }
-            4%,60% { transform: translate(-2px,0) skew(0deg); }
-            62% { transform: translate(0,0) skew(5deg); }
-        }
-
-        /* --- 投影片通用樣式 --- */
-        .slide {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            padding: 5% 6%;
-            box-sizing: border-box;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center;
-            transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
-            transform: translateX(100%);
+            min-height: 100vh;
+            padding: 1rem;
+            overflow: hidden;
+        }
+
+        /* 投影片容器，維持16:9比例 */
+        #presentation-container {
+            width: 100%;
+            max-width: 1280px; /* 16:9 at 720p height */
+            aspect-ratio: 16 / 9;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+
+        /* 投影片基底樣式 */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #FFF;
             opacity: 0;
-            background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
-            background-size: 20px 20px;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in-out, visibility 0.5s;
+            display: flex;
+            flex-direction: column;
+            padding: 4% 5%;
+            background-size: cover;
+            background-position: center;
         }
 
         .slide.active {
-            transform: translateX(0);
             opacity: 1;
+            visibility: visible;
             z-index: 1;
         }
         
-        .slide.exiting {
-            transform: translateX(-100%);
-            opacity: 0;
-        }
-
-        .slide.active h2 {
-            animation: glitch 1s linear infinite;
-        }
-        
-        .slide.active .animated-li {
-            opacity: 0; /* 預設隱藏 */
-            animation: fadeInUp 0.5s ease-out forwards;
-        }
-
-        /* --- 復古視窗裝飾 --- */
+        /* 視窗框架樣式 */
         .window-frame {
-            position: absolute;
-            top: 2%; left: 2%; right: 2%; bottom: 2%;
-            border: 3px solid var(--main-blue);
-            border-radius: 15px;
-            box-shadow: inset 0 0 15px rgba(116, 185, 255, 0.3);
-            pointer-events: none;
+            border: 3px solid var(--theme-dark-purple);
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
         .window-header {
-            position: absolute;
-            top: 2%; left: 2%; right: 2%;
-            height: 35px;
-            background: linear-gradient(90deg, var(--main-purple), var(--main-pink));
-            border-top-left-radius: 12px;
-            border-top-right-radius: 12px;
+            background-color: var(--theme-purple);
+            padding: 0.5rem 1rem;
+            border-bottom: 3px solid var(--theme-dark-purple);
             display: flex;
+            justify-content: flex-end;
             align-items: center;
-            padding: 0 15px;
-            font-family: var(--font-body);
-            font-weight: bold;
-            font-size: 16px;
+            gap: 0.5rem;
+        }
+
+        .window-button {
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid var(--theme-dark-purple);
+            border-radius: 0.25rem;
         }
         
-        .window-controls {
-            position: absolute; right: 15px; display: flex; gap: 8px;
+        .slide-content {
+            flex-grow: 1;
+            padding: 2rem 3rem;
+            color: var(--theme-dark-purple);
+            overflow-y: auto;
+            line-height: 1.75; /* 增加行距 */
         }
 
-        .window-controls span {
-            width: 15px; height: 15px; border-radius: 50%; background-color: var(--main-yellow);
-        }
-        .window-controls span:nth-child(2) { background-color: #2ed573; }
-        .window-controls span:nth-child(3) { background-color: #ff4757; }
-
-        /* --- 內容元素樣式 --- */
+        /* 標題樣式 */
         h1, h2, h3 {
-            font-family: var(--font-title);
-            color: var(--main-yellow);
-            text-shadow: 2px 2px 0px var(--main-pink);
-            margin-bottom: 0.5em;
+            font-family: var(--font-pixel);
+            color: var(--theme-dark-purple);
+            margin-bottom: 1.5rem; /* 增加標題下間距 */
+            line-height: 1.3;
+            font-weight: 700; /* 標題加粗 */
         }
-
-        h1 { font-size: 3.5vw; }
-        h2 { font-size: 2.5vw; }
-        h3 { font-size: 1.8vw; }
-
-        p, li, td, th {
-            font-size: 1.5vw;
-            line-height: 1.8;
-            max-width: 85%;
-        }
-
+        
+        h1 { font-size: clamp(2.5rem, 6vw, 4rem); } /* 標題加大 */
+        h2 { font-size: clamp(2rem, 5vw, 3rem); }
+        h3 { font-size: clamp(1.5rem, 4vw, 2.5rem); }
+        
         ul {
-            list-style: none; padding: 0; text-align: left; width: 85%;
+            list-style-type: none;
+            padding-left: 0;
         }
         
         li {
-            margin-bottom: 0.8em; padding-left: 2em; position: relative;
-        }
-
-        li::before {
-            content: '>';
-            font-family: var(--font-title);
-            color: var(--main-pink);
-            position: absolute; left: 0; top: 0;
+            margin-bottom: 1.5rem; /* 增加項目間距 */
+            padding-left: 2.5rem;
+            position: relative;
+            font-size: clamp(1rem, 2vw, 1.35rem);
         }
         
-        .content-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            width: 90%;
-            margin-top: 2rem;
+        .list-icon {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.5em;
+            height: 1.5em;
+            color: var(--theme-dark-purple);
         }
 
-        .grid-item {
-            background-color: rgba(108, 92, 231, 0.2);
-            border: 2px solid var(--main-blue);
-            border-radius: 10px;
-            padding: 1.5rem;
-        }
-        .grid-item h3 { font-size: 1.5vw; margin-top: 0; }
-        .grid-item p { font-size: 1.2vw; max-width: 100%; }
-
-        .quote {
-            font-style: italic;
-            border-left: 4px solid var(--main-yellow);
-            padding: 0.5rem 1.5rem;
-            margin: 1rem 0;
-            font-size: 1.4vw;
-            color: #dfe6e9;
-            background-color: rgba(0,0,0,0.1);
-        }
-        
-        table {
-            width: 90%;
-            margin-top: 1rem;
-            border-collapse: collapse;
-            font-size: 1.2vw;
-        }
-        th, td {
-            border: 2px solid var(--main-blue);
-            padding: 0.8rem;
-            text-align: left;
-            font-size: 1.1vw;
-            line-height: 1.6;
-        }
-        th {
-            background-color: var(--main-purple);
-            font-family: var(--font-body);
-            font-weight: bold;
-        }
-        td {
-            vertical-align: top;
-        }
-
-        /* --- 裝飾性元素 --- */
-        .mascot {
-            width: 10vw; height: 10vw;
-            position: absolute; bottom: 3%; right: 3%;
-            z-index: 10;
-        }
-
-        /* --- 導航控制 --- */
-        .nav-arrow {
-            position: absolute; top: 50%; transform: translateY(-50%);
-            width: 50px; height: 50px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border: 2px solid var(--main-blue); border-radius: 50%;
-            cursor: pointer; z-index: 100;
-            display: flex; justify-content: center; align-items: center;
-            font-size: 24px; color: var(--main-blue);
-            transition: all 0.2s ease;
-        }
-        .nav-arrow:hover {
-            background-color: var(--main-blue); color: var(--bg-color);
-        }
-        #prev { left: 20px; }
-        #next { right: 20px; }
-        
-        #slide-counter {
-            position: absolute; bottom: 20px; left: 50%;
+        /* 導航按鈕 */
+        #navigation {
+            position: fixed;
+            bottom: 2%;
+            left: 50%;
             transform: translateX(-50%);
-            background-color: rgba(0,0,0,0.3);
-            padding: 5px 15px; border-radius: 20px;
-            font-family: var(--font-body); z-index: 50;
+            display: flex;
+            gap: 1rem;
+            z-index: 100;
         }
+
+        .nav-btn {
+            background-color: var(--theme-purple);
+            color: var(--theme-dark-purple);
+            border: 3px solid var(--theme-dark-purple);
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-family: var(--font-pixel);
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 4px 4px 0px var(--theme-dark-purple);
+        }
+        .nav-btn:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px var(--theme-dark-purple);
+        }
+        
+        /* 頁碼 */
+        #slide-counter {
+            position: fixed;
+            bottom: 2%;
+            right: 2%;
+            font-family: var(--font-pixel);
+            font-size: 1.5rem;
+            color: var(--theme-dark-purple);
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            z-index: 100;
+        }
+        
+        /* 吉祥物 */
+        .mascot {
+            position: absolute;
+            width: clamp(60px, 10vw, 120px);
+            height: auto;
+            z-index: 20;
+        }
+        
+        /* 標題頁特殊樣式 */
+        #slide-1 {
+            background-image: url('https://storage.googleapis.com/gemini-prod-us-central1-gdcs-repo/uploaded:image_204d8a.jpg-8886ec14-fbf2-496e-b55a-9543c009043f');
+            color: white;
+            text-shadow: 3px 3px 5px rgba(0,0,0,0.7);
+        }
+        #slide-1 .window-frame {
+            background: rgba(0, 0, 0, 0.5);
+        }
+        #slide-1 h1, #slide-1 h2, #slide-1 h3, #slide-1 p {
+            color: white;
+        }
+
     </style>
 </head>
 <body>
 
     <div id="presentation-container">
-        <!-- 投影片內容 -->
-        <div class="slide active">
-            <div class="window-frame"></div>
-            <div class="window-header">COSCUPxRubyConfTW_2025_TechTalk.exe</div>
-            <svg class="mascot" viewBox="0 0 100 100">
-                <path fill="#ff7675" d="M50,10 C70,10 85,30 85,50 C85,75 70,95 50,95 C30,95 15,75 15,50 C15,30 30,10 50,10 Z"></path>
-                <path fill="#fdcb6e" d="M45,60 Q50,70 55,60 L50,50 Z"></path>
-                <circle fill="white" cx="40" cy="50" r="8"></circle><circle fill="black" cx="40" cy="50" r="3"></circle>
-                <circle fill="white" cx="60" cy="50" r="8"></circle><circle fill="black" cx="60" cy="50" r="3"></circle>
-                <path fill="#ff7675" d="M50,10 Q55,0 60,10 L50,25 Z"></path>
-            </svg>
-            <h1>媒體內容用於大型語言模型之訓練</h1>
-            <h2>權利、風險與未來</h2>
-            <p style="margin-top: 2rem; color: var(--main-blue);">學術技術研討 @ COSCUP x RubyConf TW 2025</p>
-        </div>
-
-        <div class="slide">
-            <div class="window-frame"></div>
-            <div class="window-header">1_Opening.sh</div>
-            <h2>AI從哪裡學會這一切？</h2>
-            <p class="quote">「沒有資料，AI 就只是一項技術。」</p>
-            <p>AI的「智慧」從何而來？其驚艷能力的背後，是海量資料的餵養。<br>其中，最有價值的「燃料」，正是媒體與創作者的心血結晶。</p>
-            <div class="content-grid" style="grid-template-columns: 1fr 1fr; align-items: center;">
-                <div class="grid-item"><h3>媒體內容</h3><p>事實查核、結構化、深度、觀點</p></div>
-                <div class="grid-item"><h3>大型語言模型</h3><p>模式提取、知識關聯、內容生成</p></div>
-            </div>
-        </div>
-        
-        <div class="slide">
-            <div class="window-frame"></div>
-            <div class="window-header">2_Agenda.txt</div>
-            <h2>演講議程</h2>
-            <ul>
-                <li>價值鏈的重構與衝突</li>
-                <li>法律的戰場：原則與例外的攻防</li>
-                <li>風險與治理：偏見、假新聞與民主防衛</li>
-                <li>前瞻與解方：全球路徑與台灣實踐</li>
-                <li>結論與Q&A</li>
-            </ul>
-        </div>
-        
-        <div class="slide">
-            <div class="window-frame"></div>
-            <div class="window-header">3_ValueChain.log</div>
-            <h2>價值鏈的斷裂</h2>
-            <h3>從「搭便車」到「有害競爭」</h3>
-            <p class="quote">「新聞業者負責產製新聞，但大部分利潤可能都被平台業者賺走。」</p>
-            <p>LLM開發者利用全球媒體內容創造巨大商業價值，而內容的原始創作者卻被排除在價值鏈之外，甚至成為被新技術取代的受害者。這不僅是搭便車，更可能形成動搖產業根基的「有害競爭」。</p>
-        </div>
-
-        <div class="slide">
-            <div class="window-frame"></div>
-            <div class="window-header">4_Legal_Battle.bat</div>
-            <h2>法律的戰場：原則與例外</h2>
-            <div class="content-grid">
-                <div class="grid-item">
-                    <h3>原則：著作權保護</h3>
-                    <p>媒體對其內容擁有「重製權」與「改作權」。AI訓練過程中的大量複製與分析，已構成侵犯。</p>
+        <!-- Slide 1: 標題頁 -->
+        <div class="slide active" id="slide-1">
+            <div class="window-frame">
+                <div class="window-header">
+                    <div class="window-button bg-pink-300"></div>
+                    <div class="window-button bg-green-300"></div>
+                    <div class="window-button bg-yellow-300"></div>
                 </div>
-                <div class="grid-item">
-                    <h3>例外：合理/轉化性使用</h3>
-                    <p>AI開發者主張訓練目的並非複製，而是提取模式以創造功能完全不同的新工具，屬於高度的「轉化性使用」(Transformative Use)。</p>
-                </div>
-            </div>
-             <p style="margin-top: 2rem;">這是一場「保障創作誘因」與「促進科技創新」的法律攻防戰。</p>
-        </div>
-        
-        <div class="slide">
-            <div class="window-frame"></div>
-            <div class="window-header">5_Antitrust.dll</div>
-            <h2>反托拉斯法的介入</h2>
-            <h3>濫用市場力量 vs. 必要設施原則</h3>
-            <p>當高品質媒體內容成為發展AI的「必要設施原則」(Essential Facility Doctrine)，而媒體方「集體」拒絕授權的目的是為了「消滅市場競爭」時...</p>
-            <p class="quote">這種看似合法的「拒絕交易」，就可能構成權利濫用，從而引發政府介入「強制授權」的可能。</p>
-        </div>
-
-        <div class="slide">
-            <div class="window-frame"></div>
-            <div class="window-header">6_Risk_Governance.sys</div>
-            <h2>風險與治理：偏見的放大器</h2>
-            <p class="quote">「如果餵給 AI 的資料帶有偏見，AI 的決策結果就會產生歧視。」</p>
-            <p>媒體內容本身即是社會偏見的載體。AI在學習後，會成為這些偏見的放大器，造成「代表性傷害」(Representational Harms)。</p>
-            <p style="color:var(--main-pink); font-weight: bold; margin-top: 2rem;">Garbage In, Gospel Out?</p>
-        </div>
-
-        <div class="slide">
-            <div class="window-frame"></div>
-            <div class="window-header">7_Disinformation.sys</div>
-            <h2>風險與治理：假新聞的超級工廠</h2>
-            <p>一個在充滿不實資訊、陰謀論和宣傳內容的媒體環境中訓練的LLM...</p>
-            <p class="quote">「...具備大規模、高效率、且極具說服力的製造假新聞的能力，從而對社會穩定和選舉公正構成威脅。」</p>
-            <p>現行的「資訊限制令」等法律工具，在AI生成的規模與速度面前，可能趨於無效。</p>
-        </div>
-        
-        <div class="slide">
-            <div class="window-frame"></div>
-            <div class="window-header">8_Solutions_Global.ini</div>
-            <h2>前瞻與解方：全球路徑</h2>
-            <div class="content-grid">
-                <div class="grid-item">
-                    <h3>歐盟模式</h3>
-                    <p>由上而下的嚴格立法 (如AI法案)，強調事前監管，以保障基本權利。</p>
-                </div>
-                <div class="grid-item">
-                    <h3>美國模式</h3>
-                    <p>依賴市場自律與事後訴訟，以「合理使用」為核心進行個案判斷。</p>
-                </div>
-                 <div class="grid-item">
-                    <h3>新興市場解方</h3>
-                    <p>歐洲出現「集體授權機制」，由組織統一向AI公司收費並分潤，在原則與例外間尋找務實出路。</p>
+                <div class="slide-content flex flex-col justify-center items-center text-center">
+                    <img src="https://storage.googleapis.com/gemini-prod-us-central1-gdcs-repo/uploaded:image_204d8f.jpg-036c7319-9b58-40e4-ad4d-a0feb5715e5a" alt="COSCUP x RubyConf TW 2025 Logo" class="w-1/4 mb-4">
+                    <h1 class="text-6xl">媒體內容作為大型語言模型的訓練資料</h1>
+                    <h2 class="text-4xl mt-4">權利、風險與未來</h2>
+                    <h3 class="text-2xl mt-12">2025 COSCUP x RubyConf TW 開源人年會</h3>
+                    <p class="mt-4 text-xl">蔡秀吉</p>
                 </div>
             </div>
         </div>
 
-        <div class="slide">
-             <div class="window-frame"></div>
-            <div class="window-header">9_Global_Comparison.dat</div>
-            <h2>全球路徑比較</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>面向</th>
-                        <th>歐盟模式</th>
-                        <th>美國模式</th>
-                        <th>台灣現況與挑戰</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>核心原則</strong></td>
-                        <td>事前監管、風險分級</td>
-                        <td>市場驅動、事後究責</td>
-                        <td>跟進國際、發展主權AI</td>
-                    </tr>
-                    <tr>
-                        <td><strong>關鍵法規</strong></td>
-                        <td>AI Act, DSM Directive (TDM例外)</td>
-                        <td>判例法 (Case Law), 著作權法 (合理使用)</td>
-                        <td>AI基本法(草案), 著作權法(合理使用)</td>
-                    </tr>
-                    <tr>
-                        <td><strong>主要機制</strong></td>
-                        <td>透明度義務、集體授權協商</td>
-                        <td>法院訴訟、企業間自願授權</td>
-                        <td>建置TAIDE、產業自律、法規研議</td>
-                    </tr>
-                </tbody>
-            </table>
+        <!-- Slide 2: 議程 -->
+        <div class="slide" id="slide-2">
+            <div class="window-frame">
+                <div class="window-header"></div>
+                <div class="slide-content">
+                    <h2 class="text-center">演講議程 (Agenda)</h2>
+                    <ul class="mt-8 space-y-6 text-2xl">
+                        <li>
+                            <svg class="list-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                            <span class="font-bold">引言：</span>AI 的「黑盒子」與我們的資訊世界
+                        </li>
+                        <li>
+                            <svg class="list-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                            <span class="font-bold">第一部分：</span>新時代的原料 - 為何 LLM 渴求媒體內容？
+                        </li>
+                        <li>
+                            <svg class="list-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                            <span class="font-bold">第二部分：</span>核心衝突 - 著作權、反托拉斯法與公共利益的角力
+                        </li>
+                        <li>
+                            <svg class="list-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                            <span class="font-bold">第三部分：</span>社會的隱憂 - 當 AI 學會了我們的偏見與謊言
+                        </li>
+                        <li>
+                            <svg class="list-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                            <span class="font-bold">第四部分：</span>尋找出路 - 邁向共存共榮的治理模式
+                        </li>
+                    </ul>
+                    <img src="https://storage.googleapis.com/gemini-prod-us-central1-gdcs-repo/uploaded:image_204daf.jpg-23b6a312-73b3-4667-9df1-2849d3b895ab" alt="Mascot" class="mascot bottom-5 right-5" style="width: 15%;">
+                </div>
+            </div>
         </div>
 
-        <div class="slide">
-            <div class="window-frame"></div>
-            <div class="window-header">10_Solutions_Taiwan.ini</div>
-            <h2>前瞻與解方：台灣實踐</h2>
-            <ul>
-                <li><strong>法規現況：</strong>尚未設置專門的TDM法定例外，仰賴「合理使用」原則個案判斷。</li>
-                <li><strong>政府作為：</strong>推動《AI基本法》草案、建置「主權AI語料庫」(TAIDE)。</li>
-                <li><strong>產業實踐：</strong>鴻海(FoxBrain)、台大(MiuLab/Taiwan-LLM)等投入本地模型開發，並強調訓練資料的合規性。</li>
-                <li><strong>未來挑戰：</strong>建立授權機制、資料透明、以及與國際法規（如EU AI Act）協調，以「減少跨境訓練與部署障礙」。</li>
-            </ul>
+        <!-- Slide 3: 引言 1 -->
+        <div class="slide" id="slide-3">
+            <div class="window-frame">
+                <div class="window-header"></div>
+                <div class="slide-content text-center flex flex-col justify-center">
+                    <h2>引言</h2>
+                    <h3 class="mt-8">AI 的「智慧」從何而來？</h3>
+                    <p class="mt-4 text-2xl">「AI 的能力來自於其學習的資料；沒有資料，AI 就只是一項技術。」</p>
+                    <div class="mt-8 flex items-center justify-center gap-4 text-8xl">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a5 5 0 0 0-5 5c0 1.66.84 3.15 2.13 4H5a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2.13A5 5 0 0 0 17 12a5 5 0 0 0-5-5Z"/><path d="M12 2a5 5 0 0 1 5 5c0 1.66-.84 3.15-2.13 4H19a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2.13A5 5 0 0 1 7 12a5 5 0 0 1 5-5Z"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+                    </div>
+                    <p class="mt-4 text-2xl">它的「黑盒子」裡裝了什麼？</p>
+                </div>
+            </div>
         </div>
         
-        <div class="slide">
-            <div class="window-frame"></div>
-            <div class="window-header">11_Conclusion.sh</div>
-            <h2>結論：在原則與例外之間尋找平衡</h2>
-            <p>這並非「媒體 vs. AI」的零和遊戲。</p>
-            <p class="quote">而是在「保護創作誘因」與「促進科技創新」兩大公共利益之間，尋求精巧平衡的艱難過程。</p>
-            <p>最終的解方，極可能是結合**立法強制**（如建立集體授權機制）、**市場自律**與**提升全民AI素養**的混合治理模式。</p>
+        <!-- Slide 4: 第一部分 標題 -->
+        <div class="slide" id="slide-4">
+            <div class="window-frame">
+                <div class="window-header"></div>
+                <div class="slide-content flex flex-col justify-center items-center">
+                    <h2 class="text-5xl">第一部分</h2>
+                    <h3 class="mt-4 text-4xl">新時代的原料</h3>
+                    <p class="mt-8 text-3xl">為何 LLM 渴求媒體內容？</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 5: 第一部分 內容 -->
+        <div class="slide" id="slide-5">
+            <div class="window-frame">
+                <div class="window-header"></div>
+                <div class="slide-content">
+                    <h2>媒體內容的獨特價值</h2>
+                    <ul>
+                        <li><svg class="list-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg><span class="font-bold">高品質與結構化：</span>專業媒體內容經編輯與事實查核，準確性、連貫性遠高於一般網路廢文。</li>
+                        <li><svg class="list-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg><span class="font-bold">時效性與廣度：</span>持續更新的報導，讓模型能與真實世界同步，涵蓋政治、經濟、文化等各領域知識。</li>
+                        <li><svg class="list-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg><span class="font-bold">文化與脈絡：</span>承載社會的觀點、價值觀與對話，是模型學習「如何像人一樣思考和溝通」的關鍵教科書。</li>
+                    </ul>
+                     <p class="mt-8 text-center text-3xl font-bold font-pixel">媒體內容 = 塑造 AI 世界觀的「關鍵原料」</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 6: 第二部分 標題 -->
+        <div class="slide" id="slide-6">
+            <div class="window-frame">
+                <div class="window-header"></div>
+                <div class="slide-content flex flex-col justify-center items-center">
+                    <h2 class="text-5xl">第二部分</h2>
+                    <h3 class="mt-4 text-4xl">核心衝突</h3>
+                    <p class="mt-8 text-3xl">著作權、反托拉斯法與公共利益的角力</p>
+                </div>
+            </div>
         </div>
 
-        <div class="slide">
-            <div class="window-frame"></div>
-            <div class="window-header">12_QA.exe</div>
-            <svg class="mascot" viewBox="0 0 100 100" style="width:15vw; height:15vw;">
-                <path fill="#ff7675" d="M50,10 C70,10 85,30 85,50 C85,75 70,95 50,95 C30,95 15,75 15,50 C15,30 30,10 50,10 Z"></path>
-                <path fill="#fdcb6e" d="M45,60 Q50,70 55,60 L50,50 Z"></path>
-                <circle fill="white" cx="40" cy="50" r="8"></circle><circle fill="black" cx="40" cy="50" r="3"></circle>
-                <circle fill="white" cx="60" cy="50" r="8"></circle><circle fill="black" cx="60" cy="50" r="3"></circle>
-                <path fill="#ff7675" d="M50,10 Q55,0 60,10 L50,25 Z"></path>
-            </svg>
-            <h1>Q&A</h1>
-            <h2>感謝聆聽</h2>
+        <!-- Slide 7: 第二部分 內容 1 -->
+        <div class="slide" id="slide-7">
+            <div class="window-frame">
+                <div class="window-header"></div>
+                <div class="slide-content">
+                    <h2>著作權的兩難</h2>
+                    <div class="flex items-center justify-around mt-8">
+                        <div class="text-center w-2/5">
+                            <h3 class="text-2xl">原則：保護創作誘因</h3>
+                            <p class="mt-4 text-xl">媒體「拒絕授權」是行使其基本權利，以保護其商業模式。</p>
+                        </div>
+                        <div class="text-6xl font-bold">VS</div>
+                        <div class="text-center w-2/5">
+                            <h3 class="text-2xl">例外：避免扼殺創新</h3>
+                            <p class="mt-4 text-xl">當媒體集體拒絕授權，是否構成權利濫用，消滅市場競爭？</p>
+                        </div>
+                    </div>
+                    <p class="text-center mt-12 text-2xl font-pixel">法律思辨：拒絕交易 vs. 強制授權</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: 第二部分 內容 2 -->
+        <div class="slide" id="slide-8">
+            <div class="window-frame">
+                <div class="window-header"></div>
+                <div class="slide-content">
+                    <h2>價值鏈的失衡 & 「有害競爭」</h2>
+                     <ul>
+                        <li><svg class="list-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg><span class="font-bold">價值鏈失衡：</span>類比「平台與新聞業者關係」，AI 開發者獲取巨利，內容創作者卻未獲分毫。</li>
+                        <li><svg class="list-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg><span class="font-bold">「有害競爭」浮現：</span>類比「信用卡市場」，表面良性競爭引發負面外部效應。
+                            <ul class="mt-4 text-xl">
+                                <li class="!mb-2"><svg class="list-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><span class="font-bold">版權系統性侵蝕：</span>動搖內容產業根基。</li>
+                                <li class="!mb-2"><svg class="list-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><span class="font-bold">市場壟斷趨勢：</span>演變成「數據軍備競賽」。</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 9: 第三部分 標題 -->
+        <div class="slide" id="slide-9">
+            <div class="window-frame">
+                <div class="window-header"></div>
+                <div class="slide-content flex flex-col justify-center items-center">
+                    <h2 class="text-5xl">第三部分</h2>
+                    <h3 class="mt-4 text-4xl">社會的隱憂</h3>
+                    <p class="mt-8 text-3xl">當 AI 學會了我們的偏見與謊言</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: 第三部分 內容 -->
+        <div class="slide" id="slide-10">
+            <div class="window-frame">
+                <div class="window-header"></div>
+                <div class="slide-content">
+                     <h2>偏見放大器 & 不實資訊工廠</h2>
+                     <ul>
+                        <li><svg class="list-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg><span class="font-bold">偏見的學習與放大：</span>「如果餵給 AI 的資料帶有偏見...AI 的決策結果就會產生歧視」。開發者是否應承擔「策展責任」？</li>
+                        <li><svg class="list-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg><span class="font-bold">不實資訊的超級工廠：</span>AI 具備大規模、高效率製造假新聞的能力，現行「資訊限制令」等法律工具難以應對。</li>
+                        <li><svg class="list-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg><span class="font-bold">對資訊的「非理性消費」：</span>類比「信用卡超額消費」，使用者對 AI 產生「認知懶惰」與「盲目信任」。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: 第四部分 標題 -->
+        <div class="slide" id="slide-11">
+            <div class="window-frame">
+                <div class="window-header"></div>
+                <div class="slide-content flex flex-col justify-center items-center">
+                    <h2 class="text-5xl">第四部分</h2>
+                    <h3 class="mt-4 text-4xl">尋找出路</h3>
+                    <p class="mt-8 text-3xl">邁向共存共榮的治理模式</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: 第四部分 內容 -->
+        <div class="slide" id="slide-12">
+            <div class="window-frame">
+                <div class="window-header"></div>
+                <div class="slide-content">
+                    <h2>可能的解決方案</h2>
+                    <ul>
+                        <li><svg class="list-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg><span class="font-bold">政府角色轉變：</span>從不干預到「市場建立者」，處理因「市場失靈」引發的結構性問題。</li>
+                        <li><svg class="list-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg><span class="font-bold">結構性授權機制：</span>
+                            <ul class="mt-4 text-xl">
+                                <li class="!mb-2"><svg class="list-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>參考音樂版權的「集體授權」模式，降低交易成本。</li>
+                                <li class="!mb-2"><svg class="list-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>建立強制性的「分潤或回饋機制」。</li>
+                                <li class="!mb-2"><svg class="list-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>立法要求「透明度義務」，揭露訓練資料來源。</li>
+                            </ul>
+                        </li>
+                        <li><svg class="list-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg><span class="font-bold">治理模式選擇：</span>倡導由政府、產業、學界、公民團體共同參與的「多方利害關係人」治理模式。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: 結論 -->
+        <div class="slide" id="slide-13">
+             <div class="window-frame">
+                <div class="window-header"></div>
+                <div class="slide-content flex flex-col justify-center items-center">
+                    <h2 class="text-5xl">結論</h2>
+                    <ul class="mt-8 space-y-4 text-2xl text-left w-full max-w-4xl">
+                        <li><svg class="list-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg><span class="font-bold">權利衝突：</span>保護創作 vs. 促進創新的根本衝突。</li>
+                        <li><svg class="list-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg><span class="font-bold">社會風險：</span>放任式「學習」將放大偏見、威脅民主。</li>
+                        <li><svg class="list-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg><span class="font-bold">未來出路：</span>建立公平的「結構性授權與治理框架」，尋求共存共榮。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: Q&A -->
+        <div class="slide" id="slide-14">
+            <div class="window-frame">
+                <div class="window-header"></div>
+                <div class="slide-content flex flex-col justify-center items-center text-center">
+                    <h2 class="text-6xl">Q & A</h2>
+                    <p class="mt-8 text-3xl">這不僅是法律或技術問題，</p>
+                    <p class="mt-4 text-3xl">更是我們如何定義「知識的價值」、「智慧的未來」</p>
+                    <p class="mt-4 text-3xl">以及「我們想成為什麼樣的社會」的重大選擇。</p>
+                    <img src="https://storage.googleapis.com/gemini-prod-us-central1-gdcs-repo/uploaded:image_204d8f.jpg-036c7319-9b58-40e4-ad4d-a0feb5715e5a" alt="Mascot" class="mascot bottom-5 right-5" style="width: 15%;">
+                    <div class="mt-12 text-2xl flex flex-col items-center gap-4">
+                        <p class="font-bold">蔡秀吉</p>
+                        <div class="flex items-center gap-6">
+                            <a href="mailto:hctsai@linux.com" class="flex items-center gap-2 hover:text-pink-500 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                                <span>hctsai@linux.com</span>
+                            </a>
+                            <a href="https://www.facebook.com/thc1006" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 hover:text-blue-600 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                                <span>Facebook</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>
 
-    <!-- 導航按鈕 -->
-    <div id="prev" class="nav-arrow">&lt;</div>
-    <div id="next" class="nav-arrow">&gt;</div>
-    
-    <!-- 頁碼計數器 -->
-    <div id="slide-counter">1 / 13</div>
+    <!-- 導航 -->
+    <div id="navigation">
+        <button id="prev-btn" class="nav-btn">◀ 上一頁</button>
+        <button id="next-btn" class="nav-btn">下一頁 ▶</button>
+    </div>
+
+    <!-- 頁碼 -->
+    <div id="slide-counter"></div>
 
     <script>
-        const slides = document.querySelectorAll('.slide');
-        const prevBtn = document.getElementById('prev');
-        const nextBtn = document.getElementById('next');
-        const slideCounter = document.getElementById('slide-counter');
-        let currentSlide = 0;
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const slideCounter = document.getElementById('slide-counter');
+            let currentSlide = 0;
+            const totalSlides = slides.length;
 
-        function animateListItems(slide) {
-            const listItems = slide.querySelectorAll('li');
-            if (listItems.length > 0) {
-                listItems.forEach((item, index) => {
-                    item.classList.remove('animated-li');
-                    // 為了重新觸發動畫
-                    void item.offsetWidth; 
-                    item.style.animationDelay = `${index * 0.2}s`;
-                    item.classList.add('animated-li');
+            function updateSlides() {
+                slides.forEach((slide, index) => {
+                    if (index === currentSlide) {
+                        slide.classList.add('active');
+                    } else {
+                        slide.classList.remove('active');
+                    }
                 });
+                slideCounter.textContent = `${currentSlide + 1} / ${totalSlides}`;
+                
+                // 控制按鈕可見性
+                prevBtn.disabled = currentSlide === 0;
+                nextBtn.disabled = currentSlide === totalSlides - 1;
+                prevBtn.style.opacity = currentSlide === 0 ? '0.5' : '1';
+                nextBtn.style.opacity = currentSlide === totalSlides - 1 ? '0.5' : '1';
             }
-        }
 
-        function updateSlides() {
-            slides.forEach((slide, index) => {
-                slide.classList.remove('active', 'exiting');
-                if (index === currentSlide) {
-                    slide.classList.add('active');
-                    animateListItems(slide);
+            function nextSlide() {
+                if (currentSlide < totalSlides - 1) {
+                    currentSlide++;
+                    updateSlides();
+                }
+            }
+
+            function prevSlide() {
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    updateSlides();
+                }
+            }
+
+            nextBtn.addEventListener('click', nextSlide);
+            prevBtn.addEventListener('click', prevSlide);
+
+            // 鍵盤導航
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') {
+                    nextSlide();
+                } else if (e.key === 'ArrowLeft') {
+                    prevSlide();
                 }
             });
-            slideCounter.textContent = `${currentSlide + 1} / ${slides.length}`;
-        }
 
-        function showNextSlide() {
-            if (currentSlide < slides.length - 1) {
-                slides[currentSlide].classList.add('exiting');
-                currentSlide++;
-                updateSlides();
-            }
-        }
-
-        function showPrevSlide() {
-            if (currentSlide > 0) {
-                slides[currentSlide].style.transition = 'none';
-                slides[currentSlide].style.transform = 'translateX(100%)';
-                void slides[currentSlide].offsetHeight;
-                slides[currentSlide].style.transition = 'transform 0.6s ease-in-out, opacity 0.6s ease-in-out';
-                currentSlide--;
-                updateSlides();
-            }
-        }
-
-        nextBtn.addEventListener('click', showNextSlide);
-        prevBtn.addEventListener('click', showPrevSlide);
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight') {
-                showNextSlide();
-            } else if (e.key === 'ArrowLeft') {
-                showPrevSlide();
-            }
+            // 初始化
+            updateSlides();
         });
-
-        updateSlides();
     </script>
 
 </body>
