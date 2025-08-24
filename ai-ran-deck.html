@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>從複雜性危機到 AI 原生：開放網路的下一代架構與戰略</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --primary-text-color: #c9d1d9;
+            --accent-color: #58a6ff;
+            --highlight-color: #3fb950;
+            --secondary-text-color: #8b949e;
+            --danger-color: #f85149;
+            --header-font: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            --body-font: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            --border-color: rgba(139, 148, 158, 0.3);
+        }
+
+        html, body {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden; background-color: var(--bg-color);
+            color: var(--primary-text-color); font-family: var(--body-font);
+        }
+
+        .presentation-container {
+            position: absolute; top: 50%; left: 50%;
+            width: 100vw; height: 56.25vw;
+            max-width: 177.78vh; max-height: 100vh;
+            transform: translate(-50%, -50%);
+            background: var(--bg-color);
+            box-shadow: 0 0 40px rgba(88, 166, 255, 0.2);
+        }
+        
+        .slide {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%; padding: 4% 6%;
+            box-sizing: border-box; display: flex; flex-direction: column;
+            align-items: center; justify-content: flex-start; text-align: center;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.7s ease-in-out, transform 0.7s ease-in-out;
+            transform: scale(0.95); z-index: 2;
+        }
+
+        .slide.active {
+            opacity: 1; visibility: visible; transform: scale(1); z-index: 3;
+        }
+        
+        .slide.left-align { align-items: flex-start; text-align: left; }
+        .content-wrapper { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: flex-start; }
+        .columns { display: flex; width: 100%; flex-grow: 1; gap: 30px; align-items: center; }
+        .column { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+
+        h1 { font-size: 3.2vw; color: var(--accent-color); margin: 0; font-weight: 600; text-shadow: 0 0 10px rgba(88, 166, 255, 0.5); }
+        h2 { font-size: 2.2vw; color: var(--primary-text-color); margin-top: 0; margin-bottom: 0.8em; font-weight: 500; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; width: 100%; }
+        h3 { font-size: 1.5vw; color: var(--accent-color); margin-bottom: 0.5em; }
+        p, li { font-size: 1.25vw; line-height: 1.7; color: var(--secondary-text-color); }
+        ul { list-style: none; padding-left: 0; width: 100%; }
+        ul li { padding-left: 1.5em; position: relative; margin-bottom: 1em; }
+        ul li::before { content: '»'; position: absolute; left: 0; color: var(--highlight-color); font-weight: bold; }
+        strong { color: var(--primary-text-color); font-weight: 600; }
+        .note { font-size: 1vw; color: var(--secondary-text-color); font-style: italic; margin-top: 1em; }
+
+        footer {
+            position: absolute; bottom: 2%; left: 0; width: 100%;
+            padding: 0 4%; box-sizing: border-box; display: flex;
+            justify-content: space-between; font-size: 1vw;
+            color: var(--secondary-text-color); z-index: 10;
+        }
+
+        /* --- SVG & Animation Styling --- */
+        svg { width: 100%; height: 100%; overflow: visible; }
+        .svg-text { font-family: var(--body-font); font-size: 14px; fill: var(--primary-text-color); }
+        .svg-text-sm { font-size: 12px; fill: var(--secondary-text-color); }
+        .svg-text-title { font-size: 16px; font-weight: bold; fill: var(--highlight-color); }
+        .svg-box { fill: rgba(88, 166, 255, 0.1); stroke: var(--accent-color); stroke-width: 1.5; }
+        .svg-line { stroke: var(--secondary-text-color); stroke-width: 1; fill: none; }
+        .svg-arrow { stroke: var(--highlight-color); stroke-width: 1.5; fill: none; marker-end: url(#arrowhead); }
+        .svg-danger { stroke: var(--danger-color); fill: rgba(248, 81, 73, 0.1); }
+        
+        .draw-animation path, .draw-animation line, .draw-animation rect, .draw-animation circle {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: draw 2s forwards;
+        }
+        .fade-in { opacity: 0; animation: fadeIn 1s forwards; }
+        @keyframes draw { to { stroke-dashoffset: 0; } }
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        /* Specific animation delays */
+        .slide.active .anim-delay-1 { animation-delay: 0.5s; }
+        .slide.active .anim-delay-2 { animation-delay: 1s; }
+        .slide.active .anim-delay-3 { animation-delay: 1.5s; }
+        .slide.active .anim-delay-4 { animation-delay: 2s; }
+
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <svg style="position:absolute; width:0; height:0;">
+            <defs>
+                <marker id="arrowhead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--highlight-color)" /></marker>
+            </defs>
+        </svg>
+
+        <!-- Slide 1: Cover -->
+        <section class="slide active" id="slide-1">
+            <h1 style="font-size: 3.5vw;">從複雜性危機到 AI 原生</h1>
+            <p style="font-size: 1.8vw; color: var(--primary-text-color);">開放網路的下一代架構與戰略</p>
+            <div style="margin-top: 40px; font-size: 1.4vw;">
+                <p>蔡秀吉</p>
+                <p style="color: var(--secondary-text-color);">hctsai@linux.com</p>
+            </div>
+            <p class="note" style="position:absolute; bottom: 10%;">使用 ← → 方向鍵換頁</p>
+        </section>
+
+        <!-- Slide 2: Agenda -->
+        <section class="slide left-align" id="slide-2">
+            <h2>議程：四大核心議題</h2>
+            <div class="columns">
+                <div class="column" style="align-items:flex-start; text-align:left;">
+                    <h3>I. 範式轉移 (The Paradigm Shift)</h3>
+                    <ul>
+                        <li>從 PoC 到規模化部署的轉捩點</li>
+                        <li>核心挑戰：「複雜性危機」</li>
+                        <li>新戰略賽局：「整合鎖定」</li>
+                    </ul>
+                    <h3>II. 技術深潛 (The Architectural Deep Dive)</h3>
+                    <ul>
+                        <li>LFN 生態系統：端到端協作框架</li>
+                        <li>ONAP, O-RAN, Akraino 架構剖析</li>
+                        <li>雲原生轉型的技術與文化挑戰</li>
+                    </ul>
+                </div>
+                <div class="column" style="align-items:flex-start; text-align:left;">
+                    <h3>III. AI/ML 革命 (The AI/ML Revolution)</h3>
+                    <ul>
+                        <li>AI/ML：應對複雜性的唯一長期方案</li>
+                        <li>AI-RAN 的六階段演進路徑</li>
+                        <li>核心瓶頸：「為 AI 而生的資料」挑戰</li>
+                    </ul>
+                    <h3>IV. 戰略綜合 (The Strategic Synthesis)</h3>
+                    <ul>
+                        <li>案例分析：邁向 L4 自主網路</li>
+                        <li>Agentic AI 的興起</li>
+                        <li>結論與未來展望</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 3: The Tipping Point -->
+        <section class="slide left-align" id="slide-3">
+            <h2>第一幕：範式轉移 - 轉捩點</h2>
+            <div class="columns">
+                <div class="column" style="flex: 1.2; align-items:flex-start; text-align:left;">
+                    <h3>從「建構什麼」到「如何整合與維運」</h3>
+                    <ul>
+                        <li><strong>階段演進：</strong>開放網路已從<strong>概念驗證 (PoC)</strong> 與投機性創新，明確過渡到<strong>工業級規模化部署</strong>的成熟期。</li>
+                        <li><strong>焦點轉移：</strong>產業討論的重心，已從單一開源專案的可行性，顯著轉移到如何將眾多組件整合成一個<strong>具備凝聚力、高度自動化且在營運上可行的端到端系統</strong>。</li>
+                        <li><strong>成功的定義重塑：</strong>衡量標準不再是程式碼提交數，而是<strong>實際的生產環境部署、穩健的 CI/CD 流程，以及新型態技能組合的培養</strong>。</li>
+                    </ul>
+                </div>
+                <div class="column" style="flex: 0.8;">
+                    <svg viewBox="0 0 400 300">
+                        <path d="M50,250 C150,50 250,50 350,250" fill="none" stroke="var(--accent-color)" stroke-width="2"/>
+                        <circle cx="100" cy="193" r="10" fill="var(--bg-color)" stroke="var(--accent-color)" stroke-width="2"/>
+                        <text x="100" y="230" text-anchor="middle" class="svg-text">PoC</text>
+                        <circle cx="300" cy="193" r="10" fill="var(--bg-color)" stroke="var(--accent-color)" stroke-width="2"/>
+                        <text x="300" y="230" text-anchor="middle" class="svg-text">規模化部署</text>
+                        
+                        <g class="fade-in anim-delay-1">
+                            <circle cx="200" cy="75" r="15" fill="var(--highlight-color)"/>
+                            <path d="M200,90 v50" class="svg-arrow"/>
+                            <text x="200" y="160" text-anchor="middle" class="svg-text-title">轉捩點</text>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: Complexity Crisis -->
+        <section class="slide left-align" id="slide-4">
+            <h2>核心挑戰：「複雜性危機」</h2>
+            <div class="columns">
+                <div class="column" style="align-items:flex-start; text-align:left;">
+                    <h3>一個更深層次的現實</h3>
+                    <ul>
+                        <li><strong>前所未有的靈活性 (正面)：</strong>解構 (Disaggregation)、雲原生原則及豐富的專案生態系 (ONAP, Akraino) 帶來了巨大的敏捷性。</li>
+                        <li><strong>指數級增長的複雜性 (負面)：</strong>每一個趨勢都以指數級增加了系統的<strong>動態組件、介面和潛在的故障點</strong>。</li>
+                        <li><strong>LFN 價值主張的演變：</strong>從提供單一工具，轉變為提供一個<strong>管理此一新興複雜性的整體框架</strong>。專注於整合、測試和自動化的專案成為關鍵支柱。</li>
+                    </ul>
+                </div>
+                <div class="column">
+                    <svg viewBox="0 0 400 300">
+                        <defs>
+                            <radialGradient id="dangerGradient">
+                                <stop offset="0%" stop-color="rgba(248, 81, 73, 0)"/>
+                                <stop offset="100%" stop-color="rgba(248, 81, 73, 0.4)"/>
+                            </radialGradient>
+                        </defs>
+                        <circle cx="200" cy="150" r="140" fill="url(#dangerGradient)"/>
+                        <g class="draw-animation">
+                            <path d="M100,150 C150,50 250,250 300,150" stroke="var(--danger-color)"/>
+                            <path d="M120,100 C280,120 120,200 280,180" stroke="var(--danger-color)"/>
+                            <path d="M150,250 C50,150 350,150 250,50" stroke="var(--danger-color)"/>
+                        </g>
+                        <text x="200" y="155" text-anchor="middle" font-size="24" fill="var(--danger-color)" class="fade-in anim-delay-1">複雜性危機</text>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5: Integration Lock-in -->
+        <section class="slide left-align" id="slide-5">
+            <h2>新戰略賽局：「整合鎖定」</h2>
+            <div class="columns">
+                <div class="column" style="flex: 1.2; align-items:flex-start; text-align:left;">
+                    <h3>權力以新的形式重新聚合</h3>
+                    <ul>
+                        <li><strong>解構的初衷：</strong>O-RAN 等架構旨在打破傳統供應商的硬體鎖定。</li>
+                        <li><strong>非預期後果：</strong>由此產生的巨大複雜性，創造了一個對<strong>強大協調器 (Orchestrator) 和系統整合者</strong>的新需求。</li>
+                        <li><strong>新的「造王者」：</strong>能夠主導協調層 (例如，憑藉深厚的 ONAP 專業知識) 或扮演系統整合者角色的公司，可能在堆疊的更高層次上重新聚合控制權。</li>
+                        <li><strong>對營運商的警示：</strong>必須警惕，避免僅僅是將一種形式的依賴 (硬體鎖定) 換成另一種 (整合鎖定)，核心在於<strong>建立自身的整合能力</strong>。</li>
+                    </ul>
+                </div>
+                <div class="column" style="flex: 0.8;">
+                    <svg viewBox="0 0 400 250">
+                        <g transform="translate(200, 150)">
+                            <path d="M-30,50 L0,0 L30,50 Z" fill="var(--secondary-text-color)"/>
+                            <text x="0" y="30" text-anchor="middle" class="svg-text-sm">系統複雜性</text>
+                            <g transform="rotate(-15)">
+                                <rect x="-180" y="-10" width="360" height="20" rx="5" fill="var(--highlight-color)"/>
+                                <rect x="-170" y="-50" width="80" height="40" rx="5" class="svg-box" stroke-width="2" /><text x="-130" y="-25" class="svg-text" text-anchor="middle">硬體鎖定</text>
+                                <rect x="90" y="-70" width="80" height="60" rx="5" class="svg-danger" stroke-width="2" /><text x="130" y="-35" class="svg-text" text-anchor="middle">整合鎖定</text>
+                            </g>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: LFN Ecosystem -->
+        <section class="slide left-align" id="slide-6">
+            <h2>第二幕：技術深潛 - LFN 生態系統</h2>
+             <div class="columns">
+                <div class="column" style="flex: 1.2; align-items: flex-start; text-align: left;">
+                     <h3>端到端的協作框架</h3>
+                     <ul>
+                        <li><strong>定位：</strong>LFN 是一個「傘狀組織」，旨在為從邊緣、接取網到核心網與雲端的整個技術堆疊，提供全面的開源選項。</li>
+                        <li><strong>核心策略：</strong>促進專案間的協作 (例如，使用 ONAP 來協調在 Akraino 堆疊上部署的 O-RAN)，以創造一個連貫的端到端解決方案，減少產業碎片化。</li>
+                        <li><strong>地緣政治與供應鏈：</strong>在 5G 供應鏈安全備受關注的背景下，LFN 透過創建一個強大、跨國的開放生態系統，提供了一個更多元化、可能更安全的技術替代方案。</li>
+                     </ul>
+                 </div>
+                <div class="column" style="flex: 0.8;">
+                    <svg viewBox="0 0 400 400">
+                         <style>.logo-text { font-size: 14px; font-weight: bold; fill: var(--primary-text-color); text-anchor: middle; } </style>
+                         <circle cx="200" cy="200" r="60" class="svg-box" stroke-width="2"/>
+                         <text x="200" y="205" class="logo-text" font-size="30" fill="var(--accent-color)">LFN</text>
+                         <g id="lfn-logos-v2" class="draw-animation">
+                             <!-- Logos will be placed by JS -->
+                         </g>
+                    </svg>
+                </div>
+             </div>
+        </section>
+        
+        <!-- Slide 7: Project Overview Table -->
+        <section class="slide left-align" id="slide-7">
+            <h2>核心專案概覽</h2>
+            <div style="width:100%; font-size: 1vw; line-height: 1.6;">
+                <table style="width:100%; border-collapse: collapse; text-align:left;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid var(--highlight-color);">
+                            <th style="padding:10px;">專案名稱</th>
+                            <th style="padding:10px;">主要領域</th>
+                            <th style="padding:10px;">成熟度/里程碑</th>
+                            <th style="padding:10px;">主要挑戰</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td style="padding:10px; color: var(--primary-text-color);">ONAP</td>
+                            <td style="padding:10px;">服務協調與自動化</td>
+                            <td style="padding:10px;">成熟，已發布第7版「Guilin」</td>
+                            <td style="padding:10px;">系統本身的高度複雜性</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td style="padding:10px; color: var(--primary-text-color);">O-RAN Alliance</td>
+                            <td style="padding:10px;">無線接取網 (RAN)</td>
+                            <td style="padding:10px;">快速發展中，已成產業標準</td>
+                            <td style="padding:10px;">多供應商整合與互通性</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td style="padding:10px; color: var(--primary-text-color);">Akraino Edge Stack</td>
+                            <td style="padding:10px;">邊緣運算</td>
+                            <td style="padding:10px;">活躍，已發布超過30種藍圖</td>
+                            <td style="padding:10px;">應對邊緣場景的極端多樣性</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td style="padding:10px; color: var(--primary-text-color);">Tungsten Fabric</td>
+                            <td style="padding:10px;">軟體定義網路 (SDN)</td>
+                            <td style="padding:10px;">成熟、穩定</td>
+                            <td style="padding:10px;">與 K8s 網路模型的整合</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:10px; color: var(--primary-text-color);">DANOS/SONiC</td>
+                            <td style="padding:10px;">網路作業系統 (NOS)</td>
+                            <td style="padding:10px;">正在被廣泛採用</td>
+                            <td style="padding:10px;">硬體相容性與功能廣度</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Slide 8: ONAP Deep Dive -->
+        <section class="slide left-align" id="slide-8">
+            <h2>技術深潛：ONAP 架構</h2>
+            <div class="columns">
+                <div class="column" style="flex: 1.2; align-items:flex-start; text-align:left;">
+                    <h3>追求端到端服務編排與自動化</h3>
+                    <ul>
+                        <li><strong>定位：</strong>實現網路服務端到端自動化與協調的「大腦」，目標是「零接觸」維運。</li>
+                        <li><strong>影響力：</strong>成員所代表的行動用戶總數佔全球的 <strong>55%</strong>，具備事實上的標準地位。</li>
+                        <li><strong>雙重性：</strong>ONAP 既是管理解構化網路複雜性的<strong>必要工具</strong>，其本身也是一個由眾多微服務構成的<strong>極其複雜的系統</strong>。</li>
+                        <li><strong>ONAP 採用差距：</strong>市場的核心挑戰在於填補 ONAP 宏大願景與其困難的落地實踐之間的鴻溝。</li>
+                    </ul>
+                </div>
+                <div class="column" style="flex: 0.8;">
+                     <svg viewBox="0 0 400 300">
+                        <style>
+                            .onap-box { rx: 5; }
+                            .design-time { fill: rgba(88, 166, 255, 0.1); stroke: var(--accent-color); }
+                            .run-time { fill: rgba(63, 185, 80, 0.1); stroke: var(--highlight-color); }
+                        </style>
+                        <rect x="20" y="20" width="360" height="100" class="onap-box design-time"/>
+                        <text x="200" y="40" class="svg-text-title" text-anchor="middle">Design-Time</text>
+                        <text x="200" y="75" class="svg-text" text-anchor="middle">SDC, VFC, CLAMP</text>
+                        
+                        <rect x="20" y="180" width="360" height="100" class="onap-box run-time"/>
+                        <text x="200" y="200" class="svg-text-title" text-anchor="middle">Run-Time</text>
+                        <text x="200" y="235" class="svg-text" text-anchor="middle">SO, VID, DCAE, A&AI, Policy</text>
+
+                        <path d="M200,120 v60" class="svg-arrow anim-delay-1 fade-in"/>
+                        <path d="M100,180 C 100,150 300,150 300,180" fill="none" class="svg-arrow anim-delay-2 fade-in"/>
+                        <text x="200" y="155" text-anchor="middle" class="svg-text fade-in anim-delay-3">Closed Loop</text>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: O-RAN Deep Dive -->
+        <section class="slide left-align" id="slide-9">
+            <h2>技術深潛：O-RAN 架構與 RIC</h2>
+            <div class="columns">
+                <div class="column" style="flex: 1;">
+                    <svg viewBox="-20 0 500 320">
+                        <style>
+                            .oran-box { stroke-width: 1.5; rx: 5; }
+                            .oran-main { fill: rgba(88, 166, 255, 0.1); stroke: var(--accent-color); }
+                            .oran-ric { fill: rgba(63, 185, 80, 0.15); stroke: var(--highlight-color); }
+                            .oran-app { fill: rgba(63, 185, 80, 0.25); stroke: var(--highlight-color); stroke-dasharray: 3 3; }
+                            .oran-text { font-size: 12px; text-anchor: middle; fill: var(--primary-text-color); }
+                            .if-text { font-size: 10px; text-anchor: middle; fill: var(--secondary-text-color); }
+                        </style>
+                        <g class="draw-animation">
+                            <rect x="0" y="10" width="200" height="80" class="oran-box oran-main" />
+                            <rect x="0" y="120" width="200" height="100" class="oran-box oran-ric" />
+                            <rect x="250" y="10" width="200" height="100" class="oran-box oran-main" />
+                            <rect x="250" y="120" width="200" height="100" class="oran-box oran-main" />
+                            <rect x="250" y="230" width="200" height="80" class="oran-box oran-main" />
+                        </g>
+                        <g class="fade-in anim-delay-1">
+                            <text x="100" y="30" class="oran-text" font-weight="bold">SMO / Non-RT RIC</text>
+                            <rect x="10" y="60" width="80" height="25" class="oran-box oran-app" /><text x="50" y="77" class="oran-text">rApp</text>
+                            <rect x="110" y="60" width="80" height="25" class="oran-box oran-app" /><text x="150" y="77" class="oran-text">rApp</text>
+                            <text x="100" y="140" class="oran-text" font-weight="bold">Near-RT RIC</text>
+                            <rect x="10" y="155" width="80" height="60" class="oran-box oran-app" /><text x="50" y="185" class="oran-text">xApp</text>
+                            <rect x="110" y="155" width="80" height="60" class="oran-box oran-app" /><text x="150" y="185" class="oran-text">xApp</text>
+                            <text x="350" y="65" class="oran-text">O-CU</text>
+                            <text x="350" y="175" class="oran-text">O-DU</text>
+                            <text x="350" y="275" class="oran-text">O-RU</text>
+                        </g>
+                        <g class="fade-in anim-delay-2">
+                            <path d="M100,90 V120" class="svg-arrow" /><text x="120" y="110" class="if-text">A1</text>
+                            <path d="M200,170 H250" class="svg-arrow" /><text x="225" y="165" class="if-text">E2</text>
+                            <path d="M350,110 V120" class="svg-arrow" /><text x="370" y="118" class="if-text">F1</text>
+                            <path d="M350,220 V230" class="svg-arrow" /><text x="370" y="228" class="if-text">Open Fronthaul</text>
+                        </g>
+                    </svg>
+                </div>
+                <div class="column" style="flex: 1.2; align-items:flex-start; text-align:left;">
+                    <h3>RAN 解構與新應用經濟</h3>
+                    <ul>
+                        <li><strong>RAN 智慧控制器 (RIC):</strong> O-RAN 的關鍵創新，是一個開放平台，允許第三方開發者部署應用程式 (xApps/rApps) 來智慧化地管理和優化 RAN。</li>
+                        <li><strong>「App Store」模型：</strong>RIC 及其 xApp/rApp 模型預示著一個新的應用經濟的誕生，將催生一個由軟體供應商、新創公司組成的全新生態系統。</li>
+                        <li><strong>價值轉移：</strong>未來 RAN 市場的價值將從<strong>硬體差異化</strong>轉向<strong>軟體和演算法的差異化</strong>，為數據科學和 AI/ML 專家進入電信領域創造了前所未有的機會。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 10: Akraino Deep Dive -->
+        <section class="slide left-align" id="slide-10">
+            <h2>技術深潛：Akraino 與邊緣標準化</h2>
+            <div class="columns">
+                <div class="column" style="flex: 1.2; align-items:flex-start; text-align:left;">
+                    <h3>標準化多元的邊緣運算版圖</h3>
+                    <ul>
+                        <li><strong>「藍圖」專案：</strong>Akraino 並非單一軟體，而是為特定邊緣使用案例，提供從硬體到應用層的完整、預整合、預測試的軟體堆疊。</li>
+                        <li><strong>應對多樣性：</strong>「邊緣」並非單一概念，Akraino 提供超過 <strong>30 種</strong>藍圖來應對從企業邊緣到電信遠端邊緣的廣泛場景 (5G, AI/ML, IoT)。</li>
+                        <li><strong>核心價值 - 去風險機制：</strong>邊緣部署是高風險、高成本的工作。Akraino 的藍圖提供了一個經過社群驗證的「配方」，極大地降低了部署的風險和門檻。</li>
+                    </ul>
+                </div>
+                <div class="column" style="flex: 0.8;">
+                    <svg viewBox="0 0 400 300">
+                        <circle cx="200" cy="150" r="40" class="svg-box" stroke-width="2"/>
+                        <text x="200" y="155" text-anchor="middle" class="svg-text-title">Akraino</text>
+                        <text x="200" y="175" text-anchor="middle" class="svg-text-sm">Blueprints</text>
+                        <g id="akraino-use-cases" class="draw-animation"></g>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 11: Foundational Layers -->
+        <section class="slide left-align" id="slide-11">
+            <h2>技術深潛：基礎設施層</h2>
+            <div class="columns">
+                <div class="column" style="flex: 1;">
+                    <svg viewBox="0 0 300 400">
+                        <style>
+                            .stack-layer { fill-opacity: 0.1; stroke-width: 1.5; rx: 5; }
+                            .stack-text { font-size: 16px; text-anchor: middle; fill: var(--primary-text-color); }
+                            .stack-subtext { font-size: 12px; text-anchor: middle; fill: var(--secondary-text-color); }
+                        </style>
+                        <g transform="translate(50, 20)" class="draw-animation">
+                            <rect width="200" height="80" class="stack-layer" fill="var(--accent-color)" stroke="var(--accent-color)"/>
+                            <rect y="90" width="200" height="80" class="stack-layer" fill="var(--highlight-color)" stroke="var(--highlight-color)"/>
+                            <rect y="180" width="200" height="80" class="stack-layer" fill="var(--accent-color)" stroke="var(--accent-color)"/>
+                            <rect y="270" width="200" height="80" class="stack-layer" fill="var(--highlight-color)" stroke="var(--highlight-color)"/>
+                        </g>
+                        <g class="fade-in anim-delay-1">
+                            <text x="150" y="65" class="stack-text">Service Orchestration</text>
+                            <text x="150" y="155" class="stack-text">SDN Controller</text>
+                            <text x="150" y="175" class="stack-subtext">(Tungsten Fabric)</text>
+                            <text x="150" y="245" class="stack-text">Network OS</text>
+                            <text x="150" y="265" class="stack-subtext">(DANOS, SONiC)</text>
+                            <text x="150" y="335" class="stack-text">Hardware</text>
+                            <text x="150" y="355" class="stack-subtext">(White Box Switches)</text>
+                        </g>
+                    </svg>
+                </div>
+                <div class="column" style="flex: 1.2; align-items:flex-start; text-align:left;">
+                    <h3>不可或缺的「管道系統」</h3>
+                    <ul>
+                        <li><strong>Tungsten Fabric (SDN):</strong> 成熟、可擴展、支援多雲和多堆疊的 SDN 控制器，提供統一的網路結構。</li>
+                        <li><strong>DANOS / SONiC (NOS):</strong> 為白牌交換器硬體提供開放的網路作業系統，是硬體解構的關鍵推動者。</li>
+                        <li><strong>全堆疊原則：</strong>如果只在上層採用 ONAP，而底層的 SDN 和硬體仍然僵化和封閉，那麼在上層獲得的敏捷性將不可避免地被<strong>底層的瓶頸所抵消</strong>，最終導致轉型失敗。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 12: Three Vectors -->
+        <section class="slide left-align" id="slide-12">
+            <h2>主導性技術向量</h2>
+            <div class="columns">
+                <div class="column">
+                    <svg viewBox="0 0 400 350">
+                        <g class="draw-animation">
+                            <path d="M200,50 L350,300 L50,300 Z" stroke="var(--accent-color)" stroke-width="2" fill="rgba(88, 166, 255, 0.1)"/>
+                        </g>
+                        <g class="fade-in anim-delay-1">
+                            <circle cx="200" cy="50" r="20" fill="var(--bg-color)" stroke="var(--highlight-color)" stroke-width="2"/>
+                            <text x="200" y="55" text-anchor="middle" class="svg-text">5G</text>
+                            <circle cx="350" cy="300" r="20" fill="var(--bg-color)" stroke="var(--highlight-color)" stroke-width="2"/>
+                            <text x="350" y="305" text-anchor="middle" class="svg-text">Cloud Native</text>
+                            <circle cx="50" cy="300" r="20" fill="var(--bg-color)" stroke="var(--highlight-color)" stroke-width="2"/>
+                            <text x="50" y="305" text-anchor="middle" class="svg-text">AI/ML</text>
+                        </g>
+                    </svg>
+                </div>
+                <div class="column" style="align-items:flex-start; text-align:left;">
+                    <h3>推動開放網路的三大力量</h3>
+                    <ul>
+                        <li><strong>5G 作為催化劑：</strong>其架構要求是迫使整個產業採用 LFN 技術堆疊的主要<strong>商業驅動因素</strong>。</li>
+                        <li><strong>雲原生作為典範：</strong>從 VNF 到 CNF 的遷移是當前最具<strong>顛覆性的技術轉變</strong>。</li>
+                        <li><strong>AI/ML 作為複雜性的解決方案：</strong>是管理新興網路營運複雜性的<strong>唯一長期解決方案</strong>。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 13: 5G Catalyst -->
+        <section class="slide left-align" id="slide-13">
+            <h2>技術向量 I：5G 作為催化劑</h2>
+            <div class="columns">
+                <div class="column" style="align-items:flex-start; text-align:left;">
+                    <h3>5G 核心需求</h3>
+                    <ul>
+                        <li><strong>網路切片 (Network Slicing):</strong> 為不同服務提供差異化保障 (eMBB, URLLC, mMTC)。</li>
+                        <li><strong>超可靠低延遲 (URLLC):</strong> 支援工業自動化、遠程醫療等關鍵任務應用。</li>
+                        <li><strong>大規模機器通訊 (mMTC):</strong> 支援海量物聯網設備連接。</li>
+                    </ul>
+                    <p>傳統單體式、靜態的網路架構無法經濟高效地實現這些動態需求。</p>
+                </div>
+                <div class="column" style="align-items:flex-start; text-align:left;">
+                    <h3>開放網路解決方案</h3>
+                    <ul>
+                        <li><strong>ONAP:</strong> 提供端到端的網路切片生命週期管理與自動化。</li>
+                        <li><strong>O-RAN:</strong> 透過 RIC 和 xApps/rApps 提供 RAN 靈活性與智慧化，優化切片性能。</li>
+                        <li><strong>Akraino:</strong> 透過邊緣藍圖支援分散式計算，滿足低延遲服務需求。</li>
+                    </ul>
+                    <p>5G 為開放網路的採用提供了強有力的商業案例，而開放網路則為 5G 的成功部署提供了不可或缺的技術架構。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 14: VNF to CNF -->
+        <section class="slide left-align" id="slide-14">
+            <h2>技術向量 II：雲原生典範 - 從 VNF 到 CNF</h2>
+            <div class="columns">
+                <div class="column">
+                    <h3>VNF (虛擬網路功能)</h3>
+                    <svg viewBox="0 0 200 200">
+                        <rect x="20" y="20" width="160" height="160" fill="rgba(139, 148, 158, 0.1)" stroke="var(--secondary-text-color)" rx="5"/>
+                        <text x="100" y="50" text-anchor="middle" class="svg-text-title">Hypervisor</text>
+                        <rect x="40" y="70" width="120" height="80" class="svg-box"/>
+                        <text x="100" y="115" text-anchor="middle" class="svg-text">Virtual Machine</text>
+                    </svg>
+                    <ul><li>基於虛擬機 (VM)</li><li>重量級、啟動慢</li><li>資源利用率較低</li></ul>
+                </div>
+                <div class="column" style="flex: 0.3;">
+                    <svg viewBox="0 0 100 200"><path d="M0,100 H100" class="svg-arrow" stroke-width="3"/></svg>
+                </div>
+                <div class="column">
+                    <h3>CNF (雲原生網路功能)</h3>
+                    <svg viewBox="0 0 200 200">
+                        <rect x="20" y="20" width="160" height="160" fill="rgba(63, 185, 80, 0.1)" stroke="var(--highlight-color)" rx="5"/>
+                        <text x="100" y="50" text-anchor="middle" class="svg-text-title">Container Runtime</text>
+                        <rect x="40" y="70" width="50" height="50" class="svg-box" fill="rgba(88, 166, 255, 0.2)"/><text x="65" y="100" text-anchor="middle" class="svg-text-sm">Cont.</text>
+                        <rect x="110" y="70" width="50" height="50" class="svg-box" fill="rgba(88, 166, 255, 0.2)"/><text x="135" y="100" text-anchor="middle" class="svg-text-sm">Cont.</text>
+                        <text x="100" y="150" text-anchor="middle" class="svg-text">Managed by K8s</text>
+                    </svg>
+                    <ul><li>基於容器 (Container)</li><li>輕量級、快速部署</li><li>資源利用率高、彈性強</li></ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 15: Cloud-Native Challenges -->
+        <section class="slide left-align" id="slide-15">
+            <h2>雲原生轉型的挑戰</h2>
+            <div class="columns">
+                <div class="column" style="align-items:flex-start; text-align:left;">
+                    <h3>技術挑戰</h3>
+                    <ul>
+                        <li><strong>性能：</strong>電信工作負載通常具有嚴格的性能和即時性要求，而這並非標準 Kubernetes 環境的原生特性 (例如，需要 SR-IOV, DPDK)。</li>
+                        <li><strong>安全性：</strong>容器化的環境帶來了新的安全邊界和攻擊面。</li>
+                        <li><strong>營運管理：</strong>在大規模分散式環境中監控、除錯和管理 CNF 的生命週期極其複雜。</li>
+                    </ul>
+                </div>
+                <div class="column" style="align-items:flex-start; text-align:left;">
+                    <h3>文化與組織挑戰</h3>
+                    <ul>
+                        <li><strong>文化變革：</strong>雲原生要求企業採納基於 <strong>DevOps 和 CI/CD</strong> 原則的全新營運模型，這是一場深刻的文化衝擊。</li>
+                        <li><strong>組織孤島：</strong>傳統電信營運團隊按技術領域 (無線、傳輸、核心網) 劃分成獨立的孤島，必須打破並轉向跨職能團隊。</li>
+                        <li><strong>技能差距：</strong>組織內部嚴重缺乏具備所需軟體開發、雲原生技術和大規模系統整合技能的人才。</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="text-align:center; width:100%;" class="note">這首先是<strong>關於人和流程的問題</strong>，其次才是一個技術問題。</p>
+        </section>
+
+        <!-- Slide 16: AI/ML as Solution -->
+        <section class="slide left-align" id="slide-16">
+            <h2>技術向量 III：AI/ML 作為複雜性的解決方案</h2>
+            <div class="columns">
+                <div class="column" style="flex: 1.2; align-items:flex-start; text-align:left;">
+                    <h3>從自動化到智慧化</h3>
+                    <ul>
+                        <li>隨著網路變得越來越動態和複雜，傳統的、基於腳本的自動化正達到其極限。</li>
+                        <li><strong>核心應用 - 閉環保障 (Closed-loop Assurance)：</strong>在該模式下，網路利用 AI/ML 演算法持續監控自身狀態、預測潛在故障，並在無人干預的情況下自動採取糾正措施。</li>
+                        <li><strong>數據成為新資產：</strong>這種方法的實現需要收集和分析海量的網路遙測數據，這使得數據管道和分析平台成為網路基礎設施中至關重要的新組件。</li>
+                    </ul>
+                </div>
+                <div class="column" style="flex: 0.8;">
+                    <svg viewBox="0 0 300 300">
+                        <style>@keyframes dash { to { stroke-dashoffset: -100; } } .animated-arrow { stroke-dasharray: 8 4; animation: dash 5s linear infinite; }</style>
+                        <circle cx="150" cy="150" r="100" fill="none" stroke="var(--accent-color)" stroke-width="1.5"/>
+                        <g transform="translate(150, 50)"><circle r="20" class="svg-box"/><text class="svg-text" text-anchor="middle" dy="5">監控</text></g>
+                        <g transform="translate(250, 150)"><circle r="20" class="svg-box"/><text class="svg-text" text-anchor="middle" dy="5">分析(AI)</text></g>
+                        <g transform="translate(150, 250)"><circle r="20" class="svg-box"/><text class="svg-text" text-anchor="middle" dy="5">執行</text></g>
+                        <g transform="translate(50, 150)"><circle r="20" class="svg-box"/><text class="svg-text" text-anchor="middle" dy="5">決策</text></g>
+                        <path d="M150,70 A80,80 0 0 1 230,150" class="svg-arrow animated-arrow" />
+                        <path d="M230,150 A80,80 0 0 1 150,230" class="svg-arrow animated-arrow" style="animation-delay: -1.25s;"/>
+                        <path d="M150,230 A80,80 0 0 1 70,150" class="svg-arrow animated-arrow" style="animation-delay: -2.5s;"/>
+                        <path d="M70,150 A80,80 0 0 1 150,70" class="svg-arrow animated-arrow" style="animation-delay: -3.75s;"/>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 17: Intro to AI-RAN -->
+        <section class="slide left-align" id="slide-17">
+            <h2>第三幕：AI/ML 革命 - 什麼是 AI-RAN？</h2>
+            <div class="columns">
+                <div class="column" style="align-items:flex-start; text-align:left;">
+                    <h3>下一代電信網路架構</h3>
+                    <ul>
+                        <li><strong>定義：</strong>一個將 AI 驅動的智慧深度整合到無線接取網路 (RAN) 的架構。</li>
+                        <li><strong>技術基礎：</strong>利用機器學習、深度學習、強化學習、生成式 AI、LLM 甚至 Agentic AI。</li>
+                        <li><strong>核心目標：</strong>
+                            <ul style="padding-left:20px;">
+                                <li><strong>提升效能與效率：</strong>例如，透過 AI 優化波束成形、頻道狀態預測。</li>
+                                <li><strong>優化網路營運：</strong>實現預測性維護、智慧化資源分配。</li>
+                                <li><strong>啟用新邊緣服務：</strong>將 RAN 轉型為 AI 推理中心 (AI Inferencing Hub)，創造新營收。</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="column">
+                     <svg viewBox="0 0 400 300">
+                        <path d="M200,280 L180,250 H220 Z" fill="var(--secondary-text-color)"/>
+                        <rect x="195" y="100" width="10" height="150" fill="var(--secondary-text-color)"/>
+                        <path d="M200,100 L150,80" stroke="var(--secondary-text-color)" stroke-width="2"/>
+                        <path d="M200,100 L250,80" stroke="var(--secondary-text-color)" stroke-width="2"/>
+                        <g transform="translate(200, 60) scale(0.5)" class="fade-in anim-delay-1">
+                            <path d="M-50,0 C-80,-50 -20,-80 0,-80 C20,-80 80,-50 50,0 C80,50 20,80 0,80 C-20,80 -80,50 -50,0 Z" fill="var(--highlight-color)"/>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 18: AI-RAN Evolution -->
+        <section class="slide left-align" id="slide-18">
+            <h2>AI-RAN 的六階段演進路徑</h2>
+            <svg viewBox="0 0 800 400">
+                <style>.step-text { font-size: 12px; fill: var(--primary-text-color); text-anchor: middle; }</style>
+                <path d="M50,200 H750" stroke="var(--highlight-color)" stroke-width="3" class="draw-animation" marker-end="url(#arrowhead)"/>
+                <g class="fade-in anim-delay-1">
+                    <circle cx="100" cy="200" r="10" fill="var(--bg-color)" stroke="var(--highlight-color)" stroke-width="2"/>
+                    <text x="100" y="180" class="step-text">1. AI 原生轉型</text>
+                </g>
+                <g class="fade-in anim-delay-2">
+                    <circle cx="220" cy="200" r="10" fill="var(--bg-color)" stroke="var(--highlight-color)" stroke-width="2"/>
+                    <text x="220" y="230" class="step-text">2. 部署邊緣 AI 雲</text>
+                </g>
+                <g class="fade-in anim-delay-3">
+                    <circle cx="340" cy="200" r="10" fill="var(--bg-color)" stroke="var(--highlight-color)" stroke-width="2"/>
+                    <text x="340" y="180" class="step-text">3. RAN 推理中心</text>
+                </g>
+                <g class="fade-in anim-delay-4">
+                    <circle cx="460" cy="200" r="10" fill="var(--bg-color)" stroke="var(--highlight-color)" stroke-width="2"/>
+                    <text x="460" y="230" class="step-text">4. 與 6G 整合</text>
+                </g>
+                <g class="fade-in" style="animation-delay: 2.5s;">
+                    <circle cx="580" cy="200" r="10" fill="var(--bg-color)" stroke="var(--highlight-color)" stroke-width="2"/>
+                    <text x="580" y="180" class="step-text">5. AI 原生組件</text>
+                </g>
+                <g class="fade-in" style="animation-delay: 3s;">
+                    <circle cx="700" cy="200" r="10" fill="var(--bg-color)" stroke="var(--highlight-color)" stroke-width="2"/>
+                    <text x="700" y="230" class="step-text">6. 聯邦學習</text>
+                </g>
+            </svg>
+        </section>
+
+        <!-- Slide 19: Data for AI Intro -->
+        <section class="slide left-align" id="slide-19">
+            <h2>核心瓶頸：「為 AI 而生的資料」</h2>
+            <div class="columns">
+                <div class="column" style="align-items:flex-start; text-align:left;">
+                    <h3>AI 模型的命脈</h3>
+                    <ul>
+                        <li>AI 模型的效能完全取決於用於訓練它們的數據品質和數量。</li>
+                        <li>然而，在電信網路中，獲取高品質、大規模、可用於 AI 訓練的數據集，面臨著系統性的挑戰。</li>
+                        <li>如果無法有效解決數據問題，AI-RAN 的宏大願景將難以實現。</li>
+                    </ul>
+                </div>
+                <div class="column">
+                    <svg viewBox="0 0 400 300">
+                        <g class="fade-in">
+                            <rect x="125" y="100" width="150" height="100" class="svg-box" stroke-width="2"/>
+                            <text x="200" y="155" text-anchor="middle" class="svg-text-title">Network Data</text>
+                        </g>
+                        <g class="draw-animation anim-delay-1">
+                            <rect x="20" y="20" width="100" height="50" class="svg-danger"/><text x="70" y="50" text-anchor="middle" class="svg-text">資料孤島</text>
+                            <rect x="280" y="20" width="100" height="50" class="svg-danger"/><text x="330" y="50" text-anchor="middle" class="svg-text">品質不佳</text>
+                            <rect x="20" y="230" width="100" height="50" class="svg-danger"/><text x="70" y="260" text-anchor="middle" class="svg-text">整合複雜</text>
+                            <rect x="280" y="230" width="100" height="50" class="svg-danger"/><text x="330" y="260" text-anchor="middle" class="svg-text">隱私法規</text>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 20: Data Challenges 1 -->
+        <section class="slide left-align" id="slide-20">
+            <h2>數據挑戰 (I): 管理與品質</h2>
+            <div class="columns">
+                <div class="column" style="align-items:flex-start; text-align:left;">
+                    <h3>問題</h3>
+                    <ul>
+                        <li><strong>資料孤島 (Data Silos):</strong> 數據分散在不同部門和系統 (OSS, BSS, NMS)，阻礙了統一的 AI 策略。</li>
+                        <li><strong>即時處理 (Real-time Processing):</strong> RAN 是即時系統，需要毫秒級的數據處理能力以進行快速決策。</li>
+                        <li><strong>高品質資料集稀缺:</strong> 電信網路中，經過標註、清理的高品質資料集非常罕見。</li>
+                        <li><strong>資料隱私法規:</strong> GDPR 等法律嚴格限制了資料共享，減少了可用於 AI 訓練的資料。</li>
+                    </ul>
+                </div>
+                <div class="column" style="align-items:flex-start; text-align:left;">
+                    <h3>解決方案</h3>
+                    <ul>
+                        <li><strong>聯邦式資料整合平台:</strong> 透過 AI 驅動的資料湖，打破孤島，整合數據。</li>
+                        <li><strong>邊緣 AI (Edge AI):</strong> 在分佈式位置部署低延遲 AI 推理，滿足即時性需求。</li>
+                        <li><strong>合成資料生成 (Synthetic Data):</strong> 補充真實世界數據，減少對稀缺營運資料的依賴，同時確保隱私合規。</li>
+                        <li><strong>聯邦式學習 (Federated Learning):</strong> 在不傳輸原始資料的情況下，跨分散式資料集進行 AI 訓練。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 21: Data Challenges 2 -->
+        <section class="slide left-align" id="slide-21">
+            <h2>數據挑戰 (II): 整合</h2>
+            <div class="columns">
+                <div class="column" style="align-items:flex-start; text-align:left;">
+                    <h3>問題</h3>
+                    <ul>
+                        <li><strong>標準與實作的差距:</strong> 不同供應商對 O-RAN 等標準的實作存在差異，導致不相容問題。</li>
+                        <li><strong>開發優先級衝突:</strong> 營運商、企業 AI 專家、服務公司和學術界之間常有利益衝突，難以協調。</li>
+                        <li><strong>測試的複雜性:</strong> 需要無縫的軟硬體對齊，以及 CI/CD/CT 流程，測試成本高昂。</li>
+                        <li><strong>雲原生障礙:</strong> 將 AI 工作負載適應雲環境，需要升級現有的編排器，並在效能、擴展性和成本之間進行權衡。</li>
+                    </ul>
+                </div>
+                <div class="column" style="align-items:flex-start; text-align:left;">
+                    <h3>解決方案</h3>
+                    <ul>
+                        <li><strong>標準化 API 與合規框架:</strong> 與 CAMARA 等專案社群合作，推動標準化 API。</li>
+                        <li><strong>促進產學合作:</strong> 確保 AI 研究優先級與實際電信需求保持一致。</li>
+                        <li><strong>自動化測試 (CI/CD/CT):</strong> 作為 MLOps/AIOps 的一部分，並使用網路數位分身 (Network Digital Twin)。</li>
+                        <li><strong>統一編排:</strong> 將 AI 工作負載與傳統 RAN 工作負載一起進行編排，利用 Kubernetes 等技術。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 22: Data for AI Platform -->
+        <section class="slide left-align" id="slide-22">
+            <h2>結構化解決方案：「為 AI 而生的資料」平台框架</h2>
+            <svg viewBox="0 0 800 400">
+                <style>
+                    .plat-layer { fill-opacity: 0.1; stroke-width: 1.5; rx: 5; }
+                    .plat-text { font-size: 16px; text-anchor: middle; fill: var(--primary-text-color); }
+                </style>
+                <g>
+                    <g class="fade-in" style="animation-delay: 2.5s;">
+                        <rect x="50" y="20" width="700" height="60" class="plat-layer" fill="var(--highlight-color)" stroke="var(--highlight-color)"/>
+                        <text x="400" y="55" class="plat-text">治理層 (AIOps, MLOps, DataOps, Federated Governance)</text>
+                    </g>
+                    <g class="fade-in" style="animation-delay: 2s;">
+                        <rect x="50" y="90" width="700" height="60" class="plat-layer" fill="var(--accent-color)" stroke="var(--accent-color)"/>
+                        <text x="400" y="125" class="plat-text">部署與服務層 (Model Deployment & Serving)</text>
+                    </g>
+                    <g class="fade-in" style="animation-delay: 1.5s;">
+                        <rect x="50" y="160" width="700" height="60" class="plat-layer" fill="var(--highlight-color)" stroke="var(--highlight-color)"/>
+                        <text x="400" y="195" class="plat-text">轉換與模型建構層 (Transformation & Modeling)</text>
+                    </g>
+                    <g class="fade-in" style="animation-delay: 1s;">
+                        <rect x="50" y="230" width="700" height="60" class="plat-layer" fill="var(--accent-color)" stroke="var(--accent-color)"/>
+                        <text x="400" y="265" class="plat-text">儲存與處理層 (Storage & Processing)</text>
+                    </g>
+                    <g class="fade-in" style="animation-delay: 0.5s;">
+                        <rect x="50" y="300" width="700" height="60" class="plat-layer" fill="var(--highlight-color)" stroke="var(--highlight-color)"/>
+                        <text x="400" y="335" class="plat-text">資料擷取層 (Data Ingestion)</text>
+                    </g>
+                </g>
+            </svg>
+        </section>
+
+        <!-- Slide 23: Real-World Adoption -->
+        <section class="slide left-align" id="slide-23">
+            <h2>第四幕：戰略綜合 - 實際導入與挑戰</h2>
+            <div class="columns">
+                <div class="column" style="align-items:flex-start; text-align:left;">
+                    <h3>成功故事與「務實採用」模式</h3>
+                    <ul>
+                        <li><strong>領導者：</strong>AT&T, Orange, Bell Canada 等主要營運商已有實際部署和試驗案例。</li>
+                        <li><strong>務實採用：</strong>宏大願景是端到端全自動化，但實際部署往往更具針對性。例如，Orange 利用 ONAP 的一個特定功能來自動化 SR-IOV 的配置。</li>
+                        <li><strong>策略：</strong>營運商並非對現有 OSS/BSS 進行「大爆炸」式替換，而是識別特定痛點，應用開源方案解決，從而漸進式地帶來價值、積累經驗並降低風險。</li>
+                    </ul>
+                </div>
+                <div class="column" style="align-items:flex-start; text-align:left;">
+                    <h3>主要障礙</h3>
+                    <ul>
+                        <li><strong>技術複雜性與整合：</strong>將這些複雜的多組件系統成功整合在一起，是目前最主要的技術障礙。</li>
+                        <li><strong>技能差距：</strong>傳統營運商組織內部嚴重缺乏具備所需軟體開發、雲原生技術和系統整合技能的人才。</li>
+                        <li><strong>文化阻力：</strong>克服組織慣性，並在傳統的網路工程文化中培養 DevOps 思維，是一項巨大的挑戰。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 24: L4 Networks -->
+        <section class="slide left-align" id="slide-24">
+            <h2>案例分析：邁向 L4 自主網路</h2>
+            <div class="columns">
+                <div class="column" style="flex: 1.2; align-items:flex-start; text-align:left;">
+                    <h3>中國移動的戰略</h3>
+                    <ul>
+                        <li><strong>戰略目標：</strong>在 <strong>2025 年</strong>實現 <strong>Level 4</strong> 自主網路。</li>
+                        <li><strong>實現路徑：</strong> "Open-source first → Standardization next → Scale adoption last"。</li>
+                        <li><strong>Agentic AI 的角色：</strong>被視為實現 L4/L5 願景的關鍵技術，能夠執行自主的、自我優化的決策。其定義「自主的自我優化 AI 系統」與 L4 網路的需求高度吻合。</li>
+                        <li><strong>進展：</strong>從 2021 年的 Level 2 以下，到 2023 年底接近 <strong>Level 3.8</strong>，顯示了可驗證的進展。</li>
+                    </ul>
+                </div>
+                <div class="column" style="flex: 0.8;">
+                    <svg viewBox="0 0 300 300">
+                        <style>.level-text { font-size: 12px; fill: var(--primary-text-color); } .level-box { fill-opacity: 0.1; stroke-width: 1.5; }</style>
+                        <rect x="50" y="250" width="200" height="40" class="level-box" stroke="var(--secondary-text-color)" fill="var(--secondary-text-color)"/><text x="150" y="275" text-anchor="middle" class="level-text">L0: Manual</text>
+                        <rect x="50" y="200" width="200" height="40" class="level-box" stroke="var(--secondary-text-color)" fill="var(--secondary-text-color)"/><text x="150" y="225" text-anchor="middle" class="level-text">L1: Assisted</text>
+                        <rect x="50" y="150" width="200" height="40" class="level-box" stroke="var(--secondary-text-color)" fill="var(--secondary-text-color)"/><text x="150" y="175" text-anchor="middle" class="level-text">L2: Partial Automation</text>
+                        <rect x="50" y="100" width="200" height="40" class="level-box" stroke="var(--highlight-color)" fill="var(--highlight-color)"/><text x="150" y="125" text-anchor="middle" class="level-text">L3: Conditional Automation</text>
+                        <rect x="50" y="50" width="200" height="40" class="level-box" stroke="var(--accent-color)" fill="var(--accent-color)"/><text x="150" y="75" text-anchor="middle" class="level-text" font-weight="bold">L4: High Automation (目標)</text>
+                        <rect x="50" y="0" width="200" height="40" class="level-box" stroke="var(--accent-color)" fill="var(--accent-color)"/><text x="150" y="25" text-anchor="middle" class="level-text">L5: Full Automation</text>
+                        <path d="M260,120 L280,120" class="svg-arrow" />
+                        <text x="285" y="125" class="svg-text-sm">當前進展</text>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 25: Conclusion -->
+        <section class="slide" id="slide-25">
+            <h2>結論與未來展望</h2>
+            <ul>
+                <li>開放網路的<strong>複雜性危機</strong>既是挑戰也是創新的主要驅動力。</li>
+                <li>成功轉型的關鍵在於<strong>全堆疊的開放策略、深度的系統整合能力、以及擁抱 DevOps 的文化</strong>。</li>
+                <li><strong>AI/ML</strong> 不僅是解決複雜性的工具，更將透過 <strong>AI-RAN</strong> 重新定義網路的價值。</li>
+                <li>解決<strong>「為 AI 而生的資料」</strong>問題是通往此未來的關鍵路徑。</li>
+                <li><strong>開源</strong>提供了經濟高效、透明且值得信賴的道路，但需要整個生態系統的<strong>協作</strong>。</li>
+            </ul>
+        </section>
+
+        <!-- Slide 26: Q&A -->
+        <section class="slide" id="slide-26">
+            <h1>Q & A</h1>
+            <h2>感謝聆聽</h2>
+            <div style="margin-top: 30px; font-size: 1.6vw;">
+                <p>蔡秀吉</p>
+                <p style="color: var(--secondary-text-color);">hctsai@linux.com</p>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <div id="slide-info"></div>
+        <div>從複雜性危機到 AI 原生：開放網路的下一代架構與戰略</div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const slideInfo = document.getElementById('slide-info');
+            let currentSlide = 0;
+
+            function showSlide(index) {
+                if (index < 0 || index >= slides.length) return;
+                
+                slides.forEach((slide, i) => {
+                    slide.classList.remove('active');
+                });
+                slides[index].classList.add('active');
+                currentSlide = index;
+                location.hash = `#${index + 1}`;
+                updateSlideInfo();
+            }
+            
+            function updateSlideInfo() {
+                slideInfo.textContent = `Slide ${currentSlide + 1} / ${slides.length}`;
+            }
+
+            function navigate(event) {
+                if (event.key === 'ArrowRight' || event.key === ' ') {
+                    showSlide(currentSlide + 1);
+                } else if (event.key === 'ArrowLeft') {
+                    showSlide(currentSlide - 1);
+                }
+            }
+
+            const initialSlide = parseInt(location.hash.substring(1), 10) - 1;
+            showSlide(isNaN(initialSlide) || initialSlide < 0 ? 0 : initialSlide);
+            
+            document.addEventListener('keydown', navigate);
+            
+            // --- Slide 6 LFN Logos Animation ---
+            const lfnLogosContainer = document.getElementById('lfn-logos-v2');
+            if (lfnLogosContainer) {
+                const logos = ['ONAP', 'O-RAN', 'Akraino', 'Nephio', 'Tungsten', 'SONiC'];
+                const radius = 110;
+                const centerX = 200;
+                const centerY = 200;
+                logos.forEach((logo, i) => {
+                    const angle = (i / logos.length) * 2 * Math.PI - (Math.PI / 2);
+                    const x = centerX + radius * Math.cos(angle);
+                    const y = centerY + radius * Math.sin(angle);
+                    
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', centerX);
+                    line.setAttribute('y1', centerY);
+                    line.setAttribute('x2', x);
+                    line.setAttribute('y2', y);
+                    line.setAttribute('stroke', 'var(--border-color)');
+                    line.style.animationDelay = `${i * 0.1}s`;
+                    
+                    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                    g.classList.add('fade-in');
+                    g.style.animationDelay = `${0.5 + i * 0.1}s`;
+                    
+                    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                    circle.setAttribute('cx', x);
+                    circle.setAttribute('cy', y);
+                    circle.setAttribute('r', 30);
+                    circle.setAttribute('class', 'svg-box');
+                    
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', x);
+                    text.setAttribute('y', y + 5);
+                    text.setAttribute('class', 'logo-text');
+                    text.textContent = logo;
+                    
+                    g.appendChild(circle);
+                    g.appendChild(text);
+                    lfnLogosContainer.appendChild(line);
+                    lfnLogosContainer.appendChild(g);
+                });
+            }
+
+            // --- Slide 10 Akraino Use Cases Animation ---
+            const akrainoContainer = document.getElementById('akraino-use-cases');
+            if (akrainoContainer) {
+                const cases = [
+                    { name: 'Factory', angle: 45 },
+                    { name: 'Stadium', angle: 135 },
+                    { name: 'Vehicle', angle: 225 },
+                    { name: 'Cell Tower', angle: 315 },
+                ];
+                const radius = 100;
+                const centerX = 200;
+                const centerY = 150;
+                cases.forEach((c, i) => {
+                    const angleRad = c.angle * Math.PI / 180;
+                    const x = centerX + radius * Math.cos(angleRad);
+                    const y = centerY + radius * Math.sin(angleRad);
+
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', centerX);
+                    line.setAttribute('y1', centerY);
+                    line.setAttribute('x2', x);
+                    line.setAttribute('y2', y);
+                    line.setAttribute('stroke', 'var(--border-color)');
+                    line.style.animationDelay = `${i * 0.2}s`;
+
+                    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                    g.classList.add('fade-in');
+                    g.style.animationDelay = `${0.5 + i * 0.2}s`;
+                    
+                    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                    rect.setAttribute('x', x - 40);
+                    rect.setAttribute('y', y - 15);
+                    rect.setAttribute('width', 80);
+                    rect.setAttribute('height', 30);
+                    rect.setAttribute('class', 'svg-box');
+                    
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', x);
+                    text.setAttribute('y', y + 5);
+                    text.setAttribute('class', 'svg-text');
+                    text.setAttribute('text-anchor', 'middle');
+                    text.textContent = c.name;
+
+                    g.appendChild(rect);
+                    g.appendChild(text);
+                    akrainoContainer.appendChild(line);
+                    akrainoContainer.appendChild(g);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
