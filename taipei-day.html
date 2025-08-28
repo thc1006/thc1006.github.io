@@ -1,12 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-Hant" class="scroll-smooth">
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2025/8/29 台北藝文美食一日遊</title>
-    
-    <script src="https://js.puter.com/v2/"></script>
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -77,77 +74,33 @@
         .ticket-link:hover {
             background-color: #059669; /* emerald-600 */
         }
-        .gemini-btn {
-            display: inline-flex;
-            align-items: center;
-            margin-top: 12px;
-            padding: 8px 16px;
-            background: linear-gradient(to right, #6366f1, #a855f7); /* indigo-500 to purple-500 */
-            color: white;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.2s;
-            border: none;
+        details > summary {
+            list-style: none;
             cursor: pointer;
         }
-        .gemini-btn:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            transform: translateY(-2px);
-        }
-        /* Modal styles */
-        .modal {
+        details > summary::-webkit-details-marker {
             display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.5);
-            -webkit-backdrop-filter: blur(5px);
-            backdrop-filter: blur(5px);
         }
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 24px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 500px;
-            border-radius: 12px;
-            position: relative;
-            animation: fadeIn 0.3s;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        .close-btn {
-            color: #aaa;
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 28px;
+        details summary:before {
+            content: '＋';
+            margin-right: 0.5rem;
             font-weight: bold;
-            cursor: pointer;
+            color: #64748b;
         }
-        .close-btn:hover,
-        .close-btn:focus {
-            color: black;
+        details[open] summary:before {
+            content: '－';
         }
-        .loader {
-             width: 24px; height: 24px; border: 3px solid rgba(0,0,0,0.1);
-             border-bottom-color: #6366f1; border-radius: 50%;
-             display: inline-block; box-sizing: border-box;
-             animation: rotation 1s linear infinite;
+        .details-content {
+            border-left: 2px solid #e2e8f0;
+            padding-left: 1.25rem;
+            margin-left: 0.25rem;
+            margin-top: 0.75rem;
         }
-        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800">
 
+    <!-- Header -->
     <header class="bg-white shadow-md sticky top-0 z-20">
         <div class="container mx-auto px-6 py-4">
             <h1 class="text-2xl md:text-3xl font-bold text-slate-900">台北藝文美食一日遊</h1>
@@ -155,11 +108,14 @@
         </div>
     </header>
 
+    <!-- Main Content -->
     <main class="container mx-auto p-4 md:p-8">
         <div class="max-w-4xl mx-auto">
             
+            <!-- Timeline Starts -->
             <div class="space-y-12">
 
+                <!-- 0. Departure -->
                 <div class="relative timeline-item">
                     <div class="absolute top-0 left-0 flex items-center justify-center w-10 h-10 rounded-full icon-bg z-10">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-cyan-600"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
@@ -178,6 +134,7 @@
                     </div>
                 </div>
 
+                <!-- 1. Morning: Movie -->
                 <div class="relative timeline-item">
                     <div class="absolute top-0 left-0 flex items-center justify-center w-10 h-10 rounded-full icon-bg z-10">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-600"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
@@ -195,6 +152,7 @@
                     </div>
                 </div>
 
+                <!-- 2. Noon: Lunch -->
                 <div class="relative timeline-item">
                     <div class="absolute top-0 left-0 flex items-center justify-center w-10 h-10 rounded-full icon-bg z-10">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-600"><path d="M3 21h18"></path><path d="M7 21V7a5 5 0 0 1 10 0v14"></path><path d="M15 7a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2Z"></path><path d="M7 7a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2Z"></path></svg>
@@ -213,6 +171,7 @@
                     </div>
                 </div>
 
+                <!-- 3. Afternoon: Museum -->
                 <div class="relative timeline-item">
                     <div class="absolute top-0 left-0 flex items-center justify-center w-10 h-10 rounded-full icon-bg z-10">
                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-600"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M8 12h8"></path><path d="M12 8v8"></path></svg>
@@ -223,22 +182,26 @@
                         <div class="space-y-3 text-slate-700">
                             <p><strong>地點：</strong> <a href="https://www.google.com/maps/search/?api=1&query=富邦美術館" target="_blank" rel="noopener noreferrer" class="location-link">信義區松高路 79 號 (A25)</a></p>
                             <p><strong>時間：</strong> 11:00–18:00 (17:30 最後入場，週二休館)</p>
-                            <div>
-                                <h4 class="font-semibold">展覽與票價 (擇一或都看)：</h4>
-                                <ul class="list-disc list-inside pl-2 text-sm">
-                                    <li>《安東尼・麥考爾：在光中遇見你》 (1F)：NT$250</li>
-                                    <li>《印象派—從莫內到美國》 (3F)：NT$450</li>
-                                </ul>
-                            </div>
                             <a href="https://www.fubonartmuseum.org/zh-TW/" target="_blank" rel="noopener noreferrer" class="ticket-link">前往美術館官網購票</a>
-                            <div class="mt-4 border-t pt-4">
-                                <button id="gemini-impressionism-btn" class="gemini-btn">✨ 生成「印象派」展覽導覽</button>
-                                <button id="gemini-mccall-btn" class="gemini-btn">✨ 生成「在光中遇見你」導覽</button>
+                            <div class="mt-4 border-t pt-4 space-y-4">
+                                <details>
+                                    <summary class="font-semibold text-slate-800">《印象派—從莫內到美國》展覽簡介</summary>
+                                    <div class="details-content text-sm text-slate-600">
+                                        <p>歡迎蒞臨《印象派—從莫內到美國》特展。印象派的核心精神在於捕捉瞬間即逝的光影變化，藝術家們揚棄了傳統的清晰輪廓，改以快速、破碎的筆觸來描繪眼前的景象。您將會欣賞到藝術家如何透過色彩並置，呈現陽光在水面上的粼粼波光，或是午後斜陽下的朦朧街景。請留意畫作中充滿動感的筆觸與鮮活的色彩，這正是印象派的魅力所在。</p>
+                                    </div>
+                                </details>
+                                <details>
+                                    <summary class="font-semibold text-slate-800">《安東尼・麥考爾：在光中遇見你》展覽簡介</summary>
+                                    <div class="details-content text-sm text-slate-600">
+                                        <p>歡迎來到安東尼・麥考爾的《在光中遇見你》。這位藝術家徹底顛覆了我們對雕塑的想像，他不用石頭或金屬，而是以「光」為材料。展場中，您會看到光束在黑暗與薄霧中劃出清晰的幾何形狀，形成一道道『固體光』。這不只是觀看，更是一場沉浸式體驗。您可以走入光束之中，感受光線的體積與觸感，成為作品的一部分，體驗光影在您身邊流動、變幻的奇妙感受。</p>
+                                    </div>
+                                </details>
                             </div>
                         </div>
                     </div>
                 </div>
                 
+                <!-- 4. Twilight: Taipei 101 -->
                 <div class="relative timeline-item">
                     <div class="absolute top-0 left-0 flex items-center justify-center w-10 h-10 rounded-full icon-bg z-10">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-orange-600"><path d="M21.2 15c.7-1.2 1-2.5.7-3.9-.6-2.4-3.4-4-6.2-3.2s-4 3.4-3.2 6.2c.2.7.5 1.4.9 2.1"></path><path d="m15.2 13.8-3.5 2.2a2 2 0 0 0-1 1.7v4.1"></path><path d="m15.2 13.8 3.5-2.2a2 2 0 0 1 2.2 0l2.8 1.8a2 2 0 0 1 0 3.4l-3.5 2.2a2 2 0 0 1-2.2 0Z"></path><path d="M8 18h1"></path><path d="M12 18h1"></path><path d="M16 18h1"></path></svg>
@@ -248,13 +211,23 @@
                         <h2 class="text-2xl font-bold mt-3 mb-2">台北 101｜88F 天空興波卡位日落</h2>
                         <div class="space-y-3 text-slate-700">
                             <p><strong>地點：</strong> <a href="https://www.google.com/maps/search/?api=1&query=台北101" target="_blank" rel="noopener noreferrer" class="location-link">台北 101</a></p>
-                            <p><strong>到樓流程：</strong> 辦公大樓「信義門」→ 上 2F 櫃檯說明欲至 88F → 轉乘電梯。</p>
-                            <p><strong>日落參考 (8/29)：</strong> 18:15 (黃金時段 17:35–18:15)</p>
-                            <p class="text-sm bg-rose-100 text-rose-800 p-3 rounded-lg"><strong>關鍵提醒：</strong> 最晚 18:30 (看女子A) 或 18:40 (看遺落的語言) 離開，預留交通時間。</p>
+                            <details class="mt-2">
+                                <summary class="font-semibold text-slate-800">點擊查看詳細資訊與提醒</summary>
+                                <div class="details-content text-sm text-slate-600">
+                                    <ul class="space-y-2 list-disc list-inside">
+                                        <li><strong>營業時間：</strong> 09:00–19:00，無須觀景台門票。</li>
+                                        <li><strong>到樓流程：</strong> 請務必從辦公大樓的「信義門」進入，上 2F 櫃檯說明欲至 88F 咖啡廳，再依指示轉乘電梯。</li>
+                                        <li><strong>日落參考：</strong> 8/29 當日日落約在 18:15，黃金觀賞時段為 17:35–18:15。</li>
+                                        <li><strong>省錢策略：</strong> 可選擇外帶或站位，點一杯飲料 (約 NT$200–300) 即可欣賞風景。</li>
+                                        <li class="font-bold text-rose-600"><strong>關鍵提醒：</strong> 若晚場要看《女子A…?》，請最晚 18:30 離開；若要看《遺落的語言》，建議 18:40 前離開，以預留充足的交通時間。</li>
+                                    </ul>
+                                </div>
+                            </details>
                         </div>
                     </div>
                 </div>
 
+                <!-- 5. Night: Theater -->
                 <div class="relative timeline-item">
                     <div class="absolute top-0 left-0 flex items-center justify-center w-10 h-10 rounded-full icon-bg z-10">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple-600"><path d="M2 12.5C2 8.36 5.36 5 9.5 5s7.5 3.36 7.5 7.5c0 1.95-1.13 3.7-2.88 4.75"></path><path d="M19.5 12.5c0-1.2-1.12-2.43-2.88-3.5"></path><path d="M14 13c0 2.2 1.8 4 4 4h2v-4.5"></path><path d="M9.5 17.5c-2.42 0-4.5-1.2-4.5-2.5"></path><path d="M5 15c0-1.38 2.08-2.5 4.5-2.5"></path><path d="M9.5 5V4"></path><path d="M17.5 5V4"></path><path d="M14 20v1"></path><path d="M18 20v1"></path></svg>
@@ -283,6 +256,7 @@
                     </div>
                 </div>
 
+                <!-- 6. Return -->
                 <div class="relative timeline-item">
                      <div class="absolute top-0 left-0 flex items-center justify-center w-10 h-10 rounded-full icon-bg z-10">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-600"><path d="M19 12H6m6-7l-7 7 7 7"></path></svg>
@@ -303,7 +277,11 @@
                 </div>
 
             </div>
+            <!-- Timeline Ends -->
+
+            <!-- Summary Sections -->
             <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Schedule Summary -->
                 <div class="card p-6">
                     <h3 class="text-xl font-bold mb-4 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-sky-600"><path d="M5 22h14"></path><path d="M5 2h14"></path><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"></path><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"></path></svg>
@@ -322,6 +300,7 @@
                     </ul>
                 </div>
 
+                <!-- Cost Summary -->
                 <div class="card p-6">
                     <h3 class="text-xl font-bold mb-4 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-lime-600"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="M8 12h.01"></path><path d="M12 12h.01"></path><path d="M16 12h.01"></path></svg>
@@ -343,84 +322,9 @@
         </div>
     </main>
     
-    <div id="gemini-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">×</span>
-            <h2 id="modal-title" class="text-xl font-bold mb-4">✨ AI 導覽員</h2>
-            <div id="modal-body" class="text-slate-700 whitespace-pre-wrap">
-                <p>導覽生成中，請稍候...</p>
-            </div>
-        </div>
-    </div>
-
     <footer class="text-center py-8 text-slate-500 text-sm">
         <p>行程規劃 by 秀吉's liver</p>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const modal = document.getElementById('gemini-modal');
-            const modalTitle = document.getElementById('modal-title');
-            const modalBody = document.getElementById('modal-body');
-            const closeModalBtn = modal.querySelector('.close-btn');
-
-            const impressionismBtn = document.getElementById('gemini-impressionism-btn');
-            const mccallBtn = document.getElementById('gemini-mccall-btn');
-
-            function openModal() {
-                modal.style.display = 'flex';
-            }
-
-            function closeModal() {
-                modal.style.display = 'none';
-            }
-
-            closeModalBtn.addEventListener('click', closeModal);
-            window.addEventListener('click', (event) => {
-                if (event.target == modal) {
-                    closeModal();
-                }
-            });
-
-            impressionismBtn.addEventListener('click', () => {
-                const prompt = "請用繁體中文，為一位即將參觀富邦美術館《印象派—從莫內到美國》特展的訪客，提供一份約150字的簡短導覽介紹，重點介紹印象派捕捉光影的特色、筆觸，以及可以期待看到的作品風格。";
-                modalTitle.innerText = "✨《印象派—從莫內到美國》導覽";
-                callGeminiAPI(prompt);
-            });
-            
-            mccallBtn.addEventListener('click', () => {
-                const prompt = "請用繁體中文，為一位即將參觀富邦美術館《安東尼・麥考爾：在光中遇見你》展覽的訪客，提供一份約150字的簡短導覽介紹。請說明他如何利用光線作為雕塑媒介，以及觀眾可以期待什麼樣的沉浸式體驗。";
-                modalTitle.innerText = "✨《在光中遇見你》導覽";
-                callGeminiAPI(prompt);
-            });
-
-            async function callGeminiAPI(prompt) {
-                openModal();
-                modalBody.innerHTML = `<div class="flex items-center justify-center p-4"><div class="loader"></div></div>`;
-                
-                try {
-                    const response = await puter.ai.chat(prompt, {
-                        model: 'google/gemini-pro',
-                        stream: true
-                    });
-
-                    modalBody.innerHTML = ''; // Clear loader
-                    
-                    let fullText = '';
-                    for await (const part of response) {
-                        if (part?.text) {
-                            fullText += part.text;
-                            modalBody.innerHTML = fullText.replace(/\n/g, '<br>');
-                        }
-                    }
-                } catch (error) {
-                    console.error("Puter.js call failed:", error);
-                    modalBody.innerHTML = '<p class="text-red-500">無法生成導覽，請稍後再試。</p>';
-                }
-            }
-        });
-    </script>
-
 </body>
 </html>
-###
