@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台北都會協奏曲 - 8月29日行程資訊圖</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #F0F8FF;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 640px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .flow-line {
+            width: 2px;
+            background-color: #87CEFA;
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body class="text-[#191970]">
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-7xl">
+
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#191970] mb-2">台北都會協奏曲</h1>
+            <p class="text-lg md:text-xl text-[#4169E1]">您的2025年8月29日專屬行程視覺化指南</p>
+        </header>
+
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-center mb-8">序曲：行程速覽</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <p class="text-5xl font-bold text-[#00BFFF]">~12</p>
+                    <p class="text-lg mt-2">總時長 (小時)</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <p class="text-5xl font-bold text-[#00BFFF]">~1,700</p>
+                    <p class="text-lg mt-2">預估花費 (新台幣)</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <p class="text-5xl font-bold text-[#00BFFF]">🚇</p>
+                    <p class="text-lg mt-2">主要交通 (捷運)</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <main class="lg:col-span-2">
+                <section class="mb-12">
+                    <h2 class="text-3xl font-bold text-center mb-8">四個樂章：視覺化時間軸</h2>
+                    <div class="flex flex-col items-center">
+                        <div class="w-full max-w-2xl bg-white p-6 rounded-xl shadow-lg mb-4">
+                            <h3 class="text-2xl font-bold text-[#4169E1]">啟程 (09:00 - 09:45)</h3>
+                            <p class="mt-2">從陽明交大出發，搭乘捷運紅線，這條城市動脈將無縫串連今日所有目的地，為高效的旅程奠定基礎。</p>
+                        </div>
+                        <div class="flow-line h-8"></div>
+                        <div class="w-full max-w-2xl bg-white p-6 rounded-xl shadow-lg mb-4">
+                             <h3 class="text-2xl font-bold text-[#4169E1]">I. 晨之序曲 (09:45 - 11:30) ⛰️</h3>
+                            <p class="mt-2">攀登象山，在城市之巔迎接壯麗的台北天際線。這是一段 invigorating 的開場，從六巨石的經典視角，為一天的探索注入活力。</p>
+                        </div>
+                        <div class="flow-line h-8"></div>
+                        <div class="w-full max-w-2xl bg-white p-6 rounded-xl shadow-lg mb-4">
+                            <h3 class="text-2xl font-bold text-[#4169E1]">II. 藝術慢板 (11:30 - 14:30) 🖼️</h3>
+                            <p class="mt-2">沉浸在富邦美術館的光影世界。探索由建築大師設計的空間，並在「在光中遇見你」主題展覽中，與藝術進行一場跨越時空的深度對話。</p>
+                        </div>
+                        <div class="flow-line h-8"></div>
+                        <div class="w-full max-w-2xl bg-white p-6 rounded-xl shadow-lg mb-4">
+                            <h3 class="text-2xl font-bold text-[#4169E1]">III. 速度快板 (14:30 - 18:15) 🏎️</h3>
+                            <p class="mt-2">在信義威秀影城感受F1的極速激情。這部電影不僅是感官的饗宴，更是行程中關鍵的時間錨點，為整趟旅程賦予了節奏與結構。</p>
+                        </div>
+                        <div class="flow-line h-8"></div>
+                        <div class="w-full max-w-2xl bg-white p-6 rounded-xl shadow-lg">
+                            <h3 class="text-2xl font-bold text-[#4169E1]">IV. 都會夜曲 (18:15 - 21:00) 🌙</h3>
+                            <p class="mt-2">在松山文創園區的創意氛圍中結束一天。漫步於歷史建築之間，探索誠品生活，感受台北設計之都的獨特魅力，畫下完美的休止符。</p>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <aside class="lg:col-span-1 space-y-8">
+                <section class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-bold text-center mb-4">樂譜：預算分析 💰</h3>
+                    <p class="text-center text-sm mb-4">此圖表比較了各項支出的最低與最高預估費用，幫助您更精準地規劃開銷。</p>
+                    <div class="chart-container h-96">
+                        <canvas id="budgetBarChart"></canvas>
+                    </div>
+                </section>
+
+                <section class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-bold text-center mb-4">智行者工具包 🎒</h3>
+                    <ul class="space-y-3 list-disc list-inside">
+                        <li>一雙舒適好走的鞋</li>
+                        <li>儲值足夠的悠遊卡</li>
+                        <li>行動電源</li>
+                        <li>水瓶與防曬用品</li>
+                        <li>相機或手機</li>
+                        <li>輕薄外套 (室內/夜晚)</li>
+                    </ul>
+                </section>
+
+                <section class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-bold text-center mb-4">安可曲：備選路線 🚲</h3>
+                    <p>若想換個節奏，可考慮擇日安排一趟河濱單車之旅。從圓山站出發，沿基隆河騎行至彩虹橋，最後在饒河夜市享受美食，體驗台北的另一種悠閒步調。</p>
+                </section>
+            </aside>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tooltipTitleCallback = (tooltipItems) => {
+                const item = tooltipItems[0];
+                let label = item.chart.data.labels[item.dataIndex];
+                if (Array.isArray(label)) {
+                    return label.join(' ');
+                } else {
+                    return label;
+                }
+            };
+            
+            const wrapLabel = (str, maxWidth) => {
+                if (str.length <= maxWidth) {
+                    return str;
+                }
+                const words = str.split(' ');
+                const lines = [];
+                let currentLine = '';
+                for (const word of words) {
+                    if ((currentLine + word).length > maxWidth && currentLine.length > 0) {
+                        lines.push(currentLine.trim());
+                        currentLine = '';
+                    }
+                    currentLine += word + ' ';
+                }
+                lines.push(currentLine.trim());
+                return lines;
+            };
+
+            const barChartLabels = [
+                '捷運交通', 
+                '富邦美術館門票', 
+                'F1電影電影票', 
+                '午餐', 
+                '晚餐／小吃'
+            ].map(label => wrapLabel(label, 16));
+
+            const ctxBar = document.getElementById('budgetBarChart').getContext('2d');
+            new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: barChartLabels,
+                    datasets: [{
+                        label: '最低預估 (NT$)',
+                        data: [150, 380, 330, 200, 300],
+                        backgroundColor: '#87CEFA',
+                        borderColor: '#87CEFA',
+                        borderWidth: 1
+                    }, {
+                        label: '最高預估 (NT$)',
+                        data: [150, 500, 400, 300, 500],
+                        backgroundColor: '#4169E1',
+                        borderColor: '#4169E1',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#191970'
+                            },
+                             grid: {
+                                color: '#E0E8F0'
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: '#191970'
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                               color: '#191970'
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: tooltipTitleCallback
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
