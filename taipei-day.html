@@ -3,395 +3,289 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>台北一日遊行程規劃 | 視覺化資訊圖表</title>
+    <title>2025/8/29 台北藝文美食一日遊</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Noto Sans TC', sans-serif;
-            background-color: #f0f4f8;
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background-color: #f0f2f5;
         }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px;
-            max-height: 400px;
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 44px;
+            bottom: -20px;
+            width: 2px;
+            background-color: #cbd5e1;
+            z-index: 0;
         }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 350px;
-            }
+        .timeline-item:last-child::before {
+            display: none;
         }
-        .flow-step {
-            display: flex;
-            align-items: center;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            margin-bottom: 1rem;
-            transition: transform 0.2s;
+        .icon-bg {
+            background-color: #ffffff;
+            border: 2px solid #cbd5e1;
         }
-        .flow-step:hover {
-            transform: translateY(-2px);
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         }
-        .flow-arrow {
-            font-size: 1.5rem;
-            margin: 0.5rem 0;
-            color: #FFD166;
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
         }
-        .path-card {
-            border-width: 2px;
-            height: 100%;
+        .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+        .link-source {
+            font-size: 0.75rem;
+            color: #64748b;
+            font-style: italic;
+        }
+        a.location-link {
+            color: #0ea5e9; /* sky-500 */
+            text-decoration: none;
+            font-weight: 500;
+        }
+        a.location-link:hover {
+            text-decoration: underline;
+        }
+        .ticket-link {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 6px 12px;
+            background-color: #10b981; /* emerald-500 */
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        .ticket-link:hover {
+            background-color: #059669; /* emerald-600 */
         }
     </style>
 </head>
-<body class="text-[#073B4C]">
+<body class="bg-slate-50 text-slate-800">
 
-    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-20">
+        <div class="container mx-auto px-6 py-4">
+            <h1 class="text-2xl md:text-3xl font-bold text-slate-900">台北藝文美食一日遊</h1>
+            <p class="text-slate-600 mt-1">2025年8月29日（五）</p>
+        </div>
+    </header>
 
-        <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-6xl font-black text-[#118AB2] mb-2">台北一日光影探索</h1>
-            <p class="text-lg md:text-xl text-[#073B4C]">📅 8月29日 | 從陽明校區出發的冒險</p>
-        </header>
+    <!-- Main Content -->
+    <main class="container mx-auto p-4 md:p-8">
+        <div class="max-w-4xl mx-auto">
+            
+            <!-- Timeline Starts -->
+            <div class="space-y-12">
 
-        <main class="space-y-12">
+                <!-- 0. Departure -->
+                <div class="relative timeline-item">
+                    <div class="absolute top-0 left-0 flex items-center justify-center w-10 h-10 rounded-full icon-bg z-10">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-cyan-600"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                    </div>
+                    <div class="ml-16 card p-6">
+                        <span class="tag bg-cyan-100 text-cyan-800">清晨 07:30 - 08:45</span>
+                        <h2 class="text-2xl font-bold mt-3 mb-2">起床 & 出發準備</h2>
+                        <div class="space-y-3 text-slate-700">
+                            <p><strong>地點：</strong> <a href="https://www.google.com/maps/search/?api=1&query=陽明交通大學陽明校區" target="_blank" rel="noopener noreferrer" class="location-link">陽明交大 陽明校區</a></p>
+                            <ul class="list-disc list-inside pl-2 text-sm">
+                                <li><strong>07:30–08:30：</strong> 起床盥洗、整肅儀容。</li>
+                                <li><strong>08:45 前：</strong> 從校區出發，搭乘捷運前往信義區。</li>
+                            </ul>
+                            <p class="text-sm bg-slate-100 p-3 rounded-lg"><strong>交通提醒：</strong> 預留約 50-60 分鐘的捷運與步行時間，確保 09:45 左右抵達信義威秀。</p>
+                        </div>
+                    </div>
+                </div>
 
-            <section id="morning" class="bg-white rounded-lg shadow-lg p-6 md:p-8">
-                <h2 class="text-3xl font-bold text-[#118AB2] mb-6 text-center">序曲：晨光之行 (09:30 - 11:00)</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                    <div>
-                        <h3 class="text-xl font-bold mb-4">從校園到都會心臟</h3>
-                        <p class="mb-6">旅程始於一場場景的轉換，從北投的學術靜謐，搭乘捷運紅線，一路向南穿越城市紋理，直達信義區的現代脈動。這不僅是交通，更是體驗台北多元面貌的開端。</p>
-                        <div class="bg-[#f0f4f8] p-4 rounded-lg">
-                            <div class="flow-step bg-white shadow-sm">
-                                <span class="text-2xl mr-4">🏫</span>
-                                <div>
-                                    <p class="font-bold">陽明交大陽明校區</p>
-                                    <p class="text-sm">步行或搭乘559公車</p>
+                <!-- 1. Morning: Movie -->
+                <div class="relative timeline-item">
+                    <div class="absolute top-0 left-0 flex items-center justify-center w-10 h-10 rounded-full icon-bg z-10">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-600"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
+                    </div>
+                    <div class="ml-16 card p-6">
+                        <span class="tag bg-indigo-100 text-indigo-800">早上 10:15 開演</span>
+                        <h2 class="text-2xl font-bold mt-3 mb-2">電影《F1》@ 信義威秀</h2>
+                        <div class="space-y-3 text-slate-700">
+                            <p><strong>地點：</strong> <a href="https://www.google.com/maps/search/?api=1&query=台北信義威秀影城" target="_blank" rel="noopener noreferrer" class="location-link">台北信義威秀影城 (信義區松壽路 20 號)</a></p>
+                            <p><strong>票價：</strong> 早場 NT$300 (2D 一般版) <span class="link-source">(威秀影城)</span></p>
+                            <p><strong>片長：</strong> 155 分鐘 <span class="link-source">(維基百科)</span></p>
+                            <a href="https://www.vscinemas.com.tw/" target="_blank" rel="noopener noreferrer" class="ticket-link">前往威秀影城官網</a>
+                            <p class="text-sm bg-slate-100 p-3 rounded-lg mt-2"><strong>備註：</strong> 長片線上訂票可能會有加價規則，以現場售價為準。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Noon: Lunch -->
+                <div class="relative timeline-item">
+                    <div class="absolute top-0 left-0 flex items-center justify-center w-10 h-10 rounded-full icon-bg z-10">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-600"><path d="M3 21h18"></path><path d="M7 21V7a5 5 0 0 1 10 0v14"></path><path d="M15 7a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2Z"></path><path d="M7 7a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2Z"></path></svg>
+                    </div>
+                    <div class="ml-16 card p-6">
+                        <span class="tag bg-amber-100 text-amber-800">中午</span>
+                        <h2 class="text-2xl font-bold mt-3 mb-2">「不繞路」午餐 4 選 1</h2>
+                        <p class="text-slate-600 mb-4">均在松壽/松高路軸線，從信義威秀步行 3–10 分鐘。</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="border border-slate-200 p-4 rounded-lg"><h3 class="font-bold"><a href="https://www.google.com/maps/search/?api=1&query=麵屋一燈+新光三越A11" target="_blank" rel="noopener noreferrer" class="location-link">麵屋一燈</a></h3><p class="text-sm text-slate-600">新光三越 A11 B2</p></div>
+                            <div class="border border-slate-200 p-4 rounded-lg"><h3 class="font-bold"><a href="https://www.google.com/maps/search/?api=1&query=大心+信義威秀" target="_blank" rel="noopener noreferrer" class="location-link">大心 Very Thai Noodles</a></h3><p class="text-sm text-slate-600">信義威秀 2F</p></div>
+                            <div class="border border-slate-200 p-4 rounded-lg"><h3 class="font-bold"><a href="https://www.google.com/maps/search/?api=1&query=添好運+新光三越A8" target="_blank" rel="noopener noreferrer" class="location-link">添好運</a></h3><p class="text-sm text-slate-600">新光三越 A8 3F</p></div>
+                            <div class="border border-slate-200 p-4 rounded-lg"><h3 class="font-bold"><a href="https://www.google.com/maps/search/?api=1&query=帕泰家+Baan+Phadthai+新光三越A8" target="_blank" rel="noopener noreferrer" class="location-link">帕泰家 Baan Phadthai</a></h3><p class="text-sm text-slate-600">新光三越 A8 B1</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Afternoon: Museum -->
+                <div class="relative timeline-item">
+                    <div class="absolute top-0 left-0 flex items-center justify-center w-10 h-10 rounded-full icon-bg z-10">
+                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-600"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M8 12h8"></path><path d="M12 8v8"></path></svg>
+                    </div>
+                    <div class="ml-16 card p-6">
+                        <span class="tag bg-emerald-100 text-emerald-800">下午 14:20 - 16:30</span>
+                        <h2 class="text-2xl font-bold mt-3 mb-2">富邦美術館</h2>
+                        <div class="space-y-3 text-slate-700">
+                            <p><strong>地點：</strong> <a href="https://www.google.com/maps/search/?api=1&query=富邦美術館" target="_blank" rel="noopener noreferrer" class="location-link">信義區松高路 79 號 (A25)</a></p>
+                            <p><strong>時間：</strong> 11:00–18:00 (17:30 最後入場，週二休館)</p>
+                            <div>
+                                <h4 class="font-semibold">展覽與票價 (擇一或都看)：</h4>
+                                <ul class="list-disc list-inside pl-2 text-sm">
+                                    <li>《安東尼・麥考爾：在光中遇見你》 (1F)：NT$250</li>
+                                    <li>《印象派—從莫內到美國》 (3F)：NT$450</li>
+                                </ul>
+                            </div>
+                            <a href="https://www.fubonartmuseum.org/zh-TW/" target="_blank" rel="noopener noreferrer" class="ticket-link">前往美術館官網購票</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 4. Twilight: Taipei 101 -->
+                <div class="relative timeline-item">
+                    <div class="absolute top-0 left-0 flex items-center justify-center w-10 h-10 rounded-full icon-bg z-10">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-orange-600"><path d="M21.2 15c.7-1.2 1-2.5.7-3.9-.6-2.4-3.4-4-6.2-3.2s-4 3.4-3.2 6.2c.2.7.5 1.4.9 2.1"></path><path d="m15.2 13.8-3.5 2.2a2 2 0 0 0-1 1.7v4.1"></path><path d="m15.2 13.8 3.5-2.2a2 2 0 0 1 2.2 0l2.8 1.8a2 2 0 0 1 0 3.4l-3.5 2.2a2 2 0 0 1-2.2 0Z"></path><path d="M8 18h1"></path><path d="M12 18h1"></path><path d="M16 18h1"></path></svg>
+                    </div>
+                    <div class="ml-16 card p-6">
+                        <span class="tag bg-orange-100 text-orange-800">黃昏 17:00 - 18:30</span>
+                        <h2 class="text-2xl font-bold mt-3 mb-2">台北 101｜88F 天空興波卡位日落</h2>
+                        <div class="space-y-3 text-slate-700">
+                            <p><strong>地點：</strong> <a href="https://www.google.com/maps/search/?api=1&query=台北101" target="_blank" rel="noopener noreferrer" class="location-link">台北 101</a></p>
+                            <p><strong>到樓流程：</strong> 辦公大樓「信義門」→ 上 2F 櫃檯說明欲至 88F → 轉乘電梯。</p>
+                            <p><strong>日落參考 (8/29)：</strong> 18:15 (黃金時段 17:35–18:15)</p>
+                            <p class="text-sm bg-rose-100 text-rose-800 p-3 rounded-lg"><strong>關鍵提醒：</strong> 最晚 18:30 (看女子A) 或 18:40 (看遺落的語言) 離開，預留交通時間。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Night: Theater -->
+                <div class="relative timeline-item">
+                    <div class="absolute top-0 left-0 flex items-center justify-center w-10 h-10 rounded-full icon-bg z-10">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple-600"><path d="M2 12.5C2 8.36 5.36 5 9.5 5s7.5 3.36 7.5 7.5c0 1.95-1.13 3.7-2.88 4.75"></path><path d="M19.5 12.5c0-1.2-1.12-2.43-2.88-3.5"></path><path d="M14 13c0 2.2 1.8 4 4 4h2v-4.5"></path><path d="M9.5 17.5c-2.42 0-4.5-1.2-4.5-2.5"></path><path d="M5 15c0-1.38 2.08-2.5 4.5-2.5"></path><path d="M9.5 5V4"></path><path d="M17.5 5V4"></path><path d="M14 20v1"></path><path d="M18 20v1"></path></svg>
+                    </div>
+                    <div class="ml-16 card p-6">
+                        <span class="tag bg-purple-100 text-purple-800">夜晚</span>
+                        <h2 class="text-2xl font-bold mt-3 mb-2">臺北藝穗節「兩擇一」晚場</h2>
+                        <div class="mt-4 space-y-6">
+                            <div>
+                                <h3 class="text-lg font-bold">A. 女子A…? (獨角戲) — <span class="text-green-600">建議主選</span></h3>
+                                <div class="mt-2 pl-4 border-l-4 border-green-500 space-y-2 text-sm">
+                                    <p><strong>地點：</strong> <a href="https://www.google.com/maps/search/?api=1&query=二空間+SPACE+TWO" target="_blank" rel="noopener noreferrer" class="location-link">二空間 (中山區松江路 226 巷 6 號)</a></p>
+                                    <p><strong>時間：</strong> 19:15 (長度 45 分鐘)</p>
+                                    <a href="https://www.opentix.life/" target="_blank" rel="noopener noreferrer" class="ticket-link">OPENTIX 購票</a>
                                 </div>
                             </div>
-                            <div class="text-center flow-arrow">↓</div>
-                            <div class="flow-step bg-white shadow-sm">
-                                <span class="text-2xl mr-4">🚇</span>
-                                <div>
-                                    <p class="font-bold">捷運石牌站 (R19)</p>
-                                    <p class="text-sm">搭乘淡水信義線 (往象山)</p>
-                                </div>
-                            </div>
-                             <div class="text-center flow-arrow">↓</div>
-                            <div class="flow-step bg-white shadow-sm">
-                                <span class="text-2xl mr-4">🏙️</span>
-                                <div>
-                                    <p class="font-bold">捷運台北101/世貿站 (R03)</p>
-                                    <p class="text-sm">抵達信義計畫區</p>
+                            <div>
+                                <h3 class="text-lg font-bold">B. 遺落的語言 (戲劇) — <span class="text-slate-500">備選</span></h3>
+                                <div class="mt-2 pl-4 border-l-4 border-slate-400 space-y-2 text-sm">
+                                    <p><strong>地點：</strong> <a href="https://www.google.com/maps/search/?api=1&query=羊檯+Lamp" target="_blank" rel="noopener noreferrer" class="location-link">羊檯 Lamp (士林區中正路 387 號 2 樓)</a></p>
+                                    <p><strong>時間：</strong> 19:30 (長度約 75 分鐘)</p>
+                                    <a href="https://www.opentix.life/" target="_blank" rel="noopener noreferrer" class="ticket-link">OPENTIX 購票</a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="chart-container">
-                        <canvas id="morningCostChart"></canvas>
-                    </div>
                 </div>
-            </section>
 
-            <section id="midday" class="bg-white rounded-lg shadow-lg p-6 md:p-8">
-                <h2 class="text-3xl font-bold text-[#06D6A0] mb-6 text-center">正午：藝術沉浸 (11:00 - 14:00)</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                    <div class="bg-[#f0f4f8] p-6 rounded-lg">
-                        <p class="text-6xl font-black text-[#06D6A0]">1 HR</p>
-                        <p class="mt-2 font-bold">建築鑑賞</p>
-                        <p class="text-sm">欣賞普立茲克獎大師Renzo Piano的台灣首件作品。</p>
+                <!-- 6. Return -->
+                <div class="relative timeline-item">
+                     <div class="absolute top-0 left-0 flex items-center justify-center w-10 h-10 rounded-full icon-bg z-10">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-600"><path d="M19 12H6m6-7l-7 7 7 7"></path></svg>
                     </div>
-                    <div class="bg-[#f0f4f8] p-6 rounded-lg">
-                        <p class="text-6xl font-black text-[#06D6A0]">2 HR</p>
-                        <p class="mt-2 font-bold">《在光中遇見你》</p>
-                        <p class="text-sm">走入安東尼・麥考爾的「固體光」作品，成為藝術的一部分。</p>
-                    </div>
-                    <div class="bg-[#f0f4f8] p-6 rounded-lg">
-                        <p class="text-6xl font-black text-[#06D6A0]">250</p>
-                        <p class="mt-2 font-bold">單展票價 (NT$)</p>
-                        <p class="text-sm">以親民的價格，體驗世界級的沉浸式光影藝術。</p>
-                    </div>
-                </div>
-                 <p class="text-center mt-6">午餐於信義區百貨美食街解決，兼具美味、多元與性價比。</p>
-            </section>
-
-            <section id="afternoon-choices">
-                <h2 class="text-3xl font-bold text-[#FF6B6B] mb-6 text-center">午後插曲：都會敘事的抉擇 (14:00 - 19:00)</h2>
-                <p class="text-center max-w-3xl mx-auto mb-8">下午的行程來到一個十字路口。依據當下的心情與體力，選擇一條屬於你的城市探索路徑。每個選擇都將引導你走向截然不同的傍晚體驗與晚餐地點。</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    
-                    <div class="path-card bg-white rounded-lg shadow-lg p-6 border-[#118AB2]">
-                        <h3 class="text-2xl font-bold text-[#118AB2] mb-4 text-center">路徑 A：動感光影與都會之巔</h3>
-                        <div class="flow-step bg-blue-50 shadow-sm">
-                            <span class="text-2xl mr-4">🎬</span>
-                            <div>
-                                <p class="font-bold">F1電影體驗</p>
-                                <p class="text-sm">在頂級影城享受速度與激情。</p>
-                            </div>
-                        </div>
-                        <div class="text-center flow-arrow text-[#118AB2]">↓</div>
-                        <div class="flow-step bg-blue-50 shadow-sm">
-                            <span class="text-2xl mr-4">⛰️</span>
-                            <div>
-                                <p class="font-bold">象山步道健行</p>
-                                <p class="text-sm">攀登至高點，捕捉城市日落的魔幻時刻。</p>
-                            </div>
-                        </div>
-                        <div class="text-center flow-arrow text-[#118AB2]">↓</div>
-                        <div class="flow-step bg-blue-50 shadow-sm">
-                            <span class="text-2xl mr-4">🍢</span>
-                            <div>
-                                <p class="font-bold">通化(臨江)夜市</p>
-                                <p class="text-sm">在地風味濃厚，為登山者補充能量。</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="path-card bg-white rounded-lg shadow-lg p-6 border-[#06D6A0]">
-                        <h3 class="text-2xl font-bold text-[#06D6A0] mb-4 text-center">路徑 B：文創漫遊與河濱愜意</h3>
-                        <div class="flow-step bg-green-50 shadow-sm">
-                            <span class="text-2xl mr-4">🌳</span>
-                            <div>
-                                <p class="font-bold">松山文創園區</p>
-                                <p class="text-sm">在歷史菸廠中感受台北的設計活力。</p>
-                            </div>
-                        </div>
-                        <div class="text-center flow-arrow text-[#06D6A0]">↓</div>
-                        <div class="flow-step bg-green-50 shadow-sm">
-                            <span class="text-2xl mr-4">🚲</span>
-                            <div>
-                                <p class="font-bold">基隆河濱單車行</p>
-                                <p class="text-sm">御風而行，享受傍晚的寧靜與微風。</p>
-                            </div>
-                        </div>
-                        <div class="text-center flow-arrow text-[#06D6A0]">↓</div>
-                        <div class="flow-step bg-green-50 shadow-sm">
-                            <span class="text-2xl mr-4">🥟</span>
-                            <div>
-                                <p class="font-bold">饒河街觀光夜市</p>
-                                <p class="text-sm">指標性夜市，為騎行畫下完美句點。</p>
-                            </div>
+                    <div class="ml-16 card p-6">
+                        <span class="tag bg-gray-100 text-gray-800">深夜</span>
+                        <h2 class="text-2xl font-bold mt-3 mb-2">行程結束 & 返回宿舍</h2>
+                        <div class="space-y-3 text-slate-700">
+                            <p><strong>目的地：</strong> <a href="https://www.google.com/maps/search/?api=1&query=陽明交通大學陽明校區男一舍" target="_blank" rel="noopener noreferrer" class="location-link">陽明校區 (男一舍)</a></p>
+                            <h4 class="font-semibold">預估抵達時間：</h4>
+                            <ul class="list-disc list-inside pl-2 text-sm">
+                                <li>若看《女子A…?》：演出約 20:00 結束，預計 <strong>21:00</strong> 左右返抵宿舍。</li>
+                                <li>若看《遺落的語言》：演出約 20:45 結束，預計 <strong>21:15</strong> 左右返抵宿舍。</li>
+                            </ul>
+                            <p class="text-sm bg-slate-100 p-3 rounded-lg"><strong>提醒：</strong> 夜間搭乘大眾運輸請注意末班車時間與自身安全。</p>
                         </div>
                     </div>
                 </div>
-            </section>
+
+            </div>
+            <!-- Timeline Ends -->
+
+            <!-- Summary Sections -->
+            <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Schedule Summary -->
+                <div class="card p-6">
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-sky-600"><path d="M5 22h14"></path><path d="M5 2h14"></path><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"></path><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"></path></svg>
+                        逐時程表
+                    </h3>
+                    <ul class="space-y-2 text-slate-600 text-sm">
+                        <li><span class="font-semibold text-slate-800 w-28 inline-block">07:30–08:45</span> 起床 & 出發準備</li>
+                        <li><span class="font-semibold text-slate-800 w-28 inline-block">09:45–10:05</span> 到信義威秀取票/入場</li>
+                        <li><span class="font-semibold text-slate-800 w-28 inline-block">10:15–12:55</span> 看片《F1》</li>
+                        <li><span class="font-semibold text-slate-800 w-28 inline-block">13:05–14:10</span> 午餐時間</li>
+                        <li><span class="font-semibold text-slate-800 w-28 inline-block">14:20–16:30</span> 參觀富邦美術館</li>
+                        <li><span class="font-semibold text-slate-800 w-28 inline-block">16:50–18:30</span> 台北101天空興波</li>
+                        <li><span class="font-semibold text-slate-800 w-28 inline-block">18:30/18:40</span> 出發前往劇場</li>
+                        <li><span class="font-semibold text-slate-800 w-28 inline-block">19:15/19:30</span> 晚場戲劇</li>
+                        <li><span class="font-semibold text-slate-800 w-28 inline-block">20:00/20:45</span> 演出結束，返程</li>
+                    </ul>
+                </div>
+
+                <!-- Cost Summary -->
+                <div class="card p-6">
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-lime-600"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="M8 12h.01"></path><path d="M12 12h.01"></path><path d="M16 12h.01"></path></svg>
+                        費用彙總 (估算/人)
+                    </h3>
+                    <ul class="space-y-2 text-slate-600 text-sm">
+                        <li><span class="font-semibold text-slate-800 w-24 inline-block">電影：</span> NT$300</li>
+                        <li><span class="font-semibold text-slate-800 w-24 inline-block">午餐：</span> NT$250 – 450</li>
+                        <li><span class="font-semibold text-slate-800 w-24 inline-block">美術館：</span> NT$250 或 NT$450</li>
+                        <li><span class="font-semibold text-slate-800 w-24 inline-block">咖啡：</span> NT$200 – 300</li>
+                        <li><span class="font-semibold text-slate-800 w-24 inline-block">戲劇：</span> NT$600+</li>
+                    </ul>
+                    <div class="mt-4 pt-3 border-t border-slate-200">
+                        <p class="font-bold text-slate-800">一日總計 (參考): NT$1,350 – 1,850+</p>
+                    </div>
+                </div>
+            </div>
             
-            <section id="summary" class="bg-white rounded-lg shadow-lg p-6 md:p-8">
-                <h2 class="text-3xl font-bold text-[#FFD166] mb-6 text-center">終章：預算與時間總覽</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                    <div>
-                        <h3 class="text-xl font-bold mb-4">路徑成本比較</h3>
-                        <p class="mb-6">路徑A的娛樂開銷較高，而路徑B則提供了更具彈性的免費選項。此圖表視覺化了兩種主要選擇的預估總花費，幫助你做出最符合預算的決策。</p>
-                        <div class="chart-container">
-                            <canvas id="totalCostChart"></canvas>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold mb-4">時間分配</h3>
-                         <p class="mb-6">這趟旅程完美平衡了各種類型的活動。無論你選擇哪條路徑，都能在一天內深度體驗台北的文化、休閒、自然與美食，讓每一刻都充實而有意義。</p>
-                        <div class="chart-container">
-                            <canvas id="timeAllocationChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </section>
+        </div>
+    </main>
+    
+    <footer class="text-center py-8 text-slate-500 text-sm">
+        <p>行程規劃 by Gemini & You</p>
+    </footer>
 
-        </main>
-        
-        <footer class="text-center mt-12 text-gray-500 text-sm">
-            <p>此視覺化資訊圖表根據您提供的行程規劃報告生成。</p>
-            <p>祝您有趟愉快又充實的旅程！</p>
-        </footer>
-
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const FONT_COLOR = '#073B4C';
-            const GRID_COLOR = '#e0e0e0';
-            
-            const processLabel = (label, maxLength = 16) => {
-                if (label.length <= maxLength) {
-                    return label;
-                }
-                const words = label.split(' ');
-                const lines = [];
-                let currentLine = '';
-                for (const word of words) {
-                    if ((currentLine + ' ' + word).trim().length > maxLength) {
-                        lines.push(currentLine.trim());
-                        currentLine = word;
-                    } else {
-                        currentLine = (currentLine + ' ' + word).trim();
-                    }
-                }
-                if (currentLine) {
-                    lines.push(currentLine.trim());
-                }
-                return lines;
-            };
-
-            const tooltipTitleCallback = (tooltipItems) => {
-                const item = tooltipItems[0];
-                let label = item.chart.data.labels[item.dataIndex];
-                if (Array.isArray(label)) {
-                  return label.join(' ');
-                } else {
-                  return label;
-                }
-            };
-            
-            const SHARED_OPTIONS = {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: FONT_COLOR,
-                            font: {
-                                size: 14,
-                                family: "'Noto Sans TC', sans-serif"
-                            }
-                        }
-                    },
-                    tooltip: {
-                        callbacks: {
-                           title: tooltipTitleCallback
-                        },
-                        titleFont: {
-                            family: "'Noto Sans TC', sans-serif"
-                        },
-                        bodyFont: {
-                           family: "'Noto Sans TC', sans-serif"
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        ticks: { 
-                            color: FONT_COLOR,
-                            font: { family: "'Noto Sans TC', sans-serif" }
-                        },
-                        grid: { color: GRID_COLOR }
-                    },
-                    y: {
-                        ticks: { 
-                            color: FONT_COLOR,
-                            font: { family: "'Noto Sans TC', sans-serif" }
-                        },
-                        grid: { color: GRID_COLOR }
-                    }
-                }
-            };
-
-            const morningCostCtx = document.getElementById('morningCostChart').getContext('2d');
-            new Chart(morningCostCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['交通', '富邦美術館門票', '午餐 (預估)'],
-                    datasets: [{
-                        label: '上午花費分佈 (NT$)',
-                        data: [55, 250, 225],
-                        backgroundColor: ['#FFD166', '#06D6A0', '#FF6B6B'],
-                        borderColor: '#ffffff',
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    ...SHARED_OPTIONS,
-                    scales: { x: { display: false }, y: { display: false } },
-                    plugins: {
-                        ...SHARED_OPTIONS.plugins,
-                        title: {
-                            display: true,
-                            text: '上午花費分佈 (NT$)',
-                            color: FONT_COLOR,
-                            font: { size: 16, weight: 'bold', family: "'Noto Sans TC', sans-serif" }
-                        }
-                    }
-                }
-            });
-
-            const totalCostCtx = document.getElementById('totalCostChart').getContext('2d');
-            new Chart(totalCostCtx, {
-                type: 'bar',
-                data: {
-                    labels: [processLabel('路徑 A: 電影 & 登山'), processLabel('路徑 B: 文創 & 單車 (免費)')],
-                    datasets: [
-                        {
-                            label: '交通',
-                            data: [65, 65],
-                            backgroundColor: '#FFD166',
-                        },
-                        {
-                            label: '餐飲',
-                            data: [625, 625],
-                            backgroundColor: '#FF6B6B',
-                        },
-                        {
-                            label: '活動',
-                            data: [350, 15],
-                            backgroundColor: '#118AB2',
-                        }
-                    ]
-                },
-                options: {
-                    ...SHARED_OPTIONS,
-                    scales: {
-                        x: { ...SHARED_OPTIONS.scales.x, stacked: true },
-                        y: { ...SHARED_OPTIONS.scales.y, stacked: true, title: { display: true, text: '預估花費 (NT$)', color: FONT_COLOR } }
-                    },
-                    plugins: {
-                        ...SHARED_OPTIONS.plugins,
-                        title: {
-                            display: true,
-                            text: '兩種路徑總花費比較',
-                            color: FONT_COLOR,
-                            font: { size: 16, weight: 'bold', family: "'Noto Sans TC', sans-serif" }
-                        }
-                    }
-                }
-            });
-
-            const timeAllocationCtx = document.getElementById('timeAllocationChart').getContext('2d');
-            new Chart(timeAllocationCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['交通移動', '文化藝術', '休閒活動', '餐飲時光'],
-                    datasets: [{
-                        label: '時間分配 (小時)',
-                        data: [2.5, 2, 5, 3],
-                        backgroundColor: ['#FFD166', '#06D6A0', '#118AB2', '#FF6B6B'],
-                        borderColor: '#073B4C',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    ...SHARED_OPTIONS,
-                    indexAxis: 'y',
-                    scales: {
-                        ...SHARED_OPTIONS.scales,
-                        y: { ...SHARED_OPTIONS.scales.y, grid: { display: false } }
-                    },
-                     plugins: {
-                        ...SHARED_OPTIONS.plugins,
-                        legend: { display: false },
-                        title: {
-                            display: true,
-                            text: '一日行程時間分配',
-                            color: FONT_COLOR,
-                            font: { size: 16, weight: 'bold', family: "'Noto Sans TC', sans-serif" }
-                        }
-                    }
-                }
-            });
-        });
-    </script>
 </body>
 </html>
