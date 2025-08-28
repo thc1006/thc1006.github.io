@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台北一日遊行程規劃 | 視覺化資訊圖表</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .flow-step {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            transition: transform 0.2s;
+        }
+        .flow-step:hover {
+            transform: translateY(-2px);
+        }
+        .flow-arrow {
+            font-size: 1.5rem;
+            margin: 0.5rem 0;
+            color: #FFD166;
+        }
+        .path-card {
+            border-width: 2px;
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="text-[#073B4C]">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl font-black text-[#118AB2] mb-2">台北一日光影探索</h1>
+            <p class="text-lg md:text-xl text-[#073B4C]">📅 8月29日 | 從陽明校區出發的冒險</p>
+        </header>
+
+        <main class="space-y-12">
+
+            <section id="morning" class="bg-white rounded-lg shadow-lg p-6 md:p-8">
+                <h2 class="text-3xl font-bold text-[#118AB2] mb-6 text-center">序曲：晨光之行 (09:30 - 11:00)</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">從校園到都會心臟</h3>
+                        <p class="mb-6">旅程始於一場場景的轉換，從北投的學術靜謐，搭乘捷運紅線，一路向南穿越城市紋理，直達信義區的現代脈動。這不僅是交通，更是體驗台北多元面貌的開端。</p>
+                        <div class="bg-[#f0f4f8] p-4 rounded-lg">
+                            <div class="flow-step bg-white shadow-sm">
+                                <span class="text-2xl mr-4">🏫</span>
+                                <div>
+                                    <p class="font-bold">陽明交大陽明校區</p>
+                                    <p class="text-sm">步行或搭乘559公車</p>
+                                </div>
+                            </div>
+                            <div class="text-center flow-arrow">↓</div>
+                            <div class="flow-step bg-white shadow-sm">
+                                <span class="text-2xl mr-4">🚇</span>
+                                <div>
+                                    <p class="font-bold">捷運石牌站 (R19)</p>
+                                    <p class="text-sm">搭乘淡水信義線 (往象山)</p>
+                                </div>
+                            </div>
+                             <div class="text-center flow-arrow">↓</div>
+                            <div class="flow-step bg-white shadow-sm">
+                                <span class="text-2xl mr-4">🏙️</span>
+                                <div>
+                                    <p class="font-bold">捷運台北101/世貿站 (R03)</p>
+                                    <p class="text-sm">抵達信義計畫區</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="morningCostChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section id="midday" class="bg-white rounded-lg shadow-lg p-6 md:p-8">
+                <h2 class="text-3xl font-bold text-[#06D6A0] mb-6 text-center">正午：藝術沉浸 (11:00 - 14:00)</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div class="bg-[#f0f4f8] p-6 rounded-lg">
+                        <p class="text-6xl font-black text-[#06D6A0]">1 HR</p>
+                        <p class="mt-2 font-bold">建築鑑賞</p>
+                        <p class="text-sm">欣賞普立茲克獎大師Renzo Piano的台灣首件作品。</p>
+                    </div>
+                    <div class="bg-[#f0f4f8] p-6 rounded-lg">
+                        <p class="text-6xl font-black text-[#06D6A0]">2 HR</p>
+                        <p class="mt-2 font-bold">《在光中遇見你》</p>
+                        <p class="text-sm">走入安東尼・麥考爾的「固體光」作品，成為藝術的一部分。</p>
+                    </div>
+                    <div class="bg-[#f0f4f8] p-6 rounded-lg">
+                        <p class="text-6xl font-black text-[#06D6A0]">250</p>
+                        <p class="mt-2 font-bold">單展票價 (NT$)</p>
+                        <p class="text-sm">以親民的價格，體驗世界級的沉浸式光影藝術。</p>
+                    </div>
+                </div>
+                 <p class="text-center mt-6">午餐於信義區百貨美食街解決，兼具美味、多元與性價比。</p>
+            </section>
+
+            <section id="afternoon-choices">
+                <h2 class="text-3xl font-bold text-[#FF6B6B] mb-6 text-center">午後插曲：都會敘事的抉擇 (14:00 - 19:00)</h2>
+                <p class="text-center max-w-3xl mx-auto mb-8">下午的行程來到一個十字路口。依據當下的心情與體力，選擇一條屬於你的城市探索路徑。每個選擇都將引導你走向截然不同的傍晚體驗與晚餐地點。</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <div class="path-card bg-white rounded-lg shadow-lg p-6 border-[#118AB2]">
+                        <h3 class="text-2xl font-bold text-[#118AB2] mb-4 text-center">路徑 A：動感光影與都會之巔</h3>
+                        <div class="flow-step bg-blue-50 shadow-sm">
+                            <span class="text-2xl mr-4">🎬</span>
+                            <div>
+                                <p class="font-bold">F1電影體驗</p>
+                                <p class="text-sm">在頂級影城享受速度與激情。</p>
+                            </div>
+                        </div>
+                        <div class="text-center flow-arrow text-[#118AB2]">↓</div>
+                        <div class="flow-step bg-blue-50 shadow-sm">
+                            <span class="text-2xl mr-4">⛰️</span>
+                            <div>
+                                <p class="font-bold">象山步道健行</p>
+                                <p class="text-sm">攀登至高點，捕捉城市日落的魔幻時刻。</p>
+                            </div>
+                        </div>
+                        <div class="text-center flow-arrow text-[#118AB2]">↓</div>
+                        <div class="flow-step bg-blue-50 shadow-sm">
+                            <span class="text-2xl mr-4">🍢</span>
+                            <div>
+                                <p class="font-bold">通化(臨江)夜市</p>
+                                <p class="text-sm">在地風味濃厚，為登山者補充能量。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="path-card bg-white rounded-lg shadow-lg p-6 border-[#06D6A0]">
+                        <h3 class="text-2xl font-bold text-[#06D6A0] mb-4 text-center">路徑 B：文創漫遊與河濱愜意</h3>
+                        <div class="flow-step bg-green-50 shadow-sm">
+                            <span class="text-2xl mr-4">🌳</span>
+                            <div>
+                                <p class="font-bold">松山文創園區</p>
+                                <p class="text-sm">在歷史菸廠中感受台北的設計活力。</p>
+                            </div>
+                        </div>
+                        <div class="text-center flow-arrow text-[#06D6A0]">↓</div>
+                        <div class="flow-step bg-green-50 shadow-sm">
+                            <span class="text-2xl mr-4">🚲</span>
+                            <div>
+                                <p class="font-bold">基隆河濱單車行</p>
+                                <p class="text-sm">御風而行，享受傍晚的寧靜與微風。</p>
+                            </div>
+                        </div>
+                        <div class="text-center flow-arrow text-[#06D6A0]">↓</div>
+                        <div class="flow-step bg-green-50 shadow-sm">
+                            <span class="text-2xl mr-4">🥟</span>
+                            <div>
+                                <p class="font-bold">饒河街觀光夜市</p>
+                                <p class="text-sm">指標性夜市，為騎行畫下完美句點。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="summary" class="bg-white rounded-lg shadow-lg p-6 md:p-8">
+                <h2 class="text-3xl font-bold text-[#FFD166] mb-6 text-center">終章：預算與時間總覽</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">路徑成本比較</h3>
+                        <p class="mb-6">路徑A的娛樂開銷較高，而路徑B則提供了更具彈性的免費選項。此圖表視覺化了兩種主要選擇的預估總花費，幫助你做出最符合預算的決策。</p>
+                        <div class="chart-container">
+                            <canvas id="totalCostChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">時間分配</h3>
+                         <p class="mb-6">這趟旅程完美平衡了各種類型的活動。無論你選擇哪條路徑，都能在一天內深度體驗台北的文化、休閒、自然與美食，讓每一刻都充實而有意義。</p>
+                        <div class="chart-container">
+                            <canvas id="timeAllocationChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+        
+        <footer class="text-center mt-12 text-gray-500 text-sm">
+            <p>此視覺化資訊圖表根據您提供的行程規劃報告生成。</p>
+            <p>祝您有趟愉快又充實的旅程！</p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const FONT_COLOR = '#073B4C';
+            const GRID_COLOR = '#e0e0e0';
+            
+            const processLabel = (label, maxLength = 16) => {
+                if (label.length <= maxLength) {
+                    return label;
+                }
+                const words = label.split(' ');
+                const lines = [];
+                let currentLine = '';
+                for (const word of words) {
+                    if ((currentLine + ' ' + word).trim().length > maxLength) {
+                        lines.push(currentLine.trim());
+                        currentLine = word;
+                    } else {
+                        currentLine = (currentLine + ' ' + word).trim();
+                    }
+                }
+                if (currentLine) {
+                    lines.push(currentLine.trim());
+                }
+                return lines;
+            };
+
+            const tooltipTitleCallback = (tooltipItems) => {
+                const item = tooltipItems[0];
+                let label = item.chart.data.labels[item.dataIndex];
+                if (Array.isArray(label)) {
+                  return label.join(' ');
+                } else {
+                  return label;
+                }
+            };
+            
+            const SHARED_OPTIONS = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: FONT_COLOR,
+                            font: {
+                                size: 14,
+                                family: "'Noto Sans TC', sans-serif"
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                           title: tooltipTitleCallback
+                        },
+                        titleFont: {
+                            family: "'Noto Sans TC', sans-serif"
+                        },
+                        bodyFont: {
+                           family: "'Noto Sans TC', sans-serif"
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { 
+                            color: FONT_COLOR,
+                            font: { family: "'Noto Sans TC', sans-serif" }
+                        },
+                        grid: { color: GRID_COLOR }
+                    },
+                    y: {
+                        ticks: { 
+                            color: FONT_COLOR,
+                            font: { family: "'Noto Sans TC', sans-serif" }
+                        },
+                        grid: { color: GRID_COLOR }
+                    }
+                }
+            };
+
+            const morningCostCtx = document.getElementById('morningCostChart').getContext('2d');
+            new Chart(morningCostCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['交通', '富邦美術館門票', '午餐 (預估)'],
+                    datasets: [{
+                        label: '上午花費分佈 (NT$)',
+                        data: [55, 250, 225],
+                        backgroundColor: ['#FFD166', '#06D6A0', '#FF6B6B'],
+                        borderColor: '#ffffff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    ...SHARED_OPTIONS,
+                    scales: { x: { display: false }, y: { display: false } },
+                    plugins: {
+                        ...SHARED_OPTIONS.plugins,
+                        title: {
+                            display: true,
+                            text: '上午花費分佈 (NT$)',
+                            color: FONT_COLOR,
+                            font: { size: 16, weight: 'bold', family: "'Noto Sans TC', sans-serif" }
+                        }
+                    }
+                }
+            });
+
+            const totalCostCtx = document.getElementById('totalCostChart').getContext('2d');
+            new Chart(totalCostCtx, {
+                type: 'bar',
+                data: {
+                    labels: [processLabel('路徑 A: 電影 & 登山'), processLabel('路徑 B: 文創 & 單車 (免費)')],
+                    datasets: [
+                        {
+                            label: '交通',
+                            data: [65, 65],
+                            backgroundColor: '#FFD166',
+                        },
+                        {
+                            label: '餐飲',
+                            data: [625, 625],
+                            backgroundColor: '#FF6B6B',
+                        },
+                        {
+                            label: '活動',
+                            data: [350, 15],
+                            backgroundColor: '#118AB2',
+                        }
+                    ]
+                },
+                options: {
+                    ...SHARED_OPTIONS,
+                    scales: {
+                        x: { ...SHARED_OPTIONS.scales.x, stacked: true },
+                        y: { ...SHARED_OPTIONS.scales.y, stacked: true, title: { display: true, text: '預估花費 (NT$)', color: FONT_COLOR } }
+                    },
+                    plugins: {
+                        ...SHARED_OPTIONS.plugins,
+                        title: {
+                            display: true,
+                            text: '兩種路徑總花費比較',
+                            color: FONT_COLOR,
+                            font: { size: 16, weight: 'bold', family: "'Noto Sans TC', sans-serif" }
+                        }
+                    }
+                }
+            });
+
+            const timeAllocationCtx = document.getElementById('timeAllocationChart').getContext('2d');
+            new Chart(timeAllocationCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['交通移動', '文化藝術', '休閒活動', '餐飲時光'],
+                    datasets: [{
+                        label: '時間分配 (小時)',
+                        data: [2.5, 2, 5, 3],
+                        backgroundColor: ['#FFD166', '#06D6A0', '#118AB2', '#FF6B6B'],
+                        borderColor: '#073B4C',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    ...SHARED_OPTIONS,
+                    indexAxis: 'y',
+                    scales: {
+                        ...SHARED_OPTIONS.scales,
+                        y: { ...SHARED_OPTIONS.scales.y, grid: { display: false } }
+                    },
+                     plugins: {
+                        ...SHARED_OPTIONS.plugins,
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            text: '一日行程時間分配',
+                            color: FONT_COLOR,
+                            font: { size: 16, weight: 'bold', family: "'Noto Sans TC', sans-serif" }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
