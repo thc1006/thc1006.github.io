@@ -1,244 +1,179 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADHD 光譜｜台灣成人與青少年衛教資訊站 (溫暖風格)</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Manrope:wght@400;700;800&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Manrope', 'Noto Sans TC', sans-serif;
-            background-color: #FEFDF8; /* 柔和的米白背景 */
-            color: #3D352E; /* 深棕色文字 */
-        }
-        :focus-visible {
-            outline: 3px solid #6D9886; /* 綠色外框 */
-            outline-offset: 2px;
-            border-radius: 6px;
-        }
-        .hero-gradient-text {
-            background: linear-gradient(to right, #D9534F, #BF4040);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .section-title {
-            color: #A44A3F; /* 暖紅色調 */
-        }
-        .card-hover {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .card-hover:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.07);
-        }
-        .blob1 {
-            position: absolute;
-            top: -50px;
-            left: -80px;
-            width: 300px;
-            height: 300px;
-            background: #F2E1D9; /* 淡粉橘 */
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.6;
-            z-index: -1;
-        }
-        .blob2 {
-            position: absolute;
-            bottom: -50px;
-            right: -80px;
-            width: 350px;
-            height: 350px;
-            background: #D5E4D8; /* 淡綠 */
-            border-radius: 50%;
-            filter: blur(90px);
-            opacity: 0.7;
-            z-index: -1;
-        }
-    </style>
-</head>
-<body class="overflow-x-hidden">
+export default function SinglePageA4() {
+  const AVATAR = "https://raw.githubusercontent.com/thc1006/thc1006.github.io/main/images/profile.png";
+  const Link = ({ href, children }) => (
+    <a href={href} target="_blank" rel="noreferrer" className="underline hover:no-underline">{children}</a>
+  );
+  return (
+    <div className="min-h-screen w-full bg-gray-100 py-8">
+      <style>{`
+        :root { --a4w: 210mm; --a4h: 297mm; }
+        .sheet { width: var(--a4w); height: var(--a4h); margin: 0 auto; background: white; box-shadow: 0 8px 24px rgba(0,0,0,0.08); border: 1px solid #e5e7eb; }
+        .inner { padding: 12mm 12mm 12mm 12mm; height: 100%; display: grid; grid-template-columns: 1fr 2fr; gap: 12px; }
+        .tight p, .tight li { line-height: 1.2; }
+        .small { font-size: 12px; }
+        .xsmall { font-size: 11.5px; }
+        .chip { display:inline-block; border:1px solid #e5e7eb; border-radius:999px; padding:.15rem .5rem; margin:.12rem .12rem 0 0; font-size:11.5px; }
+        @media print { @page { size: A4; margin: 12mm; } body{ background:white!important;} .sheet{ box-shadow:none;border:none;} a{ color:black!important; text-decoration:underline!important; } }
+      `}</style>
 
-    <!-- Header -->
-    <header class="sticky top-0 z-50 bg-[#FEFDF8]/80 backdrop-blur-lg">
-        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-             <a href="#" class="flex items-center space-x-3">
-                <!-- 手繪感 Logo -->
-                <svg width="40" height="40" viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="45" fill="#F2E1D9"/>
-                    <path d="M 30 60 C 40 75, 60 75, 70 60" stroke="#A44A3F" stroke-width="6" fill="none" stroke-linecap="round"/>
-                    <circle cx="35" cy="45" r="5" fill="#3D352E"/>
-                    <circle cx="65" cy="45" r="5" fill="#3D352E"/>
-                </svg>
-                <span class="text-2xl font-extrabold text-[#A44A3F]">ADHD 光譜</span>
-            </a>
-            <nav class="hidden md:flex items-center space-x-10 text-lg">
-                <a href="adhd-inner-world.html" class="text-gray-700 hover:text-[#A44A3F] transition-colors">心理與決策</a>
-                <a href="toolbox.html" class="text-gray-700 hover:text-[#A44A3F] transition-colors">資源與實用工具箱</a>
-                <a href="strategies.html" class="text-gray-700 hover:text-[#A44A3F] transition-colors">生活與策略</a>
-            </nav>
-            <button class="bg-[#3D352E] text-white font-bold py-2 px-5 rounded-full hover:bg-[#A44A3F] transition-colors">
-                聯絡我們
-            </button>
+      <section className="sheet">
+        <div className="inner">
+          {/* LEFT COLUMN */}
+          <aside className="flex flex-col gap-3 pr-3 border-r border-gray-200">
+            {/* Header */}
+            <div className="flex items-start gap-3">
+              <img src={AVATAR} alt="Hsiu‑Chi Tsai" className="w-18 h-18 rounded-full object-cover ring-2 ring-gray-200"/>
+              <div>
+                <h1 className="text-2xl font-bold leading-tight">Hsiu‑Chi Tsai <span className="text-gray-500 text-base">(蔡秀吉)</span></h1>
+                <p className="text-[12px] text-gray-600">NYCU · Hsinchu, Taiwan</p>
+                <p className="text-[12px]"><Link href="mailto:hctsai@linux.com">hctsai@linux.com</Link> · <Link href="https://github.com/thc1006">github.com/thc1006</Link></p>
+                <p className="xsmall mt-1"><b>Target:</b> Claude Campus Ambassador & Builder Club Lead</p>
+                <p className="xsmall"><b>Availability:</b> Late‑August cohort · Conflict‑free commitment</p>
+              </div>
+            </div>
+
+            {/* Value Proposition */}
+            <div className="tight">
+              <h2 className="uppercase tracking-wider text-[11px] text-gray-600 font-semibold">Value Proposition</h2>
+              <p className="small mt-1">I build <b>inclusive, measurable</b> AI programs on campus. From zero → community → recurring workshops → public demos, with <b>responsible AI</b> guardrails and verifiable links.</p>
+            </div>
+
+            {/* Competency Map */}
+            <div className="tight">
+              <h2 className="uppercase tracking-wider text-[11px] text-gray-600 font-semibold">Competency Map</h2>
+              <div className="mt-1">
+                <span className="chip">Community strategy</span>
+                <span className="chip">Program ops</span>
+                <span className="chip">Partnerships</span>
+                <span className="chip">Workshops & hackathons</span>
+                <span className="chip">Public speaking (EN/ZH)</span>
+                <span className="chip">Claude prompting</span>
+                <span className="chip">Academic integrity</span>
+                <span className="chip">Content & growth</span>
+                <span className="chip">UTM & A/B testing</span>
+                <span className="chip">Python</span>
+                <span className="chip">Basic JS</span>
+                <span className="chip">Kubernetes fundamentals</span>
+              </div>
+            </div>
+
+            {/* Verification Links */}
+            <div className="tight">
+              <h2 className="uppercase tracking-wider text-[11px] text-gray-600 font-semibold">Verification Links</h2>
+              <ul className="small list-disc ml-4 mt-1 space-y-1">
+                <li>GDSC @ NYCU: <Link href="https://gdg.community.dev/gdg-on-campus-national-yang-ming-chiao-tung-university-hsinchu-city-taiwan/">chapter</Link></li>
+                <li>Yearbook: <Link href="https://thc1006.github.io/gdg-on-campus-nycu-2022-2023/">site</Link> · <Link href="https://hackmd.io/@thc1006/r1tmfaXqxl">index</Link></li>
+                <li>I/O Extended 2023: <Link href="https://sessionize.com/google-io-extended-2023-x-gdsc-nycu/">CFS</Link> · <Link href="https://www.youtube.com/watch?v=4gFOdHqid4A">recap</Link></li>
+                <li>NYCU MHCC: <Link href="https://mhcc.nycu.edu.tw/mhcc/ch/app/news/view?id=2316&module=headnews&serno=e5c444ed-a07e-4228-abbb-be2fc351fbcd">process</Link> · <Link href="https://mhcc.nycu.edu.tw/mhcc/ch/app/artwebsite/view?id=5254&module=artwebsite&serno=7c801bba-9102-48f8-b473-40e667b32330">resources</Link></li>
+                <li>NYCU OSA Award: <Link href="https://osa.nycu.edu.tw/osa/ch/app/data/view?id=2660&module=nycu0091&serno=48377866-92cc-4a3c-a7f2-51947ed86d6f">announcement</Link></li>
+              </ul>
+            </div>
+
+            {/* Keywords */}
+            <div className="tight mt-auto">
+              <h2 className="uppercase tracking-wider text-[11px] text-gray-600 font-semibold">Keywords (ATS)</h2>
+              <p className="small">Campus ambassador · community building · event operations · partnerships · content strategy · social media · prompt engineering · responsible AI · academic integrity · workshop design · hackathon · metrics · bilingual communication.</p>
+            </div>
+          </aside>
+
+          {/* RIGHT COLUMN */}
+          <section className="pl-3 flex flex-col">
+            {/* Impact Snapshot */}
+            <div className="mb-2">
+              <h2 className="uppercase tracking-wider text-[11px] text-gray-600 font-semibold">Impact Snapshot (verified)</h2>
+              <div className="grid grid-cols-3 gap-3 mt-2">
+                <div className="p-3 bg-gray-50 rounded-lg ring-1 ring-gray-200">
+                  <p className="text-xl font-bold leading-tight">10+ events</p>
+                  <p className="text-[12px] text-gray-600">See <Link href="https://hackmd.io/@thc1006/r1tmfaXqxl">yearbook index</Link></p>
+                </div>
+                <div className="p-3 bg-gray-50 rounded-lg ring-1 ring-gray-200">
+                  <p className="text-xl font-bold leading-tight">I/O organizer</p>
+                  <p className="text-[12px] text-gray-600"><Link href="https://sessionize.com/google-io-extended-2023-x-gdsc-nycu/">CFS</Link> · <Link href="https://www.youtube.com/watch?v=4gFOdHqid4A">video</Link></p>
+                </div>
+                <div className="p-3 bg-gray-50 rounded-lg ring-1 ring-gray-200">
+                  <p className="text-xl font-bold leading-tight">Policy comms</p>
+                  <p className="text-[12px] text-gray-600">NYCU <Link href="https://mhcc.nycu.edu.tw/mhcc/ch/app/news/view?id=2316&module=headnews&serno=e5c444ed-a07e-4228-abbb-be2fc351fbcd">MHCC process</Link></p>
+                </div>
+              </div>
+            </div>
+
+            {/* Leadership & Community */}
+            <div className="mb-2 tight">
+              <h2 className="uppercase tracking-wider text-[11px] text-gray-600 font-semibold">Leadership & Community</h2>
+              <div className="small mt-1 space-y-2">
+                <div>
+                  <div className="flex items-baseline justify-between gap-3">
+                    <p className="font-semibold">Founding Lead · GDSC (GDG on Campus) @ NYCU</p>
+                    <span className="text-gray-600 text-[11px]">Aug 2022 – Jul 2023</span>
+                  </div>
+                  <ul className="list-disc ml-5 mt-1 space-y-1">
+                    <li>Built chapter; Learn→Connect→Build cadence. <Link href="https://gdg.community.dev/gdg-on-campus-national-yang-ming-chiao-tung-university-hsinchu-city-taiwan/">chapter</Link> · <Link href="https://thc1006.github.io/gdg-on-campus-nycu-2022-2023/">site</Link></li>
+                    <li>Co‑hosted <b>Google I/O Extended 2023 Hsinchu</b>: <Link href="https://sessionize.com/google-io-extended-2023-x-gdsc-nycu/">CFS</Link> · <Link href="https://www.youtube.com/watch?v=4gFOdHqid4A">recap</Link></li>
+                  </ul>
+                </div>
+                <div>
+                  <div className="flex items-baseline justify-between gap-3">
+                    <p className="font-semibold">Student Association — Chiaotung Campus</p>
+                    <span className="text-gray-600 text-[11px]">Jun 2023 – Jul 2024</span>
+                  </div>
+                  <ul className="list-disc ml-5 mt-1 space-y-1">
+                    <li>Coordinated comms for <Link href="https://mhcc.nycu.edu.tw/mhcc/ch/app/news/view?id=2316&module=headnews&serno=e5c444ed-a07e-4228-abbb-be2fc351fbcd">Mental Health Leave</Link>; see <Link href="https://mhcc.nycu.edu.tw/mhcc/ch/app/artwebsite/view?id=5254&module=artwebsite&serno=7c801bba-9102-48f8-b473-40e667b32330">resources</Link>.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* Projects — Claude‑relevant */}
+            <div className="mb-2 tight">
+              <h2 className="uppercase tracking-wider text-[11px] text-gray-600 font-semibold">Projects (Claude‑relevant)</h2>
+              <ul className="small list-disc ml-4 mt-1 space-y-1">
+                <li><b>Kubernetes Workshop —</b> beginner labs for container deployment. Ref: <Link href="https://kubernetes.io/">kubernetes.io</Link></li>
+                <li><b>Academic Integrity Toolkit (with Claude) —</b> citation templates & originality guidance (pilot; internal docs on request).</li>
+                <li><b>O‑RAN/Nephio automation —</b> Claude Code subagents: <Link href="https://github.com/thc1006/nephio-oran-claude-agents">GitHub</Link> · <Link href="https://hackmd.io/@thc1006/B12NsPAuge">HackMD</Link> · <Link href="https://libraries.io/go/github.com%2Fthc1006%2Fnephoran-intent-operator">index</Link></li>
+                <li><b>I/O Extended 2023 Hsinchu —</b> program & partnerships: <Link href="https://thc1006.github.io/google-io-extended-2023-hsinchu.html">event page</Link> · <Link href="https://sessionize.com/google-io-extended-2023-x-gdsc-nycu/">CFS</Link> · <Link href="https://www.youtube.com/watch?v=4gFOdHqid4A">recap</Link></li>
+              </ul>
+            </div>
+
+            {/* 10‑Week Ambassador Plan (Proposed KPIs) */}
+            <div className="mb-2">
+              <h2 className="uppercase tracking-wider text-[11px] text-gray-600 font-semibold">10‑Week Ambassador Plan (proposed KPIs)</h2>
+              <div className="grid grid-cols-5 gap-2 mt-2 xsmall text-gray-800">
+                <div className="p-2 bg-gray-50 rounded ring-1 ring-gray-200"><p className="font-semibold">W1–2</p><p>Awareness push: 2 reels, launch Discord, partner sign‑offs</p></div>
+                <div className="p-2 bg-gray-50 rounded ring-1 ring-gray-200"><p className="font-semibold">W3–4</p><p>Workshops ×2 (prompting 101; no‑code); office hours</p></div>
+                <div className="p-2 bg-gray-50 rounded ring-1 ring-gray-200"><p className="font-semibold">W5–6</p><p>Claude coding clinic; collab dept. talk; collect NPS/CSAT</p></div>
+                <div className="p-2 bg-gray-50 rounded ring-1 ring-gray-200"><p className="font-semibold">W7–8</p><p>Mini‑projects; publish recap posts; shortlist demos</p></div>
+                <div className="p-2 bg-gray-50 rounded ring-1 ring-gray-200"><p className="font-semibold">W9–10</p><p>Demo night; partner showcase; final report with links</p></div>
+              </div>
+            </div>
+
+            {/* Event Menu & Sample Agendas */}
+            <div className="mb-2 tight">
+              <h2 className="uppercase tracking-wider text-[11px] text-gray-600 font-semibold">Event Menu & Sample Agendas</h2>
+              <ul className="xsmall list-disc ml-4 mt-1 space-y-1">
+                <li><b>Prompting for Research</b> (60–90m): overview → live demo → hands‑on → integrity checklist.</li>
+                <li><b>No‑code Build‑athon</b> (3–4h): team‑up → idea → build with Claude → 3‑min demo.</li>
+                <li><b>Claude Coding Clinic</b> (weekly 90m): queue‑based debugging; tag stats & outcomes.</li>
+              </ul>
+            </div>
+
+            {/* Education & Honors */}
+            <div className="mb-1 tight">
+              <h2 className="uppercase tracking-wider text-[11px] text-gray-600 font-semibold">Education & Honors</h2>
+              <ul className="small list-disc ml-4 mt-1 space-y-1">
+                <li><b>National Yang Ming Chiao Tung University (NYCU)</b> — Undergraduate · <Link href="https://en.nycu.edu.tw/">nycu.edu.tw</Link></li>
+                <li><b>Fighting Spirit Outstanding Student Award</b> (2023) — <Link href="https://osa.nycu.edu.tw/osa/ch/app/data/view?id=2660&module=nycu0091&serno=48377866-92cc-4a3c-a7f2-51947ed86d6f">NYCU OSA</Link></li>
+                <li><b>IEEE Region 10 ACEI</b> (2025) — <Link href="https://www.ieeer10.org/activities/ieee-r10-adhoc-committee-on-entrepreneurship-and-innovation/">program info</Link></li>
+              </ul>
+            </div>
+
+            {/* Footer / Action */}
+            <div className="mt-auto text-[11.5px] text-gray-600 border-t pt-2 flex items-center justify-between">
+              <p>Ready to lead Claude Campus @ NYCU · References upon request</p>
+              <button onClick={() => window.print()} className="px-3 py-1.5 rounded-lg bg-black text-white">Print / Save PDF (A4)</button>
+            </div>
+          </section>
         </div>
-    </header>
-
-    <!-- Main Content -->
-    <main>
-        <!-- Hero Section -->
-        <section class="relative py-20 md:py-32">
-            <div class="blob1"></div>
-            <div class="blob2"></div>
-            <div class="container mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
-                <div class="text-center md:text-left">
-                    <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4 text-[#3D352E]">
-                        嘿，<br class="hidden md:block">你的大腦運作方式<br>
-                        <span class="hero-gradient-text">有點不一樣，也很棒。</span>
-                    </h1>
-                    <p class="max-w-xl mx-auto md:mx-0 text-lg md:text-xl text-gray-600 mb-8">
-                        我們蒐集了科學的證據與溫暖的故事，打造這個專屬於你的空間。在這裡，你可以放慢腳步，重新認識自己，找到與世界共處的獨特頻率。
-                    </p>
-                    <a href="#pathways" class="bg-[#D9534F] text-white font-bold py-4 px-10 rounded-full text-lg hover:bg-[#A44A3F] transition-all transform hover:scale-105 inline-block">
-                        踏出第一步 &rarr;
-                    </a>
-                </div>
-                <div class="hidden md:block">
-                    <!-- 抽象插畫 -->
-                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                      <path fill="#F2E1D9" d="M48.2,-64.9C61.4,-53.9,70.3,-38.4,75.4,-21.8C80.5,-5.2,81.8,12.5,75.3,27.2C68.9,41.9,54.7,53.6,39.6,62.8C24.4,72,8.3,78.7,-6.8,79.5C-22,80.4,-44,75.3,-58.5,63.4C-73,51.5,-79.9,32.7,-79,15.2C-78.1,-2.3,-69.3,-18.5,-59.1,-33.1C-48.9,-47.7,-37.2,-60.8,-23.4,-68.8C-9.5,-76.8,6.5,-79.6,22.1,-76.3C37.7,-73,50.8,-63.9,48.2,-64.9Z" transform="translate(100 100)" />
-                      <text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="20" font-family="Manrope" fill="#3D352E">探索</text>
-                      <text x="50%" y="60%" text-anchor="middle" dy=".3em" font-size="20" font-family="Manrope" fill="#3D352E">接納</text>
-                      <text x="50%" y="70%" text-anchor="middle" dy=".3em" font-size="20" font-family="Manrope" fill="#3D352E">成長</text>
-                    </svg>
-                </div>
-            </div>
-        </section>
-
-        <!-- Pathways Section -->
-        <section id="pathways" class="py-16 md:py-24 bg-white">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold tracking-tight section-title">你現在在哪個階段？</h2>
-                    <p class="text-lg text-gray-600 mt-3">每個人的旅程都不同，選一個入口，開始探索吧。</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                    <!-- Pathway 1 -->
-                    <a href="adhd-inner-world.html" class="card-hover bg-[#F9F3F0] p-8 rounded-2xl text-center">
-                        <div class="mb-4">
-                            <svg class="w-16 h-16 mx-auto" viewBox="0 0 100 100"><path d="M25,75 A40,40 0 0,1 75,75" stroke="#A44A3F" stroke-width="5" fill="none"/><path d="M35,60 Q50,40 65,60" stroke="#3D352E" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="50" cy="25" r="5" fill="#6D9886"/></svg>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-2 text-[#A44A3F]">我是誰？</h3>
-                        <p class="text-gray-700">關於 ADHD 的基本認識、自我懷疑，以及如何尋求專業診斷。</p>
-                    </a>
-                    <!-- Pathway 2 -->
-                    <a href="medication-guide.html" class="card-hover bg-[#F0F5F2] p-8 rounded-2xl text-center">
-                        <div class="mb-4">
-                            <svg class="w-16 h-16 mx-auto" viewBox="0 0 100 100"><polyline points="20,80 40,50 60,70 80,30" stroke="#6D9886" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="80" r="5" fill="#A44A3F"/><circle cx="80" cy="30" r="5" fill="#A44A3F"/></svg>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-2 text-[#6D9886]">我該怎麼辦？</h3>
-                        <p class="text-gray-700">深入了解藥物與非藥物治療，權衡利弊，找到適合你的方法。</p>
-                    </a>
-                    <!-- Pathway 3 -->
-                    <a href="strategies.html" class="card-hover bg-[#FDF6E4] p-8 rounded-2xl text-center">
-                        <div class="mb-4">
-                           <svg class="w-16 h-16 mx-auto" viewBox="0 0 100 100"><path d="M50 20 L80 80 H20 Z" fill="#F4A261" /><path d="M50 35 L70 70 H30 Z" fill="#FEFDF8"/></svg>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-2 text-[#E76F51]">我們如何共處？</h3>
-                        <p class="text-gray-700">給家人、伴侶與朋友的實用建議，以及給你的生活應對技巧。</p>
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Inner Monologue / Myth Section -->
-        <section class="py-16 md:py-24">
-             <div class="container mx-auto px-6">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold tracking-tight section-title">常見的內心小劇場</h2>
-                    <p class="text-lg text-gray-600 mt-3">這些念頭，你是否也曾有過？讓我們用科學一起聊聊。</p>
-                </div>
-                <div class="max-w-3xl mx-auto space-y-6">
-                    <!-- Thought 1 -->
-                    <div class="bg-white p-6 rounded-2xl shadow-sm flex items-start space-x-5">
-                        <div class="flex-shrink-0 text-3xl">🤔</div>
-                        <div>
-                            <h4 class="font-bold text-xl mb-1">「吃藥會不會讓我上癮，或變得不像自己？」</h4>
-                            <p class="text-gray-600">這是許多人的首要擔憂。研究顯示，在醫師指導下用藥並 <b>不會</b> 增加成癮風險。至於「不像自己」的感覺，通常與劑量有關，這是可以和醫師討論、調整的目標。</p>
-                        </div>
-                    </div>
-                    <!-- Thought 2 -->
-                    <div class="bg-white p-6 rounded-2xl shadow-sm flex items-start space-x-5">
-                        <div class="flex-shrink-0 text-3xl">😟</div>
-                        <div>
-                            <h4 class="font-bold text-xl mb-1">「藥物會不會讓我的思考變得死板、沒有創造力？」</h4>
-                            <p class="text-gray-600">有些研究指出藥物可能會影響「發散性思考」，但多數大型研究認為，藥物提升的「專注力」反而能幫助你完成有創意的專案。重點在於找到**平衡**，而非一刀切。</p>
-                        </div>
-                    </div>
-                    <!-- Thought 3 -->
-                    <div class="bg-white p-6 rounded-2xl shadow-sm flex items-start space-x-5">
-                        <div class="flex-shrink-0 text-3xl">🤯</div>
-                        <div>
-                            <h4 class="font-bold text-xl mb-1">「網路上說的都是真的嗎？我到底該相信誰？」</h4>
-                            <p class="text-gray-600">社群媒體是尋求共鳴的好地方，但也充滿了錯誤資訊。學會辨識資訊來源、對照科學證據、並與你的醫師討論，是保護自己的不二法門。</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Research Highlights Section -->
-        <section class="py-16 md:py-24 bg-white">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold tracking-tight section-title">來自實驗室的悄悄話</h2>
-                    <p class="text-lg text-gray-600 mt-3">把複雜的研究論文，變成有趣的故事說給你聽。</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <a href="research.html" class="card-hover block bg-gray-50 rounded-2xl overflow-hidden">
-                        <div class="p-8">
-                            <h3 class="font-bold text-2xl mb-3">藥物與意外</h3>
-                            <p class="text-gray-700 mb-4">台灣健保資料庫告訴我們一個驚人發現：規律服藥的 ADHD 孩子，發生骨折的風險竟然比較低！</p>
-                            <span class="font-semibold text-[#A44A3F]">了解背後原因 &rarr;</span>
-                        </div>
-                    </a>
-                    <a href="research.html" class="card-hover block bg-gray-50 rounded-2xl overflow-hidden">
-                         <div class="p-8">
-                            <h3 class="font-bold text-2xl mb-3">自行調藥的心路</h3>
-                            <p class="text-gray-700 mb-4">為什麼總想自己增減藥量？質性研究深入訪談，揭示了背後關於「自主權」與「身體感受」的心理需求。</p>
-                            <span class="font-semibold text-[#A44A3F]">聽聽他們的故事 &rarr;</span>
-                        </div>
-                    </a>
-                     <a href="research.html" class="card-hover block bg-gray-50 rounded-2xl overflow-hidden">
-                         <div class="p-8">
-                            <h3 class="font-bold text-2xl mb-3">獎賞的奧秘</h3>
-                            <p class="text-gray-700 mb-4">ADHD 的大腦對「獎賞」反應不同。藥物如何影響我們對努力和回報的看法？fMRI 研究帶我們一探究竟。</p>
-                             <span class="font-semibold text-[#A44A3F]">窺探大腦秘密 &rarr;</span>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </section>
-
-    </main>
-    
-    <!-- Footer -->
-    <footer class="bg-[#3D352E] text-white">
-        <div class="container mx-auto px-6 py-12 text-center">
-            <h4 class="text-2xl font-bold mb-4">準備好，與你的大腦成為好朋友了嗎？</h4>
-            <p class="max-w-2xl mx-auto text-gray-300 mb-8">
-                這趟旅程，你不是一個人。ADHD 光譜會持續更新資訊，陪伴在你身邊。
-            </p>
-            <div class="flex justify-center space-x-6 mb-10">
-                <a href="#" class="text-gray-300 hover:text-white">關於我們</a>
-                <a href="#" class="text-gray-300 hover:text-white">聯絡方式</a>
-                <a href="#" class="text-gray-300 hover:text-white">免責聲明</a>
-            </div>
-            <p class="text-gray-400 text-sm">&copy; 2025 ADHD 光譜. All rights reserved.</p>
-        </div>
-    </footer>
-
-</body>
-</html>
+      </section>
+    </div>
+  );
+}
