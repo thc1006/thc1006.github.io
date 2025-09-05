@@ -6,8 +6,10 @@
     <title>貓芯 CatCore (Static Demo)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide-react@0.395.0/dist/lucide-react.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://unpkg.com/recharts@2.12.7/umd/Recharts.min.js"></script>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
 
     <style>
         body {
@@ -147,9 +149,9 @@
             // =================================================================
             const db = {
                 cats: [
-                    { id: 1, name: '花花', code: 'HANA-001', sex: 'F', age: 2, status: 'SHELTER', story: '從花園裡發現的親人小美女，喜歡曬太陽和追逐光影。', coverImage: 'https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg?auto=compress&cs=tinysrgb&w=600' },
-                    { id: 2, name: '斑斑', code: 'BAN-002', sex: 'M', age: 3, status: 'SHELTER', story: '有點害羞的帥氣虎斑貓，需要多一點耐心來融化他的心。', coverImage: 'https://images.pexels.com/photos/1056251/pexels-photo-1056251.jpeg?auto=compress&cs=tinysrgb&w=600' },
-                    { id: 3, name: '橘寶', code: 'JU-003', sex: 'M', age: 5, status: 'LONGSTAY', story: '體型圓潤的橘貓大叔，因為有慢性口炎需要長期照顧。', coverImage: 'https://images.pexels.com/photos/2071873/pexels-photo-2071873.jpeg?auto=compress&cs=tinysrgb&w=600' },
+                    { id: 1, name: '花花', code: 'HANA-001', sex: 'F', age: 2, status: 'SHELTER', story: '從花園裡發現的親人小美女，喜歡曬太陽和追逐光影。', coverImage: 'https://images.pexels.com/photos/2173872/pexels-photo-2173872.jpeg?auto=compress&cs=tinysrgb&w=600' },
+                    { id: 2, name: '斑斑', code: 'BAN-002', sex: 'M', age: 3, status: 'SHELTER', story: '有點害羞的帥氣虎斑貓，需要多一點耐心來融化他的心。', coverImage: 'https://images.pexels.com/photos/3631430/pexels-photo-3631430.jpeg?auto=compress&cs=tinysrgb&w=600' },
+                    { id: 3, name: '橘寶', code: 'JU-003', sex: 'M', age: 5, status: 'LONGSTAY', story: '體型圓潤的橘貓大叔，因為有慢性口炎需要長期照顧。', coverImage: 'https://images.pexels.com/photos/290164/pexels-photo-290164.jpeg?auto=compress&cs=tinysrgb&w=600' },
                     { id: 4, name: '咪咪', code: 'MIMI-004', sex: 'F', age: 1, status: 'ADOPTED', story: '活潑好動的小貓，已經在 2024 年 8 月找到永遠的家。', coverImage: 'https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?auto=compress&cs=tinysrgb&w=600' }
                 ],
                 stressLogs: [
@@ -215,7 +217,7 @@
                 return { ...cat, stressLogs };
             };
 
-            const createIcon = (name, className = 'w-5 h-5') => `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-${name} ${className}"><use href="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/${name}.svg#${name}"></use></svg>`;
+            const createIcon = (name, className = 'w-5 h-5') => `<i data-lucide="${name}" class="${className}"></i>`;
             
             const createStressChip = (level, large = false) => {
                 const levelMap = {
@@ -236,7 +238,7 @@
                 return `
                     <a href="#" data-page="cat-profile" data-cat-id="${cat.id}" class="cat-card-link card block group">
                         <div class="relative h-60 w-full overflow-hidden rounded-t-2xl">
-                            <img src="${cat.coverImage}" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                            <img src="${cat.coverImage}" alt="[${cat.name}的照片]" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                         </div>
                         <div class="p-6">
                             <div class="flex justify-between items-start">
@@ -324,11 +326,13 @@
                             </div>
                         </a>`;
                 }).join('');
+                lucide.createIcons();
             }
             
             function renderCatsPage() {
                 const container = document.getElementById('cats-list-container');
                 container.innerHTML = db.cats.map(createCatCard).join('');
+                lucide.createIcons();
             }
             
             function renderCatProfilePage(catId) {
@@ -356,7 +360,7 @@
                         <div class="grid md:grid-cols-3 gap-8">
                             <div class="md:col-span-1">
                                 <div class="relative aspect-square w-full rounded-3xl overflow-hidden shadow-lg">
-                                    <img src="${cat.coverImage}" alt="" class="w-full h-full object-cover"/>
+                                    <img src="${cat.coverImage}" alt="[${cat.name}的照片]" class="w-full h-full object-cover"/>
                                     ${adoptedBadge}
                                 </div>
                             </div>
@@ -401,6 +405,7 @@
                     )
                 );
                 ReactDOM.render(chart, document.getElementById('chart-container'));
+                lucide.createIcons();
             }
 
             function renderImprintStationPage() {
@@ -436,6 +441,7 @@
                 const panel = document.getElementById('imprint-action-panel');
                 if (!catId) {
                     panel.innerHTML = `<p class="text-stone-500">請從左側列表選擇一隻貓咪開始作業。</p>`;
+                    lucide.createIcons();
                     return;
                 }
                 const cat = getCatWithStress(catId);
@@ -464,6 +470,7 @@
                            ${createIcon('paw-print', 'inline mr-2')} 開始 10 秒計時取樣
                         </button>
                     </div>`;
+                lucide.createIcons();
             }
             
             function renderImprintTimer(cat) {
@@ -480,6 +487,7 @@
                             <div class="absolute inset-0 flex items-center justify-center"><span id="timer-text" class="text-5xl font-bold">${timeLeft}</span></div>
                         </div>
                     </div>`;
+                lucide.createIcons();
 
                 const timerText = document.getElementById('timer-text');
                 const timerProgress = document.getElementById('timer-progress');
@@ -502,6 +510,7 @@
                                 <p class="font-bold">追溯碼: <span class="font-mono bg-stone-100 text-orange-600 p-2 rounded">${newSession.traceId}</span></p>
                                 <button id="imprint-done-btn" class="btn-primary">完成</button>
                             </div>`;
+                        lucide.createIcons();
                     }
                 }, 1000);
             }
@@ -532,6 +541,7 @@
                         </div>
                         <div><h2 class="text-2xl font-bold mb-4 flex items-center">${createIcon('ban')} 停產紀念清單</h2><div class="card p-4"><ul class="divide-y">${stoppedList}</ul></div></div>
                     </div>`;
+                lucide.createIcons();
             }
 
             function renderSubscribePage() {
@@ -555,6 +565,7 @@
                         <p class="page-subtitle">您的穩定支持，是貓咪們在找到家之前最溫暖的依靠。</p>
                         <div class="grid md:grid-cols-3 gap-8 mt-12">${plans}</div>
                     </div>`;
+                lucide.createIcons();
             }
             
             function renderExperiencePage() {
@@ -584,6 +595,7 @@
                         <p class="page-subtitle text-center">預約一場小規模、低刺激的實體互動。</p>
                         <div class="space-y-6 mt-12">${slots}</div>
                     </div>`;
+                lucide.createIcons();
             }
             
             function renderTransparencyPage() {
@@ -618,6 +630,7 @@
                             <div class="card p-4 overflow-x-auto"><table class="w-full text-left"><thead class="text-sm text-stone-500 border-b"><tr><th class="p-2">日期</th><th class="p-2">類別</th><th class="p-2">金額</th><th class="p-2">廠商</th><th class="p-2">憑證雜湊</th></tr></thead><tbody>${receipts}</tbody></table></div>
                         </section>
                     </div>`;
+                lucide.createIcons();
             }
 
             // =================================================================
@@ -721,6 +734,7 @@
                 document.getElementById('footer-year').textContent = new Date().getFullYear();
                 renderAuthSection();
                 navigateTo('home');
+                lucide.createIcons();
             }
 
             init();
@@ -728,3 +742,4 @@
     </script>
 </body>
 </html>
+
