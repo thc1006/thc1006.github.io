@@ -279,4 +279,130 @@
             
             const FitBar = ({ percentage }) => {
                 const barColor = percentage > 90 ? 'bg-green-500' : percentage > 80 ? 'bg-blue-500' : 'bg-sky-500';
-                return ( <div className="w-
+                return ( <div className="w-full bg-gray-200 rounded-full h-2.5"><div className={`${barColor} h-2.5 rounded-full`} style={{ width: `${percentage}%` }}></div></div> );
+            };
+
+            // React components rendering... (no changes needed in this part)
+            return (
+                <div ref={scrollContainerRef} className="bg-white text-gray-800 h-full w-full overflow-y-auto scrollbar-hide p-4 pt-0">
+                    <header className="text-center mb-6 pt-4 cursor-pointer" onClick={resetToSearch}>
+                        <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">百川智慧媒合系統</h1>
+                    </header>
+                    <div className="px-2">
+                        {isLoading && ( <div className="flex justify-center items-center h-64"><div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-600"></div></div> )}
+                        {error && <div className="text-center text-red-500 bg-red-100 p-4 rounded-lg">{error}</div>}
+                        {!isLoading && !error && view === 'search' && (
+                          <div className="animate-fade-in">
+                              <h2 className="text-xl font-semibold text-center mb-4 text-gray-700">說出你的迷惘，<br />讓 AI 為你找到方向</h2>
+                              <textarea value={query} onChange={(e) => setQuery(e.target.value)} placeholder="例如：我想用AI來做藝術創作或影片，但不知道從何開始..." className="w-full h-28 p-3 bg-slate-50 border-2 border-gray-200 rounded-lg text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-300 resize-none" onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSearch())}/>
+                              <button onClick={handleSearch} className="w-full mt-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition-transform transform hover:scale-105 shadow-lg shadow-blue-500/30">AI 智慧媒合</button>
+                              <div className="mt-6 text-center">
+                                  <p className="text-gray-500 text-sm mb-3">或試試看這些靈感：</p>
+                                  <div className="flex flex-col space-y-2">
+                                      <button onClick={() => handleSuggestionClick('對創業投資有興趣，但不知道如何開始')} className="bg-slate-100 hover:bg-blue-100 text-gray-700 text-sm w-full text-left p-3 rounded-lg transition border border-slate-200">🚀 創業投資</button>
+                                      <button onClick={() => handleSuggestionClick('我想用有趣的互動方式來呈現嚴肅的社會議題')} className="bg-slate-100 hover:bg-blue-100 text-gray-700 text-sm w-full text-left p-3 rounded-lg transition border border-slate-200">🎮 嚴肅遊戲化</button>
+                                      <button onClick={() => handleSuggestionClick('對硬體跟AI的結合很好奇，例如腦波或地震應用')} className="bg-slate-100 hover:bg-blue-100 text-gray-700 text-sm w-full text-left p-3 rounded-lg transition border border-slate-200">🧠 硬體與AI</button>
+                                  </div>
+                              </div>
+                          </div>
+                        )}
+                        {!isLoading && !error && view === 'results' && (
+                          <div className="w-full animate-fade-in">
+                              <button onClick={resetToSearch} className="mb-4 text-blue-600 hover:text-blue-800 font-semibold">&larr; 返回重新搜尋</button>
+                              <p className="text-sm text-gray-500 mb-1">根據您的提問：</p>
+                              <p className="text-gray-700 italic bg-slate-100 p-2 rounded-md mb-4 border border-slate-200">"{query}"</p>
+                              <h2 className="text-xl font-bold mb-4 text-gray-800">AI 為您推薦以下學長姐：</h2>
+                              <div className="space-y-4">
+                                  {results.map((mentor) => (
+                                      <div key={mentor.id} className="bg-white p-4 rounded-lg border border-gray-200 hover:border-blue-500 hover:shadow-lg transition duration-300 cursor-pointer" onClick={() => handleSelectMentor(mentor)}>
+                                          <div className="flex justify-between items-center mb-3">
+                                              <h4 className="text-xl font-bold text-blue-600">{mentor.name}</h4>
+                                              <div className="w-28"><div className="flex items-center gap-2"><FitBar percentage={mentor.fit} /><span className="font-mono text-base font-bold text-green-600">{mentor.fit}%</span></div></div>
+                                          </div>
+                                          <p className="mb-3 text-sm text-gray-600"><strong className="text-gray-800">AI 推薦：</strong>{mentor.reason}</p>
+                                          <div className="flex flex-wrap gap-1.5">{mentor.keywords.slice(0, 4).map(kw => (<span key={kw} className="bg-blue-50 text-blue-800 text-xs font-medium px-2 py-0.5 rounded-full">{kw}</span>))}</div>
+                                      </div>
+                                  ))}
+                                  {results.length === 0 && <p className="text-center text-gray-500 py-8">抱歉，AI 沒有找到合適的人選。請嘗試換個方式提問。</p>}
+                              </div>
+                          </div>
+                        )}
+                        
+                        {!isLoading && !error && view === 'detail' && selectedMentor && (
+                            <div className="w-full animate-fade-in">
+                                <button onClick={() => {setView('results'); scrollToTop();}} className="mb-4 text-blue-600 hover:text-blue-800 font-semibold">&larr; 返回推薦列表</button>
+                                <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-md">
+                                    <div className="flex justify-between items-start mb-4">
+                                        <div><h2 className="text-3xl font-bold text-blue-600">{selectedMentor.name}</h2><p className="text-gray-500 text-sm">百川學長姐</p></div>
+                                        <div className="text-right flex-shrink-0 ml-4"><p className="text-xs text-gray-500 mb-1">契合度</p><p className="text-2xl font-mono font-bold text-green-600">{selectedMentor.fit}%</p></div>
+                                    </div>
+                                    <div className="bg-slate-50 p-3 rounded-md mb-6 border border-slate-200"><p className="text-sm text-gray-600"><strong className="text-gray-800">AI 推薦理由：</strong>{selectedMentor.reason}</p></div>
+                                    
+                                    <div className="mb-6">
+                                        <h3 className="text-lg font-semibold border-b-2 border-blue-200 pb-2 mb-3 text-gray-800">✨ AI 建議學習路徑</h3>
+                                        {isPlanning ? (
+                                            <div className="flex justify-center items-center h-24"><div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div></div>
+                                        ) : (
+                                            <ul className="list-disc list-outside space-y-2 pl-5 text-gray-700">
+                                                {learningPath.map((step, index) => <li key={index}>{step}</li>)}
+                                            </ul>
+                                        )}
+                                    </div>
+
+                                    <div className="space-y-6">
+                                        <div><h3 className="text-lg font-semibold border-b-2 border-blue-200 pb-2 mb-3 text-gray-800">專題檔案</h3><h4 className="text-xl font-bold text-gray-900 mb-2">{selectedMentor.title}</h4><p className="text-gray-600 leading-relaxed text-sm">{selectedMentor.summary}</p></div>
+                                        <div><h3 className="text-lg font-semibold border-b-2 border-blue-200 pb-2 mb-3 text-gray-800">專業關鍵字</h3><div className="flex flex-wrap gap-2">{selectedMentor.keywords.map(kw => (<span key={kw} className="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">{kw}</span>))}</div></div>
+                                    </div>
+
+                                    <div className="mt-8 border-t pt-6">
+                                        <h3 className="text-lg font-semibold mb-3 text-gray-800 text-center">準備好開始對話了嗎？</h3>
+                                        <div className="flex flex-col sm:flex-row gap-2">
+                                            <button className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition-transform transform hover:scale-105 shadow-lg shadow-blue-500/30">預約諮詢</button>
+                                            <button onClick={handleDraftMessage} disabled={isDrafting} className="w-full bg-slate-200 hover:bg-slate-300 text-blue-800 font-bold py-3 px-4 rounded-lg transition">
+                                                {isDrafting ? 'AI 撰寫中...' : '✨ 請 AI 幫我草擬訊息'}
+                                            </button>
+                                        </div>
+                                        {draftedMessage && (
+                                            <div className="mt-4 p-4 bg-slate-50 border border-slate-200 rounded-lg">
+                                                <p className="text-sm whitespace-pre-wrap text-gray-700">{draftedMessage}</p>
+                                                <button onClick={() => navigator.clipboard.writeText(draftedMessage)} className="mt-3 text-xs bg-blue-100 text-blue-800 font-semibold py-1 px-2 rounded hover:bg-blue-200">複製訊息</button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        // 主應用程式組件 (手機外殼)
+        function App() {
+          return (
+            <main className="font-sans bg-slate-100 min-h-screen flex items-center justify-center p-4">
+              {/* Pixel 7 手機外殼 */}
+              <div className="relative mx-auto border-gray-800 bg-gray-800 border-[10px] rounded-[2.5rem] h-[800px] w-[380px] shadow-2xl">
+                <div className="w-[140px] h-[18px] bg-gray-800 top-0 rounded-b-lg absolute left-1/2 -translate-x-1/2"></div>
+                <div className="h-[60px] w-[3px] bg-gray-800 absolute -left-[13px] top-[148px] rounded-l-lg"></div>
+                <div className="h-[100px] w-[3px] bg-gray-800 absolute -right-[13px] top-[142px] rounded-r-lg"></div>
+                <div className="w-full h-full overflow-hidden rounded-[2rem] bg-white">
+                  <div className="absolute top-5 left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-gray-900 rounded-full z-20"></div>
+                  <div className="relative w-full h-full flex flex-col">
+                    <StatusBar />
+                    <div className="flex-grow relative">
+                      <MentorshipApp />
+                    </div>
+                    <GestureBar />
+                  </div>
+                </div>
+              </div>
+            </main>
+          );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+
+    </script>
+</body>
+</html>
