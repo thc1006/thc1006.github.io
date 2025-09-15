@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>百川智慧媒合系統 (Puter.js 整合修正版)</title>
+    <title>百川智慧媒合系統 (Puter.js 整合版)</title>
+    
     <script src="https://js.puter.com/v2/"></script>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -78,7 +79,23 @@
         ];
 
         // --- 手機介面組件 ---
-        const StatusBar = () => { /* ... 內容不變 ... */ };
+        const StatusBar = () => {
+          const [time, setTime] = useState(new Date());
+          useEffect(() => {
+              const timerId = setInterval(() => setTime(new Date()), 1000);
+              return () => clearInterval(timerId);
+          }, []);
+          return (
+              <div className="flex justify-between items-center px-6 pt-1 text-black text-sm font-medium z-10">
+                  <span>{time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}</span>
+                  <div className="flex items-center space-x-1.5">
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M17.5 2.5h-3.5a.5.5 0 00-.5.5v14a.5.5 0 00.5.5h3.5a.5.5 0 00.5-.5v-14a.5.5 0 00-.5-.5zM12.5 5h-1.5a.5.5 0 00-.5.5v12a.5.5 0 00.5.5h1.5a.5.5 0 00.5-.5v-12a.5.5 0 00-.5-.5zM8.5 10H7a.5.5 0 00-.5.5v7a.5.5 0 00.5.5h1.5a.5.5 0 00.5-.5v-7a.5.5 0 00-.5-.5zM4.5 14H3a.5.5 0 00-.5.5v3a.5.5 0 00.5.5h1.5a.5.5 0 00.5-.5v-3a.5.5 0 00-.5-.5z"/></svg>
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3.75a.75.75 0 00-1.5 0v2.5a.75.75 0 001.5 0v-2.5zM13.25 5a.75.75 0 00-1.06-1.06L11.1 4.94a.75.75 0 001.06 1.06l1.09-1.09zM16.25 8a.75.75 0 000-1.5h-2.5a.75.75 0 000 1.5h2.5zM12.19 11.1a.75.75 0 00-1.06-1.06l-1.09 1.09a.75.75 0 101.06 1.06l1.09-1.09zM10 13.25a.75.75 0 00-1.5 0v2.5a.75.75 0 001.5 0v-2.5zM6.75 12a.75.75 0 00-1.06 1.06l1.09 1.09a.75.75 0 101.06-1.06l-1.09-1.09zM3.75 9a.75.75 0 000 1.5h2.5a.75.75 0 000-1.5h-2.5zM7.81 4.94a.75.75 0 00-1.06-1.06L5.66 5a.75.75 0 001.06 1.06l1.09-1.09z"/></svg>
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M1 5.25A2.25 2.25 0 013.25 3h13.5A2.25 2.25 0 0119 5.25v9.5A2.25 2.25 0 0116.75 17H3.25A2.25 2.25 0 011 14.75v-9.5zm1.75-.25a.75.75 0 00-.75.75v9.5c0 .414.336.75.75.75h13.5a.75.75 0 00.75-.75v-9.5a.75.75 0 00-.75-.75H2.75z" clipRule="evenodd" /><path d="M15.5 6a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7a.5.5 0 01.5-.5z" /></svg>
+                  </div>
+              </div>
+          );
+        };
         const GestureBar = () => ( <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-gray-800 rounded-full"></div> );
 
         // --- App 核心邏輯組件 ---
@@ -97,39 +114,47 @@
                 }
             };
 
-            // ✅ 修正 1: 改造 AI 核心呼叫函式，使其更穩健
+            // ✅ 步驟 2: 改造核心 AI 呼叫函式，使其更強健
             const callAI = async (prompt) => {
                 let delay = 1000;
                 for (let i = 0; i < 3; i++) { // 保留重試機制
                     try {
                         const response = await puter.ai.chat(prompt, {
                             model: 'google/gemini-pro',
-                            temperature: 0.1 
+                            temperature: 0.1 // 為了穩定的 JSON 輸出，使用較低的溫度
                         });
                         
-                        const rawResponse = response?.message?.content;
-                        if (!rawResponse) {
+                        let jsonString = response?.message?.content;
+                        if (!jsonString) {
                             throw new Error("AI 回應為空。");
                         }
                         
-                        // ✅ 修正 2: 從 AI 的潛在回文中提取純淨的 JSON
-                        const jsonMatch = rawResponse.match(/\[[\s\S]*\]|{[\s\S]*}/);
-                        if (!jsonMatch) {
-                            console.error("在 AI 回應中找不到有效的 JSON 結構:", rawResponse);
-                            throw new Error("AI 未回傳可辨識的 JSON 格式。");
+                        console.log("Raw AI Response:", jsonString); // 增加日誌，方便未來除錯
+
+                        // --- 智慧清理邏輯 ---
+                        // 1. 嘗試從 Markdown 語法中提取 JSON
+                        const match = jsonString.match(/```json\s*([\s\S]*?)\s*```/);
+                        if (match) {
+                            jsonString = match[1];
+                        } else {
+                        // 2. 如果沒有 Markdown，尋找第一個 "[" 和最後一個 "]" 來擷取陣列內容
+                            const startIndex = jsonString.indexOf('[');
+                            const endIndex = jsonString.lastIndexOf(']');
+                            if (startIndex !== -1 && endIndex !== -1) {
+                                jsonString = jsonString.substring(startIndex, endIndex + 1);
+                            }
                         }
                         
-                        const jsonString = jsonMatch[0];
-                        return JSON.parse(jsonString); // 解析清潔後的字串
+                        return JSON.parse(jsonString); // 解析清理後的字串
                     
                     } catch (err) {
-                        console.error(`AI 呼叫嘗試 ${i + 1} 失敗:`, err);
+                        console.error(`AI 呼叫或解析的第 ${i + 1} 次嘗試失敗:`, err);
                         if (i === 2) throw err; // 最後一次嘗試失敗後，拋出錯誤
                         await new Promise(res => setTimeout(res, delay));
                         delay *= 2;
                     }
                 }
-                throw new Error("AI 請求在多次重試後失敗。");
+                throw new Error("AI 請求在多次重試後依然失敗。");
             };
 
             const handleSearch = async () => {
@@ -139,6 +164,7 @@
 
                 const simplifiedMentors = mentorsData.map(({ id, name, title, keywords, summary }) => ({ id, name, title, keywords, summary }));
                 
+                // ✅ 步驟 3: 強化 Prompt，將 JSON 格式要求寫入
                 const fullPrompt = `你是一位專業的大學學術與職涯導師，你的任務是幫助迷惘的學生找到最適合的學長姐作為 Mentor。
 1. 你會收到一段學生的提問，以及一份 JSON 格式的學長姐資料庫。
 2. 請仔細分析學生的提問，理解其背後的真正需求，可能包含多個領域或模糊的概念。
@@ -159,17 +185,16 @@
 `;
 
                 try {
+                    // ✅ 步驟 4: 使用新的 AI 呼叫函式
                     const aiResults = await callAI(fullPrompt);
                     
-                    // ✅ 修正 3: 增加對回傳資料的結構驗證
                     if (!Array.isArray(aiResults)) {
-                        console.error("AI 回傳了合法的 JSON，但不是預期的陣列格式:", aiResults);
-                        throw new Error("AI 回應的資料結構不符合預期。");
+                       throw new Error("AI 回應的並非預期的陣列格式。");
                     }
-
+                    
                     const finalResults = aiResults.map(aiMentor => {
                         const fullMentorData = mentorsData.find(m => m.id === aiMentor.id);
-                        return { ...fullMentorData, fit: aiMentor.fit, reason: aiMentor.reason };
+                        return fullMentorData ? { ...fullMentorData, fit: aiMentor.fit, reason: aiMentor.reason } : null;
                     }).filter(Boolean);
                     
                     setResults(finalResults);
@@ -183,26 +208,112 @@
                 }
             };
             
-            // --- 其餘的 React 邏輯保持不變 ---
-            const handleSuggestionClick = (suggestion) => { /* ... */ };
-            const handleSelectMentor = (mentor) => { /* ... */ };
-            const resetToSearch = () => { /* ... */ };
-            const FitBar = ({ percentage }) => { /* ... */ };
+            const handleSuggestionClick = (suggestion) => {
+                setQuery(suggestion);
+                setTimeout(() => handleSearch(), 100);
+            };
+            
+            const handleSelectMentor = (mentor) => {
+                setSelectedMentor(mentor);
+                setView('detail');
+                scrollToTop();
+            };
+
+            const resetToSearch = () => {
+                setView('search');
+                setQuery('');
+                setResults([]);
+                setError(null);
+                scrollToTop();
+            };
+            
+            const FitBar = ({ percentage }) => {
+                const barColor = percentage > 90 ? 'bg-green-500' : percentage > 80 ? 'bg-blue-500' : 'bg-sky-500';
+                return ( <div className="w-full bg-gray-200 rounded-full h-2.5"><div className={`${barColor} h-2.5 rounded-full`} style={{ width: `${percentage}%` }}></div></div> );
+            };
 
             return (
                 <div ref={scrollContainerRef} className="bg-white text-gray-800 h-full w-full overflow-y-auto scrollbar-hide p-4 pt-0">
-                    {/* ... JSX 內容完全不變 ... */}
+                    <header className="text-center mb-6 pt-4 cursor-pointer" onClick={resetToSearch}>
+                        <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">百川智慧媒合系統</h1>
+                    </header>
+                    <div className="px-2">
+                        {isLoading && ( <div className="flex justify-center items-center h-64"><div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-600"></div></div> )}
+                        {error && <div className="text-center text-red-500 bg-red-100 p-4 rounded-lg">{error}</div>}
+                        {!isLoading && !error && view === 'search' && (
+                          <div className="animate-fade-in">
+                              <h2 className="text-xl font-semibold text-center mb-4 text-gray-700">說出你的迷惘，<br />讓 AI 為你找到方向</h2>
+                              <textarea value={query} onChange={(e) => setQuery(e.target.value)} placeholder="例如：我想用AI來做藝術創作或影片，但不知道從何開始..." className="w-full h-28 p-3 bg-slate-50 border-2 border-gray-200 rounded-lg text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-300 resize-none" onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSearch())}/>
+                              <button onClick={handleSearch} className="w-full mt-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition-transform transform hover:scale-105 shadow-lg shadow-blue-500/30">AI 智慧媒合</button>
+                              <div className="mt-6 text-center">
+                                  <p className="text-gray-500 text-sm mb-3">或試試看這些靈感：</p>
+                                  <div className="flex flex-col space-y-2">
+                                      <button onClick={() => handleSuggestionClick('對創業投資有興趣，但不知道如何開始')} className="bg-slate-100 hover:bg-blue-100 text-gray-700 text-sm w-full text-left p-3 rounded-lg transition border border-slate-200">🚀 創業投資</button>
+                                      <button onClick={() => handleSuggestionClick('我想用有趣的互動方式來呈現嚴肅的社會議題')} className="bg-slate-100 hover:bg-blue-100 text-gray-700 text-sm w-full text-left p-3 rounded-lg transition border border-slate-200">🎮 嚴肅遊戲化</button>
+                                      <button onClick={() => handleSuggestionClick('對硬體跟AI的結合很好奇，例如腦波或地震應用')} className="bg-slate-100 hover:bg-blue-100 text-gray-700 text-sm w-full text-left p-3 rounded-lg transition border border-slate-200">🧠 硬體與AI</button>
+                                  </div>
+                              </div>
+                          </div>
+                        )}
+                        {!isLoading && !error && view === 'results' && (
+                          <div className="w-full animate-fade-in">
+                              <button onClick={resetToSearch} className="mb-4 text-blue-600 hover:text-blue-800 font-semibold">&larr; 返回重新搜尋</button>
+                              <p className="text-sm text-gray-500 mb-1">根據您的提問：</p>
+                              <p className="text-gray-700 italic bg-slate-100 p-2 rounded-md mb-4 border border-slate-200">"{query}"</p>
+                              <h2 className="text-xl font-bold mb-4 text-gray-800">AI 為您推薦以下學長姐：</h2>
+                              <div className="space-y-4">
+                                  {results.map((mentor) => (
+                                      <div key={mentor.id} className="bg-white p-4 rounded-lg border border-gray-200 hover:border-blue-500 hover:shadow-lg transition duration-300 cursor-pointer" onClick={() => handleSelectMentor(mentor)}>
+                                          <div className="flex justify-between items-center mb-3">
+                                              <h4 className="text-xl font-bold text-blue-600">{mentor.name}</h4>
+                                              <div className="w-28"><div className="flex items-center gap-2"><FitBar percentage={mentor.fit} /><span className="font-mono text-base font-bold text-green-600">{mentor.fit}%</span></div></div>
+                                          </div>
+                                          <p className="mb-3 text-sm text-gray-600"><strong className="text-gray-800">AI 推薦：</strong>{mentor.reason}</p>
+                                          <div className="flex flex-wrap gap-1.5">{mentor.keywords.slice(0, 4).map(kw => (<span key={kw} className="bg-blue-50 text-blue-800 text-xs font-medium px-2 py-0.5 rounded-full">{kw}</span>))}</div>
+                                      </div>
+                                  ))}
+                                  {results.length === 0 && <p className="text-center text-gray-500 py-8">抱歉，AI 沒有找到合適的人選。請嘗試換個方式提問。</p>}
+                              </div>
+                          </div>
+                        )}
+                        
+                        {!isLoading && !error && view === 'detail' && selectedMentor && (
+                            <div className="w-full animate-fade-in">
+                                <button onClick={() => {setView('results'); scrollToTop();}} className="mb-4 text-blue-600 hover:text-blue-800 font-semibold">&larr; 返回推薦列表</button>
+                                <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-md">
+                                    <div className="flex justify-between items-start mb-4">
+                                        <div><h2 className="text-3xl font-bold text-blue-600">{selectedMentor.name}</h2><p className="text-gray-500 text-sm">百川學長姐</p></div>
+                                        <div className="text-right flex-shrink-0 ml-4"><p className="text-xs text-gray-500 mb-1">契合度</p><p className="text-2xl font-mono font-bold text-green-600">{selectedMentor.fit}%</p></div>
+                                    </div>
+                                    <div className="bg-slate-50 p-3 rounded-md mb-6 border border-slate-200"><p className="text-sm text-gray-600"><strong className="text-gray-800">AI 推薦理由：</strong>{selectedMentor.reason}</p></div>
+                                    
+                                    <div className="space-y-6">
+                                        <div><h3 className="text-lg font-semibold border-b-2 border-blue-200 pb-2 mb-3 text-gray-800">專題檔案</h3><h4 className="text-xl font-bold text-gray-900 mb-2">{selectedMentor.title}</h4><p className="text-gray-600 leading-relaxed text-sm">{selectedMentor.summary}</p></div>
+                                        <div><h3 className="text-lg font-semibold border-b-2 border-blue-200 pb-2 mb-3 text-gray-800">專業關鍵字</h3><div className="flex flex-wrap gap-2">{selectedMentor.keywords.map(kw => (<span key={kw} className="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">{kw}</span>))}</div></div>
+                                    </div>
+
+                                    <div className="mt-8 text-center border-t pt-6">
+                                        <button className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold py-3 px-8 rounded-lg transition-transform transform hover:scale-105 shadow-lg shadow-blue-500/30">預約諮詢</button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             );
         };
 
-        // --- 主應用程式組件 (手機外殼) ---
+        // 主應用程式組件 (手機外殼)
         function App() {
           return (
             <main className="font-sans bg-slate-100 min-h-screen flex items-center justify-center p-4">
+              {/* Pixel 7 手機外殼 */}
               <div className="relative mx-auto border-gray-800 bg-gray-800 border-[10px] rounded-[2.5rem] h-[800px] w-[380px] shadow-2xl">
-                {/* ... 手機外殼 JSX 內容完全不變 ... */}
+                <div className="w-[140px] h-[18px] bg-gray-800 top-0 rounded-b-lg absolute left-1/2 -translate-x-1/2"></div>
+                <div className="h-[60px] w-[3px] bg-gray-800 absolute -left-[13px] top-[148px] rounded-l-lg"></div>
+                <div className="h-[100px] w-[3px] bg-gray-800 absolute -right-[13px] top-[142px] rounded-r-lg"></div>
                 <div className="w-full h-full overflow-hidden rounded-[2rem] bg-white">
+                  <div className="absolute top-5 left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-gray-900 rounded-full z-20"></div>
                   <div className="relative w-full h-full flex flex-col">
                     <StatusBar />
                     <div className="flex-grow relative">
