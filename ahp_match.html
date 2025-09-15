@@ -129,7 +129,7 @@
                     scrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
                 }
             };
-
+            
             // ✨ 步驟 2: 使用 Puter.js 重寫 API 呼叫函式
             const callPuterAI = async (prompt) => {
                 // ✨ 步驟 3.2: 建立更具韌性的 JSON 解析函式
@@ -138,19 +138,20 @@
                     const startIndex = text.indexOf('[');
                     const endIndex = text.lastIndexOf(']');
                     
-                    if (startIndex === -1 || endIndex === -1 || endIndex < startIndex) {
-                        // 如果找不到陣列，嘗試尋找物件
-                        const objStartIndex = text.indexOf('{');
-                        const objEndIndex = text.lastIndexOf('}');
-                        if(objStartIndex !== -1 && objEndIndex > objStartIndex){
-                             const jsonString = text.substring(objStartIndex, objEndIndex + 1);
-                             return JSON.parse(jsonString);
-                        }
-                        throw new Error("AI 回應中未包含有效的 JSON 格式。");
+                    if (startIndex !== -1 && endIndex !== -1 && endIndex > startIndex) {
+                         const jsonString = text.substring(startIndex, endIndex + 1);
+                         return JSON.parse(jsonString);
                     }
                     
-                    const jsonString = text.substring(startIndex, endIndex + 1);
-                    return JSON.parse(jsonString);
+                    // 如果找不到陣列，嘗試尋找物件
+                    const objStartIndex = text.indexOf('{');
+                    const objEndIndex = text.lastIndexOf('}');
+                    if(objStartIndex !== -1 && objEndIndex > objStartIndex){
+                         const jsonString = text.substring(objStartIndex, objEndIndex + 1);
+                         return JSON.parse(jsonString);
+                    }
+                    
+                    throw new Error("AI 回應中未包含有效的 JSON 格式。");
                 };
 
                 try {
@@ -164,6 +165,7 @@
 
                 } catch (err) {
                     console.error("Puter.js AI call failed:", err);
+                    // 拋出一個更具體的錯誤以便上層函式捕獲
                     throw new Error(`AI 服務錯誤: ${err.message}`);
                 }
             };
@@ -179,7 +181,7 @@
                 規則：
                 1. 分析學生提問，理解其需求。
                 2. 從提供的 JSON 資料庫中，找出 4 位最相關的學長姐。
-                3. **你的回覆必須是、也只能是一個 JSON 陣列**，不包含任何其他文字、說明或 Markdown 標籤。
+                3. **你的回覆必須是、也只能是一個 JSON 陣列**，不包含任何其他文字、說明或 markdown 標籤。
                 4. 陣列中每個物件必須包含 "id" (字串), "fit" (80-100的數字，最符合者>95), "reason" (約30-50字的繁體中文推薦理由)。
 
                 學長姐資料庫: ${JSON.stringify(simplifiedMentors)}
@@ -212,7 +214,7 @@
                 規則：
                 1. 訊息需包含：自我介紹(百川學程學弟妹)、說明困擾(來自學生提問)、為何認為 Mentor 能提供幫助、明確請求(15分鐘線上對談)。
                 2. 語氣需謙遜有禮。
-                3. **你的回覆必須是、也只能是一個 JSON 物件**，不包含任何其他文字、說明或 Markdown 標籤。
+                3. **你的回覆必須是、也只能是一個 JSON 物件**，不包含任何其他文字、說明或 markdown 標籤。
                 4. JSON 物件需包含一個 key "message"，其 value 為草擬的訊息字串。
 
                 學生提問: "${query}"
@@ -235,7 +237,7 @@
                 const prompt = `你是一位資深的學術導師，專長是為學生規劃跨領域學習路徑。任務是根據學生的困惑和已配對 Mentor 的專業，設計一份「首次見面討論大綱」。
                 規則：
                 1. 提供3到4個具體的、可執行的步驟或討論主題。
-                2. **你的回覆必須是、也只能是一個 JSON 物件**，不包含任何其他文字、說明或 Markdown 標籤。
+                2. **你的回覆必須是、也只能是一個 JSON 物件**，不包含任何其他文字、說明或 markdown 標籤。
                 3. JSON 物件需包含一個 key "path"，其 value 為一個包含各步驟說明的字串陣列。
                 
                 學生提問: "${query}"
