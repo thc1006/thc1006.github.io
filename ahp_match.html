@@ -3,15 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>百川智慧媒合系統 (演示版)</title>
-    <meta name="description" content="正在尋找適合台灣失智症長輩的活動嗎？「想當年...懷舊話匣子」是一款免費的CST認知刺激治療互動工具，精選1950-60年代懷舊主題，透過趣味問答活化大腦、開啟話匣子。專為長照與家庭照護設計，立即免費使用！">
+    <title>百川智慧媒合系統 (Puter.js 整合版)</title>
     
     <script src="https://js.puter.com/v2/"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
@@ -26,14 +21,7 @@
             scrollbar-width: none;  /* Firefox */
         }
         body {
-            font-family: 'Noto Sans TC', sans-serif;
-        }
-        .animate-fade-in {
-            animation: fadeIn 0.5s ease-in-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            font-family: sans-serif;
         }
     </style>
 </head>
@@ -45,49 +33,49 @@
 
         // --- 資料庫: 根據您提供的所有學長姐資料擴充而成 ---
         const mentorsData = [
-          // AI & Data Science
-          { id: "111950005", name: "黃宇晨", title: "Generative Adversarial Networks (GAN)", summary: "本專題旨在透過拍攝科普影片介紹「生成對抗網路」（GAN）的原理與應用，並研究Midjourney、Stable Diffusion等AI圖像生成技術。", keywords: ["GAN", "深度學習", "AI圖像生成", "Stable Diffusion", "Midjourney", "科普影片", "擴增實境", "AR", "Unity"] },
-          { id: "111950031", name: "陳妍沂", title: "Analysis of Go Player with EEG-based BCI & Reinforcement Learning", summary: "此專題包含兩部分：一是介紹腦機介面(BCI)並分析圍棋棋手的腦波活動；二是應用強化學習（Reinforcement Learning）技術訓練AI遊玩益智遊戲「2048」。", keywords: ["Brain-Computer Interface", "BCI", "EEG", "腦波", "reinforcement learning", "2048", "AI", "machine learning"] },
-          { id: "111950019", name: "張沂竣", title: "Supervised Machine Learning Method for Predicting Supermarket Item Prices", summary: "This study performs a regression analysis using supervised machine learning to predict the prices of various supermarket items. Several algorithms were tested, including Linear, Lasso, Ridge regression, and XGBoost.", keywords: ["machine learning", "regression", "price prediction", "XGBoost", "feature engineering", "Python", "scikit-learn"] },
-          { id: "110950011", name: "廖家淯", title: "自動辨識學校別名的演算法設計", summary: "本專題設計了一套能自動辨識大學別名的演算法。演算法採用TF-IDF技術將詞語轉換為數值向量，並計算餘弦相似度來找出最相符的結果。", keywords: ["別名辨識", "演算法", "TF-IDF", "向量化", "餘弦相似度", "自然語言處理", "NLP"] },
-          { id: "112950026", name: "孫奇霆", title: "基於文字描述的通用圖像編輯層之生成", summary: "本研究旨在解決現有文字生成圖片模型無法對給定圖片進行局部修改的問題。研究提出一個模型，能根據輸入的一張圖片和一段文字描述，生成一個透明的RGBA編輯層，實現語義化、局部的修改效果。", keywords: ["圖像編輯", "生成模型", "CLIP", "U-Net", "零樣本學習", "AI"] },
+         // AI & Data Science
+         { id: "111950005", name: "黃宇晨", title: "Generative Adversarial Networks (GAN)", summary: "本專題旨在透過拍攝科普影片介紹「生成對抗網路」（GAN）的原理與應用，並研究Midjourney、Stable Diffusion等AI圖像生成技術。", keywords: ["GAN", "深度學習", "AI圖像生成", "Stable Diffusion", "Midjourney", "科普影片", "擴增實境", "AR", "Unity"] },
+         { id: "111950031", name: "陳妍沂", title: "Analysis of Go Player with EEG-based BCI & Reinforcement Learning", summary: "此專題包含兩部分：一是介紹腦機介面(BCI)並分析圍棋棋手的腦波活動；二是應用強化學習（Reinforcement Learning）技術訓練AI遊玩益智遊戲「2048」。", keywords: ["Brain-Computer Interface", "BCI", "EEG", "腦波", "reinforcement learning", "2048", "AI", "machine learning"] },
+         { id: "111950019", name: "張沂竣", title: "Supervised Machine Learning Method for Predicting Supermarket Item Prices", summary: "This study performs a regression analysis using supervised machine learning to predict the prices of various supermarket items. Several algorithms were tested, including Linear, Lasso, Ridge regression, and XGBoost.", keywords: ["machine learning", "regression", "price prediction", "XGBoost", "feature engineering", "Python", "scikit-learn"] },
+         { id: "110950011", name: "廖家淯", title: "自動辨識學校別名的演算法設計", summary: "本專題設計了一套能自動辨識大學別名的演算法。演算法採用TF-IDF技術將詞語轉換為數值向量，並計算餘弦相似度來找出最相符的結果。", keywords: ["別名辨識", "演算法", "TF-IDF", "向量化", "餘弦相似度", "自然語言處理", "NLP"] },
+         { id: "112950026", name: "孫奇霆", title: "基於文字描述的通用圖像編輯層之生成", summary: "本研究旨在解決現有文字生成圖片模型無法對給定圖片進行局部修改的問題。研究提出一個模型，能根據輸入的一張圖片和一段文字描述，生成一個透明的RGBA編輯層，實現語義化、局部的修改效果。", keywords: ["圖像編輯", "生成模型", "CLIP", "U-Net", "零樣本學習", "AI"] },
 
-          // Hardware & Engineering
-          { id: "110263008", name: "蔡秀吉", title: "O-RAN可程式化自動流量引導xApp之開發", summary: "本專題旨在開發O-RAN（開放式無線接取網路）架構下的流量引導（Traffic Steering, TS）xApp應用程式，以優化特定用戶的通訊品質。", keywords: ["O-RAN", "Traffic Steering", "xApp", "5G", "網路優化", "學生治理"] },
-          { id: "111950023", name: "吳佳芸", title: "智慧穿戴裝置元件 & Multi-Frequency Antenna", summary: "此系列研究包含拆解與分析智慧穿戴裝置的內部元件（以GARMIN fēnix 5X Plus為例），以及設計與模擬一款能在7GHz、17GHz和32.5GHz三個頻率下共振的多頻段天線。", keywords: ["智慧穿戴裝置", "GARMIN", "GPS", "NFC", "天線設計", "HFSS", "RF"] },
-          { id: "110950027", name: "王冠樺", title: "智慧魚缸的探討及實作", summary: "本專題旨在探討並實作一個智慧魚缸系統，以ESP32為核心，整合自動餵食、水質過濾及溫度控制等功能，並具備遠端監控能力。", keywords: ["智慧魚缸", "ESP32", "物聯網", "IoT", "自動化控制"] },
-          { id: "110950002", name: "邱于瑄", title: "穿戴式定位裝置開發", summary: "本研究旨在開發一款以藍牙技術為基礎的穿戴式追蹤裝置，可用於尋找遺失物品或需關懷的親人。研究方法初期透過對Apple Airtag的逆向工程來建立雛形。", keywords: ["穿戴式裝置", "定位裝置", "藍牙", "BLE", "Airtag", "逆向工程", "nRF52840"] },
-          { id: "113950027", name: "江采霓", title: "Modeling of a Piezoelectric-Based Intelligent Seismic Isolation System", summary: "鑒於台灣頻繁的地震活動，本研究旨在開發一套基於壓電材料的智慧型隔震系統（PSIS）。利用LSTM與深度強化學習（DRL）訓練控制模組，實現快速精準的減災目標。", keywords: ["seismic isolation", "piezoelectric", "deep reinforcement learning", "earthquake engineering", "土木工程", "LSTM", "DRL"] },
-          { id: "1112950008", name: "吳懿恩", title: "Optimized Single-Layer MoSe2 Epitaxy and Mobility", summary: "本研究旨在優化化學氣相沉積法(CVD)的生長參數，以合成高品質且穩定的單層二硒化鉬(MoSe2)薄膜，並探討其作為半導體通道材料的應用潛力。", keywords: ["MoSe2", "CVD", "monolayer", "半導體", "FET", "carrier mobility", "材料科學"] },
+         // Hardware & Engineering
+         { id: "110263008", name: "蔡秀吉", title: "O-RAN可程式化自動流量引導xApp之開發", summary: "本專題旨在開發O-RAN（開放式無線接取網路）架構下的流量引導（Traffic Steering, TS）xApp應用程式，以優化特定用戶的通訊品質。", keywords: ["O-RAN", "Traffic Steering", "xApp", "5G", "網路優化", "學生治理"] },
+         { id: "111950023", name: "吳佳芸", title: "智慧穿戴裝置元件 & Multi-Frequency Antenna", summary: "此系列研究包含拆解與分析智慧穿戴裝置的內部元件（以GARMIN fēnix 5X Plus為例），以及設計與模擬一款能在7GHz、17GHz和32.5GHz三個頻率下共振的多頻段天線。", keywords: ["智慧穿戴裝置", "GARMIN", "GPS", "NFC", "天線設計", "HFSS", "RF"] },
+         { id: "110950027", name: "王冠樺", title: "智慧魚缸的探討及實作", summary: "本專題旨在探討並實作一個智慧魚缸系統，以ESP32為核心，整合自動餵食、水質過濾及溫度控制等功能，並具備遠端監控能力。", keywords: ["智慧魚缸", "ESP32", "物聯網", "IoT", "自動化控制"] },
+         { id: "110950002", name: "邱于瑄", title: "穿戴式定位裝置開發", summary: "本研究旨在開發一款以藍牙技術為基礎的穿戴式追蹤裝置，可用於尋找遺失物品或需關懷的親人。研究方法初期透過對Apple Airtag的逆向工程來建立雛形。", keywords: ["穿戴式裝置", "定位裝置", "藍牙", "BLE", "Airtag", "逆向工程", "nRF52840"] },
+         { id: "113950027", name: "江采霓", title: "Modeling of a Piezoelectric-Based Intelligent Seismic Isolation System", summary: "鑒於台灣頻繁的地震活動，本研究旨在開發一套基於壓電材料的智慧型隔震系統（PSIS）。利用LSTM與深度強化學習（DRL）訓練控制模組，實現快速精準的減災目標。", keywords: ["seismic isolation", "piezoelectric", "deep reinforcement learning", "earthquake engineering", "土木工程", "LSTM", "DRL"] },
+         { id: "1112950008", name: "吳懿恩", title: "Optimized Single-Layer MoSe2 Epitaxy and Mobility", summary: "本研究旨在優化化學氣相沉積法(CVD)的生長參數，以合成高品質且穩定的單層二硒化鉬(MoSe2)薄膜，並探討其作為半導體通道材料的應用潛力。", keywords: ["MoSe2", "CVD", "monolayer", "半導體", "FET", "carrier mobility", "材料科學"] },
 
-          // Business & Entrepreneurship
-          { id: "110950004", name: "朱立恆", title: "大學生創投家? 青年創投訓練班實作", summary: "本專題旨在探討創投人才是否可被培育，並記錄了一個為期六週的「青年創投訓練班」的實作過程。課程內容依循創投的「募、投、管、退」流程設計。", keywords: ["創業投資", "VC", "人才培育", "課程設計", "Kirkpatrick模型", "新創"] },
-          { id: "112950022", name: "洪宇辰", title: "擺脫對 GPT 的依賴-AI陪跑人生", summary: "本專題基於創業經歷，開發了一款強調「陪跑」概念的AI產品，定位為能與用戶共同設計人生戰略的生涯諮詢師。", keywords: ["AI", "AI Agent", "生涯諮詢", "創業", "個人化學習", "GPT"] },
-          { id: "112950013", name: "陳大森", title: "台灣咖啡廳創業經營現況與未來趨勢探索", summary: "本研究旨在探討台灣獨立咖啡廳的創業現況，分析其啟動資金、回本預期、收益空間及經營風險。", keywords: ["獨立咖啡廳", "創業", "經營現況", "商業模式", "SWOT", "生技保健食品"] },
-          { id: "111481049", name: "陳可婕", title: "AI PC產業分析——————以華碩為例", summary: "本研究針對興起的AI PC產業進行分析，並以華碩(ASUS)為個案研究對象。運用五力分析模型評估產業結構，並提出策略建議。", keywords: ["AI PC", "產業分析", "五力分析", "華碩", "ASUS", "生態系", "市場策略"] },
-          { id: "110481016", name: "劉星妤", title: "燃油機車市場的競爭策略分析 --以三陽跟光陽為例", summary: "本研究旨在深入分析台灣兩大燃油機車品牌——三陽（Sym）與光陽（Kymco）的市場競爭策略。研究追蹤了市佔率變化並運用SWOT分析工具檢視其策略。", keywords: ["三陽", "光陽", "機車市場", "市佔率", "競爭策略", "SWOT分析"] },
+         // Business & Entrepreneurship
+         { id: "110950004", name: "朱立恆", title: "大學生創投家? 青年創投訓練班實作", summary: "本專題旨在探討創投人才是否可被培育，並記錄了一個為期六週的「青年創投訓練班」的實作過程。課程內容依循創投的「募、投、管、退」流程設計。", keywords: ["創業投資", "VC", "人才培育", "課程設計", "Kirkpatrick模型", "新創"] },
+         { id: "112950022", name: "洪宇辰", title: "擺脫對 GPT 的依賴-AI陪跑人生", summary: "本專題基於創業經歷，開發了一款強調「陪跑」概念的AI產品，定位為能與用戶共同設計人生戰略的生涯諮詢師。", keywords: ["AI", "AI Agent", "生涯諮詢", "創業", "個人化學習", "GPT"] },
+         { id: "112950013", name: "陳大森", title: "台灣咖啡廳創業經營現況與未來趨勢探索", summary: "本研究旨在探討台灣獨立咖啡廳的創業現況，分析其啟動資金、回本預期、收益空間及經營風險。", keywords: ["獨立咖啡廳", "創業", "經營現況", "商業模式", "SWOT", "生技保健食品"] },
+         { id: "111481049", name: "陳可婕", title: "AI PC產業分析——————以華碩為例", summary: "本研究針對興起的AI PC產業進行分析，並以華碩(ASUS)為個案研究對象。運用五力分析模型評估產業結構，並提出策略建議。", keywords: ["AI PC", "產業分析", "五力分析", "華碩", "ASUS", "生態系", "市場策略"] },
+         { id: "110481016", name: "劉星妤", title: "燃油機車市場的競爭策略分析 --以三陽跟光陽為例", summary: "本研究旨在深入分析台灣兩大燃油機車品牌——三陽（Sym）與光陽（Kymco）的市場競爭策略。研究追蹤了市佔率變化並運用SWOT分析工具檢視其策略。", keywords: ["三陽", "光陽", "機車市場", "市佔率", "競爭策略", "SWOT分析"] },
 
-          // Arts, Design & Culture
-          { id: "111950006", name: "洪琳玲", title: "同步物件：看見人物肢體外的舞蹈理念與編舞結構的翻譯", summary: "本研究旨在分析舞蹈家William Forsythe的作品，透過擷取舞蹈中的特定資訊，並以20種不同的視覺化方式重新呈現，藉此翻譯並揭示其編舞結構。", keywords: ["編舞結構", "視覺化", "William Forsythe", "舞蹈與科技", "街舞教學", "兒童教育"] },
-          { id: "110950024", name: "楊芷嫺", title: "嚴肅主題的遊戲化設計研究——以互動敘事遊戲 \"Tell Me Why\"為例", summary: "本研究旨在探討如何有效地將嚴肅主題（如教育、政治、醫療等）進行「遊戲化」設計。研究以互動敘事遊戲《Tell Me Why》為案例，運用設計思考工具收集玩家回饋。", keywords: ["嚴肅遊戲", "遊戲化", "互動敘事", "Tell Me Why", "設計思考", "共同設計"] },
-          { id: "111950010", name: "雷翔茲", title: "從故事行銷與敘事手法分析居家用品廣告—以IKEA近五年的廣告為例", summary: "本研究旨在分析IKEA近五年來的廣告，探討其如何運用故事行銷與敘事手法來進行傳播，並結合傳播理論（如SMCRE模型）進行剖析。", keywords: ["故事行銷", "敘事手法", "IKEA", "廣告分析", "傳播SMCRE", "Martech"] },
-          { id: "110950017", name: "張念晴", title: "管弦樂曲創作：譜寫台灣的百年追求（百年追求一序曲：輪迴）", summary: "本專題為一首原創管弦樂曲《百年追求—序曲：輪迴》的創作成果。此樂曲旨在描繪福爾摩沙（台灣）及其人民追求自由的故事。", keywords: ["管弦樂", "音樂創作", "台灣", "福爾摩摩沙", "歷史", "藝術創作"] },
-          { id: "112950017", name: "張廷安", title: "Procreate 電繪訓練", summary: "本專題旨在透過使用Procreate軟體，訓練學生的數位繪圖技巧。訓練內容涵蓋人物插畫、建築透視以及排版設計等多個面向。", keywords: ["Procreate", "電繪", "數位藝術", "插畫", "平面設計"] },
-          { id: "112950018", name: "蔡承珉", title: "網頁動畫與 Shader 應用研究", summary: "本專題研究網頁動畫與Shader的應用，並透過實作一個互動式網頁來展示成果。專題利用GLSL（OpenGL Shading Language）編寫程式碼，實現互動視覺效果。", keywords: ["Shader", "網頁動畫", "WebGL", "Vertex Shader", "Fragment Shader", "GLSL", "前端開發"] },
-          { id: "111950002", name: "林韋婷", title: "虛擬世界--瘋狂XR", summary: "本專題旨在探討XR（擴展實境）的概念，並透過專案製作與demo統整來進行實踐，分析成功的VR體驗應具備「完整度」與「VR特性」兩大要素。", keywords: ["XR", "VR", "AR", "MR", "虛擬實境", "遊戲設計"] },
+         // Arts, Design & Culture
+         { id: "111950006", name: "洪琳玲", title: "同步物件：看見人物肢體外的舞蹈理念與編舞結構的翻譯", summary: "本研究旨在分析舞蹈家William Forsythe的作品，透過擷取舞蹈中的特定資訊，並以20種不同的視覺化方式重新呈現，藉此翻譯並揭示其編舞結構。", keywords: ["編舞結構", "視覺化", "William Forsythe", "舞蹈與科技", "街舞教學", "兒童教育"] },
+         { id: "110950024", name: "楊芷嫺", title: "嚴肅主題的遊戲化設計研究——以互動敘事遊戲 \"Tell Me Why\"為例", summary: "本研究旨在探討如何有效地將嚴肅主題（如教育、政治、醫療等）進行「遊戲化」設計。研究以互動敘事遊戲《Tell Me Why》為案例，運用設計思考工具收集玩家回饋。", keywords: ["嚴肅遊戲", "遊戲化", "互動敘事", "Tell Me Why", "設計思考", "共同設計"] },
+         { id: "111950010", name: "雷翔茲", title: "從故事行銷與敘事手法分析居家用品廣告—以IKEA近五年的廣告為例", summary: "本研究旨在分析IKEA近五年來的廣告，探討其如何運用故事行銷與敘事手法來進行傳播，並結合傳播理論（如SMCRE模型）進行剖析。", keywords: ["故事行銷", "敘事手法", "IKEA", "廣告分析", "傳播SMCRE", "Martech"] },
+         { id: "110950017", name: "張念晴", title: "管弦樂曲創作：譜寫台灣的百年追求（百年追求一序曲：輪迴）", summary: "本專題為一首原創管弦樂曲《百年追求—序曲：輪迴》的創作成果。此樂曲旨在描繪福爾摩沙（台灣）及其人民追求自由的故事。", keywords: ["管弦樂", "音樂創作", "台灣", "福爾摩摩沙", "歷史", "藝術創作"] },
+         { id: "112950017", name: "張廷安", title: "Procreate 電繪訓練", summary: "本專題旨在透過使用Procreate軟體，訓練學生的數位繪圖技巧。訓練內容涵蓋人物插畫、建築透視以及排版設計等多個面向。", keywords: ["Procreate", "電繪", "數位藝術", "插畫", "平面設計"] },
+         { id: "112950018", name: "蔡承珉", title: "網頁動畫與 Shader 應用研究", summary: "本專題研究網頁動畫與Shader的應用，並透過實作一個互動式網頁來展示成果。專題利用GLSL（OpenGL Shading Language）編寫程式碼，實現互動視覺效果。", keywords: ["Shader", "網頁動畫", "WebGL", "Vertex Shader", "Fragment Shader", "GLSL", "前端開發"] },
+         { id: "111950002", name: "林韋婷", title: "虛擬世界--瘋狂XR", summary: "本專題旨在探討XR（擴展實境）的概念，並透過專案製作與demo統整來進行實踐，分析成功的VR體驗應具備「完整度」與「VR特性」兩大要素。", keywords: ["XR", "VR", "AR", "MR", "虛擬實境", "遊戲設計"] },
 
-          // Social Sciences & Humanities
-          { id: "111950024", name: "林子婕", title: "高中生與大學生階段使用Instagram社群媒體產生之心理影響發展對比", summary: "本研究旨在探討並比較青少年在高中與大學兩個不同階段，因使用社群媒體Instagram所造成的心理層面影響與變化。", keywords: ["Instagram", "社交媒體", "心理影響", "社交焦慮", "青少年", "問卷調查"] },
-          { id: "111950008", name: "卓予杰", title: "性侵性騷擾：其創傷中的社會建構性", summary: "本研究旨在探討性侵害與性騷擾事件中所產生的創傷，有多少成分是受到社會建構的影響。研究方法為深度訪談。", keywords: ["性侵", "性騷擾", "創傷", "社會建構", "性別", "深度訪談"] },
-          { id: "110950001", name: "林芷樂", title: "The Imposter Phenomenon - Elucidating Effectors & Model Construction", summary: "本研究旨在透過量化方法探討台灣大學生中的冒名頂替現象（Imposter Phenomenon, IP）。研究假設低自尊會透過「向上社會比較」，間接預測較高的冒名頂頂替感。", keywords: ["Imposter Phenomenon", "IP", "self-esteem", "social comparison", "quantitative study", "心理學"] },
-          { id: "109950017", name: "汪李芊", title: "我們擁有相同的歷史記憶嗎？聽老人說話", summary: "本研究旨在紀錄台東卡大地布（Katratripulr）部落耆老的口述地方故事，探討在宏觀歷史脈絡下，部落族人如何應對過去的殖民政策。", keywords: ["口述歷史", "原住民歷史", "卡大地布部落", "卑南族", "地方史", "田野調查"] },
-          { id: "112950030", name: "吉芸箴", title: "死刑爭議之我見", summary: "本專題探討台灣的死刑爭議，並聚焦於憲法法庭113年憲判字第8號的判決，並從加害者與被害者雙方觀點出發，提出個人看法。", keywords: ["死刑", "憲法", "生命權", "人權", "司法", "法律"] },
+         // Social Sciences & Humanities
+         { id: "111950024", name: "林子婕", title: "高中生與大學生階段使用Instagram社群媒體產生之心理影響發展對比", summary: "本研究旨在探討並比較青少年在高中與大學兩個不同階段，因使用社群媒體Instagram所造成的心理層面影響與變化。", keywords: ["Instagram", "社交媒體", "心理影響", "社交焦慮", "青少年", "問卷調查"] },
+         { id: "111950008", name: "卓予杰", title: "性侵性騷擾：其創傷中的社會建構性", summary: "本研究旨在探討性侵害與性騷擾事件中所產生的創傷，有多少成分是受到社會建構的影響。研究方法為深度訪談。", keywords: ["性侵", "性騷擾", "創傷", "社會建構", "性別", "深度訪談"] },
+         { id: "110950001", name: "林芷樂", title: "The Imposter Phenomenon - Elucidating Effectors & Model Construction", summary: "本研究旨在透過量化方法探討台灣大學生中的冒名頂替現象（Imposter Phenomenon, IP）。研究假設低自尊會透過「向上社會比較」，間接預測較高的冒名頂頂替感。", keywords: ["Imposter Phenomenon", "IP", "self-esteem", "social comparison", "quantitative study", "心理學"] },
+         { id: "109950017", name: "汪李芊", title: "我們擁有相同的歷史記憶嗎？聽老人說話", summary: "本研究旨在紀錄台東卡大地布（Katratripulr）部落耆老的口述地方故事，探討在宏觀歷史脈絡下，部落族人如何應對過去的殖民政策。", keywords: ["口述歷史", "原住民歷史", "卡大地布部落", "卑南族", "地方史", "田野調查"] },
+         { id: "112950030", name: "吉芸箴", title: "死刑爭議之我見", summary: "本專題探討台灣的死刑爭議，並聚焦於憲法法庭113年憲判字第8號的判決，並從加害者與被害者雙方觀點出發，提出個人看法。", keywords: ["死刑", "憲法", "生命權", "人權", "司法", "法律"] },
 
-          // Physics, Chemistry & Medical Science
-          { id: "111950015", name: "高家恩", title: "Noether's theorem之推導及對場概念的熟悉", summary: "本報告旨在推導並闡釋諾特定理（Noether's theorem），該定理闡述了物理系統中的對稱性與守恆量之間的深刻聯繫。", keywords: ["Noether's theorem", "諾特定理", "變分法", "歐拉-拉格朗日方程", "物理", "Raman spectroscopy", "Wagyu beef"] },
-          { id: "111950032", name: "張仁瑀", title: "量子隨機行走模擬化學碰撞電子軌域分配問題", summary: "本研究旨在運用量子隨機行走（Quantum Random Walk）模型來模擬化學反應中的產率問題，以提供一個更接近量子力學本質的解釋。", keywords: ["量子隨機行走", "化學碰撞", "產率預測", "量子計算", "量子電腦", "QRACON"] },
-          { id: "Novel miRNA-based multi-state model", name: "何彥霖", title: "Novel miRNA-based multi-state model for predicting recurrence and survival of patients with lung cancer", summary: "This study proposes a novel multi-state model based on microRNAs (miRNAs) to simultaneously predict the personal transition probabilities of recurrence and death in lung cancer patients.", keywords: ["lung cancer", "miRNA", "multi-state model", "biomarkers", "survival prediction", "TCGA", "醫學", "統計"] },
-          { id: "112950016", name: "施羽庭", title: "Comparative Efficacy of rTMS, tDCS and TBS Across Neurological and Psychiatric Disorders", summary: "本研究旨在透過系統性文獻回顧，評估與比較三種常見的非侵入性腦刺激技術：rTMS、tDCS與TBS，在多種神經及精神疾病上的治療效果。", keywords: ["rTMS", "tDCS", "TBS", "systematic review", "neuropsychiatric disorders", "腦科學"] },
+         // Physics, Chemistry & Medical Science
+         { id: "111950015", name: "高家恩", title: "Noether's theorem之推導及對場概念的熟悉", summary: "本報告旨在推導並闡釋諾特定理（Noether's theorem），該定理闡述了物理系統中的對稱性與守恆量之間的深刻聯繫。", keywords: ["Noether's theorem", "諾特定理", "變分法", "歐拉-拉格朗日方程", "物理", "Raman spectroscopy", "Wagyu beef"] },
+         { id: "111950032", name: "張仁瑀", title: "量子隨機行走模擬化學碰撞電子軌域分配問題", summary: "本研究旨在運用量子隨機行走（Quantum Random Walk）模型來模擬化學反應中的產率問題，以提供一個更接近量子力學本質的解釋。", keywords: ["量子隨機行走", "化學碰撞", "產率預測", "量子計算", "量子電腦", "QRACON"] },
+         { id: "Novel miRNA-based multi-state model", name: "何彥霖", title: "Novel miRNA-based multi-state model for predicting recurrence and survival of patients with lung cancer", summary: "This study proposes a novel multi-state model based on microRNAs (miRNAs) to simultaneously predict the personal transition probabilities of recurrence and death in lung cancer patients.", keywords: ["lung cancer", "miRNA", "multi-state model", "biomarkers", "survival prediction", "TCGA", "醫學", "統計"] },
+         { id: "112950016", name: "施羽庭", title: "Comparative Efficacy of rTMS, tDCS and TBS Across Neurological and Psychiatric Disorders", summary: "本研究旨在透過系統性文獻回顧，評估與比較三種常見的非侵入性腦刺激技術：rTMS、tDCS與TBS，在多種神經及精神疾病上的治療效果。", keywords: ["rTMS", "tDCS", "TBS", "systematic review", "neuropsychiatric disorders", "腦科學"] },
         ];
 
         // --- 手機介面組件 ---
@@ -118,10 +106,6 @@
             const [selectedMentor, setSelectedMentor] = useState(null);
             const [isLoading, setIsLoading] = useState(false);
             const [error, setError] = useState(null);
-            const [isDrafting, setIsDrafting] = useState(false);
-            const [draftedMessage, setDraftedMessage] = useState('');
-            const [isPlanning, setIsPlanning] = useState(false);
-            const [learningPath, setLearningPath] = useState([]);
             const scrollContainerRef = useRef(null);
 
             const scrollToTop = () => {
@@ -129,71 +113,71 @@
                     scrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
                 }
             };
-            
-            // ✨ 步驟 2: 使用 Puter.js 重寫 API 呼叫函式
-            const callPuterAI = async (prompt) => {
-                // ✨ 步驟 3.2: 建立更具韌性的 JSON 解析函式
-                const extractAndParseJson = (text) => {
-                    // 尋找 JSON 的起始和結束位置
-                    const startIndex = text.indexOf('[');
-                    const endIndex = text.lastIndexOf(']');
-                    
-                    if (startIndex !== -1 && endIndex !== -1 && endIndex > startIndex) {
-                         const jsonString = text.substring(startIndex, endIndex + 1);
-                         return JSON.parse(jsonString);
-                    }
-                    
-                    // 如果找不到陣列，嘗試尋找物件
-                    const objStartIndex = text.indexOf('{');
-                    const objEndIndex = text.lastIndexOf('}');
-                    if(objStartIndex !== -1 && objEndIndex > objStartIndex){
-                         const jsonString = text.substring(objStartIndex, objEndIndex + 1);
-                         return JSON.parse(jsonString);
-                    }
-                    
-                    throw new Error("AI 回應中未包含有效的 JSON 格式。");
-                };
 
-                try {
-                    const response = await puter.ai.chat(prompt, { 
-                        // ✨ 步驟 3.3: 優化 AI 模型選擇
-                        model: 'google/gemini-1.5-flash-latest'
-                    });
+            // ✅ 步驟 2: 改造核心 AI 呼叫函式
+            const callAI = async (prompt) => {
+                let delay = 1000;
+                for (let i = 0; i < 3; i++) { // Retry logic
+                    try {
+                        const response = await puter.ai.chat(prompt, {
+                            model: 'google/gemini-pro',
+                            temperature: 0.1 // Low temperature for stable JSON output
+                        });
+                        
+                        const jsonString = response?.message?.content;
+                        if (!jsonString) {
+                            throw new Error("AI response is empty.");
+                        }
+                        
+                        // It's crucial to parse the JSON string to get the object
+                        return JSON.parse(jsonString);
                     
-                    const content = response.message.content;
-                    return extractAndParseJson(content);
-
-                } catch (err) {
-                    console.error("Puter.js AI call failed:", err);
-                    // 拋出一個更具體的錯誤以便上層函式捕獲
-                    throw new Error(`AI 服務錯誤: ${err.message}`);
+                    } catch (err) {
+                        console.error(`AI call attempt ${i + 1} failed:`, err);
+                        if (i === 2) throw err; // Throw error on last attempt
+                        await new Promise(res => setTimeout(res, delay));
+                        delay *= 2;
+                    }
                 }
+                throw new Error("AI request failed after multiple retries.");
             };
-            
+
             const handleSearch = async () => {
                 if (!query.trim()) return;
                 setIsLoading(true);
                 setError(null);
 
-                const simplifiedMentors = mentorsData.map(({ id, name, title, keywords }) => ({ id, name, title, keywords }));
-                // ✨ 步驟 3.1: 強化 Prompt 指令
-                const prompt = `你是一位專業的大學學術與職涯導師，任務是幫助學生找到最適合的 Mentor。
-                規則：
-                1. 分析學生提問，理解其需求。
-                2. 從提供的 JSON 資料庫中，找出 4 位最相關的學長姐。
-                3. **你的回覆必須是、也只能是一個 JSON 陣列**，不包含任何其他文字、說明或 markdown 標籤。
-                4. 陣列中每個物件必須包含 "id" (字串), "fit" (80-100的數字，最符合者>95), "reason" (約30-50字的繁體中文推薦理由)。
-
-                學長姐資料庫: ${JSON.stringify(simplifiedMentors)}
+                const simplifiedMentors = mentorsData.map(({ id, name, title, keywords, summary }) => ({ id, name, title, keywords, summary }));
                 
-                學生的問題: "${query}"`;
+                // ✅ 步驟 3: 強化 Prompt，將 JSON 格式要求寫入
+                const fullPrompt = `你是一位專業的大學學術與職涯導師，你的任務是幫助迷惘的學生找到最適合的學長姐作為 Mentor。
+1. 你會收到一段學生的提問，以及一份 JSON 格式的學長姐資料庫。
+2. 請仔細分析學生的提問，理解其背後的真正需求，可能包含多個領域或模糊的概念。
+3. 根據學生的需求，從資料庫中找出 4 位最相關、最能提供幫助的學長姐。
+4. 你的回覆必須是「純粹的、可直接被 JSON.parse() 解析的 JSON 陣列」，不包含任何額外文字或 markdown 符號。
+5. 在 'reason' 欄位中，用繁體中文、溫暖且具說服力的語氣，簡要解釋為什麼這位學長姐是個好人選（約 30-50 字）。
+6. 在 'fit' 欄位中，給出一個 80 到 100 之間的契合度分數。最符合的應高於 95 分。
+
+這是學長姐資料庫: ${JSON.stringify(simplifiedMentors)}
+
+這是學生的問題: "${query}"
+
+請回傳符合以下結構的 JSON 陣列:
+[
+  { "id": "學號", "fit": 98, "reason": "推薦原因..." },
+  { "id": "學號", "fit": 95, "reason": "推薦原因..." }
+]
+`;
 
                 try {
-                    const aiResults = await callPuterAI(prompt);
+                    // ✅ 步驟 4: 使用新的 AI 呼叫函式
+                    const aiResults = await callAI(fullPrompt);
+                    
                     const finalResults = aiResults.map(aiMentor => {
                         const fullMentorData = mentorsData.find(m => m.id === aiMentor.id);
                         return { ...fullMentorData, fit: aiMentor.fit, reason: aiMentor.reason };
-                    }).filter(Boolean);
+                    }).filter(Boolean); // Filter out any potential mismatches
+                    
                     setResults(finalResults);
                     setView('results');
                     scrollToTop();
@@ -205,61 +189,6 @@
                 }
             };
             
-            const handleDraftMessage = async () => {
-                if (!selectedMentor) return;
-                setIsDrafting(true);
-                setDraftedMessage('');
-                
-                const prompt = `你是一位專業的職涯發展顧問，擅長幫助學生與業界專家建立連結。任務是根據學生問題和目標 Mentor 的背景，草擬一封誠懇、專業且簡潔的初次聯繫訊息(約150字)。
-                規則：
-                1. 訊息需包含：自我介紹(百川學程學弟妹)、說明困擾(來自學生提問)、為何認為 Mentor 能提供幫助、明確請求(15分鐘線上對談)。
-                2. 語氣需謙遜有禮。
-                3. **你的回覆必須是、也只能是一個 JSON 物件**，不包含任何其他文字、說明或 markdown 標籤。
-                4. JSON 物件需包含一個 key "message"，其 value 為草擬的訊息字串。
-
-                學生提問: "${query}"
-                目標 Mentor: ${JSON.stringify({name: selectedMentor.name, title: selectedMentor.title, keywords: selectedMentor.keywords})}`;
-
-                try {
-                    const result = await callPuterAI(prompt);
-                    setDraftedMessage(result.message);
-                } catch (err) {
-                    console.error("草擬訊息時發生錯誤:", err);
-                    setDraftedMessage("抱歉，AI 助教暫時無法草擬訊息，請稍後再試。");
-                } finally {
-                    setIsDrafting(false);
-                }
-            };
-
-            const handlePlanLearningPath = async (mentor) => {
-                setIsPlanning(true);
-                setLearningPath([]);
-                const prompt = `你是一位資深的學術導師，專長是為學生規劃跨領域學習路徑。任務是根據學生的困惑和已配對 Mentor 的專業，設計一份「首次見面討論大綱」。
-                規則：
-                1. 提供3到4個具體的、可執行的步驟或討論主題。
-                2. **你的回覆必須是、也只能是一個 JSON 物件**，不包含任何其他文字、說明或 markdown 標籤。
-                3. JSON 物件需包含一個 key "path"，其 value 為一個包含各步驟說明的字串陣列。
-                
-                學生提問: "${query}"
-                Mentor 專業: ${JSON.stringify({name: mentor.name, title: mentor.title, keywords: mentor.keywords})}`;
-
-                try {
-                    const result = await callPuterAI(prompt);
-                    setLearningPath(result.path);
-                } catch (err) {
-                    console.error("規劃學習路徑時發生錯誤:", err);
-                    setLearningPath(["抱歉，AI 暫時無法規劃學習路徑，請稍後再試。"]);
-                } finally {
-                    setIsPlanning(false);
-                }
-            };
-            
-            useEffect(() => {
-                if (view === 'detail' && selectedMentor && query) {
-                    handlePlanLearningPath(selectedMentor);
-                }
-            }, [view, selectedMentor]);
-
             const handleSuggestionClick = (suggestion) => {
                 setQuery(suggestion);
                 setTimeout(() => handleSearch(), 100);
@@ -284,7 +213,6 @@
                 return ( <div className="w-full bg-gray-200 rounded-full h-2.5"><div className={`${barColor} h-2.5 rounded-full`} style={{ width: `${percentage}%` }}></div></div> );
             };
 
-            // React components rendering... (no changes needed in this part)
             return (
                 <div ref={scrollContainerRef} className="bg-white text-gray-800 h-full w-full overflow-y-auto scrollbar-hide p-4 pt-0">
                     <header className="text-center mb-6 pt-4 cursor-pointer" onClick={resetToSearch}>
@@ -340,36 +268,13 @@
                                     </div>
                                     <div className="bg-slate-50 p-3 rounded-md mb-6 border border-slate-200"><p className="text-sm text-gray-600"><strong className="text-gray-800">AI 推薦理由：</strong>{selectedMentor.reason}</p></div>
                                     
-                                    <div className="mb-6">
-                                        <h3 className="text-lg font-semibold border-b-2 border-blue-200 pb-2 mb-3 text-gray-800">✨ AI 建議學習路徑</h3>
-                                        {isPlanning ? (
-                                            <div className="flex justify-center items-center h-24"><div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div></div>
-                                        ) : (
-                                            <ul className="list-disc list-outside space-y-2 pl-5 text-gray-700">
-                                                {learningPath.map((step, index) => <li key={index}>{step}</li>)}
-                                            </ul>
-                                        )}
-                                    </div>
-
                                     <div className="space-y-6">
                                         <div><h3 className="text-lg font-semibold border-b-2 border-blue-200 pb-2 mb-3 text-gray-800">專題檔案</h3><h4 className="text-xl font-bold text-gray-900 mb-2">{selectedMentor.title}</h4><p className="text-gray-600 leading-relaxed text-sm">{selectedMentor.summary}</p></div>
                                         <div><h3 className="text-lg font-semibold border-b-2 border-blue-200 pb-2 mb-3 text-gray-800">專業關鍵字</h3><div className="flex flex-wrap gap-2">{selectedMentor.keywords.map(kw => (<span key={kw} className="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">{kw}</span>))}</div></div>
                                     </div>
 
-                                    <div className="mt-8 border-t pt-6">
-                                        <h3 className="text-lg font-semibold mb-3 text-gray-800 text-center">準備好開始對話了嗎？</h3>
-                                        <div className="flex flex-col sm:flex-row gap-2">
-                                            <button className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition-transform transform hover:scale-105 shadow-lg shadow-blue-500/30">預約諮詢</button>
-                                            <button onClick={handleDraftMessage} disabled={isDrafting} className="w-full bg-slate-200 hover:bg-slate-300 text-blue-800 font-bold py-3 px-4 rounded-lg transition">
-                                                {isDrafting ? 'AI 撰寫中...' : '✨ 請 AI 幫我草擬訊息'}
-                                            </button>
-                                        </div>
-                                        {draftedMessage && (
-                                            <div className="mt-4 p-4 bg-slate-50 border border-slate-200 rounded-lg">
-                                                <p className="text-sm whitespace-pre-wrap text-gray-700">{draftedMessage}</p>
-                                                <button onClick={() => navigator.clipboard.writeText(draftedMessage)} className="mt-3 text-xs bg-blue-100 text-blue-800 font-semibold py-1 px-2 rounded hover:bg-blue-200">複製訊息</button>
-                                            </div>
-                                        )}
+                                    <div className="mt-8 text-center border-t pt-6">
+                                        <button className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold py-3 px-8 rounded-lg transition-transform transform hover:scale-105 shadow-lg shadow-blue-500/30">預約諮詢</button>
                                     </div>
                                 </div>
                             </div>
