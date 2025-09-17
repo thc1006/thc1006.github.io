@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>媒體內容作為 AI 燃料：權利、風險與治理的未來</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #F5F3FF; /* Light Lavender */
+            --primary-pink: #FF99D7;
+            --primary-purple: #A491D6;
+            --accent-blue: #89CFF0;
+            --accent-yellow: #FDFD96;
+            --text-dark: #3D2C8D;
+            --text-light: #9370DB;
+        }
+        body {
+            font-family: 'M PLUS Rounded 1c', 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-color);
+        }
+        .slide {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100vh;
+            padding: 4vw;
+            box-sizing: border-box;
+            color: var(--text-dark);
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+            background-size: cover;
+            background-position: center;
+            transform: scale(0.95);
+        }
+        .slide.active {
+            display: flex;
+            opacity: 1;
+            z-index: 10;
+            transform: scale(1);
+        }
+        .slide-content {
+            width: 100%;
+            max-width: 1200px;
+            background-color: rgba(255, 255, 255, 0.85);
+            border-radius: 20px;
+            padding: 3rem 4rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(8px);
+            border: 2px solid white;
+        }
+        h1 { font-size: 4rem; font-weight: 800; line-height: 1.2; color: white; text-shadow: 3px 3px 0px var(--primary-purple);}
+        h2 { font-size: 2.2rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--text-dark); }
+        h3 { font-size: 1.8rem; font-weight: 800; margin-bottom: 2rem; color: var(--primary-purple); }
+        p, li { font-size: 1.2rem; line-height: 1.8; }
+        .nav-button {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--primary-pink);
+            color: white;
+            border: 2px solid white;
+            padding: 1rem;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 20;
+            font-size: 1.5rem;
+            width: 55px;
+            height: 55px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.2s ease;
+        }
+        .nav-button:hover { transform: translateY(-50%) scale(1.1); }
+        #prev { left: 2vw; }
+        #next { right: 2vw; }
+        #slide-counter {
+            position: fixed;
+            bottom: 2vh;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--text-dark);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            z-index: 20;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        .bullet-list li {
+            position: relative;
+            padding-left: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .bullet-list li::before {
+            content: "\f005"; /* Font Awesome star icon */
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            color: var(--primary-pink);
+            position: absolute;
+            left: 0;
+            top: 5px;
+            font-size: 1.5rem;
+        }
+        .quote {
+            font-size: 1.5rem;
+            font-weight: 500;
+            line-height: 1.6;
+            padding: 1.5rem;
+            border: 2px dashed var(--primary-purple);
+            background-color: #E9E6FF; /* Lighter Lavender */
+            border-radius: 15px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+        .quote::after {
+            content: '\f0e7'; /* Lightning bolt */
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            font-size: 1.8rem;
+            color: var(--accent-yellow);
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+        .visual-aid-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+            margin-top: 2rem;
+        }
+        .visual-aid-item {
+            background-color: #ffffff;
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 2px solid var(--accent-blue);
+            box-shadow: 5px 5px 0px var(--primary-purple);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .visual-aid-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 8px 8px 0px var(--primary-purple);
+        }
+        .visual-aid-item i {
+            font-size: 3rem;
+            color: var(--primary-pink);
+            margin-bottom: 1rem;
+        }
+        .y2k-window {
+            border: 2px solid var(--text-dark);
+            border-radius: 8px;
+            background: #DFDFFB;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+        }
+        .y2k-title-bar {
+            background: linear-gradient(90deg, var(--primary-purple), var(--primary-pink));
+            color: white;
+            padding: 0.5rem 1rem;
+            font-weight: 700;
+            border-bottom: 2px solid var(--text-dark);
+            border-radius: 6px 6px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .y2k-buttons span {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--text-dark);
+            background: var(--bg-color);
+            margin-left: 5px;
+            border-radius: 3px;
+        }
+        .y2k-content {
+            padding: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Slide 1: Title Page -->
+    <div id="slide-1" class="slide active" style="background: linear-gradient(45deg, #FF99D7, #A491D6, #89CFF0);">
+        <div class="text-center">
+            <h1 class="mb-4">媒體內容作為 AI 燃料</h1>
+            <h2 class="mb-8 text-white text-3xl font-medium" style="text-shadow: 2px 2px 0px var(--text-dark);">權利、風險與治理的未來</h2>
+            <div class="mt-20 y2k-window" style="max-width: 600px; margin: auto;">
+                <div class="y2k-title-bar">
+                    <span>C:\\> Speaker_Info.exe</span>
+                    <div class="y2k-buttons"><span></span><span></span><span></span></div>
+                </div>
+                <div class="y2k-content text-xl">
+                    <p>[您的姓名]</p>
+                    <p class="text-lg text-gray-700">[您的職稱 / 所屬機構]</p>
+                    <p class="text-base text-gray-500 mt-4">[活動 / 會議名稱] | 2025.09.17</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 2: Opening -->
+    <div id="slide-2" class="slide">
+        <div class="slide-content grid grid-cols-2 gap-12 items-center">
+            <div>
+                <img src="https://placehold.co/600x600/FF99D7/FFFFFF?text=%E2%9C%A8%20AI%20Art%20%E2%9C%A8&font=m-plus-rounded-1c" alt="AI 生成的可愛藝術圖像" class="rounded-lg" style="border: 4px solid var(--primary-pink); padding: 8px; background: white;">
+            </div>
+            <div>
+                <h3 class="text-3xl font-bold leading-snug">這張圖，AI 在幾秒內便能生成。</h3>
+                <h3 class="text-3xl font-bold leading-snug mb-6">但...它究竟「吃」了什麼，才學會這一切？</h3>
+                <div class="quote">
+                    <p>網際網路的本質，是促進**資訊的自由流通**。</p>
+                    <p>而著作權法的核心，卻是**限制流通**。</p>
+                </div>
+                 <ul class="mt-4 space-y-2 text-lg bullet-list">
+                    <li><b>法律雷區</b>：如何界定「合理使用」與「侵權」？</li>
+                    <li><b>倫理與安全風險</b>：如何過濾資料中的偏見與漏洞？</li>
+                    <li><b>治理真空</b>：我們該如何建立有效的「護欄」？</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3: Digital Buffet -->
+    <div id="slide-3" class="slide">
+        <div class="slide-content text-center">
+            <h3>第一部分：數位自助餐</h3>
+            <h2>AI 的訓練資料從何而來？</h2>
+            <div class="visual-aid-grid">
+                <div class="visual-aid-item">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <p class="font-bold">網路「應用層」內容</p>
+                    <p class="text-sm text-gray-600">社交平台, 部落格, App Store</p>
+                </div>
+                <div class="visual-aid-item">
+                    <i class="fa-solid fa-comments"></i>
+                    <p class="font-bold">使用者生成數據</p>
+                    <p class="text-sm text-gray-600">公共紀錄, 商品評論, 論壇</p>
+                </div>
+                <div class="visual-aid-item">
+                    <i class="fa-solid fa-satellite-dish"></i>
+                    <p class="font-bold">基礎建設的演進</p>
+                    <p class="text-sm text-gray-600">從 3G 到 5G 促成內容爆發</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 4: New Intermediaries -->
+    <div id="slide-4" class="slide">
+        <div class="slide-content text-center">
+             <h3>第一部分：數位自助餐</h3>
+            <h2>新的中介者：從數位公路到知識守門人</h2>
+             <div class="grid grid-cols-5 gap-4 items-center text-center mt-10">
+                <div class="flex flex-col items-center"><i class="fas fa-road text-6xl text-gray-400"></i><p class="mt-2 font-semibold">馬路</p></div>
+                <div class="text-4xl text-gray-400">&rarr;</div>
+                <div class="flex flex-col items-center"><i class="fas fa-store text-6xl text-gray-400"></i><p class="mt-2 font-semibold">量販店</p></div>
+                <div class="text-4xl text-gray-400">&rarr;</div>
+                <div class="flex flex-col items-center"><i class="fas fa-robot text-6xl text-var(--primary-purple)"></i><p class="mt-2 font-semibold">LLM 開發者</p></div>
+            </div>
+            <div class="quote mt-10">
+                權力伴隨責任：巨大的影響力，使其不能規避商業模式中隱含的法律風險。
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5: Legal Disputes -->
+    <div id="slide-5" class="slide">
+        <div class="slide-content">
+            <h3>第二部分：知識的代價</h3>
+            <h2>核心法律爭議：誰該為 AI 的「學習」負責？</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                <div class="y2k-window">
+                    <div class="y2k-title-bar"><span>Warning.exe</span><div class="y2k-buttons"><span></span><span></span><span></span></div></div>
+                    <div class="y2k-content">
+                        <h4 class="text-xl font-bold mb-3">注意義務觀</h4>
+                        <p>引用「量販店侵權春聯案」，主張開發者不能完全規避其商業模式中隱含的法律風險，應對訓練資料負有審查責任。</p>
+                    </div>
+                </div>
+                <div class="y2k-window">
+                     <div class="y2k-title-bar"><span>Info.exe</span><div class="y2k-buttons"><span></span><span></span><span></span></div></div>
+                     <div class="y2k-content">
+                        <h4 class="text-xl font-bold mb-3">避風港觀</h4>
+                        <p>參考美國《通訊端正法》第 230 條，主張為保護創新，通知後移除即可免責。然而，其適用性已成激辯焦點。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 6: EU AI Act -->
+    <div id="slide-6" class="slide">
+        <div class="slide-content flex items-center gap-12">
+            <div class="w-1/2">
+                <h3>第二部分：知識的代價</h3>
+                <h2>劃定界線：歐盟《AI 法案》的前瞻性監管</h2>
+                <ul class="bullet-list mt-6">
+                    <li><b>全球首部全面性 AI 法規</b>，可能成為全球監管標準。</li>
+                    <li><b>風險為本 (Risk-Based) 策略</b>，針對「預期用途」而非技術。</li>
+                    <li><b>嚴格定義高風險應用</b>，特別是「教育」與「就業」領域。</li>
+                </ul>
+            </div>
+            <div class="w-1/2">
+                 <img src="https://placehold.co/500x500/A491D6/FFFFFF?text=%E9%A2%A8%E9%9A%AA%E7%AD%89%E7%B4%9A%E5%9C%96&font=m-plus-rounded-1c" alt="風險等級金字塔的可愛風格圖示" class="mx-auto">
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 7: High-Risk Obligations -->
+    <div id="slide-7" class="slide">
+        <div class="slide-content text-center">
+            <h3>第二部分：知識的代價</h3>
+            <h2>高風險 AI 的義務：從法律條文到工程實踐</h2>
+            <div class="visual-aid-grid mt-10">
+                <div class="visual-aid-item">
+                    <i class="fa-solid fa-shield-heart"></i>
+                    <p class="font-bold">資料與資料治理</p>
+                    <p class="text-sm text-gray-600">要求資料集高品質、具代表性且無偏見。</p>
+                </div>
+                <div class="visual-aid-item">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    <p class="font-bold">技術文件</p>
+                    <p class="text-sm text-gray-600">建立 AI 的「產品履歷」。</p>
+                </div>
+                <div class="visual-aid-item">
+                    <i class="fa-solid fa-user-gear"></i>
+                    <p class="font-bold">人類監督</p>
+                    <p class="text-sm text-gray-600">確保人類能隨時介入、覆寫 AI 決策。</p>
+                </div>
+                <div class="visual-aid-item">
+                    <i class="fa-solid fa-lightbulb"></i>
+                    <p class="font-bold">透明度</p>
+                    <p class="text-sm text-gray-600">挑戰「黑盒子」特性，提供足夠資訊。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 8: Inherent Risks -->
+    <div id="slide-8" class="slide">
+        <div class="slide-content flex items-center gap-12">
+            <div class="w-1/2">
+                <img src="https://placehold.co/600x600/89CFF0/FFFFFF?text=Garbage%20In%2C%0AGospel%20Out%20%3A(%20&font=m-plus-rounded-1c" alt="可愛風格的垃圾進福音出隱喻圖" class="rounded-lg shadow-2xl">
+            </div>
+            <div class="w-1/2">
+                <h3>第三部分：倫理與安全風險</h3>
+                <h2>垃圾進，福音出？訓練資料的內在缺陷</h2>
+                <ul class="bullet-list mt-6">
+                    <li><b>偏見的繼承與放大</b>：AI 學習並固化社會偏見。</li>
+                    <li><b>假訊息與不可靠性</b>：可能「一本正經地胡說八道」。</li>
+                    <li><b>Deepfake 技術的濫用</b>：製造假影像用於詐騙或影響選舉。</li>
+                    <li><b>缺乏人類的價值判斷</b>，無法處理複雜的倫理困境。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 9: Attack Surface -->
+    <div id="slide-9" class="slide">
+        <div class="slide-content text-center">
+            <h3>第三部分：倫理與安全風險</h3>
+            <h2>訓練資料作為新的攻擊面 (Attack Surface)</h2>
+            <div class="mt-10 y2k-window">
+                <div class="y2k-title-bar"><span>Data_Pipeline_Security.log</span><div class="y2k-buttons"><span></span><span></span><span></span></div></div>
+                <div class="y2k-content">
+                    <p class="text-lg mb-4">`[網路內容] -> [資料爬取] -> [模型訓練] -> [LLM 應用]`</p>
+                    <p class="text-red-500 font-bold text-lg"><i class="fas fa-skull-crossbones"></i> 攻擊點 1：訓練資料汙染 (源頭)</p>
+                    <p class="text-red-500 font-bold text-lg mt-2"><i class="fas fa-ghost"></i> 攻擊點 2：提示注入 (過程中)</p>
+                </div>
+            </div>
+            <p class="mt-8 text-lg">安全威脅貫穿整個資料生命週期，從源頭到應用都可能成為攻擊突破口。</p>
+        </div>
+    </div>
+    
+    <!-- Slide 10: Case Study Puzzle -->
+    <div id="slide-10" class="slide">
+        <div class="slide-content text-center">
+            <h3>案例分析：一個數據的謎題</h3>
+            <h2>台灣哪個縣市離婚率最高？</h2>
+            <div class="mt-8">
+                <img src="https://placehold.co/800x500/FDFD96/3D2C8D?text=%E6%BE%8E%E6%B9%96+%2B+%3F%E2%9D%A4%EF%B8%8E&font=m-plus-rounded-1c" alt="可愛風格的澎湖地圖與問號" class="mx-auto rounded-lg shadow-lg">
+                <p class="mt-6 text-xl">根據官方統計，離婚率最高的縣市之一是：**澎湖縣**。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 11: Case Study AI's Guess -->
+    <div id="slide-11" class="slide">
+        <div class="slide-content flex items-center gap-12">
+            <div class="w-1/3 text-center">
+                <i class="fa-solid fa-robot text-9xl text-gray-400 animate-pulse"></i>
+                 <p class="mt-4 font-bold text-gray-500">AI 的猜測...</p>
+            </div>
+            <div class="w-2/3 y2k-window">
+                 <div class="y2k-title-bar"><span>Conclusion_Error.txt</span><div class="y2k-buttons"><span></span><span></span><span></span></div></div>
+                 <div class="y2k-content">
+                    <ul class="bullet-list">
+                        <li><b>經濟因素</b>：漁業導致丈夫長期出海。</li>
+                        <li><b>社會壓力</b>：離島生活壓力大。</li>
+                        <li><b>數據關聯</b>：離島與高離婚率相關。</li>
+                    </ul>
+                     <p class="mt-4 font-semibold text-red-500">AI 找到了「相關性」，但這並非真正的「因果性」。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 12: Case Study The Truth -->
+    <div id="slide-12" class="slide">
+        <div class="slide-content text-center">
+            <h3>案例分析：一個數據的謎題</h3>
+            <h2>真相在數據之外：一個政策驅動的結果</h2>
+             <div class="flex justify-center items-center text-center mt-10 text-lg font-semibold space-x-4">
+                <div class="flex flex-col items-center"><i class="fa-solid fa-tractor text-5xl mb-2"></i><p>農地</p></div>
+                <div class="text-4xl text-gray-400">&rarr;</div>
+                <div class="flex flex-col items-center"><i class="fa-solid fa-scroll text-5xl mb-2"></i><p>地方土地政策</p></div>
+                <div class="text-4xl text-gray-400">&rarr;</div>
+                <div class="flex flex-col items-center"><i class="fa-solid fa-file-signature text-5xl mb-2"></i><p>離婚登記以獲取資格</p></div>
+            </div>
+            <div class="quote mt-10">
+                <p class="font-bold text-2xl mb-4" style="color:var(--text-dark);">理解「後數據 (Post-Data)」的重要性</p>
+                <p>數據告訴我們「What」發生了，但無法解釋「Why」。真正的洞察力來自於理解數據背後的**社會脈絡、政策背景與人類動機**。</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 13: Conclusion -->
+    <div id="slide-13" class="slide" style="background: linear-gradient(-45deg, #FF99D7, #A491D6, #89CFF0);">
+        <div class="slide-content text-center">
+            <h2 class="text-4xl">結論：在十字路口上的抉擇</h2>
+            <div class="visual-aid-grid mt-10">
+                <div class="visual-aid-item">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                    <p class="font-bold">法律的再平衡</p>
+                    <p class="text-sm text-gray-600">在保護權益與鼓勵創新之間，建立公平的價值交換。</p>
+                </div>
+                <div class="visual-aid-item">
+                    <i class="fa-solid fa-shield-virus"></i>
+                    <p class="font-bold">倫理的防火牆</p>
+                    <p class="text-sm text-gray-600">從源頭過濾偏見與風險，建立真正可信賴的 AI。</p>
+                </div>
+                <div class="visual-aid-item">
+                    <i class="fa-solid fa-drafting-compass"></i>
+                    <p class="font-bold">治理的藍圖</p>
+                    <p class="text-sm text-gray-600">借鑑過去經驗，設計一套具備彈性的全球性規則。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 14: Final Thought -->
+    <div id="slide-14" class="slide" style="background-color: var(--text-dark);">
+         <div class="text-center text-white px-12">
+            <p class="text-4xl leading-relaxed font-light mb-8">我們用海量的媒體內容作為燃料，驅動了 AI 的智慧。</p>
+            <p class="text-4xl leading-relaxed font-light mb-12">但當 AI 這面鏡子變得比以往任何時候都更清晰時，</p>
+            <p class="text-5xl leading-tight font-bold" style="color: var(--primary-pink); text-shadow: 2px 2px 0px white;">我們是否有勇氣，面對它所映照出的——我們自己？</p>
+        </div>
+    </div>
+
+    <!-- Slide 15: Q&A -->
+    <div id="slide-15" class="slide">
+        <div class="slide-content text-center">
+            <h1 class="text-6xl" style="color: var(--primary-purple); text-shadow: 3px 3px 0px #fff, 5px 5px 0px var(--primary-pink);">Q&A</h1>
+            <h2 class="text-3xl mt-4 font-normal">提問與交流</h2>
+            <div class="mt-12 y2k-window" style="max-width: 500px; margin: auto;">
+                 <div class="y2k-title-bar"><span>Contact.ini</span><div class="y2k-buttons"><span></span><span></span><span></span></div></div>
+                 <div class="y2k-content text-xl">
+                    <p>[您的姓名]</p>
+                    <p class="text-lg text-gray-700">[您的聯絡方式 / LinkedIn]</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <button id="prev" class="nav-button"><i class="fas fa-chevron-left"></i></button>
+    <button id="next" class="nav-button"><i class="fas fa-chevron-right"></i></button>
+    <div id="slide-counter">1 / 15</div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = document.querySelectorAll('.slide').length;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(slide => slide.classList.remove('active'));
+            document.getElementById(`slide-${n}`).classList.add('active');
+            document.getElementById('slide-counter').textContent = `${n} / ${totalSlides}`;
+        }
+
+        function navigate(n) {
+            currentSlide = n;
+            if (currentSlide > totalSlides) { currentSlide = 1; }
+            if (currentSlide < 1) { currentSlide = totalSlides; }
+            showSlide(currentSlide);
+        }
+
+        document.getElementById('next').addEventListener('click', () => navigate(currentSlide + 1));
+        document.getElementById('prev').addEventListener('click', () => navigate(currentSlide - 1));
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                navigate(currentSlide + 1);
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                navigate(currentSlide - 1);
+            }
+        });
+
+        showSlide(currentSlide);
+    </script>
+</body>
+</html>
