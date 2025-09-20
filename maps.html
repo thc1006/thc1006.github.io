@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale-1.0">
+    <title>守護追蹤儀表板</title>
+    <!-- 引入 Leaflet.js 地圖庫的 CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+    <!-- 引入 Tailwind CSS 以便快速美化介面 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 確保地圖容器填滿整個視窗 */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            overflow: hidden; /* 防止滾動條出現 */
+        }
+        /* 將地圖的尺寸限制在其容器內 */
+        #map {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+        /* 自訂患者移動點的樣式 */
+        .patient-marker {
+            width: 20px;
+            height: 20px;
+            background-color: #3498db; /* 藍色 */
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.8);
+            transition: background-color 0.5s ease;
+        }
+        .patient-marker.warning {
+            background-color: #e67e22; /* 橘色警告 */
+            box-shadow: 0 0 15px rgba(230, 126, 34, 1);
+        }
+        /* 讓圖標稍微跳動，增加視覺焦點 */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .home-icon, .destination-icon {
+            animation: pulse 2s infinite;
+        }
+        /* Toast 通知動畫 */
+        @keyframes slide-in {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        .toast-notification {
+            animation: slide-in 0.5s ease-out forwards;
+        }
+        /* 美化 Leaflet 的 Popup 樣式 */
+        .leaflet-popup-content-wrapper {
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .leaflet-popup-content {
+            margin: 12px 18px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex h-screen">
+
+    <!-- 左側導覽列 (Sidebar) -->
+    <aside class="w-72 bg-white shadow-md flex flex-col z-30">
+        <div class="flex items-center justify-center h-20 border-b">
+            <h1 class="text-2xl font-bold text-blue-600">守護系統</h1>
+        </div>
+        <div class="flex-1 overflow-y-auto">
+            <nav class="px-4 py-6 space-y-4">
+                <div>
+                    <a href="#" class="flex items-center px-4 py-2 text-gray-700 bg-gray-200 rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
+                        儀表板總覽
+                    </a>
+                </div>
+
+                <div>
+                    <h3 class="px-4 pt-4 pb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">患者列表</h3>
+                    <div class="space-y-1">
+                        <a href="#" class="flex items-center px-4 py-2 text-gray-700 bg-blue-100 rounded-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" /><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.022 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" /></svg>
+                            <span>陳秀英</span>
+                            <span class="ml-auto text-xs bg-green-500 text-white px-2 py-0.5 rounded-full">監控中</span>
+                        </a>
+                        <a href="#" class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>陳志明</span>
+                             <span class="ml-auto text-xs bg-gray-400 text-white px-2 py-0.5 rounded-full">安全</span>
+                        </a>
+                        <a href="#" class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+                            <span>林淑芬</span>
+                            <span class="ml-auto text-xs bg-red-500 text-white px-2 py-0.5 rounded-full">訊號遺失</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                     <h3 class="px-4 pt-4 pb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">警報歷史 (陳秀英)</h3>
+                     <div class="space-y-2 text-sm">
+                        <div class="px-4 py-2 hover:bg-gray-50 rounded-md cursor-pointer">
+                            <div class="flex justify-between items-center">
+                                <p class="font-semibold text-gray-700">進入安全區域</p>
+                                <span class="text-xs font-bold text-green-600">NEW</span>
+                            </div>
+                            <p class="text-xs text-gray-500">新竹市立醫院</p>
+                            <p class="text-xs text-gray-400">2025/9/19 下午3:50:30</p>
+                        </div>
+                        <div class="px-4 py-2 hover:bg-gray-50 rounded-md cursor-pointer">
+                            <div class="flex justify-between items-center">
+                                <p class="font-semibold text-gray-700">偵測到異常快速移動</p>
+                                <span class="text-xs font-bold text-yellow-600">NEW</span>
+                            </div>
+                            <p class="text-xs text-gray-500">可能搭乘交通工具</p>
+                            <p class="text-xs text-gray-400">2025/9/19 下午3:20:30</p>
+                        </div>
+                         <div class="px-4 py-2 hover:bg-gray-50 rounded-md cursor-pointer">
+                            <div class="flex justify-between items-center">
+                                <p class="font-semibold text-gray-700">藍牙Beacon訊號遺失</p>
+                                 <span class="text-xs font-bold text-red-600">NEW</span>
+                            </div>
+                            <p class="text-xs text-gray-500">超過10分鐘</p>
+                            <p class="text-xs text-gray-400">2025/9/19 下午2:20:30</p>
+                        </div>
+                         <div class="px-4 py-2 hover:bg-gray-50 rounded-md cursor-pointer">
+                            <div class="flex justify-between items-center">
+                                <p class="font-semibold text-gray-700">用藥提醒</p>
+                                <span class="text-xs font-bold text-blue-600">NEW</span>
+                            </div>
+                            <p class="text-xs text-gray-500">請協助患者服藥</p>
+                            <p class="text-xs text-gray-400">2025/9/19 上午11:50:30</p>
+                        </div>
+                         <div class="px-4 py-2 hover:bg-gray-50 rounded-md cursor-pointer">
+                            <div class="flex justify-between items-center">
+                                <p class="font-semibold text-gray-700">偵測到可能跌倒事件</p>
+                                 <span class="text-xs font-bold text-red-600">NEW</span>
+                            </div>
+                             <p class="text-xs text-gray-500">經國路二段</p>
+                            <p class="text-xs text-gray-400">2025/9/19 上午10:15:12</p>
+                        </div>
+                     </div>
+                </div>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- 主要內容區域 -->
+    <div class="flex-1 flex flex-col">
+        <header class="h-20 bg-white border-b flex items-center px-8 justify-between">
+            <h2 class="text-2xl font-semibold text-gray-800">即時地圖監控: <span class="text-blue-600">陳秀英</span></h2>
+            <div class="text-sm text-gray-500">照護員：蔡秀吉</div>
+        </header>
+        
+        <main class="flex-1 p-6 bg-gray-100 relative">
+            <div id="map-container" class="w-full h-full relative rounded-xl overflow-hidden shadow-lg">
+                <!-- 地圖容器 -->
+                <div id="map"></div>
+
+                <!-- 控制面板與說明 -->
+                <div id="controls" class="absolute top-4 left-4 z-20 bg-white p-4 rounded-lg shadow-lg max-w-sm text-gray-700 space-y-3">
+                    <h1 class="text-xl font-bold text-gray-800">模擬控制器</h1>
+                    <div class="text-sm space-y-2">
+                        <div class="flex items-center space-x-2"><div class="w-4 h-4 bg-green-500 rounded-full"></div><span>家 (起點)</span></div>
+                        <div class="flex items-center space-x-2"><div class="w-4 h-4 bg-red-500 rounded-full"></div><span>失智據點 (目的地)</span></div>
+                        <div class="flex items-center space-x-2"><div class="w-4 h-4 bg-blue-500 rounded-full"></div><span>患者目前位置</span></div>
+                        <div class="flex items-center space-x-2"><div class="border-t-2 border-dashed border-gray-500 w-4"></div><span>預計總路徑</span></div>
+                        <div class="flex items-center space-x-2"><div class="border-t-2 border-dashed border-gray-400 w-4"></div><span>路徑偏離(觀察中)</span></div>
+                        <div class="flex items-center space-x-2"><div class="w-4 h-4 bg-orange-400 opacity-80" style="width: 1rem; height: 0.25rem;"></div><span>異常徘徊(確認)</span></div>
+                        <div class="flex items-center space-x-2"><div class="w-4 h-4 rounded-full border-2 border-dashed border-blue-400"></div><span>數位圍籬 (安全範圍)</span></div>
+                    </div>
+                    <!-- 新的圖例 -->
+                    <div class="pt-2">
+                        <span class="text-sm font-semibold">路徑可能性預測</span>
+                        <div class="flex w-full h-4 rounded-md overflow-hidden mt-1 border">
+                            <div style="width: 20%; background-color: #27ae60;"></div>
+                            <div style="width: 20%; background-color: #2ecc71;"></div>
+                            <div style="width: 20%; background-color: #f1c40f;"></div>
+                            <div style="width: 20%; background-color: #e67e22;"></div>
+                            <div style="width: 20%; background-color: #e74c3c;"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-gray-500 px-1">
+                            <span>低</span>
+                            <span>高</span>
+                        </div>
+                    </div>
+                    <button id="start-simulation" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300 shadow-md">
+                        開始模擬
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Toast 通知 (預設隱藏) -->
+            <div id="toast-notification" class="absolute bottom-8 right-8 z-40 w-full max-w-sm bg-white shadow-2xl rounded-lg p-4 hidden toast-notification">
+                 <div class="flex items-start space-x-3">
+                     <div class="p-2 bg-red-100 rounded-full"><svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div>
+                     <div class="flex-1">
+                         <h3 class="font-bold text-gray-800">緊急警報</h3>
+                         <p class="text-sm text-gray-600">偵測到患者行走模式異常！</p>
+                         <button onclick="showAlertOnMap()" class="mt-2 text-sm font-semibold text-blue-600 hover:underline">查看詳情</button>
+                     </div>
+                     <button onclick="document.getElementById('toast-notification').classList.add('hidden')"><svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                 </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- 引入 Leaflet.js 地圖庫的 JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+
+    <script>
+    // --- 變數定義 ---
+    const homeCoords = [24.8113, 120.9715];
+    const destinationCoords = [24.8035, 120.9920];
+    const mapCenter = [24.8074, 120.98175];
+    const normalPath = [[24.8113, 120.9715], [24.8110, 120.9725], [24.8105, 120.9740], [24.8090, 120.9750], [24.8085, 120.9775], [24.8078, 120.9800], [24.8070, 120.9820], [24.8065, 120.9845], [24.8055, 120.9870], [24.8045, 120.9895], [24.8035, 120.9920]];
+    const wanderingPath = [[24.8070, 120.9820], [24.8072, 120.9825], [24.8068, 120.9828], [24.8071, 120.9823], [24.8073, 120.9826], [24.8069, 120.9829], [24.8070, 120.9821]];
+    const deviationPointIndex = 6;
+
+    let map;
+    let patientMarker;
+    let predictionPathLayers = []; // 用於儲存颱風路徑圖層
+    let normalPathPolyline, warningPathPolyline, alertMarker = null;
+    let animationFrameId;
+
+    // --- 初始化函式 ---
+    function initializeMap() {
+        map = L.map('map').setView(mapCenter, 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map);
+
+        L.marker(homeCoords, { icon: L.divIcon({ className: 'home-icon', html: '<div class="w-6 h-6 bg-green-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" /></svg></div>', iconSize: [24, 24], iconAnchor: [12, 24] }) }).addTo(map).bindPopup('<b>家 (起點)</b>');
+        L.marker(destinationCoords, { icon: L.divIcon({ className: 'destination-icon', html: '<div class="w-6 h-6 bg-red-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 21l-4.95-6.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" /></svg></div>', iconSize: [24, 24], iconAnchor: [12, 24] }) }).addTo(map).bindPopup('<b>失智據點 (目的地)</b>');
+        
+        // --- 數位圍籬 ---
+        const fenceOptions = { color: '#3498db', weight: 2, fillOpacity: 0.05 };
+        L.circle(homeCoords, { ...fenceOptions, radius: 250 }).addTo(map);
+        L.circle(homeCoords, { ...fenceOptions, radius: 500, dashArray: '10, 10' }).addTo(map);
+        L.circle(destinationCoords, { ...fenceOptions, radius: 250 }).addTo(map);
+        L.circle(destinationCoords, { ...fenceOptions, radius: 500, dashArray: '10, 10' }).addTo(map);
+
+        normalPathPolyline = L.polyline(normalPath, { color: 'rgba(100, 100, 100, 0.6)', weight: 3, dashArray: '5, 10' }).addTo(map);
+        patientMarker = L.marker(homeCoords, { icon: L.divIcon({ className: 'patient-marker', iconSize: [20, 20] }) }).addTo(map);
+    }
+
+    // --- 動畫函式 ---
+    function startSimulation() {
+        if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        if (warningPathPolyline) map.removeLayer(warningPathPolyline);
+        if (alertMarker) { map.removeLayer(alertMarker); alertMarker = null; }
+        predictionPathLayers.forEach(layer => map.removeLayer(layer));
+        predictionPathLayers = [];
+        patientMarker.setLatLng(homeCoords);
+        patientMarker.getElement().classList.remove('warning');
+        document.getElementById('toast-notification').classList.add('hidden');
+        document.getElementById('start-simulation').disabled = true;
+        document.getElementById('start-simulation').textContent = "模擬進行中...";
+
+        let startTime = null;
+        const totalDuration = 20000;
+        const segmentDuration = totalDuration / normalPath.length;
+
+        function animate(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const progress = timestamp - startTime;
+            const pathIndex = Math.min(Math.floor(progress / segmentDuration), normalPath.length - 2);
+            if (pathIndex >= deviationPointIndex) { startWanderingAnimation(); return; }
+            const segmentProgress = (progress % segmentDuration) / segmentDuration;
+            const startPoint = normalPath[pathIndex];
+            const endPoint = normalPath[pathIndex + 1];
+            const lat = startPoint[0] + (endPoint[0] - startPoint[0]) * segmentProgress;
+            const lng = startPoint[1] + (endPoint[1] - startPoint[1]) * segmentProgress;
+            const currentPos = [lat, lng];
+            patientMarker.setLatLng(currentPos);
+            map.panTo(currentPos, { animate: false });
+            updatePredictionPath(currentPos, endPoint);
+            animationFrameId = requestAnimationFrame(animate);
+        }
+        animationFrameId = requestAnimationFrame(animate);
+    }
+    
+    function startWanderingAnimation() {
+        cancelAnimationFrame(animationFrameId);
+        predictionPathLayers.forEach(layer => map.removeLayer(layer));
+        predictionPathLayers = [];
+        const wanderingPoints = [normalPath[deviationPointIndex]];
+        warningPathPolyline = L.polyline(wanderingPoints, { color: '#999999', weight: 5, dashArray: '5,5' }).addTo(map);
+        
+        let startTime = null;
+        const wanderDuration = 10000; // 增加持續時間以使階段更清晰
+        const totalWanderLength = wanderingPath.length;
+        const segmentDuration = wanderDuration / totalWanderLength;
+        let suspicionTriggered = false;
+        let alertTriggered = false;
+
+        function animateWander(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const progress = timestamp - startTime;
+
+            // 階段 1: 3秒後觸發懷疑
+            if (progress > 3000 && !suspicionTriggered) {
+                patientMarker.getElement().classList.add('warning');
+                if (warningPathPolyline) {
+                    warningPathPolyline.setStyle({ color: '#e67e22', dashArray: null }); // 變為實心橘色
+                }
+                suspicionTriggered = true;
+            }
+
+            // 階段 2: 6秒後觸發警報 (懷疑發生3秒後)
+            if (progress > 6000 && !alertTriggered) {
+                showToast();
+                alertTriggered = true;
+            }
+
+            if(progress >= wanderDuration) { resetSimulationButton(); return; }
+            
+            const pathIndex = Math.min(Math.floor(progress / segmentDuration), totalWanderLength - 2);
+            const segmentProgress = (progress % segmentDuration) / segmentDuration;
+            const startPoint = wanderingPath[pathIndex];
+            const endPoint = wanderingPath[pathIndex + 1];
+            const lat = startPoint[0] + (endPoint[0] - startPoint[0]) * segmentProgress;
+            const lng = startPoint[1] + (endPoint[1] - startPoint[1]) * segmentProgress;
+            const currentPos = [lat, lng];
+            patientMarker.setLatLng(currentPos);
+            warningPathPolyline.addLatLng(currentPos);
+            animationFrameId = requestAnimationFrame(animateWander);
+        }
+        animationFrameId = requestAnimationFrame(animateWander);
+    }
+    
+    function updatePredictionPath(currentPos, nextPoint) {
+        predictionPathLayers.forEach(layer => map.removeLayer(layer));
+        predictionPathLayers = [];
+        const pathProbabilityBands = [ { color: '#27ae60', weight: 70, opacity: 0.2 }, { color: '#2ecc71', weight: 60, opacity: 0.25 }, { color: '#f1c40f', weight: 50, opacity: 0.3 }, { color: '#e67e22', weight: 40, opacity: 0.35 }, { color: '#e74c3c', weight: 30, opacity: 0.4 }, { color: '#c0392b', weight: 20, opacity: 0.5 } ];
+        const predictionSegment = [currentPos, nextPoint];
+        pathProbabilityBands.forEach(band => {
+            const pathLayer = L.polyline(predictionSegment, { color: band.color, weight: band.weight, opacity: band.opacity, lineCap: 'round', lineJoin: 'round' }).addTo(map);
+            predictionPathLayers.push(pathLayer);
+        });
+        const centerLine = L.polyline(predictionSegment, { color: 'black', weight: 2, opacity: 0.8, dashArray: '5, 5' }).addTo(map);
+        predictionPathLayers.push(centerLine);
+    }
+    
+    function showToast() {
+        document.getElementById('toast-notification').classList.remove('hidden');
+    }
+
+    function showAlertOnMap() {
+        if (alertMarker) {
+            map.removeLayer(alertMarker);
+        }
+        const alertLocation = L.latLng(wanderingPath[0]);
+        const popupContent = `
+            <div class="w-64">
+                <div class="font-bold text-base mb-1 text-red-600">系統警報</div>
+                <p class="text-sm">偵測到異常行走模式！</p>
+                <p class="text-sm mb-2">患者可能已偏離日常路線，並在原地徘徊。請立即確認其狀況。</p>
+                <div class="border-t pt-2 mt-2">
+                    <p class="font-bold text-xs">最後位置:</p>
+                    <p class="text-xs">新竹市東區中央路 65 號附近</p>
+                    <p class="text-xs text-gray-500">(座標: ${alertLocation.lat.toFixed(4)}, ${alertLocation.lng.toFixed(4)})</p>
+                </div>
+            </div>`;
+        
+        alertMarker = L.marker(alertLocation, {
+            icon: L.divIcon({
+                className: 'alert-icon',
+                html: `<div class="relative"><svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-red-500 drop-shadow-lg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-7-8a7 7 0 1114 0 7 7 0 01-14 0z" clip-rule="evenodd" /><path fill-rule="evenodd" d="M10 4a1 1 0 011 1v4a1 1 0 11-2 0V5a1 1 0 011-1zm0 8a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd" /></svg></div>`,
+                iconSize: [48, 48],
+                iconAnchor: [24, 48]
+            })
+        }).addTo(map)
+            .bindPopup(popupContent)
+            .openPopup();
+            
+        document.getElementById('toast-notification').classList.add('hidden');
+        map.flyTo(alertLocation, 17); // 使用 flyTo 讓地圖平滑移動並放大
+    }
+
+    function resetSimulationButton() {
+        document.getElementById('start-simulation').disabled = false;
+        document.getElementById('start-simulation').textContent = "重新開始模擬";
+    }
+
+    // --- 事件監聽 ---
+    document.getElementById('start-simulation').addEventListener('click', startSimulation);
+    window.onload = function() { initializeMap(); };
+    </script>
+
+</body>
+</html>
+
