@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微積分 (1-1 ~ 4-9) 核心公式記憶表</title>
+    <!-- 載入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 載入 MathJax 進行 LaTeX 渲染 -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+    
+    <!-- 自訂樣式與印刷優化 -->
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background-color: #f9fafb; /* 淺灰色背景 */
+        }
+        
+        main {
+            max-width: 1024px;
+            margin: 2rem auto;
+            padding: 2.5rem;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+
+            /* 確保內容有足夠寬度 */
+            min-width: 320px;
+        }
+
+        h1 {
+            color: #1e3a8a; /* 深藍色 */
+            border-bottom: 3px solid #3b82f6; /* 藍色 */
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            word-break: keep-all;
+        }
+
+        /* * **** 這是新的修正 ****
+         * 使用 'main > h2' 來提高 CSS 優先級，
+         * 確保這些樣式能覆蓋 Tailwind 的預設值。
+         */
+        main > h2 {
+            /* 來自 Tailwind text-3xl */
+            font-size: 1.875rem;
+            line-height: 1.4;
+            /* 來自 Tailwind font-bold */
+            font-weight: 700;
+
+            /* 原始樣式 */
+            color: #111827;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1.5rem;
+
+            /* 防止標題在括號處換行 */
+            word-break: keep-all;
+        }
+
+        h3 {
+            color: #1e3a8a; /* 深藍色 */
+            border-left: 4px solid #60a5fa; /* 淺藍色 */
+            padding-left: 0.75rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            word-break: keep-all;
+        }
+
+        h4 {
+            word-break: keep-all;
+        }
+
+        /* 確保所有內聯數學公式不會造成換行 */
+        mjx-container {
+            display: inline-block !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            max-width: fit-content !important;
+            width: auto !important;
+            vertical-align: middle !important;
+        }
+
+        /* 公式卡片 */
+        .card {
+            background-color: #f8f9fa; /* 非常淺的灰色 */
+            border: 1px solid #e5e7eb;
+            border-left: 5px solid #3b82f6; /* 藍色 */
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+        }
+
+        /* 公式區塊 */
+        .formula-box {
+            background-color: #eef2ff; /* 非常淺的藍色 */
+            border: 1px dashed #c7d2fe; /* 虛線邊框 */
+            border-radius: 6px;
+            padding: 1rem 1.5rem;
+            text-align: center;
+            overflow-x: auto; /* 讓長公式可以滾動 */
+            font-size: 1.25rem; /* 放大公式字體 */
+        }
+        
+        /* 記憶訣竅 (綠色) */
+        .tip {
+            background-color: #f0fdf4; /* 淺綠 */
+            border-left: 4px solid #22c55e; /* 綠色 */
+            color: #15803d; /* 深綠 */
+            padding: 0.75rem 1rem;
+            margin-top: 1rem;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.95rem;
+        }
+        
+        /* 常見陷阱 (紅色) */
+        .warning {
+            background-color: #fffbeb; /* 淺黃 */
+            border-left: 4px solid #f97316; /* 橘紅色 */
+            color: #b45309; /* 深橘 */
+            padding: 0.75rem 1rem;
+            margin-top: 1rem;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.95rem;
+        }
+
+        /* 補充說明 (灰色) */
+        .note {
+            background-color: #f3f4f6; /* 灰色 */
+            color: #4b5563; /* 深灰 */
+            padding: 0.75rem 1rem;
+            margin-top: 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        /* 印刷樣式 */
+        @media print {
+            body {
+                font-family: 'Times New Roman', serif;
+                background-color: #ffffff !important;
+                color: #000000 !important;
+            }
+            
+            main, .card {
+                box-shadow: none !important;
+                border: 1px solid #999;
+                background-color: #ffffff !important;
+            }
+
+            h1, main > h2, h3 {
+                color: #000000 !important;
+                border-color: #000000 !important;
+            }
+            
+            .card {
+                border-left-width: 4px;
+            }
+
+            .formula-box {
+                background-color: #f0f0f0 !important;
+                border: 1px solid #ccc;
+            }
+
+            .tip, .warning, .note {
+                background-color: #f9f9f9 !important;
+                border-left-width: 4px;
+                color: #000 !important;
+            }
+
+            /* 隱藏不需要列印的元素 */
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <main class="max-w-4xl mx-auto p-10 bg-white rounded-lg shadow-xl my-10">
+
+        <h1 class="text-4xl font-bold text-blue-800">微積分 (1-1 ~ 4-9) 核心公式記憶表</h1>
+        <p class="text-center text-gray-600 mb-10 no-print">
+            一份專為加速記憶設計的公式表。使用「區塊化」和「色彩提示」幫助你建立清晰的觀念地圖。
+        </p>
+
+        <!-- Chapter 2: 極限 -->
+        <!-- **** 修正點：移除 h2 上的 class，樣式改由 <style> 中的 'main > h2' 控制 **** -->
+        <h2>Chapter 2: 極限 (Limits)</h2>
+        <h3 class="text-2xl font-semibold">2.3 極限定律 & 擠壓定理</h3>
+
+        <div class="card">
+            <h4 class="text-xl font-semibold text-blue-700 mb-3">極限定律 (Limit Laws)</h4>
+            <p class="text-gray-700 mb-4">假設 $\lim_{x\to a} f(x)$ 和 $\lim_{x\to a} g(x)$ 均存在，則：</p>
+            <ul class="list-disc list-inside space-y-3 pl-2">
+                <li>加減：$\lim_{x\to a} [f(x) \pm g(x)] = \lim f(x) \pm \lim g(x)$</li>
+                <li>乘法：$\lim_{x\to a} [f(x) g(x)] = (\lim f(x)) (\lim g(x))$</li>
+                <li>商法：$\lim_{x\to a} \frac{f(x)}{g(x)} = \frac{\lim f(x)}{\lim g(x)}$ (前提 $\lim g(x) \neq 0$)</li>
+                <li>開方：$\lim_{x\to a} \sqrt[n]{f(x)} = \sqrt[n]{\lim f(x)}$ (前提 $\lim f(x) > 0$ 若 $n$ 為偶數)</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h4 class="text-xl font-semibold text-blue-700 mb-3">擠壓/三明治定理 (Squeeze Theorem)</h4>
+            <p class="text-gray-700 mb-4">若在 $a$ 附近 ( $x \neq a$ )，恆有 $g(x) \leq f(x) \leq h(x)$，且：</p>
+            <div class="formula-box">
+                $$ \lim_{x\to a} g(x) = \lim_{x\to a} h(x) = L $$
+            </div>
+            <p class="text-gray-700 mt-4">則 $f(x)$ 必被「夾住」：</p>
+            <div class="formula-box">
+                $$ \lim_{x\to a} f(x) = L $$
+            </div>
+            <div class="tip">
+                <strong>使用時機：</strong> 處理震盪函數（如 $\sin(\frac{1}{x})$）或證明 $\lim \frac{\sin x}{x}$。
+            </div>
+        </div>
+
+        <div class="card">
+            <h4 class="text-xl font-semibold text-blue-700 mb-3">必背特殊極限 (Special Limits)</h4>
+            <div class="formula-box">
+                $$ \lim_{x\to 0} \frac{\sin x}{x} = 1 $$
+            </div>
+            <div class="formula-box mt-3">
+                $$ \lim_{x\to 0} \frac{1 - \cos x}{x^2} = \frac{1}{2} $$
+            </div>
+            <div class="note">
+                <strong>推導：</strong> $\frac{1-\cos x}{x^2} = \frac{1-\cos x}{x^2} \cdot \frac{1+\cos x}{1+\cos x} = \frac{\sin^2 x}{x^2(1+\cos x)} = (\frac{\sin x}{x})^2 \cdot \frac{1}{1+\cos x} \to (1)^2 \cdot \frac{1}{1+1} = \frac{1}{2}$
+            </div>
+        </div>
+
+        <!-- Chapter 3: 微分 -->
+        <!-- **** 修正點：移除 h2 上的 class **** -->
+        <h2>Chapter 3: 微分 (Differentiation)</h2>
+        <h3 class="text-2xl font-semibold">3.1 & 3.6 基本/對數導數</h3>
+        
+        <div class="card">
+            <h4 class="text-xl font-semibold text-blue-700 mb-3">基本函數導數表</h4>
+            <ul class="list-disc list-inside space-y-3 pl-2">
+                <li>冪函數 (Power)：$\frac{d}{dx} x^n = nx^{n-1}$</li>
+                <li>指數 (Exponential)：$\frac{d}{dx} e^x = e^x$</li>
+                <li>一般指數：$\frac{d}{dx} a^x = a^x \ln a$</li>
+                <li>自然對數 (Natural Log)：$\frac{d}{dx} \ln x = \frac{1}{x}$</li>
+                <li>一般對數：$\frac{d}{dx} \log_a x = \frac{1}{x \ln a}$</li>
+            </ul>
+        </div>
+        
+        <h3 class="text-2xl font-semibold">3.2 乘法 & 商法則</h3>
+
+        <div class="card">
+            <h4 class="text-xl font-semibold text-blue-700 mb-3">乘法法則 (Product Rule)</h4>
+            <div class="formula-box">
+                $$ (f(x) g(x))' = f'(x)g(x) + f(x)g'(x) $$
+            </div>
+            <div class="tip">
+                <strong>口訣：</strong> 「前微、後不微，加，前不微、後微」
+            </div>
+        </div>
+        
+        <div class="card">
+            <h4 class="text-xl font-semibold text-blue-700 mb-3">商法則 (Quotient Rule)</h4>
+            <div class="formula-box">
+                $$ \left(\frac{f(x)}{g(x)}\right)' = \frac{g(x)f'(x) - f(x)g'(x)}{[g(x)]^2} $$
+            </div>
+            <div class="tip">
+                <strong>口訣：</strong> 「分母平方，分母乘分子微分，減，分子乘分母微分」
+            </div>
+            <div class="warning">
+                <strong>陷阱：</strong> 順序和「減號」絕對不能錯！是 $g f' - f g'$，不是 $f' g - g' f$。
+            </div>
+        </div>
+
+        <h3 class="text-2xl font-semibold">3.3 三角函數導數</h3>
+        
+        <div class="card">
+            <h4 class="text-xl font-semibold text-blue-700 mb-3">三角函數導數表</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="formula-box">$(\sin x)' = \cos x$</div>
+                <div class="formula-box">$(\cos x)' = -\sin x$</div>
+                <div class="formula-box">$(\tan x)' = \sec^2 x$</div>
+                <div class="formula-box">$(\cot x)' = -\csc^2 x$</div>
+                <div class="formula-box">$(\sec x)' = \sec x \tan x$</div>
+                <div class="formula-box">$(\csc x)' = -\csc x \cot x$</div>
+            </div>
+            <div class="tip">
+                <strong>記憶訣竅：</strong> 所有 "co-" (cos, cot, csc) 的微分，結果都是「負號」。
+            </div>
+        </div>
+
+        <h3 class="text-2xl font-semibold">3.4 鏈鎖法則 (Chain Rule)</h3>
+        
+        <div class="card">
+            <h4 class="text-xl font-semibold text-blue-700 mb-3">鏈鎖法則 (Chain Rule)</h4>
+            <p class="text-gray-700 mb-4">用於處理「複合函數」，也就是「函數包函數」的情況。</p>
+            <div class="formula-box">
+                $$ \frac{d}{dx} f(g(x)) = f'(g(x)) \cdot g'(x) $$
+            </div>
+            <div class="tip">
+                <strong>口訣：</strong> 「由外而內，一層一層微分，然後相乘」
+                <br>
+                <strong>範例：</strong> $(\sin(x^2))' = \cos(x^2) \cdot (2x)$
+            </div>
+        </div>
+
+        <!-- Chapter 4: 應用 -->
+        <!-- **** 修正點：移除 h2 上的 class **** -->
+        <h2>Chapter 4: 微分的應用 (Applications)</h2>
+        <h3 class="text-2xl font-semibold">4.2 均值定理 (MVT)</h3>
+        
+        <div class="card">
+            <h4 class="text-xl font-semibold text-blue-700 mb-3">均值定理 (Mean Value Theorem)</h4>
+            <p class="text-gray-700 mb-4">若 $f(x)$ 在 $[a, b]$ 連續，在 $(a, b)$ 可微，則「至少存在」一點 $c \in (a, b)$ 使得：</p>
+            <div class="formula-box">
+                $$ f'(c) = \frac{f(b) - f(a)}{b - a} $$
+            </div>
+            <div class="note">
+                <strong>幾何意義：</strong> 必存在一點 $c$，使得該點的「切線斜率」($f'(c)$)
+                <br>
+                完全等於 $a, b$ 兩點連成的「割線斜率」。
+            </div>
+        </div>
+
+        <h3 class="text-2xl font-semibold">4.3 函數圖形判別</h3>
+        
+        <div class="card">
+            <h4 class="text-xl font-semibold text-blue-700 mb-3">一階導數判別 (First Derivative Test)</h4>
+            <ul class="list-disc list-inside space-y-2 pl-2">
+                <li>若 $f'(x) > 0$，則 $f(x)$ 在該區間「嚴格遞增」 (Increasing)</li>
+                <li>若 $f'(x) < 0$，則 $f(x)$ 在該區間「嚴格遞減」 (Decreasing)</li>
+                <li>$f'(x) = 0$ 或 $f'(x)$ 不存在處，稱為「臨界點」(Critical Points)，可能是極值發生處。</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h4 class="text-xl font-semibold text-blue-700 mb-3">二階導數判別 (Second Derivative Test)</h4>
+            <ul class="list-disc list-inside space-y-2 pl-2">
+                <li>若 $f''(x) > 0$，則 $f(x)$ 在該區間「凹向上」 (Concave Up, 像笑臉)</li>
+                <li>若 $f''(x) < 0$，則 $f(x)$ 在該區間「凹向下」 (Concave Down, 像哭臉)</li>
+                <li>$f''(x) = 0$ 且凹向改變處，稱為「拐點」(Inflection Point)。</li>
+            </ul>
+        </div>
+
+        <h3 class="text-2xl font-semibold">4.4 羅必達法則 (L'Hôpital's Rule)</h3>
+
+        <div class="card">
+            <h4 class="text-xl font-semibold text-blue-700 mb-3">羅必達法則 (L'Hôpital's Rule)</h4>
+            <p class="text-gray-700 mb-4">當 $\lim_{x\to a} \frac{f(x)}{g(x)}$ 滿足「不定型」($\frac{0}{0}$ 或 $\frac{\infty}{\infty}$) 時，可以使用：</p>
+            <div class="formula-box">
+                $$ \lim_{x\to a} \frac{f(x)}{g(x)} = \lim_{x\to a} \frac{f'(x)}{g'(x)} $$
+            </div>
+            <div class="warning">
+                <strong>致命陷阱：</strong> 不是使用「商法則」！
+                <br>
+                是「分子各自微分」和「分母各自微分」，千萬不要搞混！
+            </div>
+        </div>
+        
+        <h3 class="text-2xl font-semibold">4.8 牛頓法 (Newton's Method)</h3>
+        
+        <div class="card">
+            <h4 class="text-xl font-semibold text-blue-700 mb-3">牛頓法 (Newton's Method)</h4>
+            <p class="text-gray-700 mb-4">用於逼近 $f(x) = 0$ 的根 (x-截距) 的迭代法。</p>
+            <div class="formula-box">
+                $$ x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)} $$
+            </div>
+            <div class="note">
+                <strong>思考方式：</strong> 下一個猜測點 $x_{n+1}$，是 $x_n$ 點的切線與 x 軸的交點。
+            </div>
+        </div>
+
+        <h3 class="text-2xl font-semibold">4.9 反導數 (Antiderivatives)</h3>
+        
+        <div class="card">
+            <h4 class="text-xl font-semibold text-blue-700 mb-3">反導數最小必背表 (The "Must-Know" Integrals)</h4>
+            <ul class="list-none space-y-4">
+                <li>$\int x^n dx = \frac{x^{n+1}}{n+1} + C \quad (n \neq -1)$</li>
+                <li>$\int \frac{1}{x} dx = \ln|x| + C$</li>
+                <li>$\int e^x dx = e^x + C$</li>
+                <li>$\int \sin x dx = -\cos x + C$</li>
+                <li>$\int \cos x dx = \sin x + C$</li>
+                <li>$\int \sec^2 x dx = \tan x + C$</li>
+                <li>$\int \frac{1}{1+x^2} dx = \arctan x + C$ (或 $\tan^{-1} x + C$)</li>
+                <li>$\int \frac{1}{\sqrt{1-x^2}} dx = \arcsin x + C$ (或 $\sin^{-1} x + C$)</li>
+            </ul>
+            <div class="warning">
+                <strong>史上最大陷阱：</strong> 只要是「不定積分」，答案「絕對」不要忘記寫 $+C$！
+            </div>
+        </div>
+
+    </main>
+
+</body>
+</html>
+
