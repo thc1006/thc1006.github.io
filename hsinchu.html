@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChiTu-Chi MaaS 竹科接送平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* 字體設定：使用系統字體以求流暢與原生感 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* Google Pixel 7 邊框模擬 */
+        .pixel-7-frame {
+            position: relative;
+            width: 360px;
+            height: 780px;
+            background: black;
+            border-radius: 40px;
+            box-shadow: 0 0 0 2px #3c4043, 0 20px 40px rgba(0,0,0,0.4);
+            overflow: hidden;
+            border: 8px solid #2d2d2d;
+            box-sizing: content-box; /* 重要：讓border不吃掉內容寬度 */
+        }
+
+        /* 前鏡頭挖孔 */
+        .camera-cutout {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 16px;
+            background: #000;
+            border-radius: 50%;
+            z-index: 50;
+        }
+
+        /* 隱藏滾動條但保留功能 */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* 底部導航欄效果 */
+        .nav-item.active {
+            color: #0D9488; /* Teal-600 */
+        }
+        .nav-item.active span {
+            font-weight: 600;
+        }
+
+        /* 地圖模擬背景 */
+        .map-bg {
+            background-image: url('data:image/svg+xml,%3Csvg width="100%25" height="100%25" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Crect width="100%25" height="100%25" fill="%23e5e7eb"/%3E%3Cpath d="M0 20 L100 20" stroke="%23ffffff" stroke-width="4"/%3E%3Cpath d="M20 0 L20 100" stroke="%23ffffff" stroke-width="4"/%3E%3Cpath d="M0 80 L100 60" stroke="%23ffffff" stroke-width="4"/%3E%3Cpath d="M60 0 L80 100" stroke="%23ffffff" stroke-width="4"/%3E%3C/svg%3E');
+            background-size: cover;
+        }
+
+        /* 頁面切換動畫 */
+        .page-section {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .page-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 載入動畫 */
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 3px solid #0D9488;
+            width: 24px;
+            height: 24px;
+            -webkit-animation: spin 1s linear infinite; /* Safari */
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 模擬 Android 狀態列 */
+        .status-bar {
+            height: 40px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #000;
+            z-index: 40;
+            background: transparent;
+            position: absolute;
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Pixel 7 Frame -->
+    <div class="pixel-7-frame bg-gray-50">
+        
+        <!-- Camera & Status Bar -->
+        <div class="camera-cutout"></div>
+        <div class="status-bar">
+            <span>08:30</span>
+            <div class="flex gap-1.5">
+                <i class="fas fa-signal"></i>
+                <i class="fas fa-wifi"></i>
+                <i class="fas fa-battery-full"></i>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div id="app-content" class="h-full w-full pt-12 pb-20 overflow-y-auto hide-scrollbar relative">
+            
+            <!-- 1. HOME PAGE (Dashboard) -->
+            <div id="view-home" class="page-section active px-4">
+                <!-- Header -->
+                <div class="flex justify-between items-center mb-6 mt-2">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">早安，陳爸爸 👋</h1>
+                        <p class="text-xs text-gray-500">今日竹科預估通勤 +20min</p>
+                    </div>
+                    <div class="bg-gray-200 p-2 rounded-full cursor-pointer hover:bg-gray-300 transition">
+                        <i class="fas fa-bell text-gray-600"></i>
+                    </div>
+                </div>
+
+                <!-- Live Status Card (最重要資訊) -->
+                <div class="bg-gradient-to-r from-teal-600 to-teal-500 rounded-2xl p-4 text-white shadow-lg mb-6 relative overflow-hidden group cursor-pointer" onclick="switchTab('tracking')">
+                    <div class="absolute right-0 top-0 opacity-10 transform translate-x-4 -translate-y-4">
+                        <i class="fas fa-car fa-5x"></i>
+                    </div>
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="bg-white/20 px-2 py-1 rounded text-xs font-medium backdrop-blur-sm">進行中 • 距目的地 12分</span>
+                        <i class="fas fa-chevron-right text-white/70"></i>
+                    </div>
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+                             <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Grandma" alt="Grandma" class="w-8 h-8">
+                        </div>
+                        <div>
+                            <p class="font-bold text-lg">送林奶奶去日照中心</p>
+                            <p class="text-xs text-teal-100">車輛位置：光復路二段 320號</p>
+                        </div>
+                    </div>
+                    <!-- Tracking Bar -->
+                    <div class="w-full bg-black/20 h-1.5 rounded-full mt-2">
+                        <div class="bg-white h-1.5 rounded-full" style="width: 65%"></div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="grid grid-cols-4 gap-3 mb-8">
+                    <button class="flex flex-col items-center gap-1 group" onclick="switchTab('booking')">
+                        <div class="w-14 h-14 bg-orange-100 rounded-2xl flex items-center justify-center text-orange-600 group-active:scale-95 transition shadow-sm">
+                            <i class="fas fa-plus text-xl"></i>
+                        </div>
+                        <span class="text-xs font-medium text-gray-600">預約</span>
+                    </button>
+                    <button class="flex flex-col items-center gap-1 group">
+                        <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 group-active:scale-95 transition shadow-sm">
+                            <i class="fas fa-history text-xl"></i>
+                        </div>
+                        <span class="text-xs font-medium text-gray-600">紀錄</span>
+                    </button>
+                    <button class="flex flex-col items-center gap-1 group">
+                        <div class="w-14 h-14 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600 group-active:scale-95 transition shadow-sm">
+                            <i class="fas fa-ticket-alt text-xl"></i>
+                        </div>
+                        <span class="text-xs font-medium text-gray-600">交通券</span>
+                    </button>
+                    <button class="flex flex-col items-center gap-1 group">
+                        <div class="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center text-gray-600 group-active:scale-95 transition shadow-sm">
+                            <i class="fas fa-cog text-xl"></i>
+                        </div>
+                        <span class="text-xs font-medium text-gray-600">設定</span>
+                    </button>
+                </div>
+
+                <!-- Today's Schedule Timeline -->
+                <div class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-4 flex justify-between">
+                        今日行程 (11/22)
+                        <span class="text-xs bg-gray-100 px-2 py-1 rounded text-gray-500">週五</span>
+                    </h3>
+                    
+                    <div class="relative pl-6 border-l-2 border-gray-200 space-y-8">
+                        <!-- Completed Item -->
+                        <div class="relative">
+                            <div class="absolute -left-[29px] top-1 w-4 h-4 rounded-full bg-gray-300 border-2 border-white"></div>
+                            <div class="opacity-50">
+                                <p class="text-xs text-gray-500 mb-1">07:30 - 已完成</p>
+                                <div class="flex items-center gap-2">
+                                    <span class="font-medium text-gray-700">送大寶去幼兒園</span>
+                                    <span class="text-xs bg-gray-100 px-1 rounded text-gray-500">北區</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Active Item -->
+                        <div class="relative">
+                            <div class="absolute -left-[29px] top-1 w-4 h-4 rounded-full bg-teal-500 border-2 border-white ring-4 ring-teal-100"></div>
+                            <div>
+                                <p class="text-xs text-teal-600 font-bold mb-1">08:15 - 進行中</p>
+                                <div class="flex items-center gap-2">
+                                    <span class="font-medium text-gray-800">送林奶奶去日照中心</span>
+                                    <span class="text-xs bg-orange-100 text-orange-600 px-1 rounded">長照2.0</span>
+                                </div>
+                                <div class="mt-2 bg-gray-50 p-2 rounded text-xs text-gray-500 flex items-center gap-2">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Driver" class="w-5 h-5 rounded-full">
+                                    由 李司機 (台灣大車隊) 接送
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Future Item -->
+                        <div class="relative">
+                            <div class="absolute -left-[29px] top-1 w-4 h-4 rounded-full bg-gray-200 border-2 border-white"></div>
+                            <div>
+                                <p class="text-xs text-gray-500 mb-1">17:00 - 預約確認</p>
+                                <div class="flex items-center gap-2">
+                                    <span class="font-medium text-gray-700">接二寶回赤土崎館</span>
+                                    <span class="text-xs bg-blue-100 text-blue-600 px-1 rounded">東區托嬰</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. BOOKING PAGE -->
+            <div id="view-booking" class="page-section px-4 h-full flex flex-col">
+                <h2 class="text-xl font-bold text-gray-800 mb-6 mt-2">預約接送</h2>
+                
+                <!-- Form -->
+                <div class="flex-1 space-y-5">
+                    <!-- Who -->
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3 block">接送對象</label>
+                        <div class="flex gap-3 overflow-x-auto pb-2 hide-scrollbar">
+                            <div class="flex flex-col items-center gap-1 cursor-pointer min-w-[60px]" onclick="selectMember(this)">
+                                <div class="w-12 h-12 rounded-full bg-gray-100 border-2 border-transparent hover:border-teal-500 flex items-center justify-center transition">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Kid1" class="w-8 h-8">
+                                </div>
+                                <span class="text-xs text-gray-600">大寶</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-1 cursor-pointer min-w-[60px]" onclick="selectMember(this)">
+                                <div class="w-12 h-12 rounded-full bg-teal-50 border-2 border-teal-500 flex items-center justify-center transition relative">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Grandma" class="w-8 h-8">
+                                    <div class="absolute -top-1 -right-1 bg-orange-500 text-white text-[8px] px-1 rounded-full">長照</div>
+                                </div>
+                                <span class="text-xs font-bold text-gray-800">林奶奶</span>
+                            </div>
+                             <div class="flex flex-col items-center gap-1 cursor-pointer min-w-[60px]" onclick="selectMember(this)">
+                                <div class="w-12 h-12 rounded-full bg-gray-100 border-2 border-transparent hover:border-teal-500 flex items-center justify-center transition">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Kid2" class="w-8 h-8">
+                                </div>
+                                <span class="text-xs text-gray-600">二寶</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Where -->
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 relative">
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3 block">路線規劃</label>
+                        
+                        <!-- Timeline graphic -->
+                        <div class="absolute left-7 top-[55px] bottom-[35px] w-0.5 bg-gray-200 border-l border-dashed border-gray-300"></div>
+
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-2 h-2 rounded-full bg-teal-500 ring-4 ring-teal-100 ml-1"></div>
+                            <div class="flex-1 bg-gray-50 p-3 rounded-xl border border-gray-100 flex justify-between items-center">
+                                <div>
+                                    <p class="text-xs text-gray-500">出發地</p>
+                                    <p class="font-medium text-gray-800">快樂社區 (家)</p>
+                                </div>
+                                <i class="fas fa-map-marker-alt text-gray-300"></i>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            <div class="w-2 h-2 rounded-full bg-orange-500 ring-4 ring-orange-100 ml-1"></div>
+                            <div class="flex-1 bg-gray-50 p-3 rounded-xl border border-gray-100 flex justify-between items-center">
+                                <div>
+                                    <p class="text-xs text-gray-500">目的地</p>
+                                    <p class="font-medium text-gray-800">仁愛日照中心</p>
+                                </div>
+                                <i class="fas fa-search text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- When -->
+                     <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3 block">接送時間</label>
+                        <div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl border border-gray-100">
+                             <span class="text-gray-800 font-medium">明天 (11/23) 上午 08:00</span>
+                             <i class="fas fa-calendar-alt text-teal-600"></i>
+                        </div>
+                         <div class="flex gap-2 mt-3">
+                             <span class="px-3 py-1 bg-teal-50 text-teal-700 text-xs rounded-full border border-teal-100 cursor-pointer">單次接送</span>
+                             <span class="px-3 py-1 bg-white text-gray-500 text-xs rounded-full border border-gray-200 cursor-pointer">每週固定</span>
+                         </div>
+                    </div>
+                </div>
+
+                <!-- Footer Action -->
+                <div class="mt-auto">
+                    <!-- Cost Estimation -->
+                    <div class="flex justify-between items-center mb-4 px-2">
+                        <div class="text-xs text-gray-500">
+                            共乘省錢 <span class="text-green-600 font-bold">-70%</span><br>
+                            長照券折抵 <span class="text-orange-500 font-bold">-$50</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs text-gray-400 line-through">NT$150</span>
+                            <div class="text-2xl font-bold text-gray-800">NT$ 21</div>
+                        </div>
+                    </div>
+
+                    <button onclick="simulateAI()" id="bookBtn" class="w-full bg-gray-900 text-white py-4 rounded-2xl font-bold text-lg shadow-lg active:scale-95 transition flex justify-center items-center gap-2">
+                        確認預約
+                    </button>
+                </div>
+            </div>
+
+            <!-- 3. TRACKING PAGE (Simulation) -->
+            <div id="view-tracking" class="page-section h-full relative">
+                <!-- Map Background -->
+                <div class="absolute inset-0 map-bg z-0">
+                    <!-- Route Line SVG (Simple representation) -->
+                    <svg class="absolute top-0 left-0 w-full h-full" style="z-index: 1;">
+                        <path d="M120 200 Q 180 300 240 450" stroke="#0D9488" stroke-width="5" fill="none" stroke-dasharray="10,5"/>
+                    </svg>
+
+                    <!-- Pins -->
+                    <div class="absolute top-[180px] left-[105px] z-10">
+                        <div class="w-4 h-4 bg-gray-800 rounded-full border-2 border-white shadow-lg"></div>
+                         <div class="bg-white px-2 py-1 rounded text-[10px] font-bold shadow absolute -top-8 -left-2 w-max">起點</div>
+                    </div>
+
+                    <!-- Car Icon (Moving) -->
+                    <div class="absolute top-[300px] left-[170px] z-20 transition-all duration-[5000ms]">
+                        <div class="bg-teal-600 text-white p-2 rounded-full shadow-xl border-2 border-white transform -rotate-12">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <div class="bg-black/80 text-white px-2 py-1 rounded text-[10px] font-bold shadow absolute -top-8 -left-4 w-max">
+                            李司機
+                        </div>
+                    </div>
+
+                     <div class="absolute top-[430px] left-[225px] z-10">
+                        <div class="w-6 h-6 bg-orange-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-white text-[10px]">
+                            <i class="fas fa-map-pin"></i>
+                        </div>
+                        <div class="bg-white px-2 py-1 rounded text-[10px] font-bold shadow absolute -top-8 -left-4 w-max">目的地</div>
+                    </div>
+                </div>
+
+                <!-- Floating Top Card -->
+                <div class="absolute top-4 left-4 right-4 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-lg z-30 border border-white/50">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs text-gray-500 font-bold uppercase">預計抵達</p>
+                            <h2 class="text-2xl font-bold text-teal-700">08:42 <span class="text-sm text-gray-400 font-normal">(剩 12 分)</span></h2>
+                        </div>
+                        <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded font-medium">交通順暢</span>
+                    </div>
+                </div>
+
+                <!-- Bottom Driver Sheet -->
+                <div class="absolute bottom-20 left-4 right-4 bg-white p-4 rounded-3xl shadow-[0_-5px_20px_rgba(0,0,0,0.1)] z-30">
+                    <div class="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-4"></div>
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="relative">
+                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Driver" class="w-14 h-14 rounded-full border-2 border-white shadow-sm">
+                            <div class="absolute -bottom-1 -right-1 bg-yellow-400 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full border border-white">★</div>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-gray-800">李大維</h3>
+                            <p class="text-xs text-gray-500">Toyota RAV4 • ABC-9527</p>
+                            <div class="flex gap-2 mt-1">
+                                <span class="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded text-gray-600">台灣大車隊</span>
+                                <span class="text-[10px] bg-teal-50 text-teal-600 px-1.5 py-0.5 rounded">已實名認證</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                             <button class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200">
+                                <i class="fas fa-phone"></i>
+                            </button>
+                            <button class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-red-500 hover:bg-red-100">
+                                <i class="fas fa-shield-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button class="w-full bg-teal-600 text-white py-3 rounded-xl font-bold shadow-md hover:bg-teal-700 transition" onclick="switchTab('home')">
+                        返回首頁
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="absolute bottom-0 w-full bg-white h-[80px] border-t border-gray-100 flex justify-around items-start pt-4 z-40 rounded-b-[32px]">
+            <button class="nav-item active flex flex-col items-center gap-1 w-16 transition duration-200" onclick="switchTab('home')" id="nav-home">
+                <i class="fas fa-home text-xl"></i>
+                <span class="text-[10px]">首頁</span>
+            </button>
+            <button class="nav-item text-gray-400 flex flex-col items-center gap-1 w-16 transition duration-200" onclick="switchTab('booking')" id="nav-booking">
+                <i class="fas fa-calendar-check text-xl"></i>
+                <span class="text-[10px]">預約</span>
+            </button>
+            <button class="nav-item text-gray-400 flex flex-col items-center gap-1 w-16 transition duration-200" onclick="switchTab('family')" id="nav-family">
+                <i class="fas fa-users text-xl"></i>
+                <span class="text-[10px]">家庭</span>
+            </button>
+            <button class="nav-item text-gray-400 flex flex-col items-center gap-1 w-16 transition duration-200" onclick="switchTab('profile')" id="nav-profile">
+                <i class="fas fa-user text-xl"></i>
+                <span class="text-[10px]">我的</span>
+            </button>
+        </div>
+        
+        <!-- Home Indicator -->
+        <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gray-300 rounded-full z-50"></div>
+
+    </div>
+
+    <!-- AI Overlay Simulation -->
+    <div id="ai-overlay" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex flex-col items-center justify-center text-white">
+        <div class="bg-gray-900 p-6 rounded-3xl w-[300px] flex flex-col items-center shadow-2xl border border-gray-700">
+            <div class="w-16 h-16 mb-4 relative">
+                 <div class="absolute inset-0 rounded-full border-4 border-teal-500/30"></div>
+                 <div class="absolute inset-0 rounded-full border-4 border-t-teal-500 animate-spin"></div>
+                 <i class="fas fa-robot absolute inset-0 flex items-center justify-center text-xl text-teal-400"></i>
+            </div>
+            <h3 class="text-lg font-bold mb-2">ChiTu AI 運算中...</h3>
+            <p class="text-sm text-gray-400 text-center mb-4">正在透過 VROOM 引擎優化路徑<br>並媒合共乘夥伴</p>
+            
+            <div class="w-full bg-gray-800 rounded-full h-1.5 mb-2 overflow-hidden">
+                <div class="bg-teal-500 h-full animate-[width_3s_ease-out_forwards]" style="width: 0%"></div>
+            </div>
+            <div class="text-xs text-teal-400 font-mono" id="ai-status">載入地圖資料...</div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            // Update Tab Styles
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('active', 'text-teal-600');
+                el.classList.add('text-gray-400');
+            });
+            
+            // Only highlight home or booking if explicitly selected or tracked to
+            let navId = 'nav-' + (tabName === 'tracking' ? 'home' : tabName);
+            let navEl = document.getElementById(navId);
+            if(navEl) {
+                navEl.classList.add('active', 'text-teal-600');
+                navEl.classList.remove('text-gray-400');
+            }
+
+            // Switch Content
+            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+            document.getElementById('view-' + tabName).classList.add('active');
+        }
+
+        function selectMember(el) {
+            // Simple visual feedback for prototype
+            let container = el.parentElement;
+            let rings = container.querySelectorAll('.border-teal-500');
+            rings.forEach(r => {
+                r.classList.remove('border-teal-500', 'bg-teal-50');
+                r.classList.add('border-transparent', 'bg-gray-100');
+            });
+            
+            let target = el.querySelector('div');
+            target.classList.remove('border-transparent', 'bg-gray-100');
+            target.classList.add('border-teal-500', 'bg-teal-50');
+        }
+
+        function simulateAI() {
+            const overlay = document.getElementById('ai-overlay');
+            const statusText = document.getElementById('ai-status');
+            const bookBtn = document.getElementById('bookBtn');
+            const bar = overlay.querySelector('div > div'); // progress bar
+
+            overlay.classList.remove('hidden');
+            
+            // Step 1
+            statusText.innerText = "分析交通流量 (OpenStreetMap)...";
+            bar.style.width = "30%";
+            
+            setTimeout(() => {
+                // Step 2
+                statusText.innerText = "計算最佳共乘路徑 (VROOM)...";
+                bar.style.width = "70%";
+            }, 1200);
+
+            setTimeout(() => {
+                // Step 3
+                statusText.innerText = "核銷長照交通券...";
+                bar.style.width = "90%";
+            }, 2200);
+
+            setTimeout(() => {
+                // Done
+                bar.style.width = "100%";
+                overlay.classList.add('hidden');
+                // Create a native-like alert simulation or just switch view
+                switchTab('tracking');
+                
+                // Reset for demo
+                bar.style.width = "0%";
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
