@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>諮心好友 - 專案進度報告</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/monokai.min.css">
+
+    <style>
+        :root {
+            --primary: #2c5282;
+            --secondary: #718096;
+            --accent: #3182ce;
+            --cbt-color: #3b82f6;
+            --dbt-color: #ec4899;
+        }
+
+        .reveal {
+            font-size: 32px;
+        }
+
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            font-family: 'Helvetica Neue', Helvetica, Arial, "Microsoft JhengHei", sans-serif;
+            text-transform: none;
+            line-height: 1.3;
+        }
+
+        .reveal h1 { font-size: 2.2em; margin-bottom: 0.3em; }
+        .reveal h2 { font-size: 1.5em; margin-bottom: 0.6em; color: var(--primary); }
+        .reveal h3 { font-size: 1.2em; }
+
+        .reveal p, .reveal li, .reveal div {
+            font-family: 'Helvetica Neue', Helvetica, Arial, "Microsoft JhengHei", sans-serif;
+            line-height: 1.6;
+        }
+
+        .reveal ul { margin-left: 0; }
+        .reveal li { margin-bottom: 0.5em; font-size: 0.85em; }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+            border-left: 5px solid var(--accent);
+            padding: 1em 1.2em;
+            margin: 1em auto;
+            border-radius: 8px;
+            font-size: 0.75em;
+            text-align: left;
+            max-width: 90%;
+        }
+
+        .highlight-box p { margin: 0; }
+
+        /* Term Badge */
+        .term-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.65em;
+            font-weight: bold;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        /* Two Column Grid */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 0.5em;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            padding: 1.2em;
+            border-radius: 12px;
+            text-align: left;
+            border-top: 4px solid var(--accent);
+        }
+
+        .card.cbt { border-top-color: var(--cbt-color); }
+        .card.dbt { border-top-color: var(--dbt-color); }
+
+        .card h4 {
+            margin: 0 0 0.4em 0;
+            font-size: 0.9em;
+        }
+
+        .card p {
+            font-size: 0.7em;
+            margin: 0.4em 0;
+        }
+
+        .card hr {
+            border: none;
+            border-top: 1px solid #e2e8f0;
+            margin: 0.8em 0;
+        }
+
+        /* Dialogue Box */
+        .dialogue {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 0.8em;
+            font-size: 0.65em;
+            line-height: 1.5;
+        }
+
+        .dialogue .student {
+            color: #4a5568;
+            margin-bottom: 0.6em;
+        }
+
+        .dialogue .ai {
+            color: var(--primary);
+        }
+
+        /* Flow Chart */
+        .flow-chart {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 1.2em 0;
+            font-size: 0.65em;
+        }
+
+        .flow-box {
+            padding: 0.8em 1em;
+            border-radius: 10px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .flow-arrow {
+            font-size: 1.8em;
+            color: #a0aec0;
+        }
+
+        .flow-branches {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .flow-branch {
+            padding: 0.5em 1em;
+            border-radius: 6px;
+            border-left: 4px solid;
+            font-size: 0.95em;
+        }
+
+        /* Roadmap */
+        .roadmap {
+            text-align: left;
+            max-width: 85%;
+            margin: 0 auto;
+        }
+
+        .roadmap-item {
+            display: flex;
+            gap: 1em;
+            margin-bottom: 1em;
+            font-size: 0.75em;
+        }
+
+        .roadmap-icon {
+            font-size: 1.8em;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .roadmap-content h4 {
+            margin: 0 0 0.3em 0;
+            font-size: 1em;
+            color: var(--primary);
+        }
+
+        .roadmap-content p {
+            margin: 0;
+            color: #4a5568;
+            font-size: 0.9em;
+        }
+
+        /* Pain Points */
+        .pain-point {
+            background: white;
+            border-radius: 10px;
+            padding: 0.8em 1.2em;
+            margin: 0.6em 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            font-size: 0.75em;
+            text-align: left;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8em;
+        }
+
+        .pain-point .icon {
+            font-size: 1.5em;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .pain-point strong {
+            color: var(--primary);
+        }
+
+        /* Cover Slide */
+        .cover-subtitle {
+            color: var(--secondary);
+            font-size: 0.9em;
+            margin-bottom: 1em;
+        }
+
+        .cover-tagline {
+            font-size: 0.7em;
+            color: #a0aec0;
+            margin-top: 2em;
+        }
+
+        /* Conclusion */
+        .conclusion-main {
+            font-size: 1.1em;
+            margin: 1em 0;
+        }
+
+        .conclusion-highlight {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.3em 0.8em;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .conclusion-footer {
+            font-size: 0.7em;
+            color: var(--secondary);
+            margin-top: 2em;
+        }
+    </style>
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+
+        <!-- Slide 1: Cover -->
+        <section>
+            <h1 style="color: var(--primary);">諮心好友</h1>
+            <h3 class="cover-subtitle">NYCU 校園心理支持 AI 機器人</h3>
+            <p>專案進度報告與未來藍圖</p>
+            <p class="cover-tagline">2024 Project Update</p>
+        </section>
+
+        <!-- Slide 2: Status Overview -->
+        <section>
+            <h2>目前進度：Web MVP 完成</h2>
+            <div class="highlight-box">
+                <p>我們建立了高度擬真的 LINE 模擬器，並成功將心理諮商理論植入 AI 大腦。</p>
+            </div>
+            <ul style="list-style: none; padding: 0; margin-top: 1em;">
+                <li><span class="term-badge">MVP</span> <strong>最小可行性產品</strong>：網頁版原型已完成</li>
+                <li><span class="term-badge">Ablation</span> <strong>消融實驗</strong>：四個對照組測試不同 AI 人格</li>
+                <li><span class="term-badge">Prompt</span> <strong>提示工程</strong>：治療邏輯轉化為 AI 指令</li>
+            </ul>
+        </section>
+
+        <!-- Slide 3: The Brain (CBT/DBT) -->
+        <section>
+            <h2>核心技術：AI 懂心理學</h2>
+            <div class="two-col">
+                <div class="card cbt">
+                    <h4>🧠 CBT 認知行為治療</h4>
+                    <p>專治「焦慮與災難化思考」</p>
+                    <hr>
+                    <div class="dialogue">
+                        <div class="student"><strong>學生：</strong>「我期中考考差了，人生完蛋了，我是廢物。」</div>
+                        <div class="ai"><strong>AI：</strong>「考差的感覺真的很挫折。但一次考差真的等於人生完蛋嗎？有沒有哪次考差後來補救回來的經驗？」</div>
+                    </div>
+                </div>
+                <div class="card dbt">
+                    <h4>❤️ DBT 辯證行為治療</h4>
+                    <p>專治「情緒崩潰與衝動」</p>
+                    <hr>
+                    <div class="dialogue">
+                        <div class="student"><strong>學生：</strong>「我受不了了，手在發抖，好想傷害自己。」</div>
+                        <div class="ai"><strong>AI：</strong>「我聽得出你極度痛苦。能不能試試抓一把冰塊握一分鐘？那刺痛感能幫助冷靜，但不會受傷。」</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: Smart Integration -->
+        <section>
+            <h2>技術突破：情緒分流機制</h2>
+            <p style="font-size: 0.8em;">建立<strong>「臨床判斷邏輯」</strong>，根據痛苦指數自動切換策略</p>
+
+            <div class="flow-chart">
+                <div class="flow-box" style="background: #e2e8f0;">學生輸入</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-box" style="background: #fef3c7;">情緒評估<br><small>SUDS 0-10</small></div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-branches">
+                    <div class="flow-branch" style="background: #dbeafe; border-color: #3b82f6;">黃區 3-6 → CBT 理性引導</div>
+                    <div class="flow-branch" style="background: #fce7f3; border-color: #ec4899;">紅區 7-10 → DBT 情緒急救</div>
+                    <div class="flow-branch" style="background: #fee2e2; border-color: #ef4444;">危機偵測 → 安全轉介</div>
+                </div>
+            </div>
+
+            <div class="highlight-box" style="font-size: 0.7em;">
+                <strong>CBT</strong>：識別認知扭曲、蘇格拉底式提問 ｜ <strong>DBT</strong>：徹底接納、TIPP/STOP 技巧
+            </div>
+        </section>
+
+        <!-- Slide 5: Market Insights -->
+        <section>
+            <h2>市場洞察：學生真正痛點</h2>
+            <p style="font-size: 0.75em; margin-bottom: 0.8em;">透過分析 Dcard/PTT 留言與競品 (Elomia/Wysa)</p>
+
+            <div class="pain-point fragment">
+                <div class="icon">😰</div>
+                <div><strong>怕被標籤化</strong><br>→ AI 提供絕對的匿名性與安全感</div>
+            </div>
+            <div class="pain-point fragment">
+                <div class="icon">🤔</div>
+                <div><strong>不知道何時求助</strong><br>→ AI 作為 24 小時守門員，隨時可聊</div>
+            </div>
+            <div class="pain-point fragment">
+                <div class="icon">⏳</div>
+                <div><strong>資源斷層</strong><br>→ AI 填補「諮商預約空窗期」的陪伴需求</div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Future Roadmap -->
+        <section>
+            <h2>未來藍圖</h2>
+            <div class="roadmap">
+                <div class="roadmap-item fragment">
+                    <div class="roadmap-icon">📍</div>
+                    <div class="roadmap-content">
+                        <h4>Phase 1：驗證期（現階段）</h4>
+                        <p>完成 Web MVP，證明 AI 能執行心理治療邏輯</p>
+                    </div>
+                </div>
+                <div class="roadmap-item fragment">
+                    <div class="roadmap-icon">🚀</div>
+                    <div class="roadmap-content">
+                        <h4>Phase 2：產品化</h4>
+                        <p><span class="term-badge">Backend</span>串接正式 LINE Bot API<br>
+                        <span class="term-badge">Memory</span>讓 AI 記得上次對話內容</p>
+                    </div>
+                </div>
+                <div class="roadmap-item fragment">
+                    <div class="roadmap-icon">🛡️</div>
+                    <div class="roadmap-content">
+                        <h4>Phase 3：安全網</h4>
+                        <p><span class="term-badge">Handoff</span>高風險個案自動轉介真人心理師</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: Conclusion -->
+        <section>
+            <h2>結語</h2>
+            <p class="conclusion-main">
+                諮心好友不只是聊天機器人<br>
+                它是 <span class="conclusion-highlight">隨身攜帶的情緒急救包</span>
+            </p>
+            <p class="conclusion-footer">我們正在用科技，接住每一個墜落的靈魂。</p>
+        </section>
+
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/highlight.min.js"></script>
+<script>
+    Reveal.initialize({
+        hash: true,
+        width: 1200,
+        height: 700,
+        margin: 0.1,
+        transition: 'slide',
+        transitionSpeed: 'default',
+        plugins: [ RevealHighlight ]
+    });
+</script>
+</body>
+</html>
