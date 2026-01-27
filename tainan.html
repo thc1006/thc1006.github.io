@@ -1,353 +1,302 @@
-import React, { useState } from 'react';
-import { MapPin, Clock, Calendar, Info, Navigation, ArrowRight, BedDouble, Bike, Train } from 'lucide-react';
-
-const ItineraryApp = () => {
-  const [activeTab, setActiveTab] = useState(0);
-
-  const tripDetails = {
-    dates: "2026.01.27 — 01.29",
-    hotel: {
-      name: "靡生三館 Maison Bohéme",
-      room: "Room 2702",
-      address: "台南市中西區萬昌街27號",
-      contact: "郭小姐 0916-729-418",
-      note: "看到「森澪」即抵達 | 無行李寄放服務",
-      mapLink: "https://www.google.com/maps/place/700台南市中西區萬昌街27號"
-    },
-    rental: {
-      name: "詠心同行 機車出租",
-      model: "JbubuS 125CC",
-      pickup: "1/27 14:30",
-      dropoff: "1/29 19:00",
-      mapLink: "https://www.google.com/maps/place/704台南市北區北門路二段17號"
-    },
-    transport: {
-      to: "1/27 新竹 11:25 → 台南 14:17 (5798180)",
-      back: "1/29 台南 (預計 19:30 後班次)"
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>台南小旅行行程卡</title>
+  <meta name="description" content="三天兩夜台南慢旅行程卡，住宿、租車、交通與每日行程時間軸。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SlZ9qtWQ8n4CPGK/c/pX9nuSUXwxLBzME2YkdE+5EYXPLkZX31lrT7xvFeoJEB6Digw1k3D6Z0fjQX+0GooyVA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    :root {
+      --bg: #f7f3ed;
+      --card: #ffffff;
+      --ink: #0f172a;
+      --muted: #6b7280;
+      --accent: #f97316;
+      --accent-2: #fed7aa;
+      --border: #e5e7eb;
     }
-  };
-
-  const days = [
-    {
-      id: 0,
-      date: "01/27",
-      weekday: "Tuesday",
-      title: "Arrival & Art",
-      theme: "City Walk",
-      events: [
-        {
-          time: "14:17",
-          title: "抵達台南",
-          desc: "抵達台南火車站，準備開啟旅程。",
-          icon: <Train size={18} />,
-          tag: "Transport"
-        },
-        {
-          time: "14:30",
-          title: "詠心同行 取車",
-          desc: "前往車行辦理租車，將大件行李暫時寄放於此。",
-          location: "詠心同行",
-          mapLink: "https://www.google.com/maps/place/704台南市北區北門路二段17號",
-          icon: <Bike size={18} />,
-          tag: "Rental"
-        },
-        {
-          time: "15:00",
-          title: "臺南市美術館 2 館",
-          desc: "欣賞碎形屋頂下的光影美學。建議前往 5 樓露台拍攝合照。",
-          location: "台南美術館2館",
-          mapLink: "https://www.google.com/maps/place/臺南市美術館2館",
-          icon: <MapPin size={18} />,
-          tag: "Activity"
-        },
-        {
-          time: "16:00",
-          title: "午後咖啡時光",
-          desc: "推薦：南美春室 (頂樓) 或 窄門咖啡。放慢步調，享受古都氛圍。",
-          tag: "Coffee"
-        },
-        {
-          time: "17:00",
-          title: "Check-in & 整頓",
-          desc: "回車行拿行李，前往民宿辦理入住。",
-          location: "靡生三館",
-          mapLink: "https://www.google.com/maps/place/700台南市中西區萬昌街27號",
-          icon: <BedDouble size={18} />,
-          tag: "Check-in"
-        },
-        {
-          time: "18:30",
-          title: "神農街 & 海安路",
-          desc: "老街燈籠亮起，氛圍極佳。晚餐可於附近特色小店解決。",
-          location: "神農街",
-          mapLink: "https://www.google.com/maps/place/神農街,+700台南市中西區",
-          tag: "Night Walk"
-        },
-        {
-          time: "20:30",
-          title: "大東東夜市",
-          desc: "週二限定。推薦：地瓜球、素食滷味。備案：小北觀光市場。",
-          location: "大東東夜市",
-          mapLink: "https://www.google.com/maps/place/大東夜市,+701台南市東區林森路一段276號",
-          tag: "Food"
-        }
-      ]
-    },
-    {
-      id: 1,
-      date: "01/28",
-      weekday: "Wednesday",
-      title: "Ocean & Sunset",
-      theme: "West Coast",
-      events: [
-        {
-          time: "10:30",
-          title: "慢活早午餐",
-          desc: "睡飽再出發。推薦：赤崁璽樓 (素食友善) 或 毛房蔥柚鍋。",
-          tag: "Brunch"
-        },
-        {
-          time: "12:00",
-          title: "安平樹屋 & 德記洋行",
-          desc: "避開人潮的午後，在榕樹氣根與光影間拍攝質感大片。",
-          location: "安平樹屋",
-          mapLink: "https://www.google.com/maps/place/安平樹屋,+708台南市安平區古堡街108號",
-          tag: "Photo Spot"
-        },
-        {
-          time: "13:30",
-          title: "安平老街覓食",
-          desc: "同記安平豆花 (檸檬口味)、周氏蝦捲。順便物色伴手禮。",
-          location: "安平老街",
-          mapLink: "https://www.google.com/maps/place/安平老街,+708台南市安平區延平街",
-          tag: "Food"
-        },
-        {
-          time: "16:00",
-          title: "漁光島 森林光影",
-          desc: "穿越漁光大橋。先至木麻黃森林步道拍攝森系照片。",
-          location: "漁光島",
-          mapLink: "https://www.google.com/maps/place/漁光島,+708台南市安平區",
-          tag: "Nature"
-        },
-        {
-          time: "17:30",
-          title: "月牙灣夕陽",
-          desc: "Golden Hour。坐在漂流木上等待日落 (約17:40)。記得帶外套。",
-          tag: "Sunset"
-        },
-        {
-          time: "19:00",
-          title: "安平晚餐",
-          desc: "避開下班尖峰車潮，建議在安平用餐後再返回市區。推薦：文章牛肉湯。",
-          location: "文章牛肉湯",
-          mapLink: "https://www.google.com/maps/place/文章牛肉湯,+708台南市安平區安平路300號",
-          tag: "Dinner"
-        }
-      ]
-    },
-    {
-      id: 2,
-      date: "01/29",
-      weekday: "Thursday",
-      title: "Lake & Heritage",
-      theme: "East Side",
-      events: [
-        {
-          time: "09:00",
-          title: "退房 & 寄放行李",
-          desc: "前往火車站行李房寄放行李 (強烈建議輕裝前往新化)。",
-          location: "台南火車站",
-          mapLink: "https://www.google.com/maps/place/臺南車站,+701台南市東區北門路二段4號",
-          tag: "Logistics"
-        },
-        {
-          time: "10:10",
-          title: "虎頭埤風景區",
-          desc: "租借雙人腳踏船。早晨湖面平靜，享受包場般的寧靜時光。",
-          location: "虎頭埤風景區",
-          mapLink: "https://www.google.com/maps/place/虎頭埤風景區,+712台南市新化區中興路42巷36號",
-          tag: "Activity"
-        },
-        {
-          time: "12:30",
-          title: "新化老街",
-          desc: "欣賞巴洛克建築。午餐：葉麥克炸雞 (有素食)、新化老街咖啡。",
-          location: "新化老街",
-          mapLink: "https://www.google.com/maps/place/新化老街,+712台南市新化區中正路",
-          tag: "Food & Culture"
-        },
-        {
-          time: "14:00",
-          title: "大目降文化園區",
-          desc: "參觀武德殿與日式宿舍群，把握最後拍照機會。",
-          location: "大目降文化園區",
-          mapLink: "https://www.google.com/maps/place/大目降文化園區,+712台南市新化區和平街45巷3號",
-          tag: "Photo Spot"
-        },
-        {
-          time: "15:30",
-          title: "返回台南市區",
-          desc: "提早回程避開下班車潮。若有時間可逛逛林百貨。",
-          tag: "Return"
-        },
-        {
-          time: "19:00",
-          title: "還車 & 賦歸",
-          desc: "將機車加滿油歸還。前往火車站準備搭車。",
-          location: "詠心同行",
-          mapLink: "https://www.google.com/maps/place/704台南市北區北門路二段17號",
-          icon: <Train size={18} />,
-          tag: "End"
-        }
-      ]
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
     }
-  ];
+    .page { min-height: 100vh; display: flex; flex-direction: column; }
+    header {
+      position: relative;
+      background: #0b0f1a;
+      color: #fff;
+      padding: 72px 20px 96px;
+      overflow: hidden;
+    }
+    header::after {
+      content: "";
+      position: absolute;
+      width: 420px; height: 420px;
+      background: radial-gradient(circle, rgba(249,115,22,0.22) 0%, rgba(249,115,22,0) 70%);
+      top: -140px; right: -160px;
+      filter: blur(12px);
+    }
+    .hero { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; text-align: left; }
+    .kicker { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase; color: #fb923c; font-size: 12px; }
+    .hero h1 { font-family: 'Playfair Display', 'Times New Roman', serif; font-size: 42px; line-height: 1.15; margin: 8px 0 6px; }
+    .hero p { color: #cbd5e1; margin: 0; font-size: 14px; letter-spacing: 0.5px; }
+    main { width: 100%; max-width: 760px; margin: -56px auto 0; padding: 0 18px 80px; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06); padding: 20px; margin-bottom: 16px; }
+    .card h3 { margin: 0 0 6px; font-size: 18px; display: flex; align-items: center; gap: 10px; }
+    .card .meta { color: var(--muted); font-size: 14px; margin: 0; }
+    .flex { display: flex; gap: 12px; }
+    .pill { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; background: #fff7ed; color: #c2410c; padding: 6px 9px; border-radius: 999px; border: 1px solid #fed7aa; }
+    .tabs { display: grid; grid-template-columns: repeat(3, 1fr); background: #e5e7eb; border-radius: 14px; padding: 4px; gap: 6px; margin: 20px 0 18px; }
+    .tab { border: none; cursor: pointer; background: transparent; padding: 10px 8px; border-radius: 10px; font-weight: 600; color: #6b7280; transition: all 160ms ease; }
+    .tab.active { background: #fff; color: #0f172a; box-shadow: 0 2px 6px rgba(0,0,0,.05); }
+    .timeline { position: relative; border-left: 2px solid #e5e7eb; margin-left: 10px; padding-left: 18px; }
+    .dot { position: absolute; left: -10px; top: 12px; width: 12px; height: 12px; background: var(--accent); border: 3px solid #fff; border-radius: 999px; box-shadow: 0 4px 10px rgba(249,115,22,.25); }
+    .event { position: relative; padding: 14px 0 10px; }
+    .event h4 { margin: 0 0 4px; font-size: 16px; }
+    .event p { margin: 0 0 8px; color: var(--muted); font-size: 14px; }
+    .event .label { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #c2410c; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 10px; padding: 4px 8px; margin-left: 8px; }
+    .time { display: inline-flex; align-items: center; gap: 6px; font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; color: #9ca3af; margin-bottom: 6px; background: #f8fafc; padding: 6px 8px; border-radius: 10px; border: 1px solid #e5e7eb; }
+    .nav-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #0f172a; background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 8px 10px; text-decoration: none; box-shadow: 0 2px 6px rgba(0,0,0,.05); transition: all 160ms ease; }
+    .nav-btn:hover { border-color: #fdba74; transform: translateY(-1px); }
+    footer { text-align: center; padding: 28px 0 12px; color: #a1a1aa; font-size: 12px; }
+    @media (max-width: 480px) {
+      header { padding: 64px 18px 84px; }
+      .hero h1 { font-size: 36px; }
+      .tabs { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="hero">
+        <div class="kicker"><i class="fa-solid fa-location-dot"></i> Tainan, Taiwan</div>
+        <h1>The Slow Travel<br>Itinerary</h1>
+        <p>2026.01.27 — 01.29</p>
+      </div>
+    </header>
 
-  return (
-    <div className="min-h-screen bg-stone-50 font-sans text-stone-800 selection:bg-orange-200">
-      {/* Hero Header */}
-      <header className="relative bg-stone-900 text-white pb-12 pt-16 px-6 overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500 rounded-full blur-[100px] opacity-20 -translate-y-1/2 translate-x-1/2"></div>
-        <div className="relative z-10 max-w-md mx-auto">
-          <div className="flex items-center space-x-2 text-orange-400 mb-2">
-            <MapPin size={16} />
-            <span className="text-sm font-medium tracking-widest uppercase">Tainan, Taiwan</span>
+    <main>
+      <section class="card">
+        <div class="flex" style="justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <div class="pill"><i class="fa-solid fa-bed"></i> Accommodation</div>
+          <a class="nav-btn" href="https://www.google.com/maps/place/700台南市中西區萬昌街27號" target="_blank" rel="noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i> 導航</a>
+        </div>
+        <h3>靡生三館 Maison Bohéme</h3>
+        <p class="meta">Room 2702 · 台南市中西區萬昌街27號 · 郭小姐 0916-729-418</p>
+        <p class="meta">看到「森澪」即抵達 · 無行李寄放服務</p>
+      </section>
+
+      <section class="card">
+        <div class="flex" style="justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <div class="pill"><i class="fa-solid fa-motorcycle"></i> Rental</div>
+          <a class="nav-btn" href="https://www.google.com/maps/place/704台南市北區北門路二段17號" target="_blank" rel="noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i> 導航</a>
+        </div>
+        <h3>詠心同行 機車出租</h3>
+        <p class="meta">JbubuS 125CC</p>
+        <div class="flex" style="justify-content: space-between; margin-top: 10px;">
+          <div>
+            <div class="meta" style="text-transform: uppercase; letter-spacing: 1px;">Pickup</div>
+            <strong>1/27 14:30</strong>
           </div>
-          <h1 className="text-4xl font-serif font-bold mb-2 leading-tight">
-            The Slow Travel <br/> Itinerary
-          </h1>
-          <p className="text-stone-400 text-sm font-light tracking-wide">{tripDetails.dates}</p>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="max-w-md mx-auto px-6 -mt-8 relative z-20 pb-20">
-        
-        {/* Info Cards - Quick Access */}
-        <section className="space-y-4 mb-10">
-          <div className="bg-white p-5 rounded-2xl shadow-sm border border-stone-100">
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex items-center space-x-2 text-stone-500">
-                <BedDouble size={18} />
-                <span className="text-xs font-bold uppercase tracking-wider">Accommodation</span>
-              </div>
-              <a href={tripDetails.hotel.mapLink} target="_blank" rel="noreferrer" className="text-orange-600 bg-orange-50 hover:bg-orange-100 p-2 rounded-full transition-colors">
-                <Navigation size={16} />
-              </a>
-            </div>
-            <h3 className="font-bold text-lg leading-tight mb-1">{tripDetails.hotel.name}</h3>
-            <p className="text-stone-500 text-sm mb-2">{tripDetails.hotel.room}</p>
-            <div className="text-xs text-stone-400 border-t border-stone-100 pt-3 mt-2">
-              <p>{tripDetails.hotel.address}</p>
-              <p className="mt-1">{tripDetails.hotel.contact}</p>
-            </div>
+          <div style="text-align: right;">
+            <div class="meta" style="text-transform: uppercase; letter-spacing: 1px;">Return</div>
+            <strong>1/29 19:00</strong>
           </div>
-
-          <div className="bg-white p-5 rounded-2xl shadow-sm border border-stone-100">
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex items-center space-x-2 text-stone-500">
-                <Bike size={18} />
-                <span className="text-xs font-bold uppercase tracking-wider">Rental</span>
-              </div>
-              <a href={tripDetails.rental.mapLink} target="_blank" rel="noreferrer" className="text-orange-600 bg-orange-50 hover:bg-orange-100 p-2 rounded-full transition-colors">
-                <Navigation size={16} />
-              </a>
-            </div>
-            <h3 className="font-bold text-lg leading-tight mb-1">{tripDetails.rental.name}</h3>
-            <p className="text-stone-500 text-sm">{tripDetails.rental.model}</p>
-            <div className="flex justify-between mt-4 text-xs">
-              <div>
-                <span className="block text-stone-400 mb-1">Pickup</span>
-                <span className="font-medium text-stone-700">{tripDetails.rental.pickup}</span>
-              </div>
-              <div className="text-right">
-                <span className="block text-stone-400 mb-1">Return</span>
-                <span className="font-medium text-stone-700">{tripDetails.rental.dropoff}</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Tabs */}
-        <div className="flex bg-stone-200 p-1 rounded-xl mb-8">
-          {days.map((day, index) => (
-            <button
-              key={day.id}
-              onClick={() => setActiveTab(index)}
-              className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
-                activeTab === index 
-                  ? 'bg-white text-stone-900 shadow-sm' 
-                  : 'text-stone-500 hover:text-stone-700'
-              }`}
-            >
-              {day.date}
-            </button>
-          ))}
         </div>
+      </section>
 
-        {/* Day Header */}
-        <div className="mb-6 animate-fade-in">
-          <span className="text-orange-600 font-bold text-sm tracking-wider uppercase">{days[activeTab].weekday}</span>
-          <h2 className="text-3xl font-serif font-bold text-stone-800">{days[activeTab].title}</h2>
-          <p className="text-stone-500 text-sm mt-1">{days[activeTab].theme}</p>
+      <div class="tabs" role="tablist" aria-label="行程日期">
+        <button class="tab active" data-day="0" role="tab" aria-selected="true">01/27</button>
+        <button class="tab" data-day="1" role="tab" aria-selected="false">01/28</button>
+        <button class="tab" data-day="2" role="tab" aria-selected="false">01/29</button>
+      </div>
+
+      <section id="day-0" class="card day-panel" role="tabpanel">
+        <div class="pill" style="margin-bottom:6px;">Tuesday · City Walk</div>
+        <h3 style="margin-bottom: 10px;">Arrival &amp; Art</h3>
+        <div class="timeline">
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time"><i class="fa-solid fa-train-subway"></i> 14:17</div>
+            <h4>抵達台南 <span class="label">Transport</span></h4>
+            <p>抵達台南火車站，準備開啟旅程。</p>
+          </article>
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time"><i class="fa-solid fa-motorcycle"></i> 14:30</div>
+            <h4>詠心同行 取車 <span class="label">Rental</span></h4>
+            <p>前往車行辦理租車，將大件行李暫時寄放於此。</p>
+            <a class="nav-btn" href="https://www.google.com/maps/place/704台南市北區北門路二段17號" target="_blank" rel="noreferrer"><i class="fa-solid fa-location-arrow"></i> 導航至詠心同行</a>
+          </article>
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time"><i class="fa-solid fa-map-pin"></i> 15:00</div>
+            <h4>臺南市美術館 2 館 <span class="label">Activity</span></h4>
+            <p>欣賞碎形屋頂下的光影美學。建議前往 5 樓露台拍攝合照。</p>
+            <a class="nav-btn" href="https://www.google.com/maps/place/臺南市美術館2館" target="_blank" rel="noreferrer">導航到美術館</a>
+          </article>
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time"><i class="fa-regular fa-clock"></i> 16:00</div>
+            <h4>午後咖啡時光 <span class="label">Coffee</span></h4>
+            <p>推薦：南美春室 (頂樓) 或 窄門咖啡。放慢步調，享受古都氛圍。</p>
+          </article>
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time"><i class="fa-solid fa-bed"></i> 17:00</div>
+            <h4>Check-in &amp; 整頓 <span class="label">Check-in</span></h4>
+            <p>回車行拿行李，前往民宿辦理入住。</p>
+            <a class="nav-btn" href="https://www.google.com/maps/place/700台南市中西區萬昌街27號" target="_blank" rel="noreferrer">導航到靡生三館</a>
+          </article>
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time"><i class="fa-solid fa-tree"></i> 18:30</div>
+            <h4>神農街 &amp; 海安路 <span class="label">Night Walk</span></h4>
+            <p>老街燈籠亮起，氛圍極佳。晚餐可於附近特色小店解決。</p>
+            <a class="nav-btn" href="https://www.google.com/maps/place/神農街,+700台南市中西區" target="_blank" rel="noreferrer">導航到神農街</a>
+          </article>
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time"><i class="fa-solid fa-bowl-food"></i> 20:30</div>
+            <h4>大東東夜市 <span class="label">Food</span></h4>
+            <p>週二限定。推薦：地瓜球、素食滷味。備案：小北觀光市場。</p>
+            <a class="nav-btn" href="https://www.google.com/maps/place/大東夜市,+701台南市東區林森路一段276號" target="_blank" rel="noreferrer">導航到大東東夜市</a>
+          </article>
         </div>
+      </section>
 
-        {/* Timeline */}
-        <div className="relative border-l-2 border-stone-200 ml-3 space-y-8 pb-4">
-          {days[activeTab].events.map((event, idx) => (
-            <div key={idx} className="relative pl-8 group">
-              {/* Timeline Dot */}
-              <div className="absolute -left-[9px] top-1 w-4 h-4 rounded-full border-4 border-white bg-orange-500 shadow-sm group-hover:scale-110 transition-transform"></div>
-              
-              {/* Event Content */}
-              <div className="flex flex-col items-start">
-                <div className="flex items-center space-x-3 mb-1">
-                  <span className="font-mono text-xs font-bold text-stone-400 bg-stone-100 px-2 py-0.5 rounded-md">
-                    {event.time}
-                  </span>
-                  <span className="text-[10px] uppercase tracking-widest text-orange-600/80 font-bold border border-orange-100 px-1.5 rounded">
-                    {event.tag}
-                  </span>
-                </div>
-                
-                <h3 className="text-lg font-bold text-stone-800 leading-snug mb-1">
-                  {event.title}
-                </h3>
-                
-                <p className="text-stone-500 text-sm leading-relaxed mb-3">
-                  {event.desc}
-                </p>
-
-                {event.mapLink && (
-                  <a 
-                    href={event.mapLink}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center space-x-1.5 text-xs font-bold text-stone-700 bg-white border border-stone-200 px-3 py-2 rounded-lg hover:bg-stone-50 hover:border-orange-200 transition-all shadow-sm active:scale-95"
-                  >
-                    <Navigation size={12} className="text-orange-600" />
-                    <span>Navigate to {event.location || "Location"}</span>
-                  </a>
-                )}
-              </div>
-            </div>
-          ))}
+      <section id="day-1" class="card day-panel" role="tabpanel" hidden>
+        <div class="pill" style="margin-bottom:6px;">Wednesday · West Coast</div>
+        <h3 style="margin-bottom: 10px;">Ocean &amp; Sunset</h3>
+        <div class="timeline">
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time"><i class="fa-solid fa-mug-hot"></i> 10:30</div>
+            <h4>慢活早午餐 <span class="label">Brunch</span></h4>
+            <p>睡飽再出發。推薦：赤崁璽樓 (素食友善) 或 毛房蔥柚鍋。</p>
+          </article>
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time"><i class="fa-solid fa-tree-city"></i> 12:00</div>
+            <h4>安平樹屋 &amp; 德記洋行 <span class="label">Photo Spot</span></h4>
+            <p>避開人潮的午後，在榕樹氣根與光影間拍攝質感大片。</p>
+            <a class="nav-btn" href="https://www.google.com/maps/place/安平樹屋,+708台南市安平區古堡街108號" target="_blank" rel="noreferrer">導航到安平樹屋</a>
+          </article>
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time"><i class="fa-solid fa-shrimp"></i> 13:30</div>
+            <h4>安平老街覓食 <span class="label">Food</span></h4>
+            <p>同記安平豆花 (檸檬口味)、周氏蝦捲。順便物色伴手禮。</p>
+            <a class="nav-btn" href="https://www.google.com/maps/place/安平老街,+708台南市安平區延平街" target="_blank" rel="noreferrer">導航到安平老街</a>
+          </article>
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time"><i class="fa-solid fa-umbrella-beach"></i> 16:00</div>
+            <h4>漁光島 森林光影 <span class="label">Nature</span></h4>
+            <p>穿越漁光大橋。先至木麻黃森林步道拍攝森系照片。</p>
+            <a class="nav-btn" href="https://www.google.com/maps/place/漁光島,+708台南市安平區" target="_blank" rel="noreferrer">導航到漁光島</a>
+          </article>
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time"><i class="fa-regular fa-sun"></i> 17:30</div>
+            <h4>月牙灣夕陽 <span class="label">Sunset</span></h4>
+            <p>Golden Hour。坐在漂流木上等待日落 (約17:40)。記得帶外套。</p>
+          </article>
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time"><i class="fa-solid fa-bowl-rice"></i> 19:00</div>
+            <h4>安平晚餐 <span class="label">Dinner</span></h4>
+            <p>避開下班尖峰車潮，建議在安平用餐後再返回市區。推薦：文章牛肉湯。</p>
+            <a class="nav-btn" href="https://www.google.com/maps/place/文章牛肉湯,+708台南市安平區安平路300號" target="_blank" rel="noreferrer">導航到文章牛肉湯</a>
+          </article>
         </div>
+      </section>
 
-      </main>
-
-      {/* Footer */}
-      <footer className="bg-white border-t border-stone-100 py-8 text-center px-6">
-        <p className="text-stone-400 text-xs uppercase tracking-widest mb-2">Have a safe trip</p>
-        <div className="flex justify-center items-center space-x-2 text-stone-300">
-          <span className="w-1 h-1 rounded-full bg-stone-300"></span>
-          <span className="w-1 h-1 rounded-full bg-stone-300"></span>
-          <span className="w-1 h-1 rounded-full bg-stone-300"></span>
+      <section id="day-2" class="card day-panel" role="tabpanel" hidden>
+        <div class="pill" style="margin-bottom:6px;">Thursday · East Side</div>
+        <h3 style="margin-bottom: 10px;">Lake &amp; Heritage</h3>
+        <div class="timeline">
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time"><i class="fa-solid fa-suitcase-rolling"></i> 09:00</div>
+            <h4>退房 &amp; 寄放行李 <span class="label">Logistics</span></h4>
+            <p>前往火車站行李房寄放行李 (強烈建議輕裝前往新化)。</p>
+            <a class="nav-btn" href="https://www.google.com/maps/place/臺南車站,+701台南市東區北門路二段4號" target="_blank" rel="noreferrer">導航到台南火車站</a>
+          </article>
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time"><i class="fa-solid fa-water-ladder"></i> 10:10</div>
+            <h4>虎頭埤風景區 <span class="label">Activity</span></h4>
+            <p>租借雙人腳踏船。早晨湖面平靜，享受包場般的寧靜時光。</p>
+            <a class="nav-btn" href="https://www.google.com/maps/place/虎頭埤風景區,+712台南市新化區中興路42巷36號" target="_blank" rel="noreferrer">導航到虎頭埤</a>
+          </article>
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time"><i class="fa-solid fa-store"></i> 12:30</div>
+            <h4>新化老街 <span class="label">Food &amp; Culture</span></h4>
+            <p>欣賞巴洛克建築。午餐：葉麥克炸雞 (有素食)、新化老街咖啡。</p>
+            <a class="nav-btn" href="https://www.google.com/maps/place/新化老街,+712台南市新化區中正路" target="_blank" rel="noreferrer">導航到新化老街</a>
+          </article>
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time"><i class="fa-solid fa-archway"></i> 14:00</div>
+            <h4>大目降文化園區 <span class="label">Photo Spot</span></h4>
+            <p>參觀武德殿與日式宿舍群，把握最後拍照機會。</p>
+            <a class="nav-btn" href="https://www.google.com/maps/place/大目降文化園區,+712台南市新化區和平街45巷3號" target="_blank" rel="noreferrer">導航到大目降文化園區</a>
+          </article>
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time"><i class="fa-solid fa-rotate-left"></i> 15:30</div>
+            <h4>返回台南市區 <span class="label">Return</span></h4>
+            <p>提早回程避開下班車潮。若有時間可逛逛林百貨。</p>
+          </article>
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time"><i class="fa-solid fa-train"></i> 19:00</div>
+            <h4>還車 &amp; 賦歸 <span class="label">End</span></h4>
+            <p>將機車加滿油歸還。前往火車站準備搭車。</p>
+            <a class="nav-btn" href="https://www.google.com/maps/place/704台南市北區北門路二段17號" target="_blank" rel="noreferrer">導航至詠心同行</a>
+          </article>
         </div>
-      </footer>
-    </div>
-  );
-};
+      </section>
+    </main>
 
-export default ItineraryApp;
+    <footer>
+      <div style="display:flex; justify-content:center; gap:6px; margin-bottom:8px;">
+        <span style="width:6px; height:6px; background:#d4d4d8; border-radius:50%;"></span>
+        <span style="width:6px; height:6px; background:#d4d4d8; border-radius:50%;"></span>
+        <span style="width:6px; height:6px; background:#d4d4d8; border-radius:50%;"></span>
+      </div>
+      <div>Have a safe trip · GitHub Pages Ready</div>
+    </footer>
+  </div>
+
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    const panels = document.querySelectorAll('.day-panel');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const day = tab.dataset.day;
+        tabs.forEach(t => {
+          t.classList.toggle('active', t === tab);
+          t.setAttribute('aria-selected', t === tab ? 'true' : 'false');
+        });
+        panels.forEach(panel => {
+          const match = panel.id === 'day-' + day;
+          panel.hidden = !match;
+        });
+      });
+    });
+  </script>
+</body>
+</html>
