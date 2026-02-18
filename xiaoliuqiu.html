@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>小琉球海龜之旅 | 行程卡</title>
+  <meta name="description" content="兩天一夜小琉球慢旅行程卡，浮潛、美食與海龜共游。">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fredoka:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SlZ9qtWQ8n4CPGK/c/pX9nuSUXwxLBzME2YkdE+5EYXPLkZX31lrT7xvFeoJEB6Digw1k3D6Z0fjQX+0GooyVA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    :root {
+      /* Theme: Xiaoliuqiu Ocean (Turquoise, Deep Blue, Sand) */
+      --bg-gradient: linear-gradient(180deg, #f0fdfa 0%, #fff 100%);
+      --card: #ffffff;
+      --ink: #1e3a8a; /* Deep Royal Blue */
+      --ink-light: #64748b;
+      --accent: #0ea5e9; /* Ocean Blue */
+      --accent-secondary: #14b8a6; /* Turtle Green */
+      --tag-bg: #e0f2fe;
+      --tag-text: #0284c7;
+      --border: #e2e8f0;
+      --shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.1), 0 8px 10px -6px rgba(14, 165, 233, 0.05);
+    }
+    
+    * { box-sizing: border-box; }
+    
+    body {
+      margin: 0;
+      background: var(--bg-gradient);
+      color: var(--ink);
+      font-family: 'DM Sans', system-ui, sans-serif; /* More modern, friendly font */
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* Header Section with Wave */
+    header {
+      position: relative;
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+      color: #fff;
+      padding: 60px 20px 120px; /* Extra bottom padding for the wave */
+      overflow: hidden;
+      text-align: center;
+    }
+
+    /* Decorative Circle/Sun */
+    header::before {
+      content: "";
+      position: absolute;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.3) 0%, rgba(56, 189, 248, 0) 70%);
+      top: -100px; right: -50px;
+      filter: blur(40px);
+      z-index: 0;
+    }
+
+    .wave-divider {
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: auto;
+      z-index: 1;
+      color: var(--bg-start); /* Matches body bg */
+    }
+
+    .hero { position: relative; z-index: 2; max-width: 600px; margin: 0 auto; }
+    
+    .kicker { 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 8px; 
+      font-weight: 700; 
+      letter-spacing: 2px; 
+      text-transform: uppercase; 
+      color: #67e8f9; /* Bright Cyan */
+      font-size: 13px; 
+      background: rgba(255,255,255,0.1);
+      padding: 4px 12px;
+      border-radius: 99px;
+      margin-bottom: 12px;
+      backdrop-filter: blur(4px);
+    }
+
+    .hero h1 { 
+      font-family: 'Fredoka', sans-serif; /* Playful, rounded font */
+      font-size: 48px; 
+      line-height: 1.1; 
+      margin: 0 0 8px; 
+      letter-spacing: -0.02em;
+    }
+    
+    .hero p { color: #cbd5e1; margin: 0; font-size: 16px; letter-spacing: 0.5px; font-weight: 500; }
+
+    main { width: 100%; max-width: 760px; margin: -60px auto 0; padding: 0 18px 80px; position: relative; z-index: 10; }
+
+    /* Cards */
+    .card { 
+      background: var(--card); 
+      border: 1px solid rgba(226, 232, 240, 0.8); 
+      border-radius: 24px; 
+      box-shadow: var(--shadow); 
+      padding: 24px; 
+      margin-bottom: 20px; 
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 20px 25px -5px rgba(14, 165, 233, 0.15), 0 8px 10px -6px rgba(14, 165, 233, 0.1);
+    }
+
+    .card h3 { margin: 0 0 6px; font-size: 18px; display: flex; align-items: center; gap: 10px; color: var(--ink); font-weight: 700; }
+    .card .meta { color: var(--ink-light); font-size: 14px; margin: 0; line-height: 1.5; }
+
+    /* Flex & Grid Helpers */
+    .flex { display: flex; gap: 12px; }
+    
+    /* Pills/Tags */
+    .pill { 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 6px; 
+      font-size: 11px; 
+      font-weight: 700; 
+      text-transform: uppercase; 
+      letter-spacing: 0.5px; 
+      background: var(--tag-bg); 
+      color: var(--tag-text); 
+      padding: 6px 12px; 
+      border-radius: 12px; 
+    }
+    
+    /* Tabs */
+    .tabs { 
+      display: grid; 
+      grid-template-columns: repeat(2, 1fr); 
+      background: #ffffff; 
+      border-radius: 18px; 
+      padding: 6px; 
+      gap: 8px; 
+      margin: 24px 0 20px; 
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e2e8f0;
+    }
+    
+    .tab { 
+      border: none; 
+      cursor: pointer; 
+      background: transparent; 
+      padding: 12px 8px; 
+      border-radius: 14px; 
+      font-weight: 600; 
+      color: #94a3b8; 
+      font-family: inherit;
+      transition: all 0.2s ease; 
+    }
+    
+    .tab.active { 
+      background: var(--tag-bg); 
+      color: var(--accent); 
+    }
+
+    /* Timeline */
+    .timeline { position: relative; border-left: 2px dashed #cbd5e1; margin-left: 14px; padding-left: 24px; margin-top: 10px;}
+    
+    .dot { 
+      position: absolute; 
+      left: -32px; 
+      top: 14px; 
+      width: 16px; 
+      height: 16px; 
+      background: #fff; 
+      border: 4px solid var(--accent-secondary); 
+      border-radius: 50%; 
+      box-shadow: 0 0 0 2px #fff;
+    }
+    
+    .event { position: relative; padding: 12px 0 16px; }
+    .event:last-child { padding-bottom: 0; }
+    
+    .event h4 { margin: 0 0 4px; font-size: 17px; font-weight: 700; color: #0f172a; }
+    .event p { margin: 0 0 10px; color: var(--ink-light); font-size: 14px; }
+    
+    /* Label for Category */
+    .event .label { 
+      display: inline-block; 
+      font-size: 10px; 
+      font-weight: 700; 
+      letter-spacing: 0.5px; 
+      text-transform: uppercase; 
+      color: #fff; 
+      background: var(--accent-secondary); 
+      border-radius: 6px; 
+      padding: 2px 6px; 
+      margin-left: 8px; 
+      vertical-align: middle;
+    }
+    .event .label.highlight { background: #f59e0b; } /* Highlight for Snorkeling */
+
+    .time { 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 6px; 
+      font-family: "DM Sans", sans-serif; 
+      font-weight: 700;
+      font-size: 13px; 
+      color: var(--accent); 
+      margin-bottom: 6px; 
+    }
+
+    /* Buttons */
+    .nav-btn { 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 6px; 
+      font-size: 13px; 
+      font-weight: 600; 
+      color: var(--ink); 
+      background: #f8fafc; 
+      border: 1px solid #e2e8f0; 
+      border-radius: 12px; 
+      padding: 8px 14px; 
+      text-decoration: none; 
+      transition: all 0.2s ease; 
+    }
+    .nav-btn:hover { 
+      background: #fff;
+      border-color: var(--accent); 
+      color: var(--accent); 
+      box-shadow: 0 4px 12px rgba(14, 165, 233, 0.15);
+    }
+    .nav-btn i { font-size: 11px; }
+
+    footer { text-align: center; padding: 40px 0 20px; color: #94a3b8; font-size: 12px; }
+
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 38px; }
+      .tabs { margin-top: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="hero">
+        <div class="kicker"><i class="fa-solid fa-location-dot"></i> Xiaoliuqiu, Taiwan</div>
+        <h1>Island<br>Vibes Only</h1>
+        <p>2026.02.19 — 02.20</p>
+      </div>
+      
+      <!-- SVG Wave Divider -->
+      <div class="wave-divider">
+        <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="#f0fdfa"></path>
+        </svg>
+      </div>
+    </header>
+
+    <main>
+      <!-- Accommodation Card -->
+      <section class="card">
+        <div class="flex" style="justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div class="pill"><i class="fa-solid fa-bed"></i> Accommodation</div>
+          <a class="nav-btn" href="https://maps.app.goo.gl/YEkWSzAkaScxWyASA" target="_blank" rel="noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i> Map</a>
+        </div>
+        <h3>Twenty Eight B&B</h3>
+        <p class="meta">屏東縣琉球鄉 · 寄放行李 & 入住</p>
+        <div style="margin-top:8px; display:flex; gap:16px; color:var(--ink-light); font-size:13px;">
+            <span><i class="fa-regular fa-clock"></i> 15:00 In</span>
+            <span><i class="fa-regular fa-clock"></i> 11:00 Out</span>
+        </div>
+      </section>
+
+      <!-- Transportation Card -->
+      <section class="card">
+        <div class="flex" style="justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div class="pill"><i class="fa-solid fa-ship"></i> Ferry & Bike</div>
+          <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E6%9D%B1%E6%B8%AF%E7%A2%BC%E9%A0%AD" target="_blank" rel="noreferrer"><i class="fa-solid fa-location-dot"></i> 東港碼頭</a>
+        </div>
+        <h3>東港 <i class="fa-solid fa-arrow-right-long" style="color:var(--accent-secondary); margin:0 6px;"></i> 小琉球</h3>
+        <p class="meta" style="margin-bottom:12px;">預計 10:00+ 搭船 · 抵達後領取機車</p>
+        
+        <div style="background: #f1f5f9; padding:12px; border-radius:12px; display:flex; justify-content:space-between;">
+          <div>
+            <div style="font-size:10px; text-transform:uppercase; color:#64748b; font-weight:700;">Depart</div>
+            <strong style="color:var(--ink);">02/19 10:30</strong>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size:10px; text-transform:uppercase; color:#64748b; font-weight:700;">Snorkel</div>
+            <strong style="color:var(--accent);">02/19 15:00</strong>
+          </div>
+        </div>
+      </section>
+
+      <!-- Day Tabs -->
+      <div class="tabs" role="tablist" aria-label="行程日期">
+        <button class="tab active" data-day="0" role="tab" aria-selected="true">02/19 (四)</button>
+        <button class="tab" data-day="1" role="tab" aria-selected="false">02/20 (五)</button>
+      </div>
+
+      <!-- Day 1 Panel -->
+      <section id="day-0" class="card day-panel" role="tabpanel">
+        <div class="pill" style="margin-bottom:10px; background:var(--accent); color:white;">Day 1 · Turtle & Chill</div>
+        <h3 style="margin-bottom: 16px;">Ocean & Sunset</h3>
+        <div class="timeline">
+          
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time">11:00</div>
+            <h4>抵達 & 寄放行李 <span class="label">Arrival</span></h4>
+            <p>抵達小琉球，領機車後前往民宿寄放行李。</p>
+            <a class="nav-btn" href="https://maps.app.goo.gl/eC4qeAVmGbUywFkm6" target="_blank" rel="noreferrer">導航至民宿</a>
+          </article>
+
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time">11:30</div>
+            <h4>高記在地小吃 <span class="label">Lunch</span></h4>
+            <p>必吃蜂巢蝦。吃飽後準備迎接下午行程。</p>
+            <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E9%AB%98%E8%A8%98%E5%9C%A8%E5%9C%B0%E5%B0%8F%E5%90%83" target="_blank" rel="noreferrer">導航至高記</a>
+          </article>
+
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time">13:00</div>
+            <h4>小山看海藝文園區 <span class="label">Photo</span></h4>
+            <p>散步消化，欣賞海景與藝術裝置。</p>
+            <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E5%B0%8F%E5%B1%B1%E7%9C%8B%E6%B5%B7%E8%97%9D%E6%96%87%E5%9C%92%E5%8D%80" target="_blank" rel="noreferrer">導航至園區</a>
+          </article>
+
+          <article class="event">
+            <span class="dot" style="border-color:#f59e0b;"></span>
+            <div class="time" style="color:#f59e0b;">15:00</div>
+            <h4>浮潛時光 <span class="label highlight">Highlight</span></h4>
+            <p>下水尋找海龜！請記得不要塗抹防曬乳。</p>
+          </article>
+
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time">17:20</div>
+            <h4>落日亭夕陽 <span class="label">Sunset</span></h4>
+            <p>全島最佳夕陽觀賞點。享受魔幻時刻。</p>
+            <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E5%B0%8F%E7%90%89%E7%90%83%E8%90%BD%E6%97%A5%E4%BA%AD" target="_blank" rel="noreferrer">導航至落日亭</a>
+          </article>
+
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time">18:30</div>
+            <h4>Good Thai 谷泰 <span class="label">Dinner</span></h4>
+            <p>人氣泰式料理，酸辣開胃。記得預先訂位。</p>
+            <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=Good+Thai+%E5%B0%8F%E7%90%89%E7%90%83" target="_blank" rel="noreferrer">導航至谷泰</a>
+          </article>
+
+          <article class="event">
+            <span class="dot" style="border-color:#8b5cf6;"></span>
+            <div class="time" style="color:#8b5cf6;">21:00</div>
+            <h4>微醺之夜 <span class="label" style="background:#8b5cf6;">Bar</span></h4>
+            <p>推薦：史奇波餐酒館 (水母牆) 或 荷花軒 (水煙)。</p>
+            <div class="flex">
+                <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E5%8F%B2%E5%A5%87%E6%B3%A2%E9%A4%90%E9%85%92%E9%A4%A8" target="_blank" rel="noreferrer">史奇波</a>
+                <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E8%8D%B7%E8%8A%B1%E8%BB%92%E6%B0%B4%E7%85%99%E9%85%92%E5%90%A7" target="_blank" rel="noreferrer">荷花軒</a>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- Day 2 Panel -->
+      <section id="day-1" class="card day-panel" role="tabpanel" hidden>
+        <div class="pill" style="margin-bottom:10px; background:var(--accent-secondary); color:white;">Day 2 · Explore & Food</div>
+        <h3 style="margin-bottom: 16px;">Caves & Souvenirs</h3>
+        <div class="timeline">
+          
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time">08:30</div>
+            <h4>洪媽媽早餐店 <span class="label">Breakfast</span></h4>
+            <p>在地人氣王。推薦：琉球粿、賓士包。</p>
+            <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E6%B4%AA%E5%AA%BD%E5%AA%BD%E6%97%A9%E9%A4%90%E5%BA%97" target="_blank" rel="noreferrer">導航至洪媽媽</a>
+          </article>
+
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time">09:30</div>
+            <h4>烏鬼洞探險 <span class="label">Explore</span></h4>
+            <p>珊瑚礁岩洞迷宮，別忘了走海景木棧道。</p>
+            <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E7%83%8F%E9%AC%BC%E6%B4%9E" target="_blank" rel="noreferrer">導航至烏鬼洞</a>
+          </article>
+
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time">11:00</div>
+            <h4>蛤板灣 & 花瓶岩 <span class="label">Landmark</span></h4>
+            <p>台版威尼斯沙灘踏浪，接著前往地標花瓶岩拍照。</p>
+            <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E8%8A%B1%E7%93%B6%E5%B2%A9" target="_blank" rel="noreferrer">導航至花瓶岩</a>
+          </article>
+
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time">12:30</div>
+            <h4>夏味鮮海鮮 <span class="label">Lunch</span></h4>
+            <p>新鮮平價海產，離開前的海鮮大餐。</p>
+            <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E5%A4%8F%E5%91%B3%E9%AE%AE%E6%B5%B7%E9%AE%AE" target="_blank" rel="noreferrer">導航至夏味鮮</a>
+          </article>
+
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time">14:00</div>
+            <h4>小本愛玉 <span class="label">Dessert</span></h4>
+            <p>打卡必拍！超可愛海龜造型愛玉。</p>
+            <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E5%B0%8F%E6%9C%AC%E6%84%9B%E7%8E%89%E5%B0%8F%E7%90%89%E7%90%83%E6%97%97%E8%89%A6%E5%BA%97" target="_blank" rel="noreferrer">導航至小本愛玉</a>
+          </article>
+
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time">15:00</div>
+            <h4>採買伴手禮 <span class="label">Shopping</span></h4>
+            <p>購買麻花捲 (王老吉/寶哥/合家)。還機車準備搭船。</p>
+          </article>
+
+          <article class="event">
+            <span class="dot"></span>
+            <div class="time">16:00</div>
+            <h4>搭船返程 <span class="label">Return</span></h4>
+            <p>再見小琉球！返回東港。</p>
+          </article>
+
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div style="display:flex; justify-content:center; gap:6px; margin-bottom:8px;">
+        <span style="width:6px; height:6px; background:#cbd5e1; border-radius:50%;"></span>
+        <span style="width:6px; height:6px; background:#cbd5e1; border-radius:50%;"></span>
+        <span style="width:6px; height:6px; background:#cbd5e1; border-radius:50%;"></span>
+      </div>
+      <div>Sea You Soon · GitHub Pages Ready</div>
+    </footer>
+  </div>
+
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    const panels = document.querySelectorAll('.day-panel');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const day = tab.dataset.day;
+        tabs.forEach(t => {
+          t.classList.toggle('active', t === tab);
+          t.setAttribute('aria-selected', t === tab ? 'true' : 'false');
+        });
+        panels.forEach(panel => {
+          const match = panel.id === 'day-' + day;
+          panel.hidden = !match;
+        });
+      });
+    });
+  </script>
+</body>
+</html>
