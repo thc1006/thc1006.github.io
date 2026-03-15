@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>阿姆斯特丹 · 秀吉 & 晴晴 · 3/22–3/26</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f5f0e8;
+    --ink: #1a1612;
+    --ink-soft: #4a4540;
+    --ink-muted: #8a857e;
+    --canal: #1c4a6e;
+    --canal-light: #e8f0f7;
+    --tulip: #c94040;
+    --tulip-light: #faeaea;
+    --moss: #3a6b3e;
+    --moss-light: #e8f2e9;
+    --amber: #b87333;
+    --amber-light: #fdf3e7;
+    --border: rgba(26,22,18,0.12);
+    --border-med: rgba(26,22,18,0.2);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: var(--canal);
+    color: #fff;
+    padding: 3.5rem 2rem 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 38px,
+      rgba(255,255,255,0.04) 38px,
+      rgba(255,255,255,0.04) 39px
+    );
+  }
+  .header-inner { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
+  .header-eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.65;
+    margin-bottom: 0.75rem;
+  }
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 6vw, 3.4rem);
+    font-weight: 400;
+    line-height: 1.15;
+    margin-bottom: 0.75rem;
+  }
+  .header-title em { font-style: italic; }
+  .header-sub {
+    font-size: 14px;
+    opacity: 0.7;
+    margin-bottom: 1.5rem;
+  }
+  .header-badges {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .hbadge {
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.08);
+    letter-spacing: 0.04em;
+  }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 960px; margin: 0 auto; padding: 0 1.25rem; }
+
+  /* ── LEGEND ── */
+  .legend {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: white;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; color: var(--ink-soft); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── HOTEL ── */
+  .hotel-section {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 2rem 0;
+  }
+  .hotel-card {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
+  @media(max-width:640px){ .hotel-card { grid-template-columns: 1fr; } }
+  .hotel-info { }
+  .section-tag {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--canal);
+    margin-bottom: 0.5rem;
+  }
+  .hotel-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  .hotel-address {
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .info-item {
+    background: var(--cream);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .info-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-muted); margin-bottom: 3px; }
+  .info-value { font-size: 13px; font-weight: 500; color: var(--ink); }
+  .transport-note {
+    margin-top: 1rem;
+    padding: 10px 14px;
+    background: var(--canal-light);
+    border-left: 3px solid var(--canal);
+    border-radius: 0 6px 6px 0;
+    font-size: 12.5px;
+    color: var(--canal);
+    line-height: 1.6;
+  }
+  .map-embed {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .map-embed iframe {
+    display: block;
+    width: 100%;
+    height: 220px;
+    border: none;
+  }
+
+  /* ── DAYS OVERVIEW ── */
+  .days-nav {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--border);
+    background: white;
+    padding: 0;
+    -webkit-overflow-scrolling: touch;
+  }
+  .days-nav::-webkit-scrollbar { display: none; }
+  .day-nav-btn {
+    flex-shrink: 0;
+    padding: 0.85rem 1.25rem;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    border: none;
+    background: transparent;
+    color: var(--ink-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .day-nav-btn:hover { color: var(--ink); }
+  .day-nav-btn.active { color: var(--canal); border-bottom-color: var(--canal); font-weight: 500; }
+
+  /* ── DAY SECTION ── */
+  .day-section { padding: 2.5rem 0; border-bottom: 1px solid var(--border); }
+  .day-section:last-of-type { border-bottom: none; }
+  .day-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+  }
+  .day-num-big {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 400;
+    line-height: 1;
+    color: var(--canal);
+    flex-shrink: 0;
+    width: 56px;
+    text-align: center;
+  }
+  .day-heading-text { }
+  .day-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .day-subtitle { font-size: 13px; color: var(--ink-muted); }
+  .day-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  @media(max-width:640px){ .day-grid { grid-template-columns: 1fr; } }
+
+  /* ── TIMELINE CARD ── */
+  .tcard {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .tcard-header {
+    padding: 10px 16px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tcard-header.daytime { background: var(--moss-light); color: var(--moss); }
+  .tcard-header.evening { background: var(--canal-light); color: var(--canal); }
+  .tcard-body { padding: 14px 16px; }
+  .t-item {
+    display: flex;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px dashed var(--border);
+  }
+  .t-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .t-time {
+    font-size: 11px;
+    color: var(--ink-muted);
+    flex-shrink: 0;
+    width: 48px;
+    padding-top: 2px;
+    font-weight: 400;
+  }
+  .t-content { flex: 1; }
+  .t-name { font-size: 13.5px; font-weight: 500; color: var(--ink); line-height: 1.4; }
+  .t-desc { font-size: 12px; color: var(--ink-muted); margin-top: 2px; line-height: 1.5; }
+  .t-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
+  .ttag {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-weight: 400;
+  }
+  .ttag-warn { background: var(--tulip-light); color: var(--tulip); }
+  .ttag-ok { background: var(--moss-light); color: var(--moss); }
+  .ttag-info { background: var(--amber-light); color: var(--amber); }
+  .ttag-canal { background: var(--canal-light); color: var(--canal); }
+
+  /* ── LOCATION MAP ROW ── */
+  .loc-maps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+  .loc-map-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .loc-map-card iframe {
+    display: block;
+    width: 100%;
+    height: 160px;
+    border: none;
+  }
+  .loc-map-info {
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .loc-map-name { font-size: 12.5px; font-weight: 500; color: var(--ink); }
+  .loc-map-addr { font-size: 11px; color: var(--ink-muted); }
+  .map-link {
+    font-size: 11px;
+    color: var(--canal);
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding: 4px 8px;
+    border-radius: 5px;
+    border: 1px solid var(--canal);
+    transition: background 0.12s;
+  }
+  .map-link:hover { background: var(--canal-light); }
+
+  /* ── TRANSPORT BOX ── */
+  .transport-box {
+    background: var(--canal-light);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 13px;
+    color: var(--canal);
+    margin-top: 0.75rem;
+    line-height: 1.7;
+  }
+  .transport-box strong { font-weight: 500; }
+
+  /* ── BOOKING SECTION ── */
+  .booking-section {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  .booking-header {
+    padding: 12px 20px;
+    background: var(--ink);
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .booking-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .booking-row:last-child { border-bottom: none; }
+  .booking-left { }
+  .booking-name { font-size: 14px; font-weight: 500; color: var(--ink); }
+  .booking-detail { font-size: 12px; color: var(--ink-muted); margin-top: 2px; }
+  .booking-urgency {
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 4px;
+    font-weight: 500;
+    margin-top: 4px;
+    display: inline-block;
+  }
+  .urgency-red { background: var(--tulip-light); color: var(--tulip); }
+  .urgency-amber { background: var(--amber-light); color: var(--amber); }
+  .btn-book {
+    display: inline-block;
+    padding: 8px 16px;
+    background: var(--canal);
+    color: white;
+    text-decoration: none;
+    border-radius: 7px;
+    font-size: 12.5px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: opacity 0.12s;
+  }
+  .btn-book:hover { opacity: 0.85; }
+
+  /* ── TIPS ── */
+  .tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .tip-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .tip-icon { font-size: 18px; margin-bottom: 6px; }
+  .tip-title { font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); margin-bottom: 5px; }
+  .tip-body { font-size: 12.5px; color: var(--ink-soft); line-height: 1.6; }
+
+  /* ── FOOTER ── */
+  .site-footer {
+    background: var(--ink);
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 12px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 1.75rem 0 1.25rem;
+    color: var(--ink-muted);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── STICKY NAV ── */
+  .sticky-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: white;
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+  }
+
+  /* ── SCROLL ANIMATIONS ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <p class="header-eyebrow">KubeCon Europe 2026</p>
+    <h1 class="header-title">Amsterdam<br><em>秀吉 & 晴晴</em></h1>
+    <p class="header-sub">2026年3月22日（日）— 3月26日（四）　·　5 天 4 夜</p>
+    <div class="header-badges">
+      <span class="hbadge">秀吉：KubeCon RAI 會場</span>
+      <span class="hbadge">晴晴：白天自由行程</span>
+      <span class="hbadge">兩人：每晚合體</span>
+    </div>
+  </div>
+</header>
+
+<!-- STICKY NAV -->
+<nav class="sticky-nav">
+  <div class="days-nav">
+    <button class="day-nav-btn" onclick="scrollToDay('hotel')">住宿</button>
+    <button class="day-nav-btn" onclick="scrollToDay('day22')">3/22 抵達</button>
+    <button class="day-nav-btn" onclick="scrollToDay('day23')">3/23 De Pijp</button>
+    <button class="day-nav-btn" onclick="scrollToDay('day24')">3/24 Jordaan</button>
+    <button class="day-nav-btn" onclick="scrollToDay('day25')">3/25 梵谷</button>
+    <button class="day-nav-btn" onclick="scrollToDay('day26')">3/26 運河船</button>
+    <button class="day-nav-btn" onclick="scrollToDay('booking')">訂票</button>
+    <button class="day-nav-btn" onclick="scrollToDay('tips')">旅遊提示</button>
+  </div>
+</nav>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#3a6b3e"></div> 晴晴白天獨立行程</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#1c4a6e"></div> 兩人晚間合體行程</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#c94040"></div> 注意 / 需要訂票</div>
+</div>
+
+<!-- HOTEL -->
+<section id="hotel" class="hotel-section">
+  <div class="container">
+    <div class="hotel-card">
+      <div class="hotel-info fade-in">
+        <p class="section-tag">全程住宿</p>
+        <h2 class="hotel-name">ibis budget Amsterdam Airport</h2>
+        <p class="hotel-address">
+          Schipholweg 181, 1171 PK Amsterdam<br>
+          Schipholweg 181, Amsterdam, Nederland, 1171 PK
+        </p>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">入住</div>
+            <div class="info-value">3/22（日）下午 3:00 後</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">退房</div>
+            <div class="info-value">3/26（四）中午 12:00 前</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">房型</div>
+            <div class="info-value">雙人房</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">住宿天數</div>
+            <div class="info-value">4 晚</div>
+          </div>
+        </div>
+        <div class="transport-note">
+          <strong>接駁交通：</strong>飯店提供免費機場接駁，約 03:48–00:43 運行。<br>
+          <strong>進市區：</strong>Schiphol → Amsterdam Zuid / Amsterdam RAI 搭 NS 火車（約 10–15 分）。<br>
+          <strong>大眾運輸：</strong>感應式信用卡 / 金融卡可直接 check-in / check-out，進出務必用同一張卡。
+        </div>
+      </div>
+      <div class="map-embed fade-in">
+        <iframe
+          src="https://www.google.com/maps?q=Schipholweg+181+1171+PK+Amsterdam&output=embed&hl=zh-TW"
+          allowfullscreen
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="ibis budget Amsterdam Airport">
+        </iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ DAY 22 ══════════════════════════════════════ -->
+<section id="day22" class="day-section">
+  <div class="container">
+    <div class="day-heading fade-in">
+      <div class="day-num-big">22</div>
+      <div class="day-heading-text">
+        <h2 class="day-title">週日 · 抵達適應日</h2>
+        <p class="day-subtitle">3月22日 · 輕鬆進城，不要太累</p>
+      </div>
+    </div>
+
+    <div class="day-grid fade-in">
+      <div class="tcard">
+        <div class="tcard-header daytime">🌿 晴晴白天</div>
+        <div class="tcard-body">
+          <div class="t-item">
+            <div class="t-time">上午</div>
+            <div class="t-content">
+              <div class="t-name">從 ibis 出發</div>
+              <div class="t-desc">飯店接駁 → Schiphol → NS 火車進 Centraal</div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">10:00</div>
+            <div class="t-content">
+              <div class="t-name">9 Straatjes 九條小街</div>
+              <div class="t-desc">阿姆斯特丹最美的精品小街區，小店 + 咖啡廳 + 運河橋，走路就好</div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">下午</div>
+            <div class="t-content">
+              <div class="t-name">運河邊咖啡廳</div>
+              <div class="t-desc">找一間坐下來發呆，不用趕行程，適應時差和城市節奏</div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">17:00</div>
+            <div class="t-content">
+              <div class="t-name">回程，與秀吉會合</div>
+              <div class="t-desc">往 Amsterdam Zuid 方向移動</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tcard">
+        <div class="tcard-header evening">🌙 晚間合體</div>
+        <div class="tcard-body">
+          <div class="t-item">
+            <div class="t-time">秀吉</div>
+            <div class="t-content">
+              <div class="t-name">KubeCon 結束後 → Amsterdam Zuid</div>
+              <div class="t-desc">RAI → metro 52 → Europaplein 或直接步行</div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">晚餐</div>
+            <div class="t-content">
+              <div class="t-name">Loetje Zuidas（第一選擇）</div>
+              <div class="t-desc">Parnassusweg 1021，Amsterdam Zuid 旁，週日營業，牛排為主</div>
+              <div class="t-tags">
+                <span class="ttag ttag-ok">可訂位</span>
+              </div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">晚餐</div>
+            <div class="t-content">
+              <div class="t-name">NENI Amsterdam（備選）</div>
+              <div class="t-desc">Stadionplein 8，東地中海分享盤，氣氛有特色，每天晚餐都開</div>
+              <div class="t-tags"><span class="ttag ttag-info">備選</span></div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">飯後</div>
+            <div class="t-content">
+              <div class="t-name">DNA Coffeeshop</div>
+              <div class="t-desc">Achillesstraat 104, Amsterdam-Zuid · 09:00–00:55 · 帶護照正本</div>
+              <div class="t-tags"><span class="ttag ttag-canal">18+ 護照</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider fade-in">地圖</div>
+    <div class="loc-maps fade-in">
+      <div class="loc-map-card">
+        <iframe src="https://www.google.com/maps?q=9+Straatjes+Amsterdam&output=embed&hl=zh-TW" loading="lazy" title="9 Straatjes"></iframe>
+        <div class="loc-map-info">
+          <div>
+            <div class="loc-map-name">9 Straatjes</div>
+            <div class="loc-map-addr">Reestraat area, Amsterdam</div>
+          </div>
+          <a class="map-link" href="https://maps.google.com/?q=9+Straatjes+Amsterdam" target="_blank">導航 ↗</a>
+        </div>
+      </div>
+      <div class="loc-map-card">
+        <iframe src="https://www.google.com/maps?q=Achillesstraat+104+Amsterdam&output=embed&hl=zh-TW" loading="lazy" title="DNA Coffeeshop"></iframe>
+        <div class="loc-map-info">
+          <div>
+            <div class="loc-map-name">DNA Coffeeshop</div>
+            <div class="loc-map-addr">Achillesstraat 104</div>
+          </div>
+          <a class="map-link" href="https://maps.google.com/?q=Achillesstraat+104+Amsterdam" target="_blank">導航 ↗</a>
+        </div>
+      </div>
+      <div class="loc-map-card">
+        <iframe src="https://www.google.com/maps?q=Loetje+Zuidas+Amsterdam+Parnassusweg&output=embed&hl=zh-TW" loading="lazy" title="Loetje Zuidas"></iframe>
+        <div class="loc-map-info">
+          <div>
+            <div class="loc-map-name">Loetje Zuidas</div>
+            <div class="loc-map-addr">Parnassusweg 1021</div>
+          </div>
+          <a class="map-link" href="https://maps.google.com/?q=Loetje+Zuidas+Parnassusweg+1021+Amsterdam" target="_blank">導航 ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ DAY 23 ══════════════════════════════════════ -->
+<section id="day23" class="day-section" style="background: #fafaf8;">
+  <div class="container">
+    <div class="day-heading fade-in">
+      <div class="day-num-big">23</div>
+      <div class="day-heading-text">
+        <h2 class="day-title">週一 · De Pijp 體驗日</h2>
+        <p class="day-subtitle">3月23日 · 市集 + Heineken + 晚間 Katsu</p>
+      </div>
+    </div>
+
+    <div class="day-grid fade-in">
+      <div class="tcard">
+        <div class="tcard-header daytime">🌿 晴晴白天</div>
+        <div class="tcard-body">
+          <div class="t-item">
+            <div class="t-time">9:30</div>
+            <div class="t-content">
+              <div class="t-name">出發進城</div>
+              <div class="t-desc">ibis → Schiphol → NS → Amsterdam RAI → metro 52 → De Pijp</div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">10:00</div>
+            <div class="t-content">
+              <div class="t-name">Albert Cuyp Markt</div>
+              <div class="t-desc">阿姆最大室外市集，週一營業到 17:00，吃早午餐、買 stroopwafel、起司、花</div>
+              <div class="t-tags"><span class="ttag ttag-ok">週一到 17:00</span></div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">12:30</div>
+            <div class="t-content">
+              <div class="t-name">Heineken Experience</div>
+              <div class="t-desc">Stadhouderskade 78 · 自助導覽約 1.5–2 小時，包含 2 杯啤酒，App 有中文語音導覽</div>
+              <div class="t-tags">
+                <span class="ttag ttag-warn">需提前訂票</span>
+                <span class="ttag ttag-info">18+</span>
+              </div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">下午</div>
+            <div class="t-content">
+              <div class="t-name">Gerard Doustraat 咖啡廳</div>
+              <div class="t-desc">Heineken 結束後就在 De Pijp 閒晃，坐到傍晚等秀吉</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tcard">
+        <div class="tcard-header evening">🌙 晚間合體</div>
+        <div class="tcard-body">
+          <div class="t-item">
+            <div class="t-time">合體</div>
+            <div class="t-content">
+              <div class="t-name">RAI → De Pijp</div>
+              <div class="t-desc">秀吉下班後 metro 52 直達，在 De Pijp 會合</div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">晚餐</div>
+            <div class="t-content">
+              <div class="t-name">De Pijp 區晚餐</div>
+              <div class="t-desc">Ferdinand Bolstraat 一帶，多間選擇，餐廳密度高</div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">飯後</div>
+            <div class="t-content">
+              <div class="t-name">Katsu Coffeeshop</div>
+              <div class="t-desc">1e van der Helststraat 70 · De Pijp 核心 · 帶護照正本</div>
+              <div class="t-tags"><span class="ttag ttag-canal">18+ 護照</span></div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">收尾</div>
+            <div class="t-content">
+              <div class="t-name">De Pijp 微路線散步 30–45 分</div>
+              <div class="t-desc">Albert Cuyp → Sarphatipark 外圍 → Ceintuurbaan → metro 52 回程</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider fade-in">地圖</div>
+    <div class="loc-maps fade-in">
+      <div class="loc-map-card">
+        <iframe src="https://www.google.com/maps?q=Albert+Cuyp+Markt+Amsterdam&output=embed&hl=zh-TW" loading="lazy" title="Albert Cuyp"></iframe>
+        <div class="loc-map-info">
+          <div>
+            <div class="loc-map-name">Albert Cuyp Markt</div>
+            <div class="loc-map-addr">Albert Cuypstraat</div>
+          </div>
+          <a class="map-link" href="https://maps.google.com/?q=Albert+Cuyp+Markt+Amsterdam" target="_blank">導航 ↗</a>
+        </div>
+      </div>
+      <div class="loc-map-card">
+        <iframe src="https://www.google.com/maps?q=Heineken+Experience+Stadhouderskade+78+Amsterdam&output=embed&hl=zh-TW" loading="lazy" title="Heineken Experience"></iframe>
+        <div class="loc-map-info">
+          <div>
+            <div class="loc-map-name">Heineken Experience</div>
+            <div class="loc-map-addr">Stadhouderskade 78</div>
+          </div>
+          <a class="map-link" href="https://maps.google.com/?q=Heineken+Experience+Amsterdam" target="_blank">導航 ↗</a>
+        </div>
+      </div>
+      <div class="loc-map-card">
+        <iframe src="https://www.google.com/maps?q=Katsu+coffeeshop+1e+van+der+Helststraat+Amsterdam&output=embed&hl=zh-TW" loading="lazy" title="Katsu"></iframe>
+        <div class="loc-map-info">
+          <div>
+            <div class="loc-map-name">Katsu Coffeeshop</div>
+            <div class="loc-map-addr">1e van der Helststraat 70</div>
+          </div>
+          <a class="map-link" href="https://maps.google.com/?q=Katsu+1e+van+der+Helststraat+Amsterdam" target="_blank">導航 ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ DAY 24 ══════════════════════════════════════ -->
+<section id="day24" class="day-section">
+  <div class="container">
+    <div class="day-heading fade-in">
+      <div class="day-num-big">24</div>
+      <div class="day-heading-text">
+        <h2 class="day-title">週二 · Jordaan 文青日</h2>
+        <p class="day-subtitle">3月24日 · Anne Frank + 運河區 → 晚間 Spa Zuiver</p>
+      </div>
+    </div>
+
+    <div class="day-grid fade-in">
+      <div class="tcard">
+        <div class="tcard-header daytime">🌿 晴晴白天</div>
+        <div class="tcard-body">
+          <div class="t-item">
+            <div class="t-time">9:30</div>
+            <div class="t-content">
+              <div class="t-name">出發，先去 Anne Frank</div>
+              <div class="t-desc">搭 tram 13 / 17 到 Westermarkt 下車</div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">10:00</div>
+            <div class="t-content">
+              <div class="t-name">Anne Frank Huis</div>
+              <div class="t-desc">Westermarkt 20 · 約 60–75 分，音頻導覽含中文 · 務必準時入場</div>
+              <div class="t-tags">
+                <span class="ttag ttag-warn">⚠ 票可能已賣完</span>
+                <span class="ttag ttag-info">當天 9–10am 刷官網</span>
+              </div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">12:00</div>
+            <div class="t-content">
+              <div class="t-name">Jordaan 街區漫步</div>
+              <div class="t-desc">最美運河區，小店 + 咖啡廳 + 拍照。Prinsengracht / Keizersgracht 沿線</div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">14:30</div>
+            <div class="t-content">
+              <div class="t-name">FOAM 攝影博物館</div>
+              <div class="t-desc">Keizersgracht 609 · 小而精緻，英文標示清楚，約 1 小時</div>
+              <div class="t-tags"><span class="ttag ttag-ok">無需預約</span></div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">備案</div>
+            <div class="t-content">
+              <div class="t-name">若 Anne Frank 買不到票</div>
+              <div class="t-desc">改去 Westerkerk 塔（可預約）或 Noordermarkt，Jordaan 本身就很值得</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tcard">
+        <div class="tcard-header evening">🌙 晚間合體</div>
+        <div class="tcard-body">
+          <div class="t-item">
+            <div class="t-time">合體</div>
+            <div class="t-content">
+              <div class="t-name">會合 → 前往 Spa Zuiver</div>
+              <div class="t-desc">Amsterdam RAI → metro 50 → Amstelveenseweg，或 metro 51 → A.J. Ernststraat</div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">晚間</div>
+            <div class="t-content">
+              <div class="t-name">Spa Zuiver</div>
+              <div class="t-desc">Koenenkade 8, Amstelveen · 泡湯 + sauna，今晚主題是放鬆恢復體力</div>
+              <div class="t-tags"><span class="ttag ttag-ok">建議訂位</span></div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">備案</div>
+            <div class="t-content">
+              <div class="t-name">若不去 Spa</div>
+              <div class="t-desc">DNA Coffeeshop + Rialto VU 電影（兩個擇一，不要同一晚都塞）</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider fade-in">地圖</div>
+    <div class="loc-maps fade-in">
+      <div class="loc-map-card">
+        <iframe src="https://www.google.com/maps?q=Anne+Frank+House+Westermarkt+20+Amsterdam&output=embed&hl=zh-TW" loading="lazy" title="Anne Frank House"></iframe>
+        <div class="loc-map-info">
+          <div>
+            <div class="loc-map-name">Anne Frank Huis</div>
+            <div class="loc-map-addr">Westermarkt 20</div>
+          </div>
+          <a class="map-link" href="https://maps.google.com/?q=Anne+Frank+House+Amsterdam" target="_blank">導航 ↗</a>
+        </div>
+      </div>
+      <div class="loc-map-card">
+        <iframe src="https://www.google.com/maps?q=FOAM+Photography+Museum+Keizersgracht+609+Amsterdam&output=embed&hl=zh-TW" loading="lazy" title="FOAM"></iframe>
+        <div class="loc-map-info">
+          <div>
+            <div class="loc-map-name">FOAM 攝影博物館</div>
+            <div class="loc-map-addr">Keizersgracht 609</div>
+          </div>
+          <a class="map-link" href="https://maps.google.com/?q=FOAM+Photography+Museum+Amsterdam" target="_blank">導航 ↗</a>
+        </div>
+      </div>
+      <div class="loc-map-card">
+        <iframe src="https://www.google.com/maps?q=Spa+Zuiver+Koenenkade+8+Amstelveen&output=embed&hl=zh-TW" loading="lazy" title="Spa Zuiver"></iframe>
+        <div class="loc-map-info">
+          <div>
+            <div class="loc-map-name">Spa Zuiver</div>
+            <div class="loc-map-addr">Koenenkade 8, Amstelveen</div>
+          </div>
+          <a class="map-link" href="https://maps.google.com/?q=Spa+Zuiver+Koenenkade+8+Amstelveen" target="_blank">導航 ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ DAY 25 ══════════════════════════════════════ -->
+<section id="day25" class="day-section" style="background: #fafaf8;">
+  <div class="container">
+    <div class="day-heading fade-in">
+      <div class="day-num-big">25</div>
+      <div class="day-heading-text">
+        <h2 class="day-title">週三 · 梵谷日</h2>
+        <p class="day-subtitle">3月25日 · Vondelpark → Van Gogh → Eye Filmmuseum</p>
+      </div>
+    </div>
+
+    <div class="day-grid fade-in">
+      <div class="tcard">
+        <div class="tcard-header daytime">🌿 晴晴白天</div>
+        <div class="tcard-body">
+          <div class="t-item">
+            <div class="t-time">9:30</div>
+            <div class="t-content">
+              <div class="t-name">出發 → Museumplein</div>
+              <div class="t-desc">ibis → Schiphol → 電車 / 巴士 → Museumplein</div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">10:00</div>
+            <div class="t-content">
+              <div class="t-name">Vondelpark 早上散步</div>
+              <div class="t-desc">阿姆最大公園，就在梵谷博物館旁邊，咖啡 + 坐草地，很放鬆</div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">11:30</div>
+            <div class="t-content">
+              <div class="t-name">Rijksmuseum 外觀 + 廣場</div>
+              <div class="t-desc">不需買票，外面的拱門和廣場就很漂亮，必拍</div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">12:30</div>
+            <div class="t-content">
+              <div class="t-name">Van Gogh Museum 入館</div>
+              <div class="t-desc">Museumplein 6 · 2026年 3–9 月 09:00–18:00 · 晴晴已訂 12:30 入場</div>
+              <div class="t-tags"><span class="ttag ttag-ok">已訂票 12:30</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tcard">
+        <div class="tcard-header evening">🌙 晚間合體</div>
+        <div class="tcard-body">
+          <div class="t-item">
+            <div class="t-time">18:00</div>
+            <div class="t-content">
+              <div class="t-name">出館 → Museumplein 晚餐</div>
+              <div class="t-desc">秀吉從 RAI → 電車 12 → Centraal → Maasstraat 方向，在 Museumplein 周邊會合吃飯</div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">19:30</div>
+            <div class="t-content">
+              <div class="t-name">前往 Eye Filmmuseum</div>
+              <div class="t-desc">Museumplein → 步行到 Vijzelgracht → metro 52 → Amsterdam Centraal</div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">20:00</div>
+            <div class="t-content">
+              <div class="t-name">免費 Ferry → Eye</div>
+              <div class="t-desc">Centraal 後方搭免費渡輪 → Buiksloterweg，24/7 運行，約 5 分鐘</div>
+              <div class="t-tags"><span class="ttag ttag-ok">全天免費</span></div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">晚上</div>
+            <div class="t-content">
+              <div class="t-name">Eye Filmmuseum 晚場 / 餐廳</div>
+              <div class="t-desc">IJpromenade 1 · 週二至四到 22:00，餐廳也到 22:00，IJ 河夜景超美</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider fade-in">地圖</div>
+    <div class="loc-maps fade-in">
+      <div class="loc-map-card">
+        <iframe src="https://www.google.com/maps?q=Van+Gogh+Museum+Museumplein+6+Amsterdam&output=embed&hl=zh-TW" loading="lazy" title="Van Gogh Museum"></iframe>
+        <div class="loc-map-info">
+          <div>
+            <div class="loc-map-name">Van Gogh Museum</div>
+            <div class="loc-map-addr">Museumplein 6</div>
+          </div>
+          <a class="map-link" href="https://maps.google.com/?q=Van+Gogh+Museum+Amsterdam" target="_blank">導航 ↗</a>
+        </div>
+      </div>
+      <div class="loc-map-card">
+        <iframe src="https://www.google.com/maps?q=Vondelpark+Amsterdam&output=embed&hl=zh-TW" loading="lazy" title="Vondelpark"></iframe>
+        <div class="loc-map-info">
+          <div>
+            <div class="loc-map-name">Vondelpark</div>
+            <div class="loc-map-addr">Amsterdam</div>
+          </div>
+          <a class="map-link" href="https://maps.google.com/?q=Vondelpark+Amsterdam" target="_blank">導航 ↗</a>
+        </div>
+      </div>
+      <div class="loc-map-card">
+        <iframe src="https://www.google.com/maps?q=Eye+Filmmuseum+IJpromenade+1+Amsterdam&output=embed&hl=zh-TW" loading="lazy" title="Eye Filmmuseum"></iframe>
+        <div class="loc-map-info">
+          <div>
+            <div class="loc-map-name">Eye Filmmuseum</div>
+            <div class="loc-map-addr">IJpromenade 1</div>
+          </div>
+          <a class="map-link" href="https://maps.google.com/?q=Eye+Film+Museum+Amsterdam" target="_blank">導航 ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ DAY 26 ══════════════════════════════════════ -->
+<section id="day26" class="day-section">
+  <div class="container">
+    <div class="day-heading fade-in">
+      <div class="day-num-big">26</div>
+      <div class="day-heading-text">
+        <h2 class="day-title">週四 · 最後完整夜</h2>
+        <p class="day-subtitle">3月26日 · 花市收尾 → 夜間運河船 → Katsu · 退房前 12:00</p>
+      </div>
+    </div>
+
+    <div class="tcard fade-in" style="margin-bottom: 1rem; max-width: 480px;">
+      <div class="tcard-header" style="background:#faeaea;color:#c94040;">⚠ 退房提醒</div>
+      <div class="tcard-body">
+        <div class="t-item">
+          <div class="t-time">12:00</div>
+          <div class="t-content">
+            <div class="t-name">退房 ibis budget Amsterdam Airport</div>
+            <div class="t-desc">中午 12:00 前退房。行李可請飯店代管至晚間</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-grid fade-in">
+      <div class="tcard">
+        <div class="tcard-header daytime">🌿 晴晴白天</div>
+        <div class="tcard-body">
+          <div class="t-item">
+            <div class="t-time">9:30</div>
+            <div class="t-content">
+              <div class="t-name">退房後進市區</div>
+              <div class="t-desc">行李寄存飯店，ibis → Schiphol → NS → Centraal</div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">10:30</div>
+            <div class="t-content">
+              <div class="t-name">Bloemenmarkt 浮動花市</div>
+              <div class="t-desc">Singel 運河上的浮動花攤，買鬱金香球莖帶回台灣，必拍</div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">11:30</div>
+            <div class="t-content">
+              <div class="t-name">Spui 廣場周邊</div>
+              <div class="t-desc">書店、咖啡廳，輕鬆逛，不趕時間</div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">下午</div>
+            <div class="t-content">
+              <div class="t-name">IJ 河岸散步</div>
+              <div class="t-desc">NEMO Science Museum 外觀 + 河岸景色，等秀吉下班</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tcard">
+        <div class="tcard-header evening">🌙 晚間合體</div>
+        <div class="tcard-body">
+          <div class="t-item">
+            <div class="t-time">合體</div>
+            <div class="t-content">
+              <div class="t-name">KubeCon 最後一天，進市區</div>
+              <div class="t-desc">先吃晚餐再出發搭運河船</div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">晚餐</div>
+            <div class="t-content">
+              <div class="t-name">市區晚餐</div>
+              <div class="t-desc">Centraal / Leidseplein 周邊選一間，時間寬裕</div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">20:00</div>
+            <div class="t-content">
+              <div class="t-name">夜間運河船 1 小時</div>
+              <div class="t-desc">LOVERS Canal Cruises，每天下午 5 點起，建議選 Leidseplein / Centraal 附近出發</div>
+              <div class="t-tags">
+                <span class="ttag ttag-warn">建議提前預約</span>
+              </div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">21:30</div>
+            <div class="t-content">
+              <div class="t-name">Katsu Coffeeshop</div>
+              <div class="t-desc">1e van der Helststraat 70 · 運河船後再去，最後完整體驗</div>
+              <div class="t-tags"><span class="ttag ttag-canal">18+ 護照</span></div>
+            </div>
+          </div>
+          <div class="t-item">
+            <div class="t-time">備案</div>
+            <div class="t-content">
+              <div class="t-name">若太累降版</div>
+              <div class="t-desc">De Pijp 晚餐 + Katsu，不上船</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider fade-in">地圖</div>
+    <div class="loc-maps fade-in">
+      <div class="loc-map-card">
+        <iframe src="https://www.google.com/maps?q=Bloemenmarkt+Singel+Amsterdam&output=embed&hl=zh-TW" loading="lazy" title="Bloemenmarkt"></iframe>
+        <div class="loc-map-info">
+          <div>
+            <div class="loc-map-name">Bloemenmarkt 花市</div>
+            <div class="loc-map-addr">Singel, Amsterdam</div>
+          </div>
+          <a class="map-link" href="https://maps.google.com/?q=Bloemenmarkt+Amsterdam" target="_blank">導航 ↗</a>
+        </div>
+      </div>
+      <div class="loc-map-card">
+        <iframe src="https://www.google.com/maps?q=LOVERS+Canal+Cruise+Amsterdam&output=embed&hl=zh-TW" loading="lazy" title="Canal Cruise"></iframe>
+        <div class="loc-map-info">
+          <div>
+            <div class="loc-map-name">LOVERS 運河船碼頭</div>
+            <div class="loc-map-addr">Prins Hendrikkade, Centraal</div>
+          </div>
+          <a class="map-link" href="https://maps.google.com/?q=Lovers+Canal+Cruises+Amsterdam+Centraal" target="_blank">導航 ↗</a>
+        </div>
+      </div>
+      <div class="loc-map-card">
+        <iframe src="https://www.google.com/maps?q=NEMO+Science+Museum+Amsterdam&output=embed&hl=zh-TW" loading="lazy" title="NEMO"></iframe>
+        <div class="loc-map-info">
+          <div>
+            <div class="loc-map-name">NEMO 外觀 / IJ 河岸</div>
+            <div class="loc-map-addr">Oosterdok 2</div>
+          </div>
+          <a class="map-link" href="https://maps.google.com/?q=NEMO+Science+Museum+Amsterdam" target="_blank">導航 ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ BOOKING ══════════════════════════════════════ -->
+<section id="booking" style="background: #fafaf8; padding: 2.5rem 0; border-top: 1px solid var(--border);">
+  <div class="container">
+    <p class="section-tag" style="margin-bottom:0.5rem;">訂票清單</p>
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:600;margin-bottom:1.5rem;" class="fade-in">需要提前訂的票</h2>
+
+    <div class="booking-section fade-in">
+      <div class="booking-header">必訂 · 現在就去</div>
+      <div class="booking-row">
+        <div class="booking-left">
+          <div class="booking-name">Anne Frank House</div>
+          <div class="booking-detail">3/24（二）· €16/人 · 每週二 10:00 CET 開放六週後的票</div>
+          <div class="booking-urgency urgency-red">⚠ 3/24 票可能已售完 — 當天早上 9am 重新整理官網等餘票</div>
+        </div>
+        <a class="btn-book" href="https://www.annefrank.org/en/museum/tickets/" target="_blank">官方訂票</a>
+      </div>
+      <div class="booking-row">
+        <div class="booking-left">
+          <div class="booking-name">Heineken Experience</div>
+          <div class="booking-detail">3/23（一）· €29.95/人 · 需選時間段，建議 10:00 或 12:00</div>
+          <div class="booking-urgency urgency-amber">📌 現在可以訂，週一淡季，不用太早但也別拖</div>
+        </div>
+        <a class="btn-book" href="https://tickets.heinekenexperience.com/en/tickets/regular" target="_blank">官方訂票</a>
+      </div>
+    </div>
+
+    <div class="booking-section fade-in">
+      <div class="booking-header">建議訂 · 早點比較安心</div>
+      <div class="booking-row">
+        <div class="booking-left">
+          <div class="booking-name">夜間運河船（LOVERS）</div>
+          <div class="booking-detail">3/26（四）晚間 · 約 €20/人 · 每天下午 5 點起</div>
+          <div class="booking-urgency urgency-amber">📌 最後一天，建議先訂位確保時段</div>
+        </div>
+        <a class="btn-book" href="https://www.lovers.nl/en/cruises/evening-canal-cruise/" target="_blank">訂票</a>
+      </div>
+      <div class="booking-row">
+        <div class="booking-left">
+          <div class="booking-name">Spa Zuiver</div>
+          <div class="booking-detail">3/24（二）晚間 · Koenenkade 8, Amstelveen</div>
+          <div class="booking-urgency urgency-amber">📌 建議線上預約，現場可能客滿</div>
+        </div>
+        <a class="btn-book" href="https://www.spazuiver.nl/en/book/" target="_blank">訂票</a>
+      </div>
+    </div>
+
+    <div class="booking-section fade-in">
+      <div class="booking-header">Heineken 替代方案（GetYourGuide，彈性取消）</div>
+      <div class="booking-row">
+        <div class="booking-left">
+          <div class="booking-name">Heineken Experience via GetYourGuide</div>
+          <div class="booking-detail">可免費取消（24小時前），先預約後付款，比較彈性</div>
+        </div>
+        <a class="btn-book" href="https://www.getyourguide.com/amsterdam-l36/amsterdam-heineken-experience-ticket-including-2-drinks-t205012/" target="_blank">GetYourGuide 訂</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ TIPS ══════════════════════════════════════ -->
+<section id="tips" style="padding: 2.5rem 0; border-top: 1px solid var(--border);">
+  <div class="container">
+    <p class="section-tag" style="margin-bottom:0.5rem;">旅遊提示</p>
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:600;margin-bottom:1.5rem;" class="fade-in">阿姆斯特丹實用資訊</h2>
+
+    <div class="tips-grid fade-in">
+      <div class="tip-card">
+        <div class="tip-title">🚊 大眾運輸</div>
+        <div class="tip-body">
+          用感應式信用卡 / 金融卡直接 check-in，進出一定要用<strong>同一張卡</strong>。<br>
+          Schiphol ↔ Amsterdam Centraal / Zuid：NS 火車約 15 分鐘。<br>
+          市區 metro 52：Centraal ↔ De Pijp ↔ Europaplein (RAI)。
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-title">🌿 Coffeeshop 規則</div>
+        <div class="tip-body">
+          只在 coffeeshop 內使用，不要在街上抽（市中心部分區域禁止）。<br>
+          18+ 才能進入，需出示<strong>護照正本</strong>（不接受影本）。<br>
+          <strong>Katsu</strong>：1e van der Helststraat 70<br>
+          <strong>DNA</strong>：Achillesstraat 104（到 00:55）
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-title">🏨 飯店接駁</div>
+        <div class="tip-body">
+          ibis budget Amsterdam Airport 提供<strong>免費機場接駁</strong>，約 03:48–00:43 運行。<br>
+          注意末班時間，深夜活動要確認能趕上接駁或安排計程車。
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-title">☀️ 天氣 & 穿著</div>
+        <div class="tip-body">
+          3 月底阿姆斯特丹約 5–12°C，天氣多變，<strong>一定要帶雨傘 / 防風外套</strong>。<br>
+          建議穿走路方便的鞋，城市以腳踏車和步行為主。
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-title">💰 支付方式</div>
+        <div class="tip-body">
+          荷蘭商店幾乎全部刷卡，現金需求很少。<br>
+          Visa / Mastercard 接受度高。<br>
+          Anne Frank Huis 館內<strong>只接受信用卡 / 金融卡</strong>，不收現金。
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-title">🔄 備案規則</div>
+        <div class="tip-body">
+          3/22 ↔ 3/24 可互換（都是低耗版本）。<br>
+          3/25 梵谷不換（時間已固定）。<br>
+          3/26 若太累：直接降版為 De Pijp 晚餐 + Katsu，不上船。
+        </div>
+      </div>
+    </div>
+
+    <!-- FULL MAP -->
+    <div class="fade-in" style="margin-bottom:2rem;">
+      <p style="font-size:12px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--canal);margin-bottom:0.75rem;">整體地圖 · Amsterdam City</p>
+      <div class="map-embed" style="border-radius:12px;">
+        <iframe
+          src="https://www.google.com/maps?q=Amsterdam+City+Center+Netherlands&output=embed&hl=zh-TW&z=13"
+          style="height:320px;"
+          allowfullscreen
+          loading="lazy"
+          title="Amsterdam City Map">
+        </iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  Amsterdam · KubeCon Europe 2026 · 秀吉 &amp; 晴晴 · 3/22–3/26
+</footer>
+
+<script>
+  function scrollToDay(id) {
+    const el = document.getElementById(id);
+    if (el) {
+      const offset = 60;
+      const top = el.getBoundingClientRect().top + window.pageYOffset - offset;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+  }
+
+  // Fade-in observer
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Active nav highlight
+  const sections = ['hotel','day22','day23','day24','day25','day26','booking','tips'];
+  const btns = document.querySelectorAll('.day-nav-btn');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && window.scrollY >= el.offsetTop - 100) current = id;
+    });
+    btns.forEach((btn, i) => {
+      btn.classList.toggle('active', sections[i] === current);
+    });
+  });
+</script>
+</body>
+</html>
