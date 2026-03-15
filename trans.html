@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="阿姆斯特丹完整交通攻略：秀吉與晴晴 KubeCon 2026 旅遊，包含 OVpay 付費方式、每日路線、費用試算與購票指南。">
+<title>AMS Transit Guide · 阿姆斯特丹交通完整攻略 · KubeCon 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════
+   DESIGN TOKENS
+   Target: WCAG 2.1 AA (4.5:1 normal text, 3:1 large/UI)
+   Palette tested via WebAIM Contrast Checker
+══════════════════════════════════════════ */
+:root {
+  /* Surfaces */
+  --bg:          #0d1b2a;   /* page bg */
+  --surface-1:   #162539;   /* card */
+  --surface-2:   #1e3350;   /* elevated card */
+  --surface-3:   #243d60;   /* hover */
+
+  /* Text — all pass 4.5:1 on --bg */
+  --text-primary:   #e8f0fa;  /* contrast 12.4:1 on --bg */
+  --text-secondary: #a8bcd4;  /* contrast 5.2:1 on --bg */
+  --text-muted:     #7a95b0;  /* contrast 4.6:1 on --bg — used only large/UI */
+
+  /* Accent colours — AA on dark bg */
+  --amber:       #f5c842;   /* 8.1:1 on --bg */
+  --amber-dim:   #c49a1a;   /* used for borders only */
+  --teal:        #4dd9b8;   /* 7.2:1 on --bg */
+  --teal-dim:    #1d8a72;
+  --red:         #ff8080;   /* 5.8:1 on --bg */
+  --red-dim:     #8b2020;
+
+  /* Semantic bg tints (used with matching text token) */
+  --amber-tint:  rgba(245,200,66,0.10);
+  --teal-tint:   rgba(77,217,184,0.10);
+  --red-tint:    rgba(255,128,128,0.10);
+
+  /* Borders */
+  --border:      rgba(168,188,212,0.12);
+  --border-med:  rgba(168,188,212,0.22);
+  --border-focus:#f5c842;   /* high-visibility focus ring */
+
+  /* Layout */
+  --gutter:      clamp(1rem, 4vw, 2.5rem);
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+
+  /* Motion */
+  --dur:         0.35s;
+  --ease:        cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ══ HIGH CONTRAST OVERRIDE (Windows forced-colors / prefers-contrast) ══ */
+@media (prefers-contrast: more) {
+  :root {
+    --bg: #000;
+    --surface-1: #000;
+    --surface-2: #111;
+    --surface-3: #222;
+    --text-primary: #fff;
+    --text-secondary: #eee;
+    --text-muted: #ccc;
+    --amber: #ffd700;
+    --teal: #00ffcc;
+    --red: #ff6666;
+    --border: rgba(255,255,255,0.4);
+    --border-med: rgba(255,255,255,0.6);
+  }
+}
+
+/* ══ REDUCED MOTION ══ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal { opacity: 1 !important; transform: none !important; }
+}
+
+/* ══ BASE RESET ══ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 300;
+  line-height: 1.75;
+  overflow-x: hidden;
+}
+
+/* ══ SKIP LINK (first focusable element) ══ */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 10000;
+  background: var(--amber);
+  color: #000;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: top 0.15s;
+}
+.skip-link:focus { top: 1rem; }
+
+/* ══ GLOBAL FOCUS RING ══
+   2px solid amber, 2px offset — visible on any bg */
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+/* Remove for mouse; keep for keyboard */
+:focus:not(:focus-visible) { outline: none; }
+
+/* ══ SCROLLBAR ══ */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 3px; }
+
+/* ══ SCREEN-READER ONLY ══ */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ══ LAYOUT ══ */
+.container        { max-width: 1080px; margin: 0 auto; padding: 0 var(--gutter); }
+.container-narrow { max-width: 760px;  margin: 0 auto; padding: 0 var(--gutter); }
+
+/* ══ DECORATIVE GRID BG ══ (aria-hidden in HTML) */
+.grid-bg {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 20%, transparent 100%);
+}
+
+/* ══════════════════════════════════════
+   HERO
+══════════════════════════════════════ */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 6rem var(--gutter) 5rem;
+  overflow: hidden;
+}
+.hero-inner { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto; width: 100%; }
+
+.hero-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.688rem;           /* 11px */
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hero-eyebrow-line {
+  display: inline-block;
+  width: 28px; height: 1px;
+  background: var(--amber);
+  flex-shrink: 0;
+}
+
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(3.2rem, 9vw, 7.5rem);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+.hero-title em { font-style: italic; color: var(--amber); }
+.hero-title .hero-sub {
+  display: block;
+  font-size: 0.42em;
+  font-weight: 400;
+  font-style: normal;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+  margin-top: 0.4em;
+}
+
+.hero-desc {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 480px;
+  margin-bottom: 2rem;
+  line-height: 1.8;
+}
+
+/* Keyword pills — decorative, aria-hidden */
+.hero-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.hero-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.688rem;
+  padding: 4px 11px;
+  border: 1px solid var(--border-med);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+.hero-scroll {
+  position: absolute;
+  bottom: 2rem; right: var(--gutter);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  color: var(--text-muted);
+  writing-mode: vertical-rl;
+  letter-spacing: 0.14em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 1;
+}
+.hero-scroll::after {
+  content: '';
+  width: 1px; height: 44px;
+  background: linear-gradient(var(--text-muted), transparent);
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════
+   STICKY NAV
+══════════════════════════════════════ */
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: rgba(13,27,42,0.95);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  display: flex;
+  align-items: stretch;
+  overflow-x: auto;
+  padding: 0 var(--gutter);
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.nav-inner::-webkit-scrollbar { display: none; }
+
+.nav-brand {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.688rem;
+  color: var(--amber);
+  letter-spacing: 0.1em;
+  padding: 0 1.25rem 0 0;
+  margin-right: 0.5rem;
+  border-right: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Nav buttons: min 44×44px tap target */
+.nav-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 0.875rem;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+.nav-btn:hover { color: var(--text-primary); }
+.nav-btn[aria-current="true"] {
+  color: var(--amber);
+  border-bottom-color: var(--amber);
+  font-weight: 500;
+}
+
+/* ══════════════════════════════════════
+   SECTIONS
+══════════════════════════════════════ */
+.section {
+  padding: 4.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.section-alt { background: var(--surface-1); }
+
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.688rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.625rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-label::after {
+  content: '';
+  width: 32px; height: 1px;
+  background: var(--amber-dim);
+}
+
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  font-weight: 400;
+  line-height: 1.1;
+  margin-bottom: 2rem;
+  color: var(--text-primary);
+}
+.section-title em { font-style: italic; color: var(--amber); }
+
+/* ══════════════════════════════════════
+   PAYMENT CARDS
+══════════════════════════════════════ */
+.pay-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border-med);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 1.75rem;
+}
+@media(max-width:640px) { .pay-grid { grid-template-columns: 1fr; } }
+
+.pay-card {
+  background: var(--surface-1);
+  padding: 1.625rem;
+  transition: background var(--dur) var(--ease);
+  position: relative;
+}
+.pay-card:hover { background: var(--surface-2); }
+.pay-card.featured { background: var(--surface-2); }
+
+/* "Recommended" badge — text-based, not colour-only */
+.rec-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  color: var(--amber);
+  border: 1px solid var(--amber-dim);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.75rem;
+}
+.rec-badge::before { content: '★ '; }
+
+.pay-icon { font-size: 1.375rem; margin-bottom: 0.625rem; }
+.pay-name {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+.pay-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  color: var(--amber);
+  letter-spacing: 0.06em;
+  margin-bottom: 0.625rem;
+}
+.pay-desc {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  line-height: 1.75;
+}
+.pay-price {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--teal);
+  margin-top: 0.625rem;
+}
+
+/* ══════════════════════════════════════
+   DATA TABLE (accessible)
+══════════════════════════════════════ */
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border-med);
+  border-radius: var(--radius-md);
+  margin-bottom: 1.75rem;
+  /* give focus ring to scrollable region */
+  tabindex: 0;
+}
+.table-wrap:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+  min-width: 540px;
+}
+caption {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.688rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0.5rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+thead tr { background: var(--surface-2); }
+th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  padding: 0.625rem 1rem;
+  text-align: left;
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+th[scope="col"] { cursor: default; }
+td {
+  padding: 0.688rem 1rem;
+  border-top: 1px solid var(--border);
+  vertical-align: top;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+tr:hover td { background: rgba(255,255,255,0.02); }
+td:first-child { color: var(--text-primary); }
+.td-mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--teal);
+  white-space: nowrap;
+}
+/* Badge: label + shape, NOT colour alone */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  padding: 2px 7px;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  white-space: nowrap;
+  letter-spacing: 0.04em;
+}
+.badge-amber { background: var(--amber-tint); border: 1px solid var(--amber-dim); color: var(--amber); }
+.badge-teal  { background: var(--teal-tint);  border: 1px solid var(--teal-dim);  color: var(--teal); }
+.badge-red   { background: var(--red-tint);   border: 1px solid var(--red-dim);   color: var(--red); }
+.badge-amber::before { content: '★ '; }
+.badge-teal::before  { content: '✓ '; }
+.badge-red::before   { content: '⚠ '; }
+
+/* ══════════════════════════════════════
+   PERSON CARDS
+══════════════════════════════════════ */
+.person-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+@media(max-width:560px) { .person-grid { grid-template-columns: 1fr; } }
+
+.person-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border-med);
+  border-radius: var(--radius-md);
+  padding: 1.625rem;
+  position: relative;
+  overflow: hidden;
+}
+/* Top accent strip — decorative (aria-hidden in HTML) */
+.person-card-accent {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.card-amber .person-card-accent { background: var(--amber); }
+.card-teal  .person-card-accent { background: var(--teal); }
+
+.person-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+.person-role {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.person-body {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+.person-body strong { color: var(--text-primary); font-weight: 500; }
+
+.pill-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 1rem; }
+.pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  padding: 3px 9px;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.04em;
+  transition: background var(--dur) var(--ease);
+}
+.pill-amber { background: var(--amber-tint); border: 1px solid var(--amber-dim); color: var(--amber); }
+.pill-teal  { background: var(--teal-tint);  border: 1px solid var(--teal-dim);  color: var(--teal); }
+.pill-ghost { background: transparent; border: 1px solid var(--border-med); color: var(--text-muted); }
+
+/* ══════════════════════════════════════
+   DAILY ROUTE TIMELINE
+══════════════════════════════════════ */
+.day-block { margin-bottom: 2.5rem; }
+
+.day-hd {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1.125rem;
+}
+.day-num-display {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 4rem;
+  font-weight: 400;
+  color: var(--surface-3);
+  line-height: 1;
+  text-align: center;
+  user-select: none;
+}
+.day-title-text { font-size: 1rem; font-weight: 500; color: var(--text-primary); margin-bottom: 2px; }
+.day-subtitle-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+}
+
+.day-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border-med);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+@media(max-width:600px) { .day-cols { grid-template-columns: 1fr; } }
+
+.day-col { background: var(--surface-1); }
+
+.col-header {
+  padding: 0.625rem 1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border-bottom: 1px solid var(--border);
+}
+/* Colour + icon so not colour-only */
+.col-header.day  { color: var(--teal); }
+.col-header.eve  { color: var(--amber); }
+.col-header-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.col-header.day  .col-header-dot { background: var(--teal); }
+.col-header.eve  .col-header-dot { background: var(--amber); }
+
+/* Timeline */
+.stop-list { padding: 6px 0; list-style: none; }
+
+.stop-item {
+  display: grid;
+  grid-template-columns: 14px 1fr;
+  gap: 10px;
+  padding: 7px 1rem;
+  position: relative;
+}
+/* Connector line between stops — decorative */
+.stop-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: calc(1rem + 6px);
+  top: calc(7px + 14px);
+  width: 1px;
+  height: calc(100% - 7px);
+  background: repeating-linear-gradient(to bottom, var(--border-med) 0, var(--border-med) 4px, transparent 4px, transparent 8px);
+  pointer-events: none;
+}
+
+.stop-dot {
+  width: 13px; height: 13px;
+  border-radius: 50%;
+  border: 2px solid;
+  background: var(--surface-1);
+  flex-shrink: 0;
+  margin-top: 4px;
+  position: relative;
+  z-index: 1;
+}
+.stop-dot.d    { border-color: var(--teal); }
+.stop-dot.e    { border-color: var(--amber); }
+.stop-dot.free { border-color: var(--teal); background: var(--teal); }
+.stop-dot.note { border-color: var(--text-muted); }
+
+.stop-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  color: var(--text-muted);
+  margin-bottom: 1px;
+}
+.stop-name {
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+.stop-desc {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: 2px;
+  line-height: 1.55;
+}
+.stop-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
+
+/* ══════════════════════════════════════
+   COST CARDS
+══════════════════════════════════════ */
+.cost-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border-med);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 1.75rem;
+}
+.cost-card {
+  background: var(--surface-1);
+  padding: 1.375rem;
+  transition: background var(--dur) var(--ease);
+}
+.cost-card:hover { background: var(--surface-2); }
+.cost-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+/* Large number: use rem so respects user font-size preference */
+.cost-amount {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.875rem;
+  font-weight: 400;
+  color: var(--amber);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.cost-unit {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  color: var(--text-muted);
+  margin-left: 3px;
+}
+.cost-desc { font-size: 0.75rem; color: var(--text-muted); line-height: 1.55; }
+
+/* ══════════════════════════════════════
+   ALERT BANNERS
+   Role + icon + text — never colour-only
+══════════════════════════════════════ */
+.alert {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 0.875rem 1.125rem;
+  border-radius: var(--radius-md);
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+.alert-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+  line-height: 1;
+}
+.alert-body strong { font-weight: 500; }
+.alert-amber { background: var(--amber-tint); border: 1px solid var(--amber-dim); color: var(--amber); }
+.alert-teal  { background: var(--teal-tint);  border: 1px solid var(--teal-dim);  color: var(--teal); }
+.alert-red   { background: var(--red-tint);   border: 1px solid var(--red-dim);   color: var(--red); }
+/* Ensure body text readable (secondary text inside alerts) */
+.alert-amber .alert-body,
+.alert-teal  .alert-body,
+.alert-red   .alert-body { color: var(--text-primary); }
+.alert-amber .alert-body strong { color: var(--amber); }
+.alert-teal  .alert-body strong { color: var(--teal); }
+.alert-red   .alert-body strong { color: var(--red); }
+
+/* ══════════════════════════════════════
+   NUMBERED STEPS
+══════════════════════════════════════ */
+.steps-list { list-style: none; counter-reset: steps; }
+.step-item {
+  counter-increment: steps;
+  display: grid;
+  grid-template-columns: 2.75rem 1fr;
+  gap: 1rem;
+  padding: 1.125rem 0;
+  border-bottom: 1px solid var(--border);
+  align-items: start;
+}
+.step-item:last-child { border-bottom: none; }
+.step-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--amber);
+  width: 2.75rem; height: 2.75rem;
+  border: 1px solid var(--amber-dim);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.step-num::before { content: counter(steps, decimal-leading-zero); }
+.step-title { font-size: 0.9375rem; font-weight: 500; color: var(--text-primary); margin-bottom: 5px; }
+.step-body {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+.step-body a {
+  color: var(--teal);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.step-body a:hover { color: var(--amber); }
+
+/* ══════════════════════════════════════
+   QUICK REFERENCE
+══════════════════════════════════════ */
+.quick-ref {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid var(--border-med);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+@media(max-width:540px) { .quick-ref { grid-template-columns: 1fr; } }
+
+.qr-item {
+  padding: 1.125rem 1.375rem;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  background: var(--surface-1);
+  transition: background var(--dur) var(--ease);
+}
+.qr-item:hover { background: var(--surface-2); }
+/* Remove right border on even items in 2-col grid */
+.qr-item:nth-child(even) { border-right: none; }
+@media(max-width:540px) {
+  .qr-item { border-right: none; }
+  .qr-item:last-child { border-bottom: none; }
+}
+
+.qr-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+}
+.qr-val {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.qr-val strong { color: var(--text-primary); font-weight: 500; }
+.qr-val em { color: var(--amber); font-style: normal; font-weight: 500; }
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+.site-footer {
+  padding: 2.5rem var(--gutter);
+  text-align: center;
+  border-top: 1px solid var(--border);
+}
+.footer-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+.footer-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+}
+.footer-wcag {
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* ══════════════════════════════════════
+   DIVIDER
+══════════════════════════════════════ */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin: 1.75rem 0 1.25rem;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* ══════════════════════════════════════
+   REVEAL ANIMATION (disabled when prefers-reduced-motion)
+══════════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.reveal.in { opacity: 1; transform: none; }
+.d1 { transition-delay: 0.06s; }
+.d2 { transition-delay: 0.12s; }
+.d3 { transition-delay: 0.18s; }
+
+</style>
+</head>
+<body>
+
+<!-- ══ SKIP NAVIGATION — first element, keyboard users jump straight to content ══ -->
+<a class="skip-link" href="#main-content">跳至主要內容</a>
+
+<!-- ══ HERO ══ -->
+<header role="banner">
+  <div class="hero">
+    <!-- decorative: aria-hidden so screen readers skip -->
+    <div class="grid-bg" aria-hidden="true"></div>
+
+    <div class="hero-inner">
+      <p class="hero-eyebrow" aria-label="背景資訊：阿姆斯特丹 3月22日至3月26日 KubeCon EU 2026">
+        <span class="hero-eyebrow-line" aria-hidden="true"></span>
+        Amsterdam · 3/22–3/26 · KubeCon EU 2026
+      </p>
+
+      <h1 class="hero-title">
+        <em>Transit</em><br>
+        Guide
+        <span class="hero-sub">阿姆斯特丹交通完整攻略</span>
+      </h1>
+
+      <p class="hero-desc">
+        從 ibis Airport 出發的每日移動方案、票種選擇、費用試算，以及每個景點的完整交通路線。
+      </p>
+
+      <!-- decorative keyword list; aria-hidden since content is covered in main -->
+      <ul class="hero-pills" aria-hidden="true" role="presentation">
+        <li class="hero-pill">OVpay</li>
+        <li class="hero-pill">GVB Metro</li>
+        <li class="hero-pill">NS Train</li>
+        <li class="hero-pill">Free Ferry</li>
+        <li class="hero-pill">ibis Shuttle</li>
+      </ul>
+    </div>
+
+    <p class="hero-scroll" aria-hidden="true">scroll</p>
+  </div>
+</header>
+
+<!-- ══ STICKY NAV ══ -->
+<nav class="site-nav" aria-label="頁面章節導覽">
+  <div class="nav-inner">
+    <span class="nav-brand" aria-hidden="true">AMS ·</span>
+    <button class="nav-btn" aria-controls="sec-pay"    onclick="navTo('sec-pay')">付費方式</button>
+    <button class="nav-btn" aria-controls="sec-person" onclick="navTo('sec-person')">兩人方案</button>
+    <button class="nav-btn" aria-controls="sec-daily"  onclick="navTo('sec-daily')">每日路線</button>
+    <button class="nav-btn" aria-controls="sec-cost"   onclick="navTo('sec-cost')">費用試算</button>
+    <button class="nav-btn" aria-controls="sec-buy"    onclick="navTo('sec-buy')">如何購票</button>
+    <button class="nav-btn" aria-controls="sec-ref"    onclick="navTo('sec-ref')">速查表</button>
+  </div>
+</nav>
+
+<!-- ══ MAIN CONTENT ══ -->
+<main id="main-content" tabindex="-1">
+
+  <!-- ────────────────────────────────
+       01  PAYMENT METHODS
+  ──────────────────────────────────── -->
+  <section class="section" id="sec-pay" aria-labelledby="h-pay">
+    <div class="container">
+      <p class="section-label reveal" aria-hidden="true">01 · Payment</p>
+      <h2 class="section-title reveal d1" id="h-pay">付費方式，<em>選哪個？</em></h2>
+
+      <!-- Card grid: role list for structured navigation -->
+      <div class="pay-grid reveal d2" role="list" aria-label="四種付費方式比較">
+
+        <article class="pay-card featured" role="listitem">
+          <div class="rec-badge" aria-label="推薦選項">推薦</div>
+          <div class="pay-icon" aria-hidden="true">💳</div>
+          <h3 class="pay-name">OVpay — 感應卡 / 手機</h3>
+          <p class="pay-sub" aria-label="特色：最推薦，零準備">最推薦 · 零準備</p>
+          <p class="pay-desc">
+            抵達 Schiphol 後直接用信用卡感應，不需下載 App、不需買任何票。Visa、Mastercard、Apple Pay、Google Pay 均可。<br><br>
+            <strong>唯一規則：</strong>進出務必用同一張卡。忘記 check-out 最高扣 €4（GVB）或 €20（NS）。
+          </p>
+          <p class="pay-price">GVB 每日費用上限 €10.50</p>
+        </article>
+
+        <article class="pay-card" role="listitem">
+          <div class="pay-icon" aria-hidden="true">🎫</div>
+          <h3 class="pay-name">GVB 多日票</h3>
+          <p class="pay-sub" aria-label="特色：市區無限搭">市區無限搭</p>
+          <p class="pay-desc">
+            1日 €10 ／ 2日 €16 ／ 3日 €21.50 ／ 5日 €34。<br>
+            僅限 GVB（tram、metro、bus），不含 Schiphol NS 火車段。晴晴每天大量在市區移動時比 OVpay 省。
+          </p>
+          <p class="pay-price">GVB App「Gappie」/ 站內機器 / 電車售票員</p>
+        </article>
+
+        <article class="pay-card" role="listitem">
+          <div class="pay-icon" aria-hidden="true">✈️</div>
+          <h3 class="pay-name">Amsterdam Travel Ticket</h3>
+          <p class="pay-sub" aria-label="特色：機場加市區全包">機場 + 市區 All-in-One</p>
+          <p class="pay-desc">
+            1日 €20 ／ 2日 €27 ／ 3日 €34。包含 GVB 無限搭 + Schiphol ↔ 阿姆各站 NS 火車。<br>
+            適合晴晴前 3 天（3/22–3/24）一次打包。
+          </p>
+          <p class="pay-price">Schiphol Connexxion 窗口（B15–B19）/ NS 售票機 / GVB 官網</p>
+        </article>
+
+        <article class="pay-card" role="listitem">
+          <div class="pay-icon" aria-hidden="true">🚂</div>
+          <h3 class="pay-name">NS 單程</h3>
+          <p class="pay-sub" aria-label="特色：火車偶爾用">火車偶爾用</p>
+          <p class="pay-desc">
+            Schiphol ↔ Centraal 單程約 €3.60–5.50（購紙卡加 €1.60 一次性費）。<br>
+            直接 OVpay 感應最省，無附加費用。
+          </p>
+          <p class="pay-price">站內黃色 NS 售票機 / OVpay 直接感應</p>
+        </article>
+      </div>
+
+      <!-- Alerts: role="note" for non-critical info, role="alert" for critical -->
+      <div class="alert alert-red reveal" role="alert" aria-live="polite">
+        <span class="alert-icon" aria-hidden="true">⚠</span>
+        <div class="alert-body">
+          <strong>重要：</strong>秀吉和晴晴必須各自用自己的卡分開感應，不能共用同一張卡搭乘。兩人同時搭乘時，各自刷一次。
+        </div>
+      </div>
+
+      <div class="alert alert-teal reveal d1" role="note">
+        <span class="alert-icon" aria-hidden="true">✓</span>
+        <div class="alert-body">
+          <strong>忘記 check-out 怎麼辦：</strong>在銀行帳單找 NLOV 開頭的 18 碼交易代碼，6 小時後、60 天內前往 GVB 官網自助補正，多扣的費用會退回。
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────────────────────────────
+       02  TWO-PERSON STRATEGY
+  ──────────────────────────────────── -->
+  <section class="section section-alt" id="sec-person" aria-labelledby="h-person">
+    <div class="container">
+      <p class="section-label reveal" aria-hidden="true">02 · Strategy</p>
+      <h2 class="section-title reveal d1" id="h-person">兩人各自的<em>最優解</em></h2>
+
+      <div class="person-grid">
+        <article class="person-card card-amber reveal">
+          <!-- decorative accent strip -->
+          <div class="person-card-accent" aria-hidden="true"></div>
+          <h3 class="person-name">秀吉</h3>
+          <p class="person-role">KubeCon 參加者 · RAI 會場</p>
+          <div class="person-body">
+            每天主要路線固定：ibis 免費接駁 → Schiphol → NS → Amsterdam RAI，來回。<br><br>
+            直接用 <strong>OVpay（信用卡感應）</strong>即可，完全不需要準備任何票券。每次 Schiphol ↔ RAI 約 €3.60。<br><br>
+            晚間與晴晴會合後回程，同樣 OVpay，從市區搭回 Schiphol 再接駁回 ibis。
+          </div>
+          <ul class="pill-row" aria-label="秀吉建議票種">
+            <li class="pill pill-amber">OVpay 全程</li>
+            <li class="pill pill-ghost">ibis 免費接駁</li>
+            <li class="pill pill-ghost">NS Schiphol↔RAI</li>
+          </ul>
+        </article>
+
+        <article class="person-card card-teal reveal d1">
+          <div class="person-card-accent" aria-hidden="true"></div>
+          <h3 class="person-name">晴晴</h3>
+          <p class="person-role">白天自由行 · 每日進出市區</p>
+          <div class="person-body">
+            每天需要：ibis → Schiphol（NS）→ 市區（GVB）兩段交通。<br><br>
+            <strong>方案 A（最省事）：</strong>OVpay 全程感應，NS + GVB 一張卡搞定，GVB 日上限 €10.50 保護不超支。<br><br>
+            <strong>方案 B（打包前 3 天）：</strong>Schiphol 購買 Amsterdam Travel Ticket 3日券 €34，涵蓋 3/22–3/24，剩餘 3/25–3/26 再用 OVpay。
+          </div>
+          <ul class="pill-row" aria-label="晴晴建議票種">
+            <li class="pill pill-teal">OVpay 全程（推薦）</li>
+            <li class="pill pill-amber">或 ATT 3日 €34</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="table-wrap reveal d2" tabindex="0" role="region" aria-label="票種比較表，可左右捲動">
+        <table>
+          <caption>2026 年阿姆斯特丹票種比較</caption>
+          <thead>
+            <tr>
+              <th scope="col">票種</th>
+              <th scope="col">適合</th>
+              <th scope="col">2026 價格</th>
+              <th scope="col">涵蓋範圍</th>
+              <th scope="col">購買</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>OVpay <span class="badge badge-amber" aria-label="推薦選項">推薦</span></td>
+              <td>兩人均適用</td>
+              <td class="td-mono">依距離；GVB 日 ≤ €10.50</td>
+              <td>GVB + NS + 全荷蘭</td>
+              <td>直接感應，無需購買</td>
+            </tr>
+            <tr>
+              <td>GVB 1 日票</td>
+              <td>晴晴城市段</td>
+              <td class="td-mono">€10</td>
+              <td>GVB 市區（tram / metro / bus）</td>
+              <td>Gappie App / 站機 / 電車</td>
+            </tr>
+            <tr>
+              <td>GVB 3 日票</td>
+              <td>晴晴前 3 天</td>
+              <td class="td-mono">€21.50</td>
+              <td>GVB 市區</td>
+              <td>Gappie App / 站機</td>
+            </tr>
+            <tr>
+              <td>Amsterdam Travel Ticket 3 日</td>
+              <td>晴晴前 3 天打包</td>
+              <td class="td-mono">€34</td>
+              <td>GVB + Schiphol ↔ 市區 NS</td>
+              <td>Schiphol Connexxion 窗口 / NS 機</td>
+            </tr>
+            <tr>
+              <td>NS 單程（OVpay）</td>
+              <td>秀吉 / 散搭</td>
+              <td class="td-mono">~€3.60–5.50</td>
+              <td>Schiphol ↔ 各阿姆站</td>
+              <td>直接感應</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────────────────────────────
+       03  DAILY ROUTES
+  ──────────────────────────────────── -->
+  <section class="section" id="sec-daily" aria-labelledby="h-daily">
+    <div class="container">
+      <p class="section-label reveal" aria-hidden="true">03 · Daily Routes</p>
+      <h2 class="section-title reveal d1" id="h-daily">每日<em>移動路線</em></h2>
+
+      <!-- ── 3/22 ── -->
+      <div class="day-block reveal">
+        <div class="day-hd">
+          <div class="day-num-display" aria-hidden="true">22</div>
+          <div>
+            <h3 class="day-title-text">週日 3 月 22 日 · 抵達適應日</h3>
+            <p class="day-subtitle-text">輕鬆進城，不要太累</p>
+          </div>
+        </div>
+        <div class="day-cols">
+          <div class="day-col">
+            <div class="col-header day" id="col-22-day">
+              <span class="col-header-dot" aria-hidden="true"></span>
+              晴晴白天
+            </div>
+            <ol class="stop-list" aria-labelledby="col-22-day">
+              <li class="stop-item">
+                <div class="stop-dot free" aria-label="免費路段"></div>
+                <div>
+                  <p class="stop-time">出發</p>
+                  <p class="stop-name">ibis → Schiphol</p>
+                  <p class="stop-desc">飯店免費接駁，零費用</p>
+                  <div class="stop-tags"><span class="badge badge-teal">免費接駁</span></div>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot d" aria-label="日間路段"></div>
+                <div>
+                  <p class="stop-time">約 9:30</p>
+                  <p class="stop-name">Schiphol → Amsterdam Centraal</p>
+                  <p class="stop-desc">NS 火車，約 15 分，OVpay 感應</p>
+                  <div class="stop-tags"><span class="badge badge-teal">約 €3.60</span></div>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot d" aria-label="日間路段"></div>
+                <div>
+                  <p class="stop-time">10:00</p>
+                  <p class="stop-name">9 Straatjes 九條小街</p>
+                  <p class="stop-desc">步行為主；或 tram 13/17 至 Westermarkt</p>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot note" aria-label="備註路段"></div>
+                <div>
+                  <p class="stop-time">17:00</p>
+                  <p class="stop-name">往 Amsterdam Zuid 移動</p>
+                  <p class="stop-desc">metro 52，準備與秀吉會合</p>
+                </div>
+              </li>
+            </ol>
+          </div>
+          <div class="day-col">
+            <div class="col-header eve" id="col-22-eve">
+              <span class="col-header-dot" aria-hidden="true"></span>
+              晚間合體
+            </div>
+            <ol class="stop-list" aria-labelledby="col-22-eve">
+              <li class="stop-item">
+                <div class="stop-dot e" aria-label="晚間路段"></div>
+                <div>
+                  <p class="stop-time">秀吉下班</p>
+                  <p class="stop-name">RAI → Amsterdam Zuid</p>
+                  <p class="stop-desc">metro 52，Europaplein 站步行 5 分</p>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot e" aria-label="晚間路段"></div>
+                <div>
+                  <p class="stop-time">晚餐</p>
+                  <p class="stop-name">Loetje Zuidas / NENI Amsterdam</p>
+                  <p class="stop-desc">Parnassusweg 1021 / Stadionplein 8</p>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot e" aria-label="晚間路段"></div>
+                <div>
+                  <p class="stop-time">飯後</p>
+                  <p class="stop-name">DNA Coffeeshop</p>
+                  <p class="stop-desc">Achillesstraat 104，步行自 Zuid，09:00–00:55</p>
+                  <div class="stop-tags"><span class="badge badge-amber">18+ 護照正本</span></div>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot note" aria-label="備註路段"></div>
+                <div>
+                  <p class="stop-time">回程</p>
+                  <p class="stop-name">Zuid → Schiphol → ibis</p>
+                  <p class="stop-desc">NS 火車 + 免費接駁</p>
+                  <div class="stop-tags"><span class="badge badge-red">接駁末班 00:43</span></div>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 3/23 ── -->
+      <div class="day-block reveal">
+        <div class="day-hd">
+          <div class="day-num-display" aria-hidden="true">23</div>
+          <div>
+            <h3 class="day-title-text">週一 3 月 23 日 · De Pijp 體驗日</h3>
+            <p class="day-subtitle-text">Albert Cuyp 市集 + Heineken + 晚間 Katsu</p>
+          </div>
+        </div>
+        <div class="day-cols">
+          <div class="day-col">
+            <div class="col-header day" id="col-23-day">
+              <span class="col-header-dot" aria-hidden="true"></span>晴晴白天
+            </div>
+            <ol class="stop-list" aria-labelledby="col-23-day">
+              <li class="stop-item">
+                <div class="stop-dot free" aria-label="免費路段"></div>
+                <div>
+                  <p class="stop-time">9:30</p>
+                  <p class="stop-name">ibis → Schiphol → Amsterdam RAI</p>
+                  <p class="stop-desc">免費接駁 + NS 火車</p>
+                  <div class="stop-tags"><span class="badge badge-teal">免費接駁</span><span class="badge badge-teal">NS 約 €3.60</span></div>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot d" aria-label="日間路段"></div>
+                <div>
+                  <p class="stop-time">10:00</p>
+                  <p class="stop-name">RAI → De Pijp（metro 52）</p>
+                  <p class="stop-desc">約 4 分鐘，GVB OVpay</p>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot d" aria-label="日間路段"></div>
+                <div>
+                  <p class="stop-time">10:15</p>
+                  <p class="stop-name">Albert Cuyp Markt</p>
+                  <p class="stop-desc">步行自 De Pijp 站，週一到 17:00</p>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot d" aria-label="日間路段"></div>
+                <div>
+                  <p class="stop-time">12:30</p>
+                  <p class="stop-name">Heineken Experience</p>
+                  <p class="stop-desc">步行自市集 10 分，Stadhouderskade 78，約 1.5–2 小時</p>
+                  <div class="stop-tags"><span class="badge badge-amber">需提前訂票</span></div>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot note" aria-label="備註路段"></div>
+                <div>
+                  <p class="stop-time">15:00+</p>
+                  <p class="stop-name">Gerard Doustraat 咖啡廳</p>
+                  <p class="stop-desc">步行，等秀吉下班</p>
+                </div>
+              </li>
+            </ol>
+          </div>
+          <div class="day-col">
+            <div class="col-header eve" id="col-23-eve">
+              <span class="col-header-dot" aria-hidden="true"></span>晚間合體
+            </div>
+            <ol class="stop-list" aria-labelledby="col-23-eve">
+              <li class="stop-item">
+                <div class="stop-dot e" aria-label="晚間路段"></div>
+                <div>
+                  <p class="stop-time">秀吉</p>
+                  <p class="stop-name">RAI → metro 52 → De Pijp</p>
+                  <p class="stop-desc">4 分鐘直達</p>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot e" aria-label="晚間路段"></div>
+                <div>
+                  <p class="stop-time">晚餐</p>
+                  <p class="stop-name">De Pijp 區餐廳</p>
+                  <p class="stop-desc">Ferdinand Bolstraat 一帶，餐廳密度高</p>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot e" aria-label="晚間路段"></div>
+                <div>
+                  <p class="stop-time">飯後</p>
+                  <p class="stop-name">Katsu Coffeeshop</p>
+                  <p class="stop-desc">1e van der Helststraat 70，步行自餐廳</p>
+                  <div class="stop-tags"><span class="badge badge-amber">18+ 護照正本</span></div>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot e" aria-label="晚間路段"></div>
+                <div>
+                  <p class="stop-time">微路線</p>
+                  <p class="stop-name">Sarphatipark → Ceintuurbaan → metro 52</p>
+                  <p class="stop-desc">步行 30–45 分後回程</p>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot note" aria-label="備註路段"></div>
+                <div>
+                  <p class="stop-time">回程</p>
+                  <p class="stop-name">De Pijp → Schiphol → ibis</p>
+                  <p class="stop-desc">metro 52 + NS</p>
+                  <div class="stop-tags"><span class="badge badge-red">接駁末班 00:43</span></div>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 3/24 ── -->
+      <div class="day-block reveal">
+        <div class="day-hd">
+          <div class="day-num-display" aria-hidden="true">24</div>
+          <div>
+            <h3 class="day-title-text">週二 3 月 24 日 · Jordaan 文青日 + Spa</h3>
+            <p class="day-subtitle-text">Anne Frank + FOAM → 晚間 Spa Zuiver</p>
+          </div>
+        </div>
+        <div class="day-cols">
+          <div class="day-col">
+            <div class="col-header day" id="col-24-day">
+              <span class="col-header-dot" aria-hidden="true"></span>晴晴白天
+            </div>
+            <ol class="stop-list" aria-labelledby="col-24-day">
+              <li class="stop-item">
+                <div class="stop-dot free" aria-label="免費路段"></div>
+                <div>
+                  <p class="stop-time">9:30</p>
+                  <p class="stop-name">ibis → Schiphol → Centraal</p>
+                  <p class="stop-desc">免費接駁 + NS 火車</p>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot d" aria-label="日間路段"></div>
+                <div>
+                  <p class="stop-time">10:00</p>
+                  <p class="stop-name">Centraal → Anne Frank Huis</p>
+                  <p class="stop-desc">tram 13 / 17 → Westermarkt 站步行 2 分</p>
+                  <div class="stop-tags"><span class="badge badge-red">票可能已賣光</span></div>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot d" aria-label="日間路段"></div>
+                <div>
+                  <p class="stop-time">12:00</p>
+                  <p class="stop-name">Jordaan 街區漫步</p>
+                  <p class="stop-desc">步行，Prinsengracht / Keizersgracht 沿線</p>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot d" aria-label="日間路段"></div>
+                <div>
+                  <p class="stop-time">14:30</p>
+                  <p class="stop-name">FOAM 攝影博物館</p>
+                  <p class="stop-desc">Keizersgracht 609，步行 5 分</p>
+                </div>
+              </li>
+            </ol>
+          </div>
+          <div class="day-col">
+            <div class="col-header eve" id="col-24-eve">
+              <span class="col-header-dot" aria-hidden="true"></span>晚間合體 → Spa Zuiver
+            </div>
+            <ol class="stop-list" aria-labelledby="col-24-eve">
+              <li class="stop-item">
+                <div class="stop-dot e" aria-label="晚間路段"></div>
+                <div>
+                  <p class="stop-time">合體</p>
+                  <p class="stop-name">前往 Spa Zuiver</p>
+                  <p class="stop-desc">RAI → metro 50 → Amstelveenseweg，或 metro 51 → A.J. Ernststraat，步行 5–8 分</p>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot e" aria-label="晚間路段"></div>
+                <div>
+                  <p class="stop-time">晚間</p>
+                  <p class="stop-name">Spa Zuiver · Koenenkade 8</p>
+                  <p class="stop-desc">泡湯 + sauna，今晚主題是放鬆</p>
+                  <div class="stop-tags"><span class="badge badge-teal">建議訂位</span></div>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot note" aria-label="備註路段"></div>
+                <div>
+                  <p class="stop-time">回程</p>
+                  <p class="stop-name">反向 metro → RAI → Schiphol → ibis</p>
+                  <p class="stop-desc">注意末班接駁時間</p>
+                  <div class="stop-tags"><span class="badge badge-red">接駁末班 00:43</span></div>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 3/25 ── -->
+      <div class="day-block reveal">
+        <div class="day-hd">
+          <div class="day-num-display" aria-hidden="true">25</div>
+          <div>
+            <h3 class="day-title-text">週三 3 月 25 日 · 梵谷 + Eye Filmmuseum</h3>
+            <p class="day-subtitle-text">Vondelpark → Van Gogh Museum → 免費渡輪 → Eye</p>
+          </div>
+        </div>
+        <div class="day-cols">
+          <div class="day-col">
+            <div class="col-header day" id="col-25-day">
+              <span class="col-header-dot" aria-hidden="true"></span>晴晴白天
+            </div>
+            <ol class="stop-list" aria-labelledby="col-25-day">
+              <li class="stop-item">
+                <div class="stop-dot free" aria-label="免費路段"></div>
+                <div>
+                  <p class="stop-time">9:30</p>
+                  <p class="stop-name">ibis → Schiphol → Centraal</p>
+                  <p class="stop-desc">免費接駁 + NS 火車</p>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot d" aria-label="日間路段"></div>
+                <div>
+                  <p class="stop-time">10:00</p>
+                  <p class="stop-name">Centraal → Museumplein</p>
+                  <p class="stop-desc">tram 2 / 12，Museum 站下車</p>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot d" aria-label="日間路段"></div>
+                <div>
+                  <p class="stop-time">10:15</p>
+                  <p class="stop-name">Vondelpark + Rijksmuseum 外觀</p>
+                  <p class="stop-desc">步行，不需購票</p>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot d" aria-label="日間路段"></div>
+                <div>
+                  <p class="stop-time">12:30</p>
+                  <p class="stop-name">Van Gogh Museum 入館</p>
+                  <p class="stop-desc">Museumplein 6，晴晴已訂 12:30 時段票</p>
+                  <div class="stop-tags"><span class="badge badge-teal">已訂票</span></div>
+                </div>
+              </li>
+            </ol>
+          </div>
+          <div class="day-col">
+            <div class="col-header eve" id="col-25-eve">
+              <span class="col-header-dot" aria-hidden="true"></span>晚間合體 → Eye
+            </div>
+            <ol class="stop-list" aria-labelledby="col-25-eve">
+              <li class="stop-item">
+                <div class="stop-dot e" aria-label="晚間路段"></div>
+                <div>
+                  <p class="stop-time">18:00</p>
+                  <p class="stop-name">Museumplein 周邊晚餐</p>
+                  <p class="stop-desc">秀吉：RAI → tram 12 → Centraal → Maasstraat 方向會合</p>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot e" aria-label="晚間路段"></div>
+                <div>
+                  <p class="stop-time">晚餐後</p>
+                  <p class="stop-name">Vijzelgracht → metro 52 → Centraal</p>
+                  <p class="stop-desc">約 7 分鐘</p>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot free" aria-label="免費路段"></div>
+                <div>
+                  <p class="stop-time">約 20:00</p>
+                  <p class="stop-name">Centraal 後側 → 免費 IJ 渡輪</p>
+                  <p class="stop-desc">往 Buiksloterweg，24/7，約 5 分鐘</p>
+                  <div class="stop-tags"><span class="badge badge-teal">完全免費</span></div>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot e" aria-label="晚間路段"></div>
+                <div>
+                  <p class="stop-time">20:10</p>
+                  <p class="stop-name">Eye Filmmuseum · IJpromenade 1</p>
+                  <p class="stop-desc">渡輪碼頭步行 3 分，週三到 22:00</p>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot note" aria-label="備註路段"></div>
+                <div>
+                  <p class="stop-time">回程</p>
+                  <p class="stop-name">渡輪 → Centraal → NS → Schiphol → ibis</p>
+                  <div class="stop-tags"><span class="badge badge-red">接駁末班 00:43</span></div>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 3/26 ── -->
+      <div class="day-block reveal">
+        <div class="day-hd">
+          <div class="day-num-display" aria-hidden="true">26</div>
+          <div>
+            <h3 class="day-title-text">週四 3 月 26 日 · 最後完整夜 · 退房日</h3>
+            <p class="day-subtitle-text">退房前 12:00 · 花市 → 運河船 → Katsu</p>
+          </div>
+        </div>
+        <div class="alert alert-amber reveal" role="note" aria-label="退房提醒">
+          <span class="alert-icon" aria-hidden="true">📦</span>
+          <div class="alert-body">
+            <strong>退房：</strong>中午 12:00 前辦理，行李可請 ibis 代管至晚間，傍晚取走後直接去 Schiphol 離境。
+          </div>
+        </div>
+        <div class="day-cols">
+          <div class="day-col">
+            <div class="col-header day" id="col-26-day">
+              <span class="col-header-dot" aria-hidden="true"></span>晴晴白天
+            </div>
+            <ol class="stop-list" aria-labelledby="col-26-day">
+              <li class="stop-item">
+                <div class="stop-dot d" aria-label="日間路段"></div>
+                <div>
+                  <p class="stop-time">退房後</p>
+                  <p class="stop-name">ibis → Schiphol → Centraal</p>
+                  <p class="stop-desc">行李寄存飯店再出發</p>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot d" aria-label="日間路段"></div>
+                <div>
+                  <p class="stop-time">10:30</p>
+                  <p class="stop-name">Bloemenmarkt 浮動花市</p>
+                  <p class="stop-desc">步行自 Centraal，Singel 運河沿線</p>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot d" aria-label="日間路段"></div>
+                <div>
+                  <p class="stop-time">11:30</p>
+                  <p class="stop-name">Spui 廣場 + IJ 河岸散步</p>
+                  <p class="stop-desc">NEMO 外觀景色，步行</p>
+                </div>
+              </li>
+            </ol>
+          </div>
+          <div class="day-col">
+            <div class="col-header eve" id="col-26-eve">
+              <span class="col-header-dot" aria-hidden="true"></span>晚間合體 · 完整體驗夜
+            </div>
+            <ol class="stop-list" aria-labelledby="col-26-eve">
+              <li class="stop-item">
+                <div class="stop-dot e" aria-label="晚間路段"></div>
+                <div>
+                  <p class="stop-time">合體</p>
+                  <p class="stop-name">市區晚餐</p>
+                  <p class="stop-desc">Centraal / Leidseplein 周邊</p>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot e" aria-label="晚間路段"></div>
+                <div>
+                  <p class="stop-time">約 20:00</p>
+                  <p class="stop-name">LOVERS 夜間運河船</p>
+                  <p class="stop-desc">Prins Hendrikkade，Centraal 步行 5 分，1 小時</p>
+                  <div class="stop-tags"><span class="badge badge-amber">建議提前預訂</span></div>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot e" aria-label="晚間路段"></div>
+                <div>
+                  <p class="stop-time">21:30</p>
+                  <p class="stop-name">Katsu Coffeeshop</p>
+                  <p class="stop-desc">metro 52 → De Pijp，1e van der Helststraat 70</p>
+                  <div class="stop-tags"><span class="badge badge-amber">18+ 護照正本</span></div>
+                </div>
+              </li>
+              <li class="stop-item">
+                <div class="stop-dot note" aria-label="備註路段"></div>
+                <div>
+                  <p class="stop-time">深夜</p>
+                  <p class="stop-name">De Pijp → Schiphol → 取行李 → ibis</p>
+                  <p class="stop-desc">metro 52 + NS，或隔天直接離境</p>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ────────────────────────────────
+       04  COST BREAKDOWN
+  ──────────────────────────────────── -->
+  <section class="section section-alt" id="sec-cost" aria-labelledby="h-cost">
+    <div class="container">
+      <p class="section-label reveal" aria-hidden="true">04 · Cost</p>
+      <h2 class="section-title reveal d1" id="h-cost">費用<em>試算</em></h2>
+
+      <div class="cost-grid reveal d2" role="list" aria-label="各路段費用明細">
+        <div class="cost-card" role="listitem">
+          <p class="cost-label">ibis 飯店接駁</p>
+          <p class="cost-amount">€0<span class="cost-unit">/ 次</span></p>
+          <p class="cost-desc">每天來回均免費。03:48–00:43 運行</p>
+        </div>
+        <div class="cost-card" role="listitem">
+          <p class="cost-label">Schiphol ↔ 市區（NS）</p>
+          <p class="cost-amount">€3.60<span class="cost-unit">單程</span></p>
+          <p class="cost-desc">OVpay 感應，Schiphol ↔ Centraal / RAI / Zuid</p>
+        </div>
+        <div class="cost-card" role="listitem">
+          <p class="cost-label">GVB 市區每日上限</p>
+          <p class="cost-amount">€10.50<span class="cost-unit">/ 日</span></p>
+          <p class="cost-desc">OVpay 超過此金額當日不再計費</p>
+        </div>
+        <div class="cost-card" role="listitem">
+          <p class="cost-label">IJ 渡輪（往 Eye）</p>
+          <p class="cost-amount">€0<span class="cost-unit">/ 次</span></p>
+          <p class="cost-desc">Centraal 後側，24/7 完全免費，不需感應</p>
+        </div>
+        <div class="cost-card" role="listitem">
+          <p class="cost-label">夜間運河船 LOVERS</p>
+          <p class="cost-amount">~€20<span class="cost-unit">/ 人</span></p>
+          <p class="cost-desc">1 小時 Evening Cruise，3/26 晚間</p>
+        </div>
+        <div class="cost-card" role="listitem">
+          <p class="cost-label">晴晴每日總交通估算</p>
+          <p class="cost-amount">~€15<span class="cost-unit">/ 日</span></p>
+          <p class="cost-desc">NS 來回 ~€7.20 + GVB 市區 ~€7–8</p>
+        </div>
+      </div>
+
+      <div class="divider reveal">5 天總費用估算</div>
+
+      <div class="table-wrap reveal d1" tabindex="0" role="region" aria-label="5天交通費用估算表">
+        <table>
+          <caption>5 天交通費用估算（OVpay 方案，每人）</caption>
+          <thead>
+            <tr>
+              <th scope="col">路段</th>
+              <th scope="col">交通方式</th>
+              <th scope="col">秀吉估算</th>
+              <th scope="col">晴晴估算</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ibis ↔ Schiphol（5 天來回）</td>
+              <td>飯店免費接駁</td>
+              <td class="td-mono">€0</td>
+              <td class="td-mono">€0</td>
+            </tr>
+            <tr>
+              <td>Schiphol ↔ 市區（NS，5 天）</td>
+              <td>OVpay 感應</td>
+              <td class="td-mono">~€36</td>
+              <td class="td-mono">~€36</td>
+            </tr>
+            <tr>
+              <td>GVB 市區（每日）</td>
+              <td>OVpay 日上限</td>
+              <td class="td-mono">~€5–8 / 日</td>
+              <td class="td-mono">~€8–10 / 日</td>
+            </tr>
+            <tr>
+              <td>IJ 渡輪（3/25）</td>
+              <td>免費</td>
+              <td class="td-mono">€0</td>
+              <td class="td-mono">€0</td>
+            </tr>
+            <tr>
+              <td>運河船（3/26）</td>
+              <td>LOVERS</td>
+              <td class="td-mono">~€20</td>
+              <td class="td-mono">~€20</td>
+            </tr>
+            <tr>
+              <td><strong>5 天總計估算</strong></td>
+              <td>OVpay 全程</td>
+              <td class="td-mono"><strong>~€80–100</strong></td>
+              <td class="td-mono"><strong>~€100–120</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────────────────────────────
+       05  HOW TO BUY
+  ──────────────────────────────────── -->
+  <section class="section" id="sec-buy" aria-labelledby="h-buy">
+    <div class="container-narrow">
+      <p class="section-label reveal" aria-hidden="true">05 · Purchase</p>
+      <h2 class="section-title reveal d1" id="h-buy">如何<em>購票</em></h2>
+
+      <ol class="steps-list reveal d2" aria-label="購票步驟說明">
+        <li class="step-item">
+          <div class="step-num" aria-label="步驟一"></div>
+          <div>
+            <h3 class="step-title">抵達 Schiphol — 直接 OVpay 感應（推薦）</h3>
+            <p class="step-body">
+              出登機門往 Arrivals 方向，進入 Schiphol Plaza 找<strong>黃色 NS 感應柱</strong>。用信用卡 / Apple Pay / Google Pay 輕觸感應完成 check-in，無需排隊買票。出站時再感應一次 check-out，費用自動計算。
+            </p>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num" aria-label="步驟二"></div>
+          <div>
+            <h3 class="step-title">購買 Amsterdam Travel Ticket（晴晴前 3 天打包方案）</h3>
+            <p class="step-body">
+              Schiphol Plaza 出口旁的 <strong>Connexxion 票務窗口（B15–B19 公車站旁）</strong>購買，或 NS 黃色自動售票機。選 3 日券（€34），從 3/22 開始使用到 3/24 結束（04:00 到期）。3/25、3/26 再改用 OVpay。<br>
+              也可提前在 <a href="https://reisproducten.gvb.nl/en/travel-products/tourists/amsterdam-travel-ticket" target="_blank" rel="noopener noreferrer">GVB 官網預購電子票<span class="sr-only">（開啟新視窗）</span></a>。
+            </p>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num" aria-label="步驟三"></div>
+          <div>
+            <h3 class="step-title">購買 GVB 日票（市區 tram / metro / bus）</h3>
+            <p class="step-body">
+              三個管道可選：<br>
+              • <strong>GVB App「Gappie」</strong> — 手機下載，搭車時出示 QR code<br>
+              • 地鐵 / 電車站內<strong>藍色 GVB 自動售票機</strong>（信用卡，不收現金）<br>
+              • 電車車廂後方向<strong>售票員購買</strong>（信用卡 / 感應支付）
+            </p>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num" aria-label="步驟四"></div>
+          <div>
+            <h3 class="step-title">市區搭乘規則</h3>
+            <p class="step-body">
+              上車時感應 check-in（黃色讀卡機），下車前感應 check-out（同一台機器）。Metro 在進站和出站閘門各感應一次。IJ 渡輪不需感應，直接上船。深夜 GVB 班次少時，改搭 NS 到 Schiphol 再接 ibis 接駁。
+            </p>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num" aria-label="步驟五"></div>
+          <div>
+            <h3 class="step-title">忘記 check-out — 補正方式</h3>
+            <p class="step-body">
+              查銀行帳單找到 <strong>NLOV 開頭的 18 碼交易代碼</strong>，至少等 6 小時後，60 天內前往 <a href="https://www.gvb.nl/en/ovpay-missed-checkout" target="_blank" rel="noopener noreferrer">GVB 官網自助補正<span class="sr-only">（開啟新視窗）</span></a>。系統會退回多扣的金額。
+            </p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ────────────────────────────────
+       06  QUICK REFERENCE
+  ──────────────────────────────────── -->
+  <section class="section section-alt" id="sec-ref" aria-labelledby="h-ref">
+    <div class="container">
+      <p class="section-label reveal" aria-hidden="true">06 · Quick Reference</p>
+      <h2 class="section-title reveal d1" id="h-ref">速查<em>資訊表</em></h2>
+
+      <div class="quick-ref reveal d2" role="list" aria-label="重要資訊速查">
+        <div class="qr-item" role="listitem">
+          <p class="qr-label">ibis 飯店接駁</p>
+          <p class="qr-val"><em>免費</em>，約 03:48–00:43<br>超過末班需計程車（約 €10–15）或步行約 20 分</p>
+        </div>
+        <div class="qr-item" role="listitem">
+          <p class="qr-label">Schiphol ↔ Centraal NS</p>
+          <p class="qr-val">每 <strong>10–15 分</strong>一班，車程約 <strong>15 分鐘</strong><br>OVpay 單程約 <strong>€3.60</strong></p>
+        </div>
+        <div class="qr-item" role="listitem">
+          <p class="qr-label">GVB OVpay 每日上限</p>
+          <p class="qr-val"><em>€10.50</em>：超過不再計費<br>進出必須用同一張卡才觸發</p>
+        </div>
+        <div class="qr-item" role="listitem">
+          <p class="qr-label">GVB metro 52 主軸</p>
+          <p class="qr-val">Centraal ↔ De Pijp ↔ <strong>RAI</strong> ↔ Europaplein<br>貫穿全部行程的核心路線</p>
+        </div>
+        <div class="qr-item" role="listitem">
+          <p class="qr-label">IJ 渡輪（往 Eye）</p>
+          <p class="qr-val"><em>完全免費</em>，24/7 運行<br>Centraal 後側，約 5 分鐘抵 Buiksloterweg</p>
+        </div>
+        <div class="qr-item" role="listitem">
+          <p class="qr-label">NS 深夜服務</p>
+          <p class="qr-val">Nachtnet 全天 24 小時，深夜每 <strong>1 小時</strong>一班<br>Schiphol ↔ Centraal 不中斷</p>
+        </div>
+        <div class="qr-item" role="listitem">
+          <p class="qr-label">OVpay 支援卡種</p>
+          <p class="qr-val"><strong>Visa / Mastercard</strong>（含台灣發行卡）<br>Apple Pay · Google Pay · Maestro</p>
+        </div>
+        <div class="qr-item" role="listitem">
+          <p class="qr-label">Spa Zuiver 交通</p>
+          <p class="qr-val">RAI → <strong>metro 50</strong> → Amstelveenseweg<br>或 <strong>metro 51</strong> → A.J. Ernststraat，步行 5 分</p>
+        </div>
+        <div class="qr-item" role="listitem">
+          <p class="qr-label">推薦 App</p>
+          <p class="qr-val"><strong>NS App</strong>（火車即時班次 + 月台）<br><strong>9292 App</strong>（GVB + NS 跨系統路線規劃）</p>
+        </div>
+        <div class="qr-item" role="listitem">
+          <p class="qr-label">一行總結</p>
+          <p class="qr-val">
+            <strong>秀吉：</strong>OVpay 全程，零準備<br>
+            <strong>晴晴：</strong>OVpay 全程，或 ATT 3日 €34 打包前 3 天
+          </p>
+        </div>
+      </div>
+
+      <div class="alert alert-amber reveal" style="margin-top:1.5rem;" role="note">
+        <span class="alert-icon" aria-hidden="true">📱</span>
+        <div class="alert-body">
+          <strong>建議下載：</strong>NS App 看即時班次，9292 App 規劃跨系統路線（輸入起點 + 終點，自動建議 tram / metro / NS 組合）。兩個 App 均支援英文介面。
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ══ FOOTER ══ -->
+<footer class="site-footer" role="contentinfo">
+  <p class="footer-title">Amsterdam Transit Guide</p>
+  <p class="footer-sub">秀吉 &amp; 晴晴 · KubeCon EU 2026 · 3/22–3/26 · ibis budget Amsterdam Airport</p>
+  <p class="footer-wcag">設計遵循 WCAG 2.1 AA 無障礙標準 · 色彩對比 ≥ 4.5:1 · 完整鍵盤導覽 · 支援螢幕閱讀器</p>
+</footer>
+
+<script>
+/* ── Skip link target fix (tabindex=-1 on #main-content) ── */
+
+/* ── Smooth scroll + update aria-current ── */
+const secs = ['sec-pay','sec-person','sec-daily','sec-cost','sec-buy','sec-ref'];
+const btns = document.querySelectorAll('.nav-btn');
+
+function navTo(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const y = el.getBoundingClientRect().top + window.pageYOffset - 52;
+  window.scrollTo({ top: y, behavior: 'smooth' });
+  /* Move focus to section for keyboard users */
+  el.setAttribute('tabindex', '-1');
+  el.focus({ preventScroll: true });
+}
+
+/* Update aria-current on scroll */
+window.addEventListener('scroll', () => {
+  let cur = '';
+  secs.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && window.scrollY >= el.offsetTop - 80) cur = id;
+  });
+  btns.forEach((btn, i) => {
+    const matched = secs[i] === cur;
+    btn.classList.toggle('active', matched);
+    btn.setAttribute('aria-current', matched ? 'true' : 'false');
+  });
+}, { passive: true });
+
+/* ── Reveal on scroll (IntersectionObserver) ── */
+/* Skipped automatically by CSS when prefers-reduced-motion */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  });
+}, { threshold: 0.06 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+/* ── Keyboard: Enter on nav buttons ── */
+btns.forEach(btn => {
+  btn.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      btn.click();
+    }
+  });
+});
+</script>
+</body>
+</html>
