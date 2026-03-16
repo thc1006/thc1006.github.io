@@ -4,1240 +4,1167 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KubeCon EU 2026 — 蔡秀吉 個人行程表</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --critical: #dc2626;
-    --critical-bg: #fef2f2;
-    --high: #ea580c;
-    --high-bg: #fff7ed;
-    --medium: #2563eb;
-    --medium-bg: #eff6ff;
-    --network: #7c3aed;
-    --network-bg: #f5f3ff;
-    --break: #059669;
-    --break-bg: #ecfdf5;
-    --bg: #f8fafc;
-    --card: #ffffff;
-    --text: #0f172a;
-    --muted: #64748b;
-    --border: #e2e8f0;
-  }
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+:root{
+  --must:#E8363D;
+  --must-bg:#FFF5F5;
+  --must-border:#FECACA;
+  --high:#D97706;
+  --high-bg:#FFFBEB;
+  --high-border:#FDE68A;
+  --med:#2563EB;
+  --med-bg:#EFF6FF;
+  --med-border:#BFDBFE;
+  --net:#7C3AED;
+  --net-bg:#F5F3FF;
+  --net-border:#C4B5FD;
+  --rest:#059669;
+  --rest-bg:#ECFDF5;
+  --rest-border:#A7F3D0;
+  --ink:#1A1A2E;
+  --ink2:#374151;
+  --ink3:#6B7280;
+  --paper:#FAFAF9;
+  --card:#FFFFFF;
+  --line:#E5E7EB;
+  --line2:#F3F4F6;
+  --sidebar:#0F172A;
+  --sidebar2:#1E293B;
+  --accent:#3B82F6;
+  --radius:10px;
+}
 
-  body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-  }
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 
-  .header {
-    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-    color: white;
-    padding: 2rem;
-    text-align: center;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
+body{
+  font-family:'DM Sans','Noto Sans TC',sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.7;
+  display:flex;
+  min-height:100vh;
+}
 
-  .header h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem; }
-  .header .subtitle { font-size: 0.875rem; color: #94a3b8; }
-  .header .meta {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin-top: 0.75rem;
-    font-size: 0.8rem;
-    color: #cbd5e1;
-  }
+/* ───── SIDEBAR NAV ───── */
+.sidebar{
+  position:fixed;
+  top:0;left:0;
+  width:260px;
+  height:100vh;
+  background:var(--sidebar);
+  color:#94A3B8;
+  display:flex;
+  flex-direction:column;
+  z-index:200;
+  overflow-y:auto;
+}
 
-  .tabs {
-    display: flex;
-    justify-content: center;
-    gap: 0;
-    background: #1e293b;
-    padding: 0 1rem 0.5rem;
-    position: sticky;
-    top: 0;
-    z-index: 99;
-  }
+.sidebar-brand{
+  padding:28px 24px 20px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
 
-  .tab {
-    padding: 0.5rem 1.25rem;
-    cursor: pointer;
-    border: none;
-    background: transparent;
-    color: #94a3b8;
-    font-size: 0.85rem;
-    font-weight: 600;
-    border-bottom: 3px solid transparent;
-    transition: all 0.2s;
-  }
+.sidebar-brand h1{
+  font-family:'DM Serif Display',serif;
+  font-size:1.15rem;
+  color:#F1F5F9;
+  letter-spacing:-.01em;
+  line-height:1.3;
+}
 
-  .tab:hover { color: white; }
-  .tab.active { color: white; border-bottom-color: #3b82f6; }
-  .tab .day-label { display: block; font-size: 0.7rem; font-weight: 400; }
+.sidebar-brand .sub{
+  font-size:.72rem;
+  color:#64748B;
+  margin-top:6px;
+  line-height:1.5;
+  font-weight:400;
+}
 
-  .legend {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-    padding: 0.75rem 1rem;
-    background: white;
-    border-bottom: 1px solid var(--border);
-    font-size: 0.75rem;
-  }
+.sidebar-nav{
+  padding:16px 12px;
+  flex:1;
+}
 
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-  }
+.nav-label{
+  font-size:.6rem;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  color:#475569;
+  padding:12px 12px 6px;
+  font-weight:600;
+}
 
-  .legend-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-  }
+.nav-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:.82rem;
+  font-weight:500;
+  color:#94A3B8;
+  transition:all .15s;
+  border:none;
+  background:none;
+  width:100%;
+  text-align:left;
+  font-family:inherit;
+}
 
-  .day-content { display: none; padding: 1rem; max-width: 900px; margin: 0 auto; }
-  .day-content.active { display: block; }
+.nav-item:hover{background:rgba(255,255,255,.05);color:#E2E8F0}
+.nav-item.active{background:rgba(59,130,246,.15);color:#60A5FA}
 
-  .day-summary {
-    background: white;
-    border-radius: 12px;
-    padding: 1.25rem;
-    margin-bottom: 1.5rem;
-    border: 1px solid var(--border);
-  }
+.nav-item .nav-date{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;
+  color:#475569;
+  min-width:36px;
+}
 
-  .day-summary h2 {
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
-  }
+.nav-item.active .nav-date{color:#60A5FA}
 
-  .day-summary .strategy {
-    font-size: 0.85rem;
-    color: var(--muted);
-    line-height: 1.7;
-  }
+.nav-item .nav-dot{
+  width:6px;height:6px;
+  border-radius:50%;
+  flex-shrink:0;
+}
 
-  .day-summary .strategy strong { color: var(--text); }
+.sidebar-footer{
+  padding:16px 24px;
+  border-top:1px solid rgba(255,255,255,.06);
+  font-size:.68rem;
+  color:#475569;
+  line-height:1.6;
+}
 
-  .time-block {
-    margin-bottom: 0.5rem;
-  }
+/* ───── LEGEND (inside sidebar) ───── */
+.sidebar-legend{
+  padding:12px 24px 16px;
+  border-top:1px solid rgba(255,255,255,.06);
+}
 
-  .time-label {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 0.5rem 0;
-    border-top: 1px solid var(--border);
-    margin-top: 1rem;
-  }
+.sidebar-legend h3{
+  font-size:.6rem;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  color:#475569;
+  margin-bottom:10px;
+  font-weight:600;
+}
 
-  .session {
-    background: var(--card);
-    border-radius: 10px;
-    padding: 1rem 1.25rem;
-    margin-bottom: 0.5rem;
-    border-left: 4px solid;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-    transition: transform 0.15s, box-shadow 0.15s;
-    position: relative;
-  }
+.legend-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:.72rem;
+  color:#94A3B8;
+  padding:3px 0;
+}
 
-  .session:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  }
+.legend-pip{
+  width:8px;height:8px;
+  border-radius:3px;
+  flex-shrink:0;
+}
 
-  .session.critical { border-left-color: var(--critical); background: var(--critical-bg); }
-  .session.high { border-left-color: var(--high); background: var(--high-bg); }
-  .session.medium { border-left-color: var(--medium); background: var(--medium-bg); }
-  .session.network { border-left-color: var(--network); background: var(--network-bg); }
-  .session.break-event { border-left-color: var(--break); background: var(--break-bg); }
+/* ───── MAIN CONTENT ───── */
+.main{
+  margin-left:260px;
+  flex:1;
+  min-height:100vh;
+}
 
-  .session-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
+/* ───── TOP BAR ───── */
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:rgba(250,250,249,.85);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--line);
+  padding:0 48px;
+  display:flex;
+  align-items:center;
+  height:56px;
+}
 
-  .session-title {
-    font-size: 0.95rem;
-    font-weight: 700;
-    flex: 1;
-  }
+.topbar-title{
+  font-family:'DM Serif Display',serif;
+  font-size:1rem;
+  color:var(--ink);
+  flex:1;
+}
 
-  .session-badge {
-    font-size: 0.65rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 0.15rem 0.5rem;
-    border-radius: 999px;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
+.topbar-meta{
+  font-size:.72rem;
+  color:var(--ink3);
+  font-family:'JetBrains Mono',monospace;
+}
 
-  .session.critical .session-badge { background: var(--critical); color: white; }
-  .session.high .session-badge { background: var(--high); color: white; }
-  .session.medium .session-badge { background: var(--medium); color: white; }
-  .session.network .session-badge { background: var(--network); color: white; }
+/* ───── PAGE SECTIONS ───── */
+.page{display:none;padding:40px 48px 80px;max-width:860px}
+.page.active{display:block}
 
-  .session-meta {
-    font-size: 0.8rem;
-    color: var(--muted);
-    margin-top: 0.25rem;
-  }
+/* ───── DAY HEADER ───── */
+.day-header{
+  margin-bottom:36px;
+  padding-bottom:28px;
+  border-bottom:2px solid var(--ink);
+}
 
-  .session-meta .venue { font-weight: 600; }
-  .session-meta .speakers { font-style: italic; }
+.day-header .day-overline{
+  font-size:.68rem;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  color:var(--ink3);
+  font-weight:600;
+  margin-bottom:4px;
+}
 
-  .session-why {
-    margin-top: 0.5rem;
-    font-size: 0.82rem;
-    padding: 0.5rem 0.75rem;
-    background: rgba(0,0,0,0.03);
-    border-radius: 6px;
-    line-height: 1.6;
-  }
+.day-header h2{
+  font-family:'DM Serif Display',serif;
+  font-size:1.75rem;
+  line-height:1.25;
+  color:var(--ink);
+  letter-spacing:-.02em;
+}
 
-  .session-why strong { color: var(--text); }
+/* ───── STRATEGY BOX ───── */
+.strategy-box{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:24px 28px;
+  margin-bottom:32px;
+  position:relative;
+  overflow:hidden;
+}
 
-  .session-action {
-    margin-top: 0.4rem;
-    font-size: 0.78rem;
-    color: var(--critical);
-    font-weight: 600;
-  }
+.strategy-box::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;
+  width:3px;
+  height:100%;
+  background:var(--accent);
+}
 
-  .alt-session {
-    font-size: 0.78rem;
-    color: var(--muted);
-    margin-top: 0.35rem;
-    padding-left: 0.75rem;
-    border-left: 2px solid var(--border);
-  }
+.strategy-box p{
+  font-size:.88rem;
+  color:var(--ink2);
+  line-height:1.85;
+}
 
-  .alt-session strong { color: var(--text); font-weight: 600; }
+.strategy-box p+p{margin-top:12px}
+.strategy-box strong{color:var(--ink);font-weight:600}
 
-  .networking-card {
-    background: var(--network-bg);
-    border: 1px solid #c4b5fd;
-    border-radius: 10px;
-    padding: 1rem 1.25rem;
-    margin-bottom: 0.5rem;
-  }
+.strategy-box .bullet{
+  display:flex;
+  gap:8px;
+  margin-top:4px;
+  font-size:.85rem;
+  color:var(--ink2);
+  line-height:1.8;
+}
 
-  .networking-card h4 {
-    font-size: 0.9rem;
-    color: var(--network);
-    margin-bottom: 0.35rem;
-  }
+.strategy-box .bullet::before{
+  content:'·';
+  font-weight:700;
+  color:var(--accent);
+  flex-shrink:0;
+}
 
-  .networking-card p {
-    font-size: 0.82rem;
-    line-height: 1.6;
-  }
+/* ───── STATS GRID ───── */
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin-top:20px;
+}
 
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 0.75rem;
-    margin-top: 1rem;
-  }
+.stat-card{
+  text-align:center;
+  padding:16px 12px;
+  border-radius:var(--radius);
+  border:1px solid var(--line);
+  background:var(--card);
+}
 
-  .stat {
-    text-align: center;
-    padding: 0.75rem;
-    background: rgba(0,0,0,0.02);
-    border-radius: 8px;
-  }
+.stat-card .stat-num{
+  font-family:'DM Serif Display',serif;
+  font-size:1.8rem;
+  line-height:1;
+}
 
-  .stat .num { font-size: 1.5rem; font-weight: 800; }
-  .stat .label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; }
+.stat-card .stat-label{
+  font-size:.65rem;
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  color:var(--ink3);
+  margin-top:4px;
+  font-weight:500;
+}
 
-  .stat.critical .num { color: var(--critical); }
-  .stat.high .num { color: var(--high); }
-  .stat.medium .num { color: var(--medium); }
-  .stat.network .num { color: var(--network); }
+.stat-card.s-must .stat-num{color:var(--must)}
+.stat-card.s-high .stat-num{color:var(--high)}
+.stat-card.s-med .stat-num{color:var(--med)}
+.stat-card.s-net .stat-num{color:var(--net)}
 
-  .print-only { display: none; }
+/* ───── PEOPLE TABLE ───── */
+.people-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:.82rem;
+  margin-top:8px;
+}
 
-  @media print {
-    .header, .tabs, .legend { position: static; }
-    .session:hover { transform: none; box-shadow: none; }
-    .day-content { display: block !important; page-break-before: always; }
-    .print-only { display: block; }
-    .tab { display: none; }
-  }
+.people-table th{
+  text-align:left;
+  padding:10px 12px;
+  font-size:.65rem;
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  color:var(--ink3);
+  font-weight:600;
+  border-bottom:2px solid var(--ink);
+}
 
-  @media (max-width: 640px) {
-    .header h1 { font-size: 1.2rem; }
-    .header .meta { flex-direction: column; gap: 0.25rem; }
-    .tabs { overflow-x: auto; justify-content: flex-start; }
-    .session { padding: 0.75rem 1rem; }
-  }
+.people-table td{
+  padding:12px;
+  border-bottom:1px solid var(--line2);
+  vertical-align:top;
+  line-height:1.6;
+}
 
-  .conflict-note {
-    font-size: 0.75rem;
-    color: #b45309;
-    background: #fef3c7;
-    padding: 0.35rem 0.65rem;
-    border-radius: 6px;
-    margin-top: 0.35rem;
-    display: inline-block;
-  }
+.people-table tr:last-child td{border-bottom:none}
+.people-table td:first-child{font-weight:600;color:var(--ink);white-space:nowrap}
+.people-table td:nth-child(2){color:var(--ink3);white-space:nowrap}
+
+/* ───── TIME MARKER ───── */
+.time-marker{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:28px 0 12px;
+}
+
+.time-marker .tm-time{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.78rem;
+  font-weight:500;
+  color:var(--ink3);
+  white-space:nowrap;
+  min-width:80px;
+}
+
+.time-marker .tm-line{
+  flex:1;
+  height:1px;
+  background:var(--line);
+}
+
+/* ───── SESSION CARD ───── */
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:20px 24px;
+  margin-bottom:10px;
+  position:relative;
+  transition:box-shadow .2s,border-color .2s;
+}
+
+.card:hover{
+  box-shadow:0 4px 20px rgba(0,0,0,.06);
+  border-color:#D1D5DB;
+}
+
+/* Priority stripe */
+.card::after{
+  content:'';
+  position:absolute;
+  top:12px;bottom:12px;left:0;
+  width:3px;
+  border-radius:0 3px 3px 0;
+}
+
+.card.p-must{background:var(--must-bg);border-color:var(--must-border)}
+.card.p-must::after{background:var(--must)}
+.card.p-must:hover{border-color:var(--must)}
+
+.card.p-high{background:var(--high-bg);border-color:var(--high-border)}
+.card.p-high::after{background:var(--high)}
+.card.p-high:hover{border-color:var(--high)}
+
+.card.p-med{background:var(--med-bg);border-color:var(--med-border)}
+.card.p-med::after{background:var(--med)}
+.card.p-med:hover{border-color:var(--med)}
+
+.card.p-net{background:var(--net-bg);border-color:var(--net-border)}
+.card.p-net::after{background:var(--net)}
+.card.p-net:hover{border-color:var(--net)}
+
+.card.p-rest{background:var(--rest-bg);border-color:var(--rest-border)}
+.card.p-rest::after{background:var(--rest)}
+.card.p-rest:hover{border-color:var(--rest)}
+
+/* Card header */
+.card-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+}
+
+.card-title{
+  font-size:.95rem;
+  font-weight:600;
+  line-height:1.4;
+  color:var(--ink);
+  flex:1;
+}
+
+.card-badge{
+  font-size:.6rem;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  padding:3px 10px;
+  border-radius:4px;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+
+.card.p-must .card-badge{background:var(--must);color:#fff}
+.card.p-high .card-badge{background:var(--high);color:#fff}
+.card.p-med .card-badge{background:var(--med);color:#fff}
+.card.p-net .card-badge{background:var(--net);color:#fff}
+.card.p-rest .card-badge{background:var(--rest);color:#fff}
+
+/* Card meta */
+.card-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:4px 16px;
+  margin-top:6px;
+  font-size:.78rem;
+  color:var(--ink3);
+}
+
+.card-meta .venue{font-weight:600;color:var(--ink2)}
+.card-meta .speakers{font-style:italic}
+
+/* Card body */
+.card-body{
+  margin-top:12px;
+  font-size:.84rem;
+  color:var(--ink2);
+  line-height:1.8;
+  padding:14px 18px;
+  background:rgba(0,0,0,.02);
+  border-radius:8px;
+}
+
+.card-body strong{color:var(--ink);font-weight:600}
+
+/* Action callout */
+.card-action{
+  margin-top:10px;
+  font-size:.8rem;
+  font-weight:600;
+  color:var(--must);
+  display:flex;
+  align-items:flex-start;
+  gap:6px;
+  line-height:1.6;
+}
+
+.card-action::before{
+  content:'→';
+  flex-shrink:0;
+  font-weight:700;
+}
+
+/* Alternative session */
+.card-alt{
+  margin-top:10px;
+  padding:10px 14px;
+  font-size:.78rem;
+  color:var(--ink3);
+  background:rgba(0,0,0,.02);
+  border-radius:6px;
+  border-left:2px solid var(--line);
+  line-height:1.7;
+}
+
+.card-alt strong{color:var(--ink2);font-weight:600}
+
+/* ───── MOBILE ───── */
+.mobile-header{
+  display:none;
+  position:sticky;
+  top:0;z-index:300;
+  background:var(--sidebar);
+  padding:14px 20px;
+  color:#F1F5F9;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.mobile-header h1{
+  font-family:'DM Serif Display',serif;
+  font-size:.95rem;
+}
+
+.menu-btn{
+  background:none;border:none;
+  color:#94A3B8;font-size:1.4rem;
+  cursor:pointer;padding:4px;
+}
+
+.sidebar-overlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.5);
+  z-index:199;
+}
+
+@media(max-width:860px){
+  .sidebar{transform:translateX(-100%);transition:transform .25s ease}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay.open{display:block}
+  .mobile-header{display:flex}
+  .main{margin-left:0}
+  .topbar{display:none}
+  .page{padding:24px 20px 60px}
+  .day-header h2{font-size:1.35rem}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .people-table{font-size:.75rem}
+  .people-table td,.people-table th{padding:8px 6px}
+}
+
+@media print{
+  .sidebar,.mobile-header,.topbar,.sidebar-overlay{display:none!important}
+  .main{margin-left:0}
+  .page{display:block!important;page-break-before:always;padding:20px}
+  .card:hover{box-shadow:none;border-color:var(--line)}
+}
+
+/* ───── ANIMATIONS ───── */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.page.active .day-header{animation:fadeUp .4s ease both}
+.page.active .strategy-box{animation:fadeUp .4s ease .05s both}
+.page.active .card{animation:fadeUp .3s ease both}
+.page.active .card:nth-child(2){animation-delay:.03s}
+.page.active .card:nth-child(3){animation-delay:.06s}
+.page.active .card:nth-child(4){animation-delay:.09s}
+.page.active .card:nth-child(5){animation-delay:.12s}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <h1>KubeCon + CloudNativeCon Europe 2026</h1>
-  <div class="subtitle">蔡秀吉（Hsiu-Chi Tsai）| Nephio TSC · Porch Maintainer · NYCU</div>
-  <div class="meta">
-    <span>2026.03.22-26</span>
-    <span>RAI Amsterdam</span>
-    <span>CET (UTC+1) = 台灣時間 -7h</span>
+<!-- ═══ MOBILE HEADER ═══ -->
+<div class="mobile-header">
+  <h1>KubeCon EU 2026</h1>
+  <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+</div>
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+<!-- ═══ SIDEBAR ═══ -->
+<nav class="sidebar">
+  <div class="sidebar-brand">
+    <h1>KubeCon + CloudNativeCon<br>Europe 2026</h1>
+    <div class="sub">蔡秀吉（Hsiu-Chi Tsai）<br>Nephio TSC · Porch Maintainer · NYCU</div>
   </div>
+
+  <div class="sidebar-nav">
+    <div class="nav-label">行程導覽</div>
+
+    <button class="nav-item active" data-page="overview">
+      <span class="nav-dot" style="background:var(--accent)"></span>
+      <span>總覽 Overview</span>
+    </button>
+
+    <button class="nav-item" data-page="sun">
+      <span class="nav-date">3/22</span>
+      <span>週日 · 報到</span>
+    </button>
+
+    <button class="nav-item" data-page="mon">
+      <span class="nav-date">3/23</span>
+      <span>週一 · Telco Day</span>
+      <span class="nav-dot" style="background:var(--must)"></span>
+    </button>
+
+    <button class="nav-item" data-page="tue">
+      <span class="nav-date">3/24</span>
+      <span>週二 · Main Day 1</span>
+    </button>
+
+    <button class="nav-item" data-page="wed">
+      <span class="nav-date">3/25</span>
+      <span>週三 · Main Day 2</span>
+    </button>
+
+    <button class="nav-item" data-page="thu">
+      <span class="nav-date">3/26</span>
+      <span>週四 · Main Day 3</span>
+    </button>
+  </div>
+
+  <div class="sidebar-legend">
+    <h3>優先級 Priority</h3>
+    <div class="legend-row"><span class="legend-pip" style="background:var(--must)"></span>必到 MUST</div>
+    <div class="legend-row"><span class="legend-pip" style="background:var(--high)"></span>強烈推薦 HIGH</div>
+    <div class="legend-row"><span class="legend-pip" style="background:var(--med)"></span>推薦 MEDIUM</div>
+    <div class="legend-row"><span class="legend-pip" style="background:var(--net)"></span>社交重點 NETWORK</div>
+    <div class="legend-row"><span class="legend-pip" style="background:var(--rest)"></span>休息/後勤 LOGISTICS</div>
+  </div>
+
+  <div class="sidebar-footer">
+    RAI Amsterdam<br>
+    CET (UTC+1) · 台灣時間 −7h<br>
+    2026.03.22 → 03.26
+  </div>
+</nav>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+
+<div class="topbar">
+  <div class="topbar-title" id="topbar-label">總覽 Overview</div>
+  <div class="topbar-meta">RAI Amsterdam · CET (UTC+1)</div>
 </div>
 
-<div class="tabs">
-  <button class="tab" data-day="overview">
-    總覽
-    <span class="day-label">Overview</span>
-  </button>
-  <button class="tab" data-day="sun">
-    3/22 日
-    <span class="day-label">Maintainer Summit</span>
-  </button>
-  <button class="tab active" data-day="mon">
-    3/23 一
-    <span class="day-label">Telco Day</span>
-  </button>
-  <button class="tab" data-day="tue">
-    3/24 二
-    <span class="day-label">Main Day 1</span>
-  </button>
-  <button class="tab" data-day="wed">
-    3/25 三
-    <span class="day-label">Main Day 2</span>
-  </button>
-  <button class="tab" data-day="thu">
-    3/26 四
-    <span class="day-label">Main Day 3</span>
-  </button>
-</div>
-
-<div class="legend">
-  <div class="legend-item"><div class="legend-dot" style="background:var(--critical)"></div> 必到 MUST</div>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--high)"></div> 強烈推薦 HIGH</div>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--medium)"></div> 推薦 MEDIUM</div>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--network)"></div> 社交重點 NETWORKING</div>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--break)"></div> 休息/後勤 LOGISTICS</div>
-</div>
-
-<!-- ==================== OVERVIEW ==================== -->
-<div class="day-content" id="overview">
-  <div class="day-summary">
+<!-- ════════════════════ OVERVIEW ════════════════════ -->
+<section class="page active" id="overview">
+  <div class="day-header">
+    <div class="day-overline">KubeCon + CloudNativeCon Europe 2026</div>
     <h2>五天總覽 — 為什麼這份行程這樣排</h2>
-    <div class="strategy">
-      <p>這份行程是根據你的<strong>三重身份</strong>交叉分析 400+ 場議程後排出的：</p>
-      <br>
-      <p><strong>1. Nephio TSC + Porch Maintainer</strong> → 你的核心戰場。Telco Day 是最高優先級，因為 <strong>Liam Fallon</strong>（你的 maintainer）和 <strong>Istvan Kispal</strong>（kispaljr，Nokia）都在講 CNF package management——這正是 Porch 要解決的問題。Gergely Csatari（Nokia）是 Telco Day co-chair 又在週四 keynote 講 Autonomous Networks，是你和 Nokia 陣營建立 face-to-face 關係的關鍵。</p>
-      <br>
-      <p><strong>2. Kubernetes Controller / Go 開發者</strong> → Controller Sharding、SIG API Machinery、Crossplane Framework、Helm 4 都直接對應你在做的 reconciler patterns、KRM、package lifecycle。Gateway API 是 K8s 網路未來方向，和 Nephio 的 multi-cluster networking 直接相關。</p>
-      <br>
-      <p><strong>3. TSC Member 建立影響力</strong> → 你需要被看見。Telco Day 整天在場、主動提問、hallway 交談；週二 KubeCrawl 社交；週三 Kubernetes Meet+Greet；週四和 Gergely Csatari（Nokia keynote）交流——這些是把「GitHub 上的 thc1006」變成「那個台灣來的 TSC member」的機會。</p>
+  </div>
 
-      <div class="stats">
-        <div class="stat critical"><div class="num">8</div><div class="label">必到場次</div></div>
-        <div class="stat high"><div class="num">11</div><div class="label">強烈推薦</div></div>
-        <div class="stat medium"><div class="num">9</div><div class="label">推薦</div></div>
-        <div class="stat network"><div class="num">6</div><div class="label">社交重點</div></div>
-      </div>
+  <div class="strategy-box">
+    <p>這份行程是根據你的<strong>三重身份</strong>交叉分析 400+ 場議程後排出的：</p>
+    <p><strong>1. Nephio TSC + Porch Maintainer</strong> → 你的核心戰場。Telco Day 是最高優先級，因為 <strong>Liam Fallon</strong>（你的 maintainer）和 <strong>Istvan Kispal</strong>（kispaljr，Nokia）都在講 CNF package management——這正是 Porch 要解決的問題。Gergely Csatari（Nokia）是 Telco Day co-chair 又在週四 keynote 講 Autonomous Networks，是你和 Nokia 陣營建立 face-to-face 關係的關鍵。</p>
+    <p><strong>2. Kubernetes Controller / Go 開發者</strong> → Controller Sharding、SIG API Machinery、Crossplane Framework、Helm 4 都直接對應你在做的 reconciler patterns、KRM、package lifecycle。Gateway API 是 K8s 網路未來方向，和 Nephio 的 multi-cluster networking 直接相關。</p>
+    <p><strong>3. TSC Member 建立影響力</strong> → 你需要被看見。Telco Day 整天在場、主動提問、hallway 交談；週二 KubeCrawl 社交；週三 Kubernetes Meet+Greet；週四和 Gergely Csatari（Nokia keynote）交流——這些是把「GitHub 上的 thc1006」變成「那個台灣來的 TSC member」的機會。</p>
+
+    <div class="stats-grid">
+      <div class="stat-card s-must"><div class="stat-num">8</div><div class="stat-label">必到場次</div></div>
+      <div class="stat-card s-high"><div class="stat-num">11</div><div class="stat-label">強烈推薦</div></div>
+      <div class="stat-card s-med"><div class="stat-num">9</div><div class="stat-label">推薦</div></div>
+      <div class="stat-card s-net"><div class="stat-num">6</div><div class="stat-label">社交重點</div></div>
     </div>
   </div>
 
-  <div class="day-summary">
+  <div class="day-header" style="margin-top:48px">
+    <div class="day-overline">Networking Targets</div>
     <h2>關鍵人物 — 必須當面見到</h2>
-    <div class="strategy">
-      <table style="width:100%;font-size:0.82rem;border-collapse:collapse;">
-        <tr style="border-bottom:1px solid var(--border);">
-          <th style="text-align:left;padding:0.5rem;">人</th>
-          <th style="text-align:left;padding:0.5rem;">組織</th>
-          <th style="text-align:left;padding:0.5rem;">為什麼</th>
-          <th style="text-align:left;padding:0.5rem;">何時何地</th>
-        </tr>
-        <tr style="border-bottom:1px solid var(--border);">
-          <td style="padding:0.5rem;"><strong>Liam Fallon</strong></td>
-          <td style="padding:0.5rem;">Ericsson</td>
-          <td style="padding:0.5rem;">你的 Porch maintainer，merge authority</td>
-          <td style="padding:0.5rem;">週一 09:45 Telco Day 演講後</td>
-        </tr>
-        <tr style="border-bottom:1px solid var(--border);">
-          <td style="padding:0.5rem;"><strong>Istvan Kispal (kispaljr)</strong></td>
-          <td style="padding:0.5rem;">Nokia Bell Labs</td>
-          <td style="padding:0.5rem;">PR#336 作者，FunctionConfig CRD (#1049) 設計者</td>
-          <td style="padding:0.5rem;">週一 09:45 同場演講</td>
-        </tr>
-        <tr style="border-bottom:1px solid var(--border);">
-          <td style="padding:0.5rem;"><strong>Gergely Csatari</strong></td>
-          <td style="padding:0.5rem;">Nokia</td>
-          <td style="padding:0.5rem;">Telco Day co-chair + 週四 keynote；Nokia 社群領袖</td>
-          <td style="padding:0.5rem;">週一全天 + 週四 09:58 keynote 後</td>
-        </tr>
-        <tr style="border-bottom:1px solid var(--border);">
-          <td style="padding:0.5rem;"><strong>Faseela K</strong></td>
-          <td style="padding:0.5rem;">Ericsson</td>
-          <td style="padding:0.5rem;">週三 keynote speaker，Ericsson 可見度最高的人</td>
-          <td style="padding:0.5rem;">週三 keynote 後</td>
-        </tr>
-        <tr style="border-bottom:1px solid var(--border);">
-          <td style="padding:0.5rem;"><strong>Lionel Jouin</strong></td>
-          <td style="padding:0.5rem;">Red Hat</td>
-          <td style="padding:0.5rem;">K8s Network Driver + Telco Day panel；多次出現</td>
-          <td style="padding:0.5rem;">週一 11:50 panel 後 + 週二 15:15</td>
-        </tr>
-        <tr style="border-bottom:1px solid var(--border);">
-          <td style="padding:0.5rem;"><strong>Jared Watts</strong></td>
-          <td style="padding:0.5rem;">Upbound (Crossplane)</td>
-          <td style="padding:0.5rem;">Crossplane = Porch 的參照對象；IaC 空間的友軍</td>
-          <td style="padding:0.5rem;">週二 15:15 + 週四 ContribFest</td>
-        </tr>
-        <tr style="border-bottom:1px solid var(--border);">
-          <td style="padding:0.5rem;"><strong>Joel Studler</strong></td>
-          <td style="padding:0.5rem;">Swisscom</td>
-          <td style="padding:0.5rem;">5G Core on K8s + Telco Day 講者；終端電信用戶視角</td>
-          <td style="padding:0.5rem;">週一 11:15 + 週二 17:00</td>
-        </tr>
-        <tr style="border-bottom:1px solid var(--border);">
-          <td style="padding:0.5rem;"><strong>Feruzjon Muyassarov</strong></td>
-          <td style="padding:0.5rem;">Ericsson</td>
-          <td style="padding:0.5rem;">Performance extraction — 你的 pod evaluator timeout (#878) 相關</td>
-          <td style="padding:0.5rem;">週一 14:40</td>
-        </tr>
-        <tr>
-          <td style="padding:0.5rem;"><strong>Kashif Khan</strong></td>
-          <td style="padding:0.5rem;">Ericsson</td>
-          <td style="padding:0.5rem;">Metal3.io CNCF Incubation — Ericsson 另一位活躍貢獻者</td>
-          <td style="padding:0.5rem;">週四 14:30</td>
-        </tr>
-      </table>
-    </div>
-  </div>
-</div>
-
-<!-- ==================== SUNDAY ==================== -->
-<div class="day-content" id="sun">
-  <div class="day-summary">
-    <h2>週日 3/22 — 報到 + Maintainer Summit（邀請制）</h2>
-    <div class="strategy">
-      Maintainer Summit 已 SOLD OUT 且為邀請制（CNCF project maintainers）。Nephio 是 LFN 項目不是 CNCF，所以你今年不會被邀請。<strong>但這是未來目標</strong>——如果 Nephio 某天申請 CNCF sandbox，你就有資格。<br><br>
-      <strong>今天唯一任務</strong>：去 Entrance C 或 K 領 badge。避開週一早上排隊人潮。
-    </div>
   </div>
 
-  <div class="time-label">08:00 – 20:00 CET</div>
+  <div class="strategy-box">
+    <table class="people-table">
+      <thead>
+        <tr><th>人</th><th>組織</th><th>為什麼</th><th>何時何地</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Liam Fallon</td><td>Ericsson</td><td>你的 Porch maintainer，merge authority</td><td>週一 09:45 Telco Day 演講後</td></tr>
+        <tr><td>Istvan Kispal</td><td>Nokia Bell Labs</td><td>PR#336 作者，FunctionConfig CRD (#1049) 設計者</td><td>週一 09:45 同場演講</td></tr>
+        <tr><td>Gergely Csatari</td><td>Nokia</td><td>Telco Day co-chair + 週四 keynote；Nokia 社群領袖</td><td>週一全天 + 週四 09:58 keynote 後</td></tr>
+        <tr><td>Faseela K</td><td>Ericsson</td><td>週三 keynote speaker，Ericsson 可見度最高的人</td><td>週三 keynote 後</td></tr>
+        <tr><td>Lionel Jouin</td><td>Red Hat</td><td>K8s Network Driver + Telco Day panel；多次出現</td><td>週一 11:50 panel 後 + 週二 15:15</td></tr>
+        <tr><td>Jared Watts</td><td>Upbound</td><td>Crossplane = Porch 的參照對象；IaC 空間的友軍</td><td>週二 15:15 + 週四 ContribFest</td></tr>
+        <tr><td>Joel Studler</td><td>Swisscom</td><td>5G Core on K8s + Telco Day 講者；終端電信用戶視角</td><td>週一 11:15 + 週二 17:00</td></tr>
+        <tr><td>Feruzjon Muyassarov</td><td>Ericsson</td><td>Performance — 你的 pod evaluator timeout (#878) 相關</td><td>週一 14:40</td></tr>
+        <tr><td>Kashif Khan</td><td>Ericsson</td><td>Metal3.io CNCF Incubation — Ericsson 另一位活躍貢獻者</td><td>週四 14:30</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
 
-  <div class="session break-event">
-    <div class="session-header">
-      <div class="session-title">Badge Pick-Up（報到領證）</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">Entrance C 或 Entrance K</span>
-    </div>
-    <div class="session-why">
-      <strong>行動</strong>：今天下午或傍晚去領 badge。週一早上 Telco Day 09:00 開始，不要浪費排隊時間。RAI 從 Schiphol 機場搭火車約 15 分鐘到 Amsterdam RAI 站，出站即到。
-    </div>
+<!-- ════════════════════ SUNDAY ════════════════════ -->
+<section class="page" id="sun">
+  <div class="day-header">
+    <div class="day-overline">Sunday · March 22</div>
+    <h2>週日 — 報到 + Maintainer Summit（邀請制）</h2>
+  </div>
+  <div class="strategy-box">
+    <p>Maintainer Summit 已 SOLD OUT 且為邀請制（CNCF project maintainers）。Nephio 是 LFN 項目不是 CNCF，所以你今年不會被邀請。<strong>但這是未來目標</strong>——如果 Nephio 某天申請 CNCF sandbox，你就有資格。</p>
+    <p><strong>今天唯一任務</strong>：去 Entrance C 或 K 領 badge。避開週一早上排隊人潮。</p>
   </div>
 
-  <div class="session break-event">
-    <div class="session-header">
-      <div class="session-title">旅館 Check-in + 調整時差</div>
-    </div>
-    <div class="session-why">
-      台灣 → 阿姆斯特丹時差 -7 小時（CET）。如果週六到，週日是你唯一的調整日。<br>
-      <strong>建議</strong>：住 RAI 附近（nhow Amsterdam RAI 或 Van der Valk Amsterdam Zuidas），步行可達會場。
-    </div>
-  </div>
-</div>
+  <div class="time-marker"><span class="tm-time">08:00 – 20:00</span><span class="tm-line"></span></div>
 
-<!-- ==================== MONDAY ==================== -->
-<div class="day-content active" id="mon">
-  <div class="day-summary">
-    <h2>週一 3/23 — Cloud Native Telco Day（你的最高優先級）</h2>
-    <div class="strategy">
-      <strong>今天的一句話策略：全天留在 G104-105，不要離開。</strong><br><br>
-      Telco Day 是你整趟旅程 ROI 最高的一天：<br>
-      • <strong>Liam Fallon + Istvan Kispal</strong> 同台講 CNF package management（09:45）——這就是 Porch 的戰場<br>
-      • <strong>Gergely Csatari</strong> (Nokia) 是 co-chair + Networking panel moderator<br>
-      • Telco Day 人數 ~200-300，遠小於主會場 10000+，每個人都更容易接觸<br>
-      • 午餐和 coffee break 是最重要的 networking 時段<br><br>
-      <strong>你的目標</strong>：(1) 和 Liam/Istvan 當面對齊 PR#336 + #1049 (2) 被 Gergely Csatari 認識 (3) 至少交換 10 張名片/LinkedIn
-    </div>
+  <div class="card p-rest">
+    <div class="card-top"><div class="card-title">Badge Pick-Up（報到領證）</div><div class="card-badge">後勤</div></div>
+    <div class="card-meta"><span class="venue">Entrance C 或 Entrance K</span></div>
+    <div class="card-body"><strong>行動</strong>：今天下午或傍晚去領 badge。週一早上 Telco Day 09:00 開始，不要浪費排隊時間。RAI 從 Schiphol 機場搭火車約 15 分鐘到 Amsterdam RAI 站，出站即到。</div>
   </div>
 
-  <div class="time-label">09:00 CET</div>
+  <div class="card p-rest">
+    <div class="card-top"><div class="card-title">旅館 Check-in + 調整時差</div><div class="card-badge">後勤</div></div>
+    <div class="card-body">台灣 → 阿姆斯特丹時差 −7 小時（CET）。如果週六到，週日是你唯一的調整日。<br><strong>建議</strong>：住 RAI 附近（nhow Amsterdam RAI 或 Van der Valk Amsterdam Zuidas），步行可達會場。</div>
+  </div>
+</section>
 
-  <div class="session medium">
-    <div class="session-header">
-      <div class="session-title">Welcome + Opening Remarks</div>
-      <div class="session-badge">推薦</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">G104-105</span> · <span class="speakers">Gergely Csatari & Philippe Ensarguet</span>
-    </div>
-    <div class="session-why">觀察 Gergely 的開場風格和重點主題。這會告訴你 Nokia 認為 telco cloud-native 的方向是什麼。</div>
+<!-- ════════════════════ MONDAY ════════════════════ -->
+<section class="page" id="mon">
+  <div class="day-header">
+    <div class="day-overline">Monday · March 23 · Co-Located Events</div>
+    <h2>Cloud Native Telco Day — 你的最高優先級</h2>
   </div>
 
-  <div class="time-label">09:10 CET</div>
-
-  <div class="session high">
-    <div class="session-header">
-      <div class="session-title">The Shift: Radio Network Functions as IT Applications</div>
-      <div class="session-badge">強烈推薦</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">G104-105</span> · <span class="speakers">Guillaume Nevicato (Orange), Andre Puschmann (Software Radio Systems)</span>
-    </div>
-    <div class="session-why">
-      RAN function 容器化是 Nephio 的核心 use case 之一。了解 Orange（歐洲大型電信）如何看待這個轉型，可以反饋到 Nephio 的需求理解。<br>
-      <strong>問題準備</strong>：「How do you handle lifecycle management of containerized RAN functions across multiple clusters? That's exactly what we're building in Nephio with Porch.」
-    </div>
+  <div class="strategy-box">
+    <p><strong>今天的一句話策略：全天留在 G104-105，不要離開。</strong></p>
+    <p>Telco Day 是你整趟旅程 ROI 最高的一天：</p>
+    <div class="bullet"><strong>Liam Fallon + Istvan Kispal</strong> 同台講 CNF package management（09:45）——這就是 Porch 的戰場</div>
+    <div class="bullet"><strong>Gergely Csatari</strong> (Nokia) 是 co-chair + Networking panel moderator</div>
+    <div class="bullet">Telco Day 人數 ~200-300，遠小於主會場 10000+，每個人都更容易接觸</div>
+    <div class="bullet">午餐和 coffee break 是最重要的 networking 時段</div>
+    <p style="margin-top:12px"><strong>你的目標</strong>：(1) 和 Liam/Istvan 當面對齊 PR#336 + #1049 (2) 被 Gergely Csatari 認識 (3) 至少交換 10 張名片/LinkedIn</p>
   </div>
 
-  <div class="time-label">09:45 CET</div>
+  <div class="time-marker"><span class="tm-time">09:00</span><span class="tm-line"></span></div>
 
-  <div class="session critical">
-    <div class="session-header">
-      <div class="session-title">Are We Stuck With Helm Forever? A Landscape of Cloud Native CNF Management Options</div>
-      <div class="session-badge">必到</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">G104-105</span> · <span class="speakers">Istvan Kispal (Nokia Bell Labs), Liam Fallon (Ericsson Software Technology)</span>
-    </div>
-    <div class="session-why">
-      <strong>這是你整個 KubeCon 最重要的一場。</strong><br><br>
-      • <strong>Istvan Kispal = kispaljr</strong>——PR#336（Parallel KRM）的作者，FunctionConfig CRD (#1049) Option 3 的提案者<br>
-      • <strong>Liam Fallon</strong>——你的 Porch maintainer，Ericsson 的 merge authority<br>
-      • 他們在講 CNF management landscape——這正是 Porch/kpt 的定位問題<br>
-      • 你需要了解他們怎麼看待 Helm vs kpt vs Porch 的未來，這會直接影響你的技術決策
-    </div>
-    <div class="session-action">
-      行動：演講結束後<strong>立刻</strong>走向他們。自我介紹：「Hi Liam, Istvan — I'm Hsiu-Chi, thc1006 on GitHub. I've been working on the pod evaluator timeout fix and following PR#336 closely. Great talk — can we grab coffee at the break?」
-    </div>
+  <div class="card p-med">
+    <div class="card-top"><div class="card-title">Welcome + Opening Remarks</div><div class="card-badge">推薦</div></div>
+    <div class="card-meta"><span class="venue">G104-105</span><span class="speakers">Gergely Csatari &amp; Philippe Ensarguet</span></div>
+    <div class="card-body">觀察 Gergely 的開場風格和重點主題。這會告訴你 Nokia 認為 telco cloud-native 的方向是什麼。</div>
   </div>
 
-  <div class="time-label">10:15 CET</div>
+  <div class="time-marker"><span class="tm-time">09:10</span><span class="tm-line"></span></div>
 
-  <div class="session medium">
-    <div class="session-header">
-      <div class="session-title">Sponsored Keynote: Telco's Next Act — Scaling Intelligence with Open Source and Agentic AI</div>
-      <div class="session-badge">推薦</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">G104-105</span> · <span class="speakers">Ranny Haiby (Linux Foundation), Philippe Ensarguet (Orange)</span>
-    </div>
-    <div class="session-why">Ranny Haiby 是 LF Networking 的人——Nephio 就在 LFN 下面。了解 LFN 怎麼定位 AI + 電信的方向。</div>
+  <div class="card p-high">
+    <div class="card-top"><div class="card-title">The Shift: Radio Network Functions as IT Applications</div><div class="card-badge">強烈推薦</div></div>
+    <div class="card-meta"><span class="venue">G104-105</span><span class="speakers">Guillaume Nevicato (Orange), Andre Puschmann (Software Radio Systems)</span></div>
+    <div class="card-body">RAN function 容器化是 Nephio 的核心 use case 之一。了解 Orange（歐洲大型電信）如何看待這個轉型，可以反饋到 Nephio 的需求理解。<br><strong>問題準備</strong>：「How do you handle lifecycle management of containerized RAN functions across multiple clusters? That's exactly what we're building in Nephio with Porch.」</div>
   </div>
 
-  <div class="time-label">10:40 CET</div>
+  <div class="time-marker"><span class="tm-time">09:45</span><span class="tm-line"></span></div>
 
-  <div class="session high">
-    <div class="session-header">
-      <div class="session-title">The Autonomous Telco: AI Agents as First-Class Citizens in Cloud-Native Infrastructure</div>
-      <div class="session-badge">強烈推薦</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">G104-105</span> · <span class="speakers">Samy Nitsche, Dorian Lenzner (Deutsche Telekom)</span>
-    </div>
-    <div class="session-why">
-      Deutsche Telekom 是歐洲最大電信之一。「AI Agents as First-Class Citizens」= 下一代 network automation 的方向。Nephio 目前是 intent-driven，如果未來要加入 agentic AI，這場會告訴你方向。
-    </div>
+  <div class="card p-must">
+    <div class="card-top"><div class="card-title">Are We Stuck With Helm Forever? A Landscape of Cloud Native CNF Management Options</div><div class="card-badge">必到</div></div>
+    <div class="card-meta"><span class="venue">G104-105</span><span class="speakers">Istvan Kispal (Nokia Bell Labs), Liam Fallon (Ericsson Software Technology)</span></div>
+    <div class="card-body"><strong>這是你整個 KubeCon 最重要的一場。</strong><br><br>• <strong>Istvan Kispal = kispaljr</strong>——PR#336（Parallel KRM）的作者，FunctionConfig CRD (#1049) Option 3 的提案者<br>• <strong>Liam Fallon</strong>——你的 Porch maintainer，Ericsson 的 merge authority<br>• 他們在講 CNF management landscape——這正是 Porch/kpt 的定位問題<br>• 你需要了解他們怎麼看待 Helm vs kpt vs Porch 的未來，這會直接影響你的技術決策</div>
+    <div class="card-action">演講結束後<strong>立刻</strong>走向他們。自我介紹：「Hi Liam, Istvan — I'm Hsiu-Chi, thc1006 on GitHub. I've been working on the pod evaluator timeout fix and following PR#336 closely. Great talk — can we grab coffee at the break?」</div>
   </div>
 
-  <div class="time-label">~11:10 CET — Coffee Break</div>
+  <div class="time-marker"><span class="tm-time">10:15</span><span class="tm-line"></span></div>
 
-  <div class="session network">
-    <div class="session-header">
-      <div class="session-title">Coffee Break Networking（最重要的 30 分鐘）</div>
-      <div class="session-badge">社交重點</div>
-    </div>
-    <div class="session-why">
-      <strong>找到 Liam Fallon 和 Istvan Kispal</strong>。帶著你的 elevator pitch（見 elevator-pitches.md）。<br>
-      話題：PR#336 status、#1049 FunctionConfig CRD Option 3、pod evaluator timeout #878 fix 你的進度。<br>
-      也找 <strong>Gergely Csatari</strong>（co-chair），簡短自我介紹。他在 Nokia，認識他 = 打通 Nokia 陣營。
-    </div>
+  <div class="card p-med">
+    <div class="card-top"><div class="card-title">Sponsored Keynote: Telco's Next Act — Scaling Intelligence with Open Source and Agentic AI</div><div class="card-badge">推薦</div></div>
+    <div class="card-meta"><span class="venue">G104-105</span><span class="speakers">Ranny Haiby (Linux Foundation), Philippe Ensarguet (Orange)</span></div>
+    <div class="card-body">Ranny Haiby 是 LF Networking 的人——Nephio 就在 LFN 下面。了解 LFN 怎麼定位 AI + 電信的方向。</div>
   </div>
 
-  <div class="time-label">11:15 CET</div>
+  <div class="time-marker"><span class="tm-time">10:40</span><span class="tm-line"></span></div>
 
-  <div class="session high">
-    <div class="session-header">
-      <div class="session-title">From YANG To YAML: How We Tamed the 5G Configuration Beast</div>
-      <div class="session-badge">強烈推薦</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">G104-105</span> · <span class="speakers">Joel Studler (Swisscom), Peter Wörndle (Ericsson)</span>
-    </div>
-    <div class="session-why">
-      YANG → YAML 轉換是 Nephio 的核心挑戰之一。Swisscom 是真實的電信用戶端，Ericsson 是供應商端。他們怎麼解決 5G configuration 問題，直接對應 Porch 要處理的 KRM package lifecycle。<br>
-      <strong>Peter Wörndle 是 Ericsson 的人</strong>——又一個 Ericsson 聯繫點。
-    </div>
+  <div class="card p-high">
+    <div class="card-top"><div class="card-title">The Autonomous Telco: AI Agents as First-Class Citizens in Cloud-Native Infrastructure</div><div class="card-badge">強烈推薦</div></div>
+    <div class="card-meta"><span class="venue">G104-105</span><span class="speakers">Samy Nitsche, Dorian Lenzner (Deutsche Telekom)</span></div>
+    <div class="card-body">Deutsche Telekom 是歐洲最大電信之一。「AI Agents as First-Class Citizens」= 下一代 network automation 的方向。Nephio 目前是 intent-driven，如果未來要加入 agentic AI，這場會告訴你方向。</div>
   </div>
 
-  <div class="time-label">11:50 CET</div>
+  <div class="time-marker"><span class="tm-time">~11:10</span><span class="tm-line"></span></div>
 
-  <div class="session critical">
-    <div class="session-header">
-      <div class="session-title">Panel: Kubernetes Networking — Present and Future</div>
-      <div class="session-badge">必到</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">G104-105</span> · <span class="speakers">Gergely Csatari (Nokia), Lionel Jouin (Red Hat), Antonio Ojea (Google), Surya Seetharaman (Red Hat)</span>
-    </div>
-    <div class="session-why">
-      <strong>四個重量級人物</strong>：<br>
-      • Gergely Csatari (Nokia) — Telco Day co-chair，你需要被他認識<br>
-      • Lionel Jouin (Red Hat) — K8s Network Driver 核心開發者，在 K8s networking SIG 非常活躍<br>
-      • Antonio Ojea (Google) — Kubernetes networking 核心<br>
-      • Surya Seetharaman (Red Hat) — 另一位 networking 主力<br><br>
-      K8s networking 的未來方向直接影響 Nephio 的 multi-cluster networking 架構。
-    </div>
-    <div class="session-action">
-      行動：Panel Q&A 時間<strong>舉手提問</strong>：「I'm from the Nephio project — we're building multi-cluster package orchestration for network functions. What networking primitives do you think are missing in Kubernetes for telecom workloads?」——這讓全場知道你是誰。
-    </div>
+  <div class="card p-net">
+    <div class="card-top"><div class="card-title">Coffee Break Networking（最重要的 30 分鐘）</div><div class="card-badge">社交重點</div></div>
+    <div class="card-body"><strong>找到 Liam Fallon 和 Istvan Kispal</strong>。帶著你的 elevator pitch（見 elevator-pitches.md）。<br>話題：PR#336 status、#1049 FunctionConfig CRD Option 3、pod evaluator timeout #878 fix 你的進度。<br>也找 <strong>Gergely Csatari</strong>（co-chair），簡短自我介紹。他在 Nokia，認識他 = 打通 Nokia 陣營。</div>
   </div>
 
-  <div class="time-label">12:30 CET — Lunch Break</div>
+  <div class="time-marker"><span class="tm-time">11:15</span><span class="tm-line"></span></div>
 
-  <div class="session network">
-    <div class="session-header">
-      <div class="session-title">午餐社交（坐到不認識的人旁邊）</div>
-      <div class="session-badge">社交重點</div>
-    </div>
-    <div class="session-why">
-      Telco Day 的午餐區人數有限（~200-300 人），這是最佳社交時段。<strong>不要和已經認識的人坐</strong>。找看起來獨自用餐的人，問「Mind if I join you?」<br>
-      開場白：「What brings you to Telco Day?」然後聽。
-    </div>
+  <div class="card p-high">
+    <div class="card-top"><div class="card-title">From YANG To YAML: How We Tamed the 5G Configuration Beast</div><div class="card-badge">強烈推薦</div></div>
+    <div class="card-meta"><span class="venue">G104-105</span><span class="speakers">Joel Studler (Swisscom), Peter Wörndle (Ericsson)</span></div>
+    <div class="card-body">YANG → YAML 轉換是 Nephio 的核心挑戰之一。Swisscom 是真實的電信用戶端，Ericsson 是供應商端。他們怎麼解決 5G configuration 問題，直接對應 Porch 要處理的 KRM package lifecycle。<br><strong>Peter Wörndle 是 Ericsson 的人</strong>——又一個 Ericsson 聯繫點。</div>
   </div>
 
-  <div class="time-label">13:30 CET</div>
+  <div class="time-marker"><span class="tm-time">11:50</span><span class="tm-line"></span></div>
 
-  <div class="session medium">
-    <div class="session-header">
-      <div class="session-title">Teaching Machines To Debug Machines: Building an AI-Powered RCA Agent for Sylva-Core</div>
-      <div class="session-badge">推薦</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">G104-105</span> · <span class="speakers">Mihai Zaharia, Vladimir Braquet (Orange)</span>
-    </div>
-    <div class="session-why">Sylva 是歐洲電信的 cloud-native 平台計畫。了解他們的 AI RCA（Root Cause Analysis）agent 如何運作，看看 Nephio 能否在 observability 層面參考。</div>
+  <div class="card p-must">
+    <div class="card-top"><div class="card-title">Panel: Kubernetes Networking — Present and Future</div><div class="card-badge">必到</div></div>
+    <div class="card-meta"><span class="venue">G104-105</span><span class="speakers">Gergely Csatari (Nokia), Lionel Jouin (Red Hat), Antonio Ojea (Google), Surya Seetharaman (Red Hat)</span></div>
+    <div class="card-body"><strong>四個重量級人物</strong>：<br>• Gergely Csatari (Nokia) — Telco Day co-chair，你需要被他認識<br>• Lionel Jouin (Red Hat) — K8s Network Driver 核心開發者<br>• Antonio Ojea (Google) — Kubernetes networking 核心<br>• Surya Seetharaman (Red Hat) — networking 主力<br><br>K8s networking 的未來方向直接影響 Nephio 的 multi-cluster networking 架構。</div>
+    <div class="card-action">Panel Q&A 時間<strong>舉手提問</strong>：「I'm from the Nephio project — we're building multi-cluster package orchestration for network functions. What networking primitives do you think are missing in Kubernetes for telecom workloads?」——這讓全場知道你是誰。</div>
   </div>
 
-  <div class="time-label">14:05 CET</div>
+  <div class="time-marker"><span class="tm-time">12:30</span><span class="tm-line"></span></div>
 
-  <div class="session medium">
-    <div class="session-header">
-      <div class="session-title">Reliability To the Edge: Telco Teaching Cloud Native</div>
-      <div class="session-badge">推薦</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">G104-105</span> · <span class="speakers">Priscila Veiga (Red Hat)</span>
-    </div>
-    <div class="session-why">電信對 reliability 的要求（99.999%）遠高於一般 IT。這些 lessons 能反饋到 Porch 的設計——你的 pod evaluator timeout fix (#878) 就是 reliability 問題。</div>
+  <div class="card p-net">
+    <div class="card-top"><div class="card-title">午餐社交（坐到不認識的人旁邊）</div><div class="card-badge">社交重點</div></div>
+    <div class="card-body">Telco Day 的午餐區人數有限（~200-300 人），這是最佳社交時段。<strong>不要和已經認識的人坐</strong>。找看起來獨自用餐的人，問「Mind if I join you?」<br>開場白：「What brings you to Telco Day?」然後聽。</div>
   </div>
 
-  <div class="time-label">14:40 CET</div>
+  <div class="time-marker"><span class="tm-time">13:30</span><span class="tm-line"></span></div>
 
-  <div class="session high">
-    <div class="session-header">
-      <div class="session-title">Extracting the Last Microseconds of Performance From Containerized Workloads</div>
-      <div class="session-badge">強烈推薦</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">G104-105</span> · <span class="speakers">Feruzjon Muyassarov (Ericsson), Alexander Kanevskiy (Intel)</span>
-    </div>
-    <div class="session-why">
-      Feruzjon 是 Ericsson 的 performance 專家。你的 pod evaluator 有 timeout 問題 (#878)，container performance tuning 知識直接相關。<br>
-      而且這又是一個 <strong>Ericsson 聯繫點</strong>——你在 Ericsson 的人脈越廣，PR merge 越順。
-    </div>
+  <div class="card p-med">
+    <div class="card-top"><div class="card-title">Teaching Machines To Debug Machines: Building an AI-Powered RCA Agent for Sylva-Core</div><div class="card-badge">推薦</div></div>
+    <div class="card-meta"><span class="venue">G104-105</span><span class="speakers">Mihai Zaharia, Vladimir Braquet (Orange)</span></div>
+    <div class="card-body">Sylva 是歐洲電信的 cloud-native 平台計畫。了解他們的 AI RCA（Root Cause Analysis）agent 如何運作，看看 Nephio 能否在 observability 層面參考。</div>
   </div>
 
-  <div class="time-label">15:20 CET</div>
+  <div class="time-marker"><span class="tm-time">14:05</span><span class="tm-line"></span></div>
 
-  <div class="session critical">
-    <div class="session-header">
-      <div class="session-title">Panel: Agentic AI Infrastructure for Telecom</div>
-      <div class="session-badge">必到</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">G104-105</span> · <span class="speakers">Yoshihiro Nakajima (NTT DOCOMO), Ranny Haiby (LF), Philippe Ensarguet (Orange), Hui Deng (Huawei), Yanjun Chen (China Mobile)</span>
-    </div>
-    <div class="session-why">
-      <strong>五大電信巨頭齊聚</strong>：NTT DOCOMO（日本）、Orange（法國）、Huawei（中國）、China Mobile（中國）、LF（基金會）。<br>
-      這是了解全球電信業對 AI + 雲原生基礎設施看法的最佳機會。<br>
-      <strong>Yoshihiro Nakajima（NTT DOCOMO）</strong>——日本電信，地理上最接近台灣，最可能的區域合作夥伴。
-    </div>
-    <div class="session-action">
-      行動：Panel 結束後找 Yoshihiro Nakajima。用日文打招呼如果你會的話，或英文：「I'm on the Nephio TSC from Taiwan — NTT DOCOMO's perspective on agentic AI is very relevant to our work. I'd love to discuss potential synergies.」
-    </div>
+  <div class="card p-med">
+    <div class="card-top"><div class="card-title">Reliability To the Edge: Telco Teaching Cloud Native</div><div class="card-badge">推薦</div></div>
+    <div class="card-meta"><span class="venue">G104-105</span><span class="speakers">Priscila Veiga (Red Hat)</span></div>
+    <div class="card-body">電信對 reliability 的要求（99.999%）遠高於一般 IT。你的 pod evaluator timeout fix (#878) 就是 reliability 問題。</div>
   </div>
 
-  <div class="time-label">16:00 CET</div>
+  <div class="time-marker"><span class="tm-time">14:40</span><span class="tm-line"></span></div>
 
-  <div class="session medium">
-    <div class="session-header">
-      <div class="session-title">What Do You Mean It's Broken? When AI Meets the Harsh Reality of Telco Observability</div>
-      <div class="session-badge">推薦</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">G104-105</span> · <span class="speakers">Piotr Matysiak, Iwona Wojdan (Orange)</span>
-    </div>
-    <div class="session-why">Observability 在電信環境的特殊挑戰。你用 OpenTelemetry tracing，了解電信環境的需求差異。</div>
+  <div class="card p-high">
+    <div class="card-top"><div class="card-title">Extracting the Last Microseconds of Performance From Containerized Workloads</div><div class="card-badge">強烈推薦</div></div>
+    <div class="card-meta"><span class="venue">G104-105</span><span class="speakers">Feruzjon Muyassarov (Ericsson), Alexander Kanevskiy (Intel)</span></div>
+    <div class="card-body">Feruzjon 是 Ericsson 的 performance 專家。你的 pod evaluator 有 timeout 問題 (#878)，container performance tuning 知識直接相關。<br>而且這又是一個 <strong>Ericsson 聯繫點</strong>——你在 Ericsson 的人脈越廣，PR merge 越順。</div>
   </div>
 
-  <div class="time-label">16:30 CET</div>
+  <div class="time-marker"><span class="tm-time">15:20</span><span class="tm-line"></span></div>
 
-  <div class="session medium">
-    <div class="session-header">
-      <div class="session-title">⚡Lightning Talk: Operationalizing the NGMN Cloud Native Manifesto — CNTi and Sylva in Action</div>
-      <div class="session-badge">推薦</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">G104-105</span> · <span class="speakers">Martin Matyáš (Tieto)</span>
-    </div>
-    <div class="session-why">CNTi (Cloud Native Telecom Initiatives) 是電信雲原生的標準化組織。Nephio 可能需要和 CNTi 的 conformance 測試對齊。</div>
+  <div class="card p-must">
+    <div class="card-top"><div class="card-title">Panel: Agentic AI Infrastructure for Telecom</div><div class="card-badge">必到</div></div>
+    <div class="card-meta"><span class="venue">G104-105</span><span class="speakers">Yoshihiro Nakajima (NTT DOCOMO), Ranny Haiby (LF), Philippe Ensarguet (Orange), Hui Deng (Huawei), Yanjun Chen (China Mobile)</span></div>
+    <div class="card-body"><strong>五大電信巨頭齊聚</strong>：NTT DOCOMO（日本）、Orange（法國）、Huawei（中國）、China Mobile（中國）、LF（基金會）。<br>這是了解全球電信業對 AI + 雲原生基礎設施看法的最佳機會。<br><strong>Yoshihiro Nakajima（NTT DOCOMO）</strong>——日本電信，地理上最接近台灣，最可能的區域合作夥伴。</div>
+    <div class="card-action">Panel 結束後找 Yoshihiro Nakajima：「I'm on the Nephio TSC from Taiwan — NTT DOCOMO's perspective on agentic AI is very relevant to our work. I'd love to discuss potential synergies.」</div>
   </div>
 
-  <div class="time-label">16:50 CET</div>
+  <div class="time-marker"><span class="tm-time">16:00</span><span class="tm-line"></span></div>
 
-  <div class="session medium">
-    <div class="session-header">
-      <div class="session-title">Panel: From Footprint To Value — Commercial Adoption of CAMARA APIs</div>
-      <div class="session-badge">推薦</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">G104-105</span> · <span class="speakers">Jill Lovato (LF), Andres Burgoa, Huub Appelboom (KPN), Nathan Rader (Deutsche Telekom)</span>
-    </div>
-    <div class="session-why">CAMARA 是電信 API 標準化——Network-as-a-Service 的方向。了解商業化進度。</div>
+  <div class="card p-med">
+    <div class="card-top"><div class="card-title">What Do You Mean It's Broken? When AI Meets the Harsh Reality of Telco Observability</div><div class="card-badge">推薦</div></div>
+    <div class="card-meta"><span class="venue">G104-105</span><span class="speakers">Piotr Matysiak, Iwona Wojdan (Orange)</span></div>
+    <div class="card-body">Observability 在電信環境的特殊挑戰。你用 OpenTelemetry tracing，了解電信環境的需求差異。</div>
   </div>
 
-  <div class="time-label">17:25 CET</div>
+  <div class="time-marker"><span class="tm-time">16:30</span><span class="tm-line"></span></div>
 
-  <div class="session break-event">
-    <div class="session-header">
-      <div class="session-title">Closing Remarks + 晚餐社交</div>
-    </div>
-    <div class="session-why">
-      Closing 後尋找 sponsor 晚餐活動或和 Liam/Istvan/Gergely 約晚餐。如果他們在 Ericsson/Nokia 有團隊晚餐，爭取被邀請——非正式場合比會議室更容易建立信任。
-    </div>
-  </div>
-</div>
-
-<!-- ==================== TUESDAY ==================== -->
-<div class="day-content" id="tue">
-  <div class="day-summary">
-    <h2>週二 3/24 — Main Conference Day 1</h2>
-    <div class="strategy">
-      <strong>策略</strong>：上午 keynotes → 中午開始選擇性參加 breakout sessions → 傍晚 KubeCrawl 社交。<br>
-      今天的重點是 <strong>Package Management + Networking + Crossplane</strong>，以及晚上的大型社交活動。<br>
-      解決衝突的原則：<strong>互動式（workshop/panel）> 錄影式（talk）</strong>，因為所有 talks 兩週後上 CNCF YouTube。
-    </div>
+  <div class="card p-med">
+    <div class="card-top"><div class="card-title">⚡ Lightning Talk: Operationalizing the NGMN Cloud Native Manifesto — CNTi and Sylva in Action</div><div class="card-badge">推薦</div></div>
+    <div class="card-meta"><span class="venue">G104-105</span><span class="speakers">Martin Matyáš (Tieto)</span></div>
+    <div class="card-body">CNTi (Cloud Native Telecom Initiatives) 是電信雲原生的標準化組織。Nephio 可能需要和 CNTi 的 conformance 測試對齊。</div>
   </div>
 
-  <div class="time-label">09:00 – 10:30 CET — Opening Keynotes</div>
+  <div class="time-marker"><span class="tm-time">16:50</span><span class="tm-line"></span></div>
 
-  <div class="session high">
-    <div class="session-header">
-      <div class="session-title">Opening Keynotes（全部）</div>
-      <div class="session-badge">強烈推薦</div>
-    </div>
-    <div class="session-meta"><span class="venue">Hall 12</span></div>
-    <div class="session-why">
-      重點關注：<br>
-      • <strong>Lin Sun (Solo.io)</strong>：「The Future of Cloud Native Is... Agentic」— 和昨天 Telco Day 的 agentic AI 主題呼應<br>
-      • <strong>Ricardo Rocha (CERN)</strong>：CERN 的超大規模 K8s 使用，技術深度高<br>
-      其餘是 sponsor keynotes，可以看看但不用太認真。
-    </div>
+  <div class="card p-med">
+    <div class="card-top"><div class="card-title">Panel: From Footprint To Value — Commercial Adoption of CAMARA APIs</div><div class="card-badge">推薦</div></div>
+    <div class="card-meta"><span class="venue">G104-105</span><span class="speakers">Jill Lovato (LF), Andres Burgoa, Huub Appelboom (KPN), Nathan Rader (Deutsche Telekom)</span></div>
+    <div class="card-body">CAMARA 是電信 API 標準化——Network-as-a-Service 的方向。了解商業化進度。</div>
   </div>
 
-  <div class="time-label">10:45 CET — Coffee Break</div>
+  <div class="time-marker"><span class="tm-time">17:25</span><span class="tm-line"></span></div>
 
-  <div class="session break-event">
-    <div class="session-header">
-      <div class="session-title">Coffee Break + Solutions Showcase 偵察</div>
-    </div>
-    <div class="session-meta"><span class="venue">Hall 1-5</span></div>
-    <div class="session-why">快速掃一圈 Solutions Showcase，找找有沒有 Nephio/LFN 相關的攤位。記下想回來深聊的。</div>
+  <div class="card p-rest">
+    <div class="card-top"><div class="card-title">Closing Remarks + 晚餐社交</div><div class="card-badge">後勤</div></div>
+    <div class="card-body">Closing 後尋找 sponsor 晚餐活動或和 Liam/Istvan/Gergely 約晚餐。如果他們在 Ericsson/Nokia 有團隊晚餐，爭取被邀請——非正式場合比會議室更容易建立信任。</div>
+  </div>
+</section>
+
+<!-- ════════════════════ TUESDAY ════════════════════ -->
+<section class="page" id="tue">
+  <div class="day-header">
+    <div class="day-overline">Tuesday · March 24 · Main Conference Day 1</div>
+    <h2>Package Management + Networking + Crossplane</h2>
   </div>
 
-  <div class="time-label">11:00 CET</div>
-
-  <div class="session critical">
-    <div class="session-header">
-      <div class="session-title">Helm 4 Is Here</div>
-      <div class="session-badge">必到</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">Amtrium 1+2</span> · <span class="speakers">Andrew Block (Red Hat), Scott Rigby (Replicated), Robert Sirchia (SUSE)</span>
-    </div>
-    <div class="session-why">
-      <strong>昨天 Liam 和 Istvan 講的就是「Are We Stuck With Helm Forever?」</strong>。現在 Helm 4 來了——了解 Helm 的演進方向，直接影響 Porch/kpt 的定位和差異化策略。Nephio 目前用 Helm + kpt 混合部署，Helm 4 的變化可能改變這個架構。
-    </div>
-    <div class="alt-session">
-      <strong>備選（同時段衝突）</strong>：Gateway API: From Ingress to the Future (F002-005) — K8s networking 未來方向。如果你對 Helm 不感興趣可以改選這場。<strong>兩場都會錄影。</strong>
-    </div>
+  <div class="strategy-box">
+    <p><strong>策略</strong>：上午 keynotes → 中午開始選擇性參加 breakout sessions → 傍晚 KubeCrawl 社交。</p>
+    <p>今天的重點是 <strong>Package Management + Networking + Crossplane</strong>，以及晚上的大型社交活動。</p>
+    <p>解決衝突的原則：<strong>互動式（workshop/panel）&gt; 錄影式（talk）</strong>，因為所有 talks 兩週後上 CNCF YouTube。</p>
   </div>
 
-  <div class="time-label">11:00 CET（同時段）</div>
+  <div class="time-marker"><span class="tm-time">09:00</span><span class="tm-line"></span></div>
 
-  <div class="session medium">
-    <div class="session-header">
-      <div class="session-title">Skyscanner: 60M Requests/Min with Istio</div>
-      <div class="session-badge">推薦（看錄影）</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">Hall 7 Room B</span> · <span class="speakers">John Clark (Skyscanner), Steven Thwaites (Solo.io)</span>
-    </div>
-    <div class="session-why">Istio 大規模使用案例。你的 pod evaluator (#878) 有 Istio sidecar 問題。看錄影即可。</div>
+  <div class="card p-high">
+    <div class="card-top"><div class="card-title">Opening Keynotes（全部）</div><div class="card-badge">強烈推薦</div></div>
+    <div class="card-meta"><span class="venue">Hall 12</span></div>
+    <div class="card-body">重點關注：<br>• <strong>Lin Sun (Solo.io)</strong>：「The Future of Cloud Native Is... Agentic」— 和昨天 Telco Day 的 agentic AI 主題呼應<br>• <strong>Ricardo Rocha (CERN)</strong>：CERN 的超大規模 K8s 使用，技術深度高<br>其餘是 sponsor keynotes，可以看看但不用太認真。</div>
   </div>
 
-  <div class="time-label">12:00 CET</div>
+  <div class="time-marker"><span class="tm-time">10:45</span><span class="tm-line"></span></div>
 
-  <div class="session high">
-    <div class="session-header">
-      <div class="session-title">Intelligent Routing for Optimized Inference</div>
-      <div class="session-badge">強烈推薦</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">Hall 7 Room B</span> · <span class="speakers">Antonio Berben (Solo.io), Felipe Vicens (Telefonica)</span>
-    </div>
-    <div class="session-why">
-      <strong>Felipe Vicens 是 Telefonica 的人</strong>——西班牙電信。Telefonica 是 Nephio 的潛在用戶。Intelligent routing 和 Nephio 的 multi-cluster traffic management 直接相關。
-    </div>
+  <div class="card p-rest">
+    <div class="card-top"><div class="card-title">Coffee Break + Solutions Showcase 偵察</div><div class="card-badge">後勤</div></div>
+    <div class="card-meta"><span class="venue">Hall 1-5</span></div>
+    <div class="card-body">快速掃一圈 Solutions Showcase，找找有沒有 Nephio/LFN 相關的攤位。記下想回來深聊的。</div>
   </div>
 
-  <div class="time-label">12:30 CET — Lunch</div>
+  <div class="time-marker"><span class="tm-time">11:00</span><span class="tm-line"></span></div>
 
-  <div class="session network">
-    <div class="session-header">
-      <div class="session-title">Lunch + Solutions Showcase 深度社交</div>
-      <div class="session-badge">社交重點</div>
-    </div>
-    <div class="session-meta"><span class="venue">Hall 1-5</span></div>
-    <div class="session-why">
-      午餐時間逛 Solutions Showcase。目標攤位：<br>
-      • <strong>Red Hat</strong> — Nephio 有 Red Hat 貢獻者（Lionel Jouin）<br>
-      • <strong>Ericsson</strong>（如果有攤位）<br>
-      • <strong>Nokia</strong>（如果有攤位）<br>
-      • <strong>Crossplane/Upbound</strong> — 和 Porch 同領域<br>
-      • 任何電信相關的攤位
-    </div>
+  <div class="card p-must">
+    <div class="card-top"><div class="card-title">Helm 4 Is Here</div><div class="card-badge">必到</div></div>
+    <div class="card-meta"><span class="venue">Amtrium 1+2</span><span class="speakers">Andrew Block (Red Hat), Scott Rigby (Replicated), Robert Sirchia (SUSE)</span></div>
+    <div class="card-body"><strong>昨天 Liam 和 Istvan 講的就是「Are We Stuck With Helm Forever?」</strong>。現在 Helm 4 來了——了解 Helm 的演進方向，直接影響 Porch/kpt 的定位和差異化策略。Nephio 目前用 Helm + kpt 混合部署，Helm 4 的變化可能改變這個架構。</div>
+    <div class="card-alt"><strong>備選（同時段衝突）</strong>：Gateway API: From Ingress to the Future (F002-005) — K8s networking 未來方向。如果你對 Helm 不感興趣可以改選這場。<strong>兩場都會錄影。</strong></div>
   </div>
 
-  <div class="time-label">14:30 CET</div>
-
-  <div class="session high">
-    <div class="session-header">
-      <div class="session-title">Karmada Multi-Cluster Orchestration</div>
-      <div class="session-badge">強烈推薦</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">G102-103</span> · <span class="speakers">Hongcai Ren (Huawei), Tessa Pham, Wei-Cheng Lai (Bloomberg), Zongqing Li (Trip.com)</span>
-    </div>
-    <div class="session-why">
-      <strong>Karmada = Nephio 的直接競爭者/互補者</strong>在 multi-cluster orchestration 領域。了解他們的方向，看看有沒有合作或差異化的機會。<br>
-      <strong>Wei-Cheng Lai (Bloomberg)</strong>——名字看起來是華裔/台灣背景，可能是 networking 機會。
-    </div>
+  <div class="card p-med">
+    <div class="card-top"><div class="card-title">Skyscanner: 60M Requests/Min with Istio</div><div class="card-badge">看錄影</div></div>
+    <div class="card-meta"><span class="venue">Hall 7 Room B</span><span class="speakers">John Clark (Skyscanner), Steven Thwaites (Solo.io)</span></div>
+    <div class="card-body">Istio 大規模使用案例。你的 pod evaluator (#878) 有 Istio sidecar 問題。看錄影即可。</div>
   </div>
 
-  <div class="time-label">15:15 CET</div>
+  <div class="time-marker"><span class="tm-time">12:00</span><span class="tm-line"></span></div>
 
-  <div class="session critical">
-    <div class="session-header">
-      <div class="session-title">Crossplane Framework</div>
-      <div class="session-badge">必到</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">Amtrium 1+2</span> · <span class="speakers">Jared Watts, Adam Wolfe Gordon (Upbound)</span>
-    </div>
-    <div class="session-why">
-      <strong>Crossplane 是 Porch 最重要的參照對象。</strong>兩者都在做 Kubernetes-native infrastructure/package management，但方法不同（Crossplane = Composition，Porch = KRM package lifecycle）。了解 Crossplane 的框架演進，找到 Porch 的差異化定位。<br>
-      <strong>Jared Watts</strong> 是 Crossplane 的核心人物，週四 ContribFest 他也在——今天先聽他講，週四再去 ContribFest 深入交流。
-    </div>
-    <div class="alt-session">
-      <strong>同時段衝突</strong>：Kubernetes Network Driver (Hall 7 Room B) — Lionel Jouin 在講。如果你昨天已經和 Lionel 深聊過了，就來 Crossplane；否則考慮去聽 Network Driver。
-    </div>
+  <div class="card p-high">
+    <div class="card-top"><div class="card-title">Intelligent Routing for Optimized Inference</div><div class="card-badge">強烈推薦</div></div>
+    <div class="card-meta"><span class="venue">Hall 7 Room B</span><span class="speakers">Antonio Berben (Solo.io), Felipe Vicens (Telefonica)</span></div>
+    <div class="card-body"><strong>Felipe Vicens 是 Telefonica 的人</strong>——西班牙電信。Telefonica 是 Nephio 的潛在用戶。Intelligent routing 和 Nephio 的 multi-cluster traffic management 直接相關。</div>
   </div>
 
-  <div class="time-label">16:15 CET</div>
+  <div class="time-marker"><span class="tm-time">12:30</span><span class="tm-line"></span></div>
 
-  <div class="session high">
-    <div class="session-header">
-      <div class="session-title">SIG API Machinery</div>
-      <div class="session-badge">強烈推薦</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">E103-105</span> · <span class="speakers">Stefan Schimanski, NVIDIA</span>
-    </div>
-    <div class="session-why">
-      <strong>Porch 是建立在 K8s API 之上的</strong>。SIG API Machinery 的方向（API aggregation, CRD 演進, admission webhooks）直接影響 Porch 的 API 設計。Stefan Schimanski 是 API Machinery 的核心人物。<br>
-      你在做 FunctionConfig CRD (#1049) 設計——了解 CRD 的最新 best practices。
-    </div>
-    <div class="alt-session">
-      <strong>同時段衝突</strong>：Kubectl & Kustomize Updates (E106-108) — 和 kpt 相關但沒有 API Machinery 重要。看錄影。<br>
-      OpenTelemetry Project Update (G102-103) — 你用 OTEL，但可以看錄影。
-    </div>
+  <div class="card p-net">
+    <div class="card-top"><div class="card-title">Lunch + Solutions Showcase 深度社交</div><div class="card-badge">社交重點</div></div>
+    <div class="card-meta"><span class="venue">Hall 1-5</span></div>
+    <div class="card-body">午餐時間逛 Solutions Showcase。目標攤位：<br>• <strong>Red Hat</strong> — Nephio 有 Red Hat 貢獻者（Lionel Jouin）<br>• <strong>Ericsson</strong>（如果有攤位）<br>• <strong>Nokia</strong>（如果有攤位）<br>• <strong>Crossplane/Upbound</strong> — 和 Porch 同領域<br>• 任何電信相關的攤位</div>
   </div>
 
-  <div class="time-label">17:00 CET</div>
+  <div class="time-marker"><span class="tm-time">14:30</span><span class="tm-line"></span></div>
 
-  <div class="session critical">
-    <div class="session-header">
-      <div class="session-title">5G Core on Kubernetes</div>
-      <div class="session-badge">必到</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">Hall 7 Room C</span> · <span class="speakers">Joel Studler (Swisscom), Ashan Senevirathne (Telstra)</span>
-    </div>
-    <div class="session-why">
-      <strong>Swisscom + Telstra = 兩大真實電信用戶</strong>講 5G Core 在 K8s 上的部署。這是 Nephio 的 target use case。Joel Studler 你昨天在 Telco Day 已經見過，今天可以深入技術討論。<br>
-      Telstra 是澳洲電信——APAC 區域，和台灣地理接近，潛在合作者。
-    </div>
-    <div class="alt-session">
-      <strong>同時段</strong>：Multi-Cluster with Gateway API (Hall 7 Room B) — multi-cluster 相關但可以看錄影。<br>
-      SIG Network: AI on Kubernetes (E103-105) — networking + AI 但你已經在 Telco Day 聽了很多。
-    </div>
+  <div class="card p-high">
+    <div class="card-top"><div class="card-title">Karmada Multi-Cluster Orchestration</div><div class="card-badge">強烈推薦</div></div>
+    <div class="card-meta"><span class="venue">G102-103</span><span class="speakers">Hongcai Ren (Huawei), Tessa Pham, Wei-Cheng Lai (Bloomberg), Zongqing Li (Trip.com)</span></div>
+    <div class="card-body"><strong>Karmada = Nephio 的直接競爭者/互補者</strong>在 multi-cluster orchestration 領域。了解他們的方向。<br><strong>Wei-Cheng Lai (Bloomberg)</strong>——名字看起來是華裔/台灣背景，可能是 networking 機會。</div>
   </div>
 
-  <div class="time-label">17:30 CET</div>
+  <div class="time-marker"><span class="tm-time">15:15</span><span class="tm-line"></span></div>
 
-  <div class="session network">
-    <div class="session-header">
-      <div class="session-title">KubeCrawl + CloudNativeFest</div>
-      <div class="session-badge">社交重點</div>
-    </div>
-    <div class="session-meta"><span class="venue">Hall 1-5 Solutions Showcase</span></div>
-    <div class="session-why">
-      <strong>這是 KubeCon 最大的社交活動</strong>（~5000 人）。策略：<br>
-      • <strong>早到</strong>（17:30 準時到）——人少時對話品質高<br>
-      • 目標：找到 3-5 個新連結（不是你已經認識的人）<br>
-      • 帶你的 QR code 名片（見 digital-card 準備）<br>
-      • <strong>90 分鐘後離開</strong>——保存精力給明天<br>
-      • 找那些也站在邊緣不太社交的人——他們通常最樂意被搭話
-    </div>
-  </div>
-</div>
-
-<!-- ==================== WEDNESDAY ==================== -->
-<div class="day-content" id="wed">
-  <div class="day-summary">
-    <h2>週三 3/25 — Main Conference Day 2</h2>
-    <div class="strategy">
-      <strong>策略</strong>：今天 keynotes 有 <strong>Faseela K (Ericsson)</strong> 和 <strong>Greg Kroah-Hartman</strong>（Linux kernel maintainer 講 EU CRA 法規）。中午有 <strong>Kubernetes Meet+Greet</strong>——小型社交，比 KubeCrawl 更容易深度對話。下午是 poster sessions + KEP lifecycle。<br><br>
-      <strong>能量管理</strong>：這是第三天（加上時差），你會累。下午允許自己跳過一些場次去 quiet space 休息。品質 > 數量。
-    </div>
+  <div class="card p-must">
+    <div class="card-top"><div class="card-title">Crossplane Framework</div><div class="card-badge">必到</div></div>
+    <div class="card-meta"><span class="venue">Amtrium 1+2</span><span class="speakers">Jared Watts, Adam Wolfe Gordon (Upbound)</span></div>
+    <div class="card-body"><strong>Crossplane 是 Porch 最重要的參照對象。</strong>兩者都在做 Kubernetes-native infrastructure/package management，但方法不同（Crossplane = Composition，Porch = KRM package lifecycle）。了解 Crossplane 的框架演進，找到 Porch 的差異化定位。<br><strong>Jared Watts</strong> 是 Crossplane 的核心人物，週四 ContribFest 他也在——今天先聽他講，週四再去 ContribFest 深入交流。</div>
+    <div class="card-alt"><strong>同時段衝突</strong>：Kubernetes Network Driver (Hall 7 Room B) — Lionel Jouin 在講。如果你昨天已經和 Lionel 深聊過了，就來 Crossplane；否則考慮去聽 Network Driver。</div>
   </div>
 
-  <div class="time-label">09:00 – 10:20 CET — Morning Keynotes</div>
+  <div class="time-marker"><span class="tm-time">16:15</span><span class="tm-line"></span></div>
 
-  <div class="session critical">
-    <div class="session-header">
-      <div class="session-title">Morning Keynotes（重點場次標記）</div>
-      <div class="session-badge">必到</div>
-    </div>
-    <div class="session-meta"><span class="venue">Hall 12</span></div>
-    <div class="session-why">
-      <strong>必看</strong>：<br>
-      • <strong>Greg Kroah-Hartman</strong>：「CRA and What It Means for Open Source Communities」— EU Cyber Resilience Act 會影響所有開源項目（包括 Nephio）的合規要求。身為 TSC member 你需要了解。<br>
-      • <strong>Faseela K (Ericsson)</strong>：「From Orbit to the Grid」— <strong>Ericsson 的人在 keynote stage！</strong>演講後找她自我介紹。她不一定知道 Nephio 的每個 contributor，但你們是同一個 ecosystem。<br>
-      • <strong>SNCF (法國國鐵)</strong>：Railway platform on K8s — 大型基礎建設的 K8s 使用案例，和電信有類似的 reliability 需求。<br>
-      • <strong>Awards Ceremony</strong>：看看誰得獎，學習什麼樣的貢獻被社群認可。
-    </div>
-    <div class="session-action">行動：Faseela K 演講結束後找機會自我介紹。「Hi Faseela, I'm Hsiu-Chi from the Nephio TSC — I work on Porch, same ecosystem as your Ericsson colleagues Liam and efiacor. Great keynote!」</div>
+  <div class="card p-high">
+    <div class="card-top"><div class="card-title">SIG API Machinery</div><div class="card-badge">強烈推薦</div></div>
+    <div class="card-meta"><span class="venue">E103-105</span><span class="speakers">Stefan Schimanski, NVIDIA</span></div>
+    <div class="card-body"><strong>Porch 是建立在 K8s API 之上的</strong>。SIG API Machinery 的方向（API aggregation, CRD 演進, admission webhooks）直接影響 Porch 的 API 設計。<br>你在做 FunctionConfig CRD (#1049) 設計——了解 CRD 的最新 best practices。</div>
+    <div class="card-alt"><strong>同時段衝突</strong>：Kubectl &amp; Kustomize Updates (E106-108) — 和 kpt 相關但沒有 API Machinery 重要。看錄影。<br>OpenTelemetry Project Update (G102-103) — 你用 OTEL，但可以看錄影。</div>
   </div>
 
-  <div class="time-label">11:00 CET</div>
+  <div class="time-marker"><span class="tm-time">17:00</span><span class="tm-line"></span></div>
 
-  <div class="session high">
-    <div class="session-header">
-      <div class="session-title">Kubernetes Controller Sharding</div>
-      <div class="session-badge">強烈推薦</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">Hall 8 Room D</span> · <span class="speakers">Motohiro Otsuka, Tomoyuki Nakamura (LY Corporation)</span>
-    </div>
-    <div class="session-why">
-      <strong>直接對應你的 Porch controller 開發</strong>。Controller sharding = 如何水平擴展 controller。Porch 的 reconciler 處理大量 packages 時可能需要 sharding。LY Corporation（LINE Yahoo）= 日本大型科技公司，有 APAC 連結。
-    </div>
-    <div class="alt-session">
-      <strong>同時段</strong>：Future of Kubernetes Node Lifecycle (Hall 8 Room E) — Uber + Google 講，但和你的工作較遠。
-    </div>
+  <div class="card p-must">
+    <div class="card-top"><div class="card-title">5G Core on Kubernetes</div><div class="card-badge">必到</div></div>
+    <div class="card-meta"><span class="venue">Hall 7 Room C</span><span class="speakers">Joel Studler (Swisscom), Ashan Senevirathne (Telstra)</span></div>
+    <div class="card-body"><strong>Swisscom + Telstra = 兩大真實電信用戶</strong>講 5G Core 在 K8s 上的部署。這是 Nephio 的 target use case。Joel Studler 你昨天在 Telco Day 已經見過。<br>Telstra 是澳洲電信——APAC 區域，和台灣地理接近，潛在合作者。</div>
+    <div class="card-alt"><strong>同時段</strong>：Multi-Cluster with Gateway API (Hall 7 Room B) — 可以看錄影。<br>SIG Network: AI on Kubernetes (E103-105) — 你已經在 Telco Day 聽了很多。</div>
   </div>
 
-  <div class="time-label">11:45 CET</div>
+  <div class="time-marker"><span class="tm-time">17:30</span><span class="tm-line"></span></div>
 
-  <div class="session high">
-    <div class="session-header">
-      <div class="session-title">In-place Updates with Cluster API</div>
-      <div class="session-badge">強烈推薦</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">Hall 8 Room D</span> · <span class="speakers">Fabrizio Pandini, Stefan Büringer (Broadcom)</span>
-    </div>
-    <div class="session-why">
-      Cluster API 的 in-place update = 不重建 node 就能升級。Nephio 管理的是 multi-cluster 環境，Cluster API 是底層支撐。了解他們的 in-place update 機制，看看 Porch 的 package update lifecycle 能否對齊。
-    </div>
-    <div class="alt-session">
-      <strong>同時段</strong>：KubeEdge Post-Graduation (Amtrium 1+2) — 邊緣 K8s，和電信 edge 相關但不是優先。
-    </div>
+  <div class="card p-net">
+    <div class="card-top"><div class="card-title">KubeCrawl + CloudNativeFest</div><div class="card-badge">社交重點</div></div>
+    <div class="card-meta"><span class="venue">Hall 1-5 Solutions Showcase</span></div>
+    <div class="card-body"><strong>KubeCon 最大的社交活動</strong>（~5000 人）。策略：<br>• <strong>早到</strong>（17:30 準時到）——人少時對話品質高<br>• 目標：找到 3-5 個新連結<br>• 帶你的 QR code 名片<br>• <strong>90 分鐘後離開</strong>——保存精力給明天<br>• 找那些也站在邊緣不太社交的人——他們通常最樂意被搭話</div>
+  </div>
+</section>
+
+<!-- ════════════════════ WEDNESDAY ════════════════════ -->
+<section class="page" id="wed">
+  <div class="day-header">
+    <div class="day-overline">Wednesday · March 25 · Main Conference Day 2</div>
+    <h2>Ericsson Keynote + Controller Patterns + 能量管理</h2>
   </div>
 
-  <div class="time-label">12:00 CET</div>
-
-  <div class="session network">
-    <div class="session-header">
-      <div class="session-title">Kubernetes Meet + Greet</div>
-      <div class="session-badge">社交重點</div>
-    </div>
-    <div class="session-meta"><span class="venue">Europe Foyer</span></div>
-    <div class="session-why">
-      <strong>比 KubeCrawl 更有價值的社交</strong>。這是小型、結構化的 networking 活動，有 facilitator 引導對話。人數少，對話深度高。<br>
-      <strong>目標</strong>：找到對 telecom / network automation / multi-cluster 有興趣的人。
-    </div>
+  <div class="strategy-box">
+    <p><strong>策略</strong>：今天 keynotes 有 <strong>Faseela K (Ericsson)</strong> 和 <strong>Greg Kroah-Hartman</strong>（Linux kernel maintainer 講 EU CRA 法規）。中午有 <strong>Kubernetes Meet+Greet</strong>——小型社交，比 KubeCrawl 更容易深度對話。下午是 poster sessions + KEP lifecycle。</p>
+    <p><strong>能量管理</strong>：這是第三天（加上時差），你會累。下午允許自己跳過一些場次去 quiet space 休息。品質 &gt; 數量。</p>
   </div>
 
-  <div class="time-label">13:15 CET</div>
+  <div class="time-marker"><span class="tm-time">09:00</span><span class="tm-line"></span></div>
 
-  <div class="session medium">
-    <div class="session-header">
-      <div class="session-title">Poster Sessions</div>
-      <div class="session-badge">推薦</div>
-    </div>
-    <div class="session-meta"><span class="venue">Hall 1-5 Gouda Zone</span></div>
-    <div class="session-why">
-      10 張海報同時展示。重點看：<br>
-      • <strong>GPU Control Plane</strong> — AI 基礎設施<br>
-      • <strong>Green Cloud Engineering</strong> — sustainability 是 EU 重要議題<br>
-      • <strong>Kubernetes Anomaly Detection</strong> — observability 相關<br>
-      Poster 展示者通常很樂意深入討論——這是學術風格的交流，對你來說很自然。
-    </div>
+  <div class="card p-must">
+    <div class="card-top"><div class="card-title">Morning Keynotes（重點場次標記）</div><div class="card-badge">必到</div></div>
+    <div class="card-meta"><span class="venue">Hall 12</span></div>
+    <div class="card-body"><strong>必看</strong>：<br>• <strong>Greg Kroah-Hartman</strong>：「CRA and What It Means for Open Source」— EU Cyber Resilience Act 會影響所有開源項目。身為 TSC member 你需要了解。<br>• <strong>Faseela K (Ericsson)</strong>：「From Orbit to the Grid」— <strong>Ericsson 的人在 keynote stage！</strong><br>• <strong>SNCF (法國國鐵)</strong>：Railway platform on K8s — 大型基礎建設，和電信有類似的 reliability 需求。<br>• <strong>Awards Ceremony</strong>：看看什麼樣的貢獻被社群認可。</div>
+    <div class="card-action">Faseela K 演講結束後找她：「Hi Faseela, I'm Hsiu-Chi from the Nephio TSC — I work on Porch, same ecosystem as your Ericsson colleagues Liam and efiacor. Great keynote!」</div>
   </div>
 
-  <div class="time-label">14:15 CET</div>
+  <div class="time-marker"><span class="tm-time">11:00</span><span class="tm-line"></span></div>
 
-  <div class="session medium">
-    <div class="session-header">
-      <div class="session-title">KEP Lifecycle</div>
-      <div class="session-badge">推薦</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">E106-108</span> · <span class="speakers">Kat Cosgrove, Sreeram Venkitesh, Rayan Das (DigitalOcean), Subhasmita Swain</span>
-    </div>
-    <div class="session-why">
-      KEP (Kubernetes Enhancement Proposal) 流程是 K8s 治理的核心。身為 TSC member，了解上游的治理流程可以改進 Nephio 的提案流程。你正在推 #1049 FunctionConfig CRD 設計——學習上游怎麼做 proposal lifecycle。
-    </div>
+  <div class="card p-high">
+    <div class="card-top"><div class="card-title">Kubernetes Controller Sharding</div><div class="card-badge">強烈推薦</div></div>
+    <div class="card-meta"><span class="venue">Hall 8 Room D</span><span class="speakers">Motohiro Otsuka, Tomoyuki Nakamura (LY Corporation)</span></div>
+    <div class="card-body"><strong>直接對應你的 Porch controller 開發</strong>。Controller sharding = 如何水平擴展 controller。LY Corporation（LINE Yahoo）= 日本大型科技公司，有 APAC 連結。</div>
+    <div class="card-alt"><strong>同時段</strong>：Future of Kubernetes Node Lifecycle (Hall 8 Room E) — Uber + Google 講，但和你的工作較遠。</div>
   </div>
 
-  <div class="time-label">14:15 CET（備選）</div>
+  <div class="time-marker"><span class="tm-time">11:45</span><span class="tm-line"></span></div>
 
-  <div class="session medium">
-    <div class="session-header">
-      <div class="session-title">Istio Ambient Mesh Tracing</div>
-      <div class="session-badge">推薦（看錄影）</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">Hall 12</span> · <span class="speakers">Mofesola Babalola, Hannah Olukoye</span>
-    </div>
-    <div class="session-why">
-      Istio ambient mesh = 不需要 sidecar 的 service mesh。你的 pod evaluator (#878) 有 Istio sidecar 造成的問題——如果 ambient mesh 成熟，sidecar 問題就不存在了。看錄影即可。
-    </div>
+  <div class="card p-high">
+    <div class="card-top"><div class="card-title">In-place Updates with Cluster API</div><div class="card-badge">強烈推薦</div></div>
+    <div class="card-meta"><span class="venue">Hall 8 Room D</span><span class="speakers">Fabrizio Pandini, Stefan Büringer (Broadcom)</span></div>
+    <div class="card-body">Cluster API 的 in-place update = 不重建 node 就能升級。Nephio 管理的是 multi-cluster 環境，Cluster API 是底層支撐。了解 in-place update 機制。</div>
   </div>
 
-  <div class="time-label">15:15 CET 以後 — 彈性時間</div>
+  <div class="time-marker"><span class="tm-time">12:00</span><span class="tm-line"></span></div>
 
-  <div class="session break-event">
-    <div class="session-header">
-      <div class="session-title">下午彈性：休息或 hallway track</div>
-    </div>
-    <div class="session-why">
-      第三天下午，你的精力可能已經很低。兩個選擇：<br>
-      <strong>選項 A</strong>：去 Quiet Space / Community Hub 休息 30 分鐘，整理前兩天的筆記和名片。<br>
-      <strong>選項 B</strong>：去 Solutions Showcase 有目的地逛。找 Crossplane、Argo、Flux 的攤位，問他們「How do you think about package lifecycle management for network functions?」<br><br>
-      <strong>不要勉強自己塞滿每個時段</strong>。高品質的一次 hallway conversation > 三場你只是坐著但沒有吸收的 talk。
-    </div>
-  </div>
-</div>
-
-<!-- ==================== THURSDAY ==================== -->
-<div class="day-content" id="thu">
-  <div class="day-summary">
-    <h2>週四 3/26 — Main Conference Day 3（最後一天）</h2>
-    <div class="strategy">
-      <strong>策略</strong>：今天是 closing day，很多人會提早離開。但 <strong>Gergely Csatari (Nokia) 在 keynote 講 Autonomous Networks</strong>——這是你和 Nokia 陣營最後的交流機會。下午有 <strong>Crossplane ContribFest</strong> 和 <strong>Configuration Design</strong>。<br><br>
-      <strong>最後衝刺</strong>：今天是收尾日。確保所有想見的人都見到了，所有 follow-up action items 都記下來了。
-    </div>
+  <div class="card p-net">
+    <div class="card-top"><div class="card-title">Kubernetes Meet + Greet</div><div class="card-badge">社交重點</div></div>
+    <div class="card-meta"><span class="venue">Europe Foyer</span></div>
+    <div class="card-body"><strong>比 KubeCrawl 更有價值的社交</strong>。小型、結構化的 networking 活動，有 facilitator 引導對話。人數少，對話深度高。<br><strong>目標</strong>：找到對 telecom / network automation / multi-cluster 有興趣的人。</div>
   </div>
 
-  <div class="time-label">09:00 – 10:20 CET — Closing Keynotes</div>
+  <div class="time-marker"><span class="tm-time">13:15</span><span class="tm-line"></span></div>
 
-  <div class="session critical">
-    <div class="session-header">
-      <div class="session-title">Closing Keynotes（重點：Gergely Csatari）</div>
-      <div class="session-badge">必到</div>
-    </div>
-    <div class="session-meta"><span class="venue">Hall 12</span></div>
-    <div class="session-why">
-      <strong>必看</strong>：<br>
-      • <strong>09:58 — Gergely Csatari (Nokia)：「Autonomous Networks」</strong> — Nokia 的人在主場 keynote 講自主網路！這是 Nephio 的上層願景。你已經在 Telco Day 和他互動過，今天他在 10000 人面前講——演講後找他深聊，這時你不再是陌生人。<br>
-      • <strong>09:05 — Cloud Native Feedback Loop</strong>：Karena Angell (Red Hat), Katie Gamanji (Apple), Boeing, NYT — 跨產業視角<br>
-      • <strong>09:29 — Ubisoft + Discord</strong>：遊戲基礎設施的 K8s 使用——純興趣<br>
-      • <strong>09:34 — Abby Bangser (Syntasso)</strong>：Platform engineering 思想領袖<br>
-      • <strong>09:46 — Jago Macleod (Google)</strong>：Accelerator-Native K8s — GPU/AI 方向
-    </div>
-    <div class="session-action">
-      行動：Gergely keynote 後<strong>找到他</strong>。「Gergely, great keynote! I'm Hsiu-Chi from the Nephio TSC — we met at Telco Day. Your vision of autonomous networks aligns exactly with what we're building in Porch. I'd love to discuss how we can better support Nokia's use cases.」
-    </div>
+  <div class="card p-med">
+    <div class="card-top"><div class="card-title">Poster Sessions</div><div class="card-badge">推薦</div></div>
+    <div class="card-meta"><span class="venue">Hall 1-5 Gouda Zone</span></div>
+    <div class="card-body">10 張海報同時展示。重點看 <strong>GPU Control Plane</strong>、<strong>Green Cloud Engineering</strong>、<strong>Kubernetes Anomaly Detection</strong>。Poster 展示者很樂意深入討論——學術風格交流，對你很自然。</div>
   </div>
 
-  <div class="time-label">11:00 CET</div>
+  <div class="time-marker"><span class="tm-time">14:15</span><span class="tm-line"></span></div>
 
-  <div class="session high">
-    <div class="session-header">
-      <div class="session-title">Multi-Cluster AI Inference</div>
-      <div class="session-badge">強烈推薦</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">Auditorium</span> · <span class="speakers">Wei-Cheng Lai (Bloomberg), Han-Ju Chen (Anyscale)</span>
-    </div>
-    <div class="session-why">
-      Multi-cluster orchestration + AI inference。Nephio 的核心是 multi-cluster。<br>
-      <strong>Wei-Cheng Lai + Han-Ju Chen</strong> — 名字都是華裔背景。如果他們說中文，這是你最自然的 networking 機會之一。
-    </div>
-    <div class="alt-session">
-      <strong>同時段</strong>：Private Cellular Networks (Hall 7 Room C) — 電信相關但 multi-cluster 更核心。
-    </div>
+  <div class="card p-med">
+    <div class="card-top"><div class="card-title">KEP Lifecycle</div><div class="card-badge">推薦</div></div>
+    <div class="card-meta"><span class="venue">E106-108</span><span class="speakers">Kat Cosgrove, Sreeram Venkitesh, Rayan Das (DigitalOcean), Subhasmita Swain</span></div>
+    <div class="card-body">KEP (Kubernetes Enhancement Proposal) 流程是 K8s 治理的核心。身為 TSC member，了解上游的治理流程可以改進 Nephio 的提案流程。你正在推 #1049 FunctionConfig CRD 設計——學習上游怎麼做 proposal lifecycle。</div>
   </div>
 
-  <div class="time-label">11:45 CET</div>
-
-  <div class="session high">
-    <div class="session-header">
-      <div class="session-title">Istio as Network Platform</div>
-      <div class="session-badge">強烈推薦</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">Amtrium 1+2</span> · <span class="speakers">Mitch Connors (Microsoft), Daniel Grimm (Red Hat)</span>
-    </div>
-    <div class="session-why">
-      你的 pod evaluator (#878) 受 Istio sidecar 影響。了解 Istio 作為 network platform 的演進方向——ambient mesh 是否會消除 sidecar 的問題？如果是，你的 Tier 3 fix（Istio holdApplicationUntilProxyStarts）可能不再需要。
-    </div>
-    <div class="alt-session">
-      <strong>同時段</strong>：SR-IOV Multi-Network Support (Hall 7 Room C) — Masaharu Kanda (NTT) + Lionel Jouin，telecom networking 但你已經和 Lionel 聊過。<br>
-      AI Agents & Platform Engineering panel (Auditorium) — 有趣但你已經在 Telco Day 聽了大量 AI agent 內容。
-    </div>
+  <div class="card p-med">
+    <div class="card-top"><div class="card-title">Istio Ambient Mesh Tracing</div><div class="card-badge">看錄影</div></div>
+    <div class="card-meta"><span class="venue">Hall 12</span><span class="speakers">Mofesola Babalola, Hannah Olukoye</span></div>
+    <div class="card-body">Istio ambient mesh = 不需要 sidecar。你的 pod evaluator (#878) 有 Istio sidecar 造成的問題——如果 ambient mesh 成熟，sidecar 問題就不存在了。看錄影即可。</div>
   </div>
 
-  <div class="time-label">12:15 CET — Lunch</div>
+  <div class="time-marker"><span class="tm-time">15:15+</span><span class="tm-line"></span></div>
 
-  <div class="session break-event">
-    <div class="session-header">
-      <div class="session-title">最後的午餐社交 + 整理筆記</div>
-    </div>
-    <div class="session-why">
-      最後機會在會場社交。同時整理這幾天的 contact list，確保每個人的 follow-up action 都記下來了。
-    </div>
+  <div class="card p-rest">
+    <div class="card-top"><div class="card-title">下午彈性：休息或 hallway track</div><div class="card-badge">能量管理</div></div>
+    <div class="card-body">第三天下午，你的精力可能已經很低。兩個選擇：<br><strong>選項 A</strong>：去 Quiet Space / Community Hub 休息 30 分鐘，整理前兩天的筆記和名片。<br><strong>選項 B</strong>：去 Solutions Showcase 有目的地逛。找 Crossplane、Argo、Flux 的攤位。<br><br><strong>不要勉強自己塞滿每個時段</strong>。高品質的一次 hallway conversation &gt; 三場你只是坐著但沒有吸收的 talk。</div>
+  </div>
+</section>
+
+<!-- ════════════════════ THURSDAY ════════════════════ -->
+<section class="page" id="thu">
+  <div class="day-header">
+    <div class="day-overline">Thursday · March 26 · Main Conference Day 3</div>
+    <h2>Nokia Keynote + Crossplane ContribFest + 最後衝刺</h2>
   </div>
 
-  <div class="time-label">13:45 CET</div>
-
-  <div class="session high">
-    <div class="session-header">
-      <div class="session-title">Gateway API Navigation</div>
-      <div class="session-badge">強烈推薦</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">Hall 7 Room B</span> · <span class="speakers">Beka Modebadze (Google), Christine Kim (Isovalent/Cisco)</span>
-    </div>
-    <div class="session-why">
-      Gateway API 是 K8s networking 的未來（取代 Ingress）。Nephio 管理的 network functions 最終會通過 Gateway API 對外暴露。了解最新進展。
-    </div>
+  <div class="strategy-box">
+    <p><strong>策略</strong>：今天是 closing day，很多人會提早離開。但 <strong>Gergely Csatari (Nokia) 在 keynote 講 Autonomous Networks</strong>——這是你和 Nokia 陣營最後的交流機會。下午有 <strong>Crossplane ContribFest</strong>。</p>
+    <p><strong>最後衝刺</strong>：確保所有想見的人都見到了，所有 follow-up action items 都記下來了。</p>
   </div>
 
-  <div class="time-label">14:30 CET</div>
+  <div class="time-marker"><span class="tm-time">09:00</span><span class="tm-line"></span></div>
 
-  <div class="session critical">
-    <div class="session-header">
-      <div class="session-title">Crossplane ContribFest</div>
-      <div class="session-badge">必到</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">G106</span> · <span class="speakers">Jared Watts, Nic Cope (Upbound)</span>
-    </div>
-    <div class="session-why">
-      <strong>這是 hands-on 互動，不會錄影。</strong>你在週二聽了 Crossplane Framework talk，現在去 ContribFest 和 Jared Watts 面對面 code。<br>
-      <strong>目標不是貢獻 Crossplane code</strong>（你不是 Crossplane contributor），而是：<br>
-      1. 和 Jared 建立個人關係<br>
-      2. 了解 Crossplane 的內部架構，對比 Porch<br>
-      3. 討論 Crossplane + Nephio 的可能整合點<br>
-      ContribFest 是小型工作坊（~20-30 人），對話深度遠超 talk 或 hallway。
-    </div>
-    <div class="alt-session">
-      <strong>同時段</strong>：Configuration Design (Forum, Bogdan Stancu, Adobe) — 直接和 KRM config 相關，但 ContribFest 的互動價值更高。如果你已經和 Jared 聊夠了，可以中途去 Configuration Design。
-    </div>
+  <div class="card p-must">
+    <div class="card-top"><div class="card-title">Closing Keynotes（重點：Gergely Csatari）</div><div class="card-badge">必到</div></div>
+    <div class="card-meta"><span class="venue">Hall 12</span></div>
+    <div class="card-body"><strong>必看</strong>：<br>• <strong>09:58 — Gergely Csatari (Nokia)：「Autonomous Networks」</strong> — Nokia 的人在主場 keynote！你已經在 Telco Day 和他互動過，今天他在 10000 人面前講——演講後找他深聊。<br>• <strong>09:05</strong> — Cloud Native Feedback Loop：Red Hat, Apple, Boeing, NYT<br>• <strong>09:34</strong> — Abby Bangser (Syntasso)：Platform engineering 思想領袖<br>• <strong>09:46</strong> — Jago Macleod (Google)：Accelerator-Native K8s</div>
+    <div class="card-action">Gergely keynote 後<strong>找到他</strong>：「Gergely, great keynote! I'm Hsiu-Chi from the Nephio TSC — we met at Telco Day. Your vision of autonomous networks aligns exactly with what we're building in Porch.」</div>
   </div>
 
-  <div class="time-label">15:15 CET</div>
+  <div class="time-marker"><span class="tm-time">11:00</span><span class="tm-line"></span></div>
 
-  <div class="session high">
-    <div class="session-header">
-      <div class="session-title">NFD & SYLVA Compatibility</div>
-      <div class="session-badge">強烈推薦</div>
-    </div>
-    <div class="session-meta">
-      <span class="venue">Hall 8 Room D</span> · <span class="speakers">Eduardo Arango Gutierrez (NVIDIA), Chaoyi Huang (Huawei)</span>
-    </div>
-    <div class="session-why">
-      NFD (Node Feature Discovery) + SYLVA（歐洲電信 cloud-native 平台）。<br>
-      <strong>Chaoyi Huang 是 Huawei 的人</strong>——Huawei 是電信設備商。SYLVA 是歐洲電信商（Orange, DT 等）共同推的平台，和 Nephio 有交集。了解他們的方向。
-    </div>
+  <div class="card p-high">
+    <div class="card-top"><div class="card-title">Multi-Cluster AI Inference</div><div class="card-badge">強烈推薦</div></div>
+    <div class="card-meta"><span class="venue">Auditorium</span><span class="speakers">Wei-Cheng Lai (Bloomberg), Han-Ju Chen (Anyscale)</span></div>
+    <div class="card-body">Multi-cluster orchestration + AI inference。Nephio 的核心是 multi-cluster。<br><strong>Wei-Cheng Lai + Han-Ju Chen</strong> — 名字都是華裔背景。如果他們說中文，這是你最自然的 networking 機會之一。</div>
+    <div class="card-alt"><strong>同時段</strong>：Private Cellular Networks (Hall 7 Room C) — 電信相關但 multi-cluster 更核心。</div>
   </div>
 
-  <div class="time-label">16:00+ CET — 會議結束</div>
+  <div class="time-marker"><span class="tm-time">11:45</span><span class="tm-line"></span></div>
 
-  <div class="session break-event">
-    <div class="session-header">
-      <div class="session-title">Conference 結束 — 48 小時 Follow-up 開始</div>
-    </div>
-    <div class="session-why">
-      <strong>回旅館第一件事</strong>：整理所有 contacts，開始寫 follow-up messages（用 followup-templates.md）。<br>
-      48 小時是黃金時間——過了這個時段，對方對你的記憶會快速衰減。<br>
-      優先順序：Liam > Istvan > Gergely > Jared Watts > 其他 Ericsson/Nokia > 電信業者 > 一般聯繫。
-    </div>
+  <div class="card p-high">
+    <div class="card-top"><div class="card-title">Istio as Network Platform</div><div class="card-badge">強烈推薦</div></div>
+    <div class="card-meta"><span class="venue">Amtrium 1+2</span><span class="speakers">Mitch Connors (Microsoft), Daniel Grimm (Red Hat)</span></div>
+    <div class="card-body">你的 pod evaluator (#878) 受 Istio sidecar 影響。了解 Istio 作為 network platform 的演進——ambient mesh 是否會消除 sidecar 的問題？</div>
+    <div class="card-alt"><strong>同時段</strong>：SR-IOV Multi-Network Support (Hall 7 Room C) — NTT + Lionel Jouin<br>AI Agents &amp; Platform Engineering panel (Auditorium)</div>
   </div>
-</div>
+
+  <div class="time-marker"><span class="tm-time">12:15</span><span class="tm-line"></span></div>
+
+  <div class="card p-rest">
+    <div class="card-top"><div class="card-title">最後的午餐社交 + 整理筆記</div><div class="card-badge">後勤</div></div>
+    <div class="card-body">最後機會在會場社交。同時整理這幾天的 contact list，確保每個人的 follow-up action 都記下來了。</div>
+  </div>
+
+  <div class="time-marker"><span class="tm-time">13:45</span><span class="tm-line"></span></div>
+
+  <div class="card p-high">
+    <div class="card-top"><div class="card-title">Gateway API Navigation</div><div class="card-badge">強烈推薦</div></div>
+    <div class="card-meta"><span class="venue">Hall 7 Room B</span><span class="speakers">Beka Modebadze (Google), Christine Kim (Isovalent/Cisco)</span></div>
+    <div class="card-body">Gateway API 是 K8s networking 的未來（取代 Ingress）。Nephio 管理的 network functions 最終會通過 Gateway API 對外暴露。了解最新進展。</div>
+  </div>
+
+  <div class="time-marker"><span class="tm-time">14:30</span><span class="tm-line"></span></div>
+
+  <div class="card p-must">
+    <div class="card-top"><div class="card-title">Crossplane ContribFest</div><div class="card-badge">必到</div></div>
+    <div class="card-meta"><span class="venue">G106</span><span class="speakers">Jared Watts, Nic Cope (Upbound)</span></div>
+    <div class="card-body"><strong>Hands-on 互動，不會錄影。</strong>你在週二聽了 Crossplane Framework talk，現在去 ContribFest 和 Jared Watts 面對面。<br><strong>目標不是貢獻 Crossplane code</strong>，而是：<br>1. 和 Jared 建立個人關係<br>2. 了解 Crossplane 內部架構，對比 Porch<br>3. 討論 Crossplane + Nephio 的可能整合點<br>ContribFest 是小型工作坊（~20-30 人），對話深度遠超 talk 或 hallway。</div>
+    <div class="card-alt"><strong>同時段</strong>：Configuration Design (Forum, Bogdan Stancu, Adobe) — 直接和 KRM config 相關。如果你已經和 Jared 聊夠了，可以中途過去。</div>
+  </div>
+
+  <div class="time-marker"><span class="tm-time">15:15</span><span class="tm-line"></span></div>
+
+  <div class="card p-high">
+    <div class="card-top"><div class="card-title">NFD &amp; SYLVA Compatibility</div><div class="card-badge">強烈推薦</div></div>
+    <div class="card-meta"><span class="venue">Hall 8 Room D</span><span class="speakers">Eduardo Arango Gutierrez (NVIDIA), Chaoyi Huang (Huawei)</span></div>
+    <div class="card-body">NFD (Node Feature Discovery) + SYLVA（歐洲電信 cloud-native 平台）。<strong>Chaoyi Huang 是 Huawei 的人</strong>——Huawei 是電信設備商。SYLVA 和 Nephio 有交集。了解他們的方向。</div>
+  </div>
+
+  <div class="time-marker"><span class="tm-time">16:00+</span><span class="tm-line"></span></div>
+
+  <div class="card p-must">
+    <div class="card-top"><div class="card-title">Conference 結束 — 48 小時 Follow-up 開始</div><div class="card-badge">最重要</div></div>
+    <div class="card-body"><strong>回旅館第一件事</strong>：整理所有 contacts，開始寫 follow-up messages（用 followup-templates.md）。<br>48 小時是黃金時間——過了這個時段，對方對你的記憶會快速衰減。<br><strong>優先順序</strong>：Liam → Istvan → Gergely → Jared Watts → 其他 Ericsson/Nokia → 電信業者 → 一般聯繫。</div>
+  </div>
+</section>
+
+</div><!-- /main -->
 
 <script>
-document.querySelectorAll('.tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.day-content').forEach(d => d.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById(tab.dataset.day).classList.add('active');
+const navItems = document.querySelectorAll('.nav-item[data-page]');
+const pages = document.querySelectorAll('.page');
+const topLabel = document.getElementById('topbar-label');
+const sidebar = document.querySelector('.sidebar');
+const overlay = document.querySelector('.sidebar-overlay');
+
+const labels = {
+  overview: '總覽 Overview',
+  sun: '3/22 週日 · 報到',
+  mon: '3/23 週一 · Cloud Native Telco Day',
+  tue: '3/24 週二 · Main Day 1',
+  wed: '3/25 週三 · Main Day 2',
+  thu: '3/26 週四 · Main Day 3'
+};
+
+navItems.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const id = btn.dataset.page;
+    navItems.forEach(n => n.classList.remove('active'));
+    pages.forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(id).classList.add('active');
+    topLabel.textContent = labels[id] || '';
+    window.scrollTo({top: 0, behavior: 'smooth'});
+    if (window.innerWidth <= 860) toggleSidebar();
   });
 });
-</script>
 
+function toggleSidebar() {
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('open');
+}
+</script>
 </body>
 </html>
