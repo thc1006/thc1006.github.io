@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="布魯日一日遊完整行程：秀吉與晴晴 2026 年 3 月 22 日，含 Google Maps 導航、訂票連結與必吃清單。">
+<title>布魯日一日 · Brugge · 3/22</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --parchment:   #f7f0e3;
+  --cream:       #fdf8f0;
+  --warm-white:  #fffdf9;
+  --ink:         #1e1810;
+  --ink-soft:    #3d3325;
+  --ink-muted:   #7a6e5f;
+  --ink-faint:   #b0a898;
+  --burgundy:    #7b2d3e;
+  --burgundy2:   #5c1f2e;
+  --gold:        #b8892a;
+  --gold-light:  #e8c96a;
+  --teal:        #2e6e6a;
+  --teal-light:  #e2f0ef;
+  --border:      rgba(30,24,16,0.10);
+  --border-med:  rgba(30,24,16,0.18);
+  --gutter:      clamp(1rem, 5vw, 3rem);
+  --r:           6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .reveal { opacity: 1 !important; transform: none !important; }
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  line-height: 1.75;
+  overflow-x: hidden;
+}
+
+/* Skip link */
+.skip { position: absolute; top: -9999px; left: 1rem; background: var(--burgundy); color: #fff; padding: .5rem 1rem; border-radius: var(--r); font-size: .875rem; z-index: 9999; }
+.skip:focus { top: 1rem; }
+
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 3px; }
+:focus:not(:focus-visible) { outline: none; }
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  background: var(--ink);
+  color: var(--parchment);
+  padding: 5rem var(--gutter) 4rem;
+  overflow: hidden;
+  text-align: center;
+}
+
+/* Decorative canal-ripple lines */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 48px,
+      rgba(184,137,42,0.06) 48px,
+      rgba(184,137,42,0.06) 49px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 72px,
+      rgba(184,137,42,0.04) 72px,
+      rgba(184,137,42,0.04) 73px
+    );
+  pointer-events: none;
+}
+
+.hero-badge {
+  display: inline-block;
+  font-family: 'Lato', sans-serif;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  border: 1px solid rgba(184,137,42,.45);
+  padding: 4px 14px;
+  border-radius: 2px;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(3rem, 9vw, 7rem);
+  font-weight: 300;
+  line-height: .95;
+  letter-spacing: -.01em;
+  position: relative;
+  margin-bottom: .5rem;
+}
+.hero-title em { font-style: italic; color: var(--gold-light); }
+
+.hero-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(247,240,227,.6);
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.hero-pills {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  position: relative;
+}
+.hero-pill {
+  font-size: .7rem;
+  font-weight: 400;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(247,240,227,.55);
+  border: 1px solid rgba(247,240,227,.15);
+  padding: 3px 10px;
+  border-radius: 2px;
+}
+
+/* ── STICKY NAV ── */
+.site-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(30,24,16,.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(184,137,42,.2);
+}
+.nav-inner {
+  display: flex; align-items: stretch; overflow-x: auto;
+  padding: 0 var(--gutter);
+  scrollbar-width: none;
+}
+.nav-inner::-webkit-scrollbar { display: none; }
+.nav-brand {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .85rem; font-style: italic;
+  color: var(--gold-light); padding: 0 1.25rem 0 0;
+  margin-right: .5rem; border-right: 1px solid rgba(184,137,42,.2);
+  display: flex; align-items: center; white-space: nowrap; flex-shrink: 0;
+}
+.nav-btn {
+  font-family: 'Lato', sans-serif;
+  font-size: .65rem; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  min-height: 44px; padding: 0 .875rem;
+  background: none; border: none; border-bottom: 2px solid transparent;
+  color: rgba(247,240,227,.45);
+  cursor: pointer; white-space: nowrap;
+  transition: color .2s, border-color .2s;
+  flex-shrink: 0;
+}
+.nav-btn:hover { color: var(--parchment); }
+.nav-btn.active { color: var(--gold-light); border-bottom-color: var(--gold); }
+
+/* ── LAYOUT ── */
+.container { max-width: 1040px; margin: 0 auto; padding: 0 var(--gutter); }
+
+.section { padding: 4rem 0; border-bottom: 1px solid var(--border); }
+.section:last-of-type { border-bottom: none; }
+.section-alt { background: var(--warm-white); }
+
+.section-label {
+  font-size: .65rem; font-weight: 700;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--burgundy); margin-bottom: .5rem;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-label::after { content: ''; width: 28px; height: 1px; background: var(--burgundy); opacity: .4; }
+
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  font-weight: 400; line-height: 1.1;
+  margin-bottom: 2rem;
+}
+.section-title em { font-style: italic; color: var(--burgundy); }
+
+/* ── TIMELINE ── */
+.timeline { position: relative; }
+.timeline::before {
+  content: ''; position: absolute;
+  left: 26px; top: 0; bottom: 0; width: 1px;
+  background: repeating-linear-gradient(to bottom, var(--border-med) 0, var(--border-med) 5px, transparent 5px, transparent 10px);
+}
+@media(max-width:560px){ .timeline::before { left: 16px; } }
+
+.stop {
+  display: grid;
+  grid-template-columns: 54px 1fr;
+  gap: 1.25rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.stop:last-child { border-bottom: none; }
+@media(max-width:560px){ .stop { grid-template-columns: 34px 1fr; gap: .75rem; } }
+
+.stop-left { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+
+.stop-time {
+  font-family: 'Lato', sans-serif;
+  font-size: .6rem; font-weight: 700;
+  letter-spacing: .08em; color: var(--ink-muted);
+  text-align: center; line-height: 1.2;
+  white-space: nowrap;
+}
+
+.stop-dot {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--burgundy);
+  background: var(--cream);
+  flex-shrink: 0;
+  z-index: 1;
+  position: relative;
+}
+.stop-dot.filled { background: var(--burgundy); }
+.stop-dot.gold { border-color: var(--gold); background: var(--gold); }
+.stop-dot.teal { border-color: var(--teal); background: var(--teal); }
+
+.stop-body { padding-bottom: .25rem; }
+
+.stop-header { display: flex; align-items: baseline; gap: .75rem; flex-wrap: wrap; margin-bottom: .3rem; }
+
+.stop-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.25rem; font-weight: 600;
+  color: var(--ink);  line-height: 1.2;
+}
+
+.stop-emoji { font-size: 1rem; }
+
+.stop-desc {
+  font-size: .875rem; color: var(--ink-soft);
+  line-height: 1.75; margin-bottom: .6rem;
+}
+.stop-desc strong { color: var(--ink); font-weight: 700; }
+.stop-desc em { font-style: italic; color: var(--burgundy); }
+
+.stop-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: .75rem; }
+.tag {
+  font-size: .65rem; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 3px;
+}
+.tag-free   { background: #e2f0ef; color: var(--teal); border: 1px solid rgba(46,110,106,.2); }
+.tag-ticket { background: #f8eee8; color: var(--burgundy); border: 1px solid rgba(123,45,62,.2); }
+.tag-food   { background: #fdf4e0; color: var(--gold); border: 1px solid rgba(184,137,42,.25); }
+.tag-tip    { background: var(--parchment); color: var(--ink-muted); border: 1px solid var(--border-med); }
+.tag-must   { background: var(--burgundy); color: #fff; }
+
+/* Map embed */
+.map-wrap {
+  border-radius: var(--r);
+  overflow: hidden;
+  border: 1px solid var(--border-med);
+  margin-top: .75rem;
+}
+.map-wrap iframe {
+  display: block; width: 100%; height: 200px; border: none;
+}
+.map-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 12px;
+  background: var(--warm-white);
+  border-top: 1px solid var(--border);
+}
+.map-name { font-size: .75rem; font-weight: 700; color: var(--ink-soft); }
+.map-addr { font-size: .7rem; color: var(--ink-muted); }
+.map-link {
+  font-size: .7rem; font-weight: 700;
+  color: var(--burgundy); text-decoration: none;
+  border: 1px solid var(--burgundy);
+  padding: 3px 10px; border-radius: 3px;
+  white-space: nowrap;
+  transition: background .15s, color .15s;
+}
+.map-link:hover { background: var(--burgundy); color: #fff; }
+
+/* Book link button */
+.btn-book {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--burgundy); color: #fff;
+  font-size: .75rem; font-weight: 700;
+  letter-spacing: .06em; text-transform: uppercase;
+  padding: 7px 16px; border-radius: 3px;
+  text-decoration: none;
+  transition: background .15s;
+  margin-top: .5rem;
+}
+.btn-book:hover { background: var(--burgundy2); }
+.btn-btn-ghost {
+  background: transparent; border: 1px solid var(--burgundy); color: var(--burgundy);
+}
+
+/* Alert box */
+.alert {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 12px 16px; border-radius: var(--r);
+  font-size: .8125rem; line-height: 1.7;
+  margin: .75rem 0;
+}
+.alert-icon { font-size: .9rem; flex-shrink: 0; margin-top: 2px; }
+.alert-gold   { background: #fdf4e0; border: 1px solid rgba(184,137,42,.3); color: #7a5c10; }
+.alert-teal   { background: var(--teal-light); border: 1px solid rgba(46,110,106,.25); color: var(--teal); }
+.alert-burg   { background: #f8eee8; border: 1px solid rgba(123,45,62,.25); color: var(--burgundy2); }
+.alert strong { font-weight: 700; }
+
+/* Summary cards */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border-med); border-radius: var(--r);
+  overflow: hidden; margin-bottom: 2rem;
+}
+.sum-card {
+  background: var(--warm-white); padding: 1.25rem;
+  transition: background .15s;
+}
+.sum-card:hover { background: var(--parchment); }
+.sum-label {
+  font-size: .65rem; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink-muted); margin-bottom: 5px;
+}
+.sum-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.6rem; font-weight: 400;
+  color: var(--burgundy); line-height: 1;
+  margin-bottom: 3px;
+}
+.sum-desc { font-size: .75rem; color: var(--ink-muted); line-height: 1.5; }
+
+/* Food & drink grid */
+.food-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+.food-card {
+  background: var(--warm-white);
+  border: 1px solid var(--border-med);
+  border-radius: var(--r); padding: 1.25rem;
+  transition: border-color .2s, transform .2s;
+}
+.food-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+.food-cat {
+  font-size: .65rem; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 6px;
+}
+.food-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem; font-weight: 600;
+  color: var(--ink); margin-bottom: 4px;
+}
+.food-desc { font-size: .8rem; color: var(--ink-soft); line-height: 1.6; }
+.food-price { font-size: .75rem; color: var(--teal); font-weight: 700; margin-top: 6px; }
+
+/* Transport box */
+.transport-box {
+  background: var(--ink);
+  color: var(--parchment);
+  border-radius: var(--r);
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 1.5rem;
+}
+.transport-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem; font-weight: 400; font-style: italic;
+  color: var(--gold-light); margin-bottom: .75rem;
+}
+.transport-row {
+  display: flex; gap: 1rem; align-items: baseline;
+  padding: 7px 0; border-bottom: 1px solid rgba(247,240,227,.08);
+  font-size: .8125rem;
+}
+.transport-row:last-child { border-bottom: none; }
+.t-label { color: rgba(247,240,227,.5); min-width: 80px; font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; }
+.t-val { color: var(--parchment); flex: 1; }
+.t-price { font-family: 'Lato', sans-serif; color: var(--gold-light); font-weight: 700; white-space: nowrap; }
+
+/* Divider */
+.divider {
+  display: flex; align-items: center; gap: 1rem;
+  margin: 2rem 0 1.5rem; color: var(--ink-faint);
+  font-size: .65rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
+}
+.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* Reveal animation */
+.reveal { opacity: 0; transform: translateY(16px); transition: opacity .45s ease, transform .45s ease; }
+.reveal.in { opacity: 1; transform: none; }
+.d1 { transition-delay: .06s; } .d2 { transition-delay: .12s; } .d3 { transition-delay: .18s; }
+
+/* Footer */
+.site-footer {
+  background: var(--ink); color: rgba(247,240,227,.45);
+  text-align: center; padding: 2.5rem var(--gutter);
+  font-size: .75rem;
+}
+.footer-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem; font-weight: 300; font-style: italic;
+  color: rgba(247,240,227,.7); margin-bottom: .3rem;
+}
+
+@media(max-width:600px){
+  .stop-name { font-size: 1.1rem; }
+  .map-wrap iframe { height: 170px; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">跳至主要內容</a>
+
+<!-- ── HERO ── -->
+<header role="banner">
+  <div class="hero">
+    <p class="hero-badge" aria-label="日期資訊">3月22日（週日）· 比利時 · 布魯日</p>
+    <h1 class="hero-title"><em>Brugge</em><br>布魯日一日</h1>
+    <p class="hero-sub">從安特衛普出發的中世紀水城小旅行</p>
+    <div class="hero-pills" aria-hidden="true">
+      <span class="hero-pill">6 小時行程</span>
+      <span class="hero-pill">運河 · 鐘樓 · 巧克力</span>
+      <span class="hero-pill">秀吉 &amp; 晴晴</span>
+    </div>
+  </div>
+</header>
+
+<!-- ── NAV ── -->
+<nav class="site-nav" aria-label="頁面導覽">
+  <div class="nav-inner">
+    <div class="nav-brand" aria-hidden="true">Brugge ·</div>
+    <button class="nav-btn" onclick="go('sec-transport')">交通</button>
+    <button class="nav-btn" onclick="go('sec-itinerary')">行程</button>
+    <button class="nav-btn" onclick="go('sec-food')">必吃必喝</button>
+    <button class="nav-btn" onclick="go('sec-tips')">小提醒</button>
+  </div>
+</nav>
+
+<main id="main" tabindex="-1">
+
+<!-- ── TRANSPORT ── -->
+<section class="section" id="sec-transport" aria-labelledby="h-transport">
+  <div class="container">
+    <p class="section-label reveal">00 · Getting There</p>
+    <h2 class="section-title reveal d1" id="h-transport">前往 <em>布魯日</em></h2>
+
+    <!-- Summary stats -->
+    <div class="summary-grid reveal d2" role="list" aria-label="行程概覽">
+      <div class="sum-card" role="listitem">
+        <p class="sum-label">出發時間</p>
+        <p class="sum-val">07:30</p>
+        <p class="sum-desc">從 Antwerpen-Centraal 出發</p>
+      </div>
+      <div class="sum-card" role="listitem">
+        <p class="sum-label">車程</p>
+        <p class="sum-val">~1h 25m</p>
+        <p class="sum-desc">SNCB IC 直達列車</p>
+      </div>
+      <div class="sum-card" role="listitem">
+        <p class="sum-label">票價（每人）</p>
+        <p class="sum-val">~€10.56</p>
+        <p class="sum-desc">26 歲以下青年票，自動 40% off</p>
+      </div>
+      <div class="sum-card" role="listitem">
+        <p class="sum-label">回程建議</p>
+        <p class="sum-val">16:00</p>
+        <p class="sum-desc">從 Brugge 站出發，約 19:00 抵 Schiphol</p>
+      </div>
+    </div>
+
+    <!-- Transport details -->
+    <div class="transport-box reveal">
+      <p class="transport-title">去程 · Antwerpen-Centraal → Brugge</p>
+      <div class="transport-row">
+        <span class="t-label">出發站</span>
+        <span class="t-val"><strong>Antwerpen-Centraal</strong></span>
+      </div>
+      <div class="transport-row">
+        <span class="t-label">到達站</span>
+        <span class="t-val"><strong>Brugge</strong></span>
+      </div>
+      <div class="transport-row">
+        <span class="t-label">建議班次</span>
+        <span class="t-val">07:30 出發 → 09:00 抵達（SNCB IC 直達）</span>
+      </div>
+      <div class="transport-row">
+        <span class="t-label">車票類型</span>
+        <span class="t-val">SNCB 比利時國鐵 · 26 歲以下青年票</span>
+        <span class="t-price">~€10.56 / 人</span>
+      </div>
+      <div class="transport-row">
+        <span class="t-label">購票</span>
+        <span class="t-val">當天在車站售票機或 App 購買，不用提前訂</span>
+      </div>
+    </div>
+
+    <div class="transport-box reveal" style="margin-top:.75rem;">
+      <p class="transport-title">回程 · Brugge → Antwerpen-Centraal → Schiphol</p>
+      <div class="transport-row">
+        <span class="t-label">Brugge 出發</span>
+        <span class="t-val">建議 16:00–17:00</span>
+      </div>
+      <div class="transport-row">
+        <span class="t-label">第一段</span>
+        <span class="t-val">Brugge → Antwerpen-Centraal（約 1h 25m）</span>
+        <span class="t-price">~€10.56 / 人</span>
+      </div>
+      <div class="transport-row">
+        <span class="t-label">轉車</span>
+        <span class="t-val">Antwerpen-Centraal 等 25 分鐘以上再出發</span>
+      </div>
+      <div class="transport-row">
+        <span class="t-label">第二段</span>
+        <span class="t-val">Antwerpen-Centraal → Amsterdam Airport Schiphol（Eurocity Direct，約 1h 13m）</span>
+        <span class="t-price">~€20 / 人</span>
+      </div>
+      <div class="transport-row">
+        <span class="t-label">預計到達</span>
+        <span class="t-val">約 19:00–20:00 抵 Schiphol</span>
+      </div>
+    </div>
+
+    <!-- Station maps -->
+    <div class="divider reveal">車站地圖</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;" class="reveal d1">
+      <div>
+        <div class="map-wrap">
+          <iframe src="https://www.google.com/maps?q=Antwerpen-Centraal+Station,+Koningin+Astridplein+27,+2018+Antwerpen&output=embed&hl=zh-TW" loading="lazy" title="Antwerpen-Centraal 車站"></iframe>
+        </div>
+        <div class="map-footer">
+          <div>
+            <div class="map-name">Antwerpen-Centraal</div>
+            <div class="map-addr">Koningin Astridplein 27, Antwerp</div>
+          </div>
+          <a class="map-link" href="https://maps.google.com/?q=Antwerpen-Centraal+Station+Koningin+Astridplein+27+Antwerp" target="_blank" rel="noopener">導航 ↗</a>
+        </div>
+      </div>
+      <div>
+        <div class="map-wrap">
+          <iframe src="https://www.google.com/maps?q=Brugge+railway+station,+Stationsplein,+8000+Brugge&output=embed&hl=zh-TW" loading="lazy" title="Brugge 車站"></iframe>
+        </div>
+        <div class="map-footer">
+          <div>
+            <div class="map-name">Brugge 布魯日站</div>
+            <div class="map-addr">Stationsplein, 8000 Brugge</div>
+          </div>
+          <a class="map-link" href="https://maps.google.com/?q=Brugge+railway+station+Stationsplein+8000+Brugge+Belgium" target="_blank" rel="noopener">導航 ↗</a>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:.75rem;color:var(--ink-muted);margin-top:.75rem;text-align:center;" class="reveal">※ 回程 Eurocity Direct 國際段需提前在 <strong>NS International</strong> 訂購 Saver 票以確保 €20 價格</p>
+  </div>
+</section>
+
+<!-- ── ITINERARY ── -->
+<section class="section section-alt" id="sec-itinerary" aria-labelledby="h-itinerary">
+  <div class="container">
+    <p class="section-label reveal">01 · Itinerary</p>
+    <h2 class="section-title reveal d1" id="h-itinerary">六小時 <em>完整行程</em></h2>
+
+    <div class="alert alert-gold reveal">
+      <span class="alert-icon" aria-hidden="true">💡</span>
+      <div><strong>策略提示：</strong>從車站到 Minnewater 步行約 20 分鐘，剛好熱身。整條路線是一個大圓圈，最後剛好走回車站附近，不走回頭路。</div>
+    </div>
+
+    <div class="timeline" role="list" aria-label="布魯日行程時間軸">
+
+      <!-- Stop 1 -->
+      <div class="stop reveal" role="listitem">
+        <div class="stop-left">
+          <span class="stop-time">09:00</span>
+          <div class="stop-dot filled" aria-label="起點"></div>
+        </div>
+        <div class="stop-body">
+          <div class="stop-header">
+            <h3 class="stop-name">抵達 Brugge 車站</h3>
+            <span class="stop-emoji" aria-hidden="true">🚉</span>
+          </div>
+          <p class="stop-desc">出月台後直走出站，往南步行約 20 分鐘前往愛之湖。建議帶早餐在路上邊走邊吃，或在車站旁的 bakery 買 croissant（€1.5–2）。</p>
+          <div class="stop-tags">
+            <span class="tag tag-tip">步行 20 分 → 愛之湖</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stop 2 -->
+      <div class="stop reveal" role="listitem">
+        <div class="stop-left">
+          <span class="stop-time">09:00<br>—<br>09:25</span>
+          <div class="stop-dot gold" aria-label="必去景點"></div>
+        </div>
+        <div class="stop-body">
+          <div class="stop-header">
+            <h3 class="stop-name">Minnewater 愛之湖 + Begijnhof 貝居安修道院</h3>
+            <span class="stop-emoji" aria-hidden="true">💕</span>
+          </div>
+          <p class="stop-desc">
+            <strong>Minnewater（愛之湖）</strong>——傳說與戀人一起走過湖上的橋，就能擁有永恆的愛。湖面常有天鵝，三月份可能有早春水仙花開。<br><br>
+            緊接著穿過 <strong>Begijnhof（貝居安修道院）</strong>——1245 年創建，白色小屋、鵝卵石庭院，現仍由本篤會修女居住。清晨最為靜謐，是全布魯日最有靈魂感的地方之一。
+          </p>
+          <div class="stop-tags">
+            <span class="tag tag-free">免費入場</span>
+            <span class="tag tag-must">必去</span>
+            <span class="tag tag-tip">清晨光線最美</span>
+          </div>
+          <div class="map-wrap">
+            <iframe src="https://www.google.com/maps?q=Minnewater+Park+Brugge+Belgium&output=embed&hl=zh-TW" loading="lazy" title="Minnewater 愛之湖"></iframe>
+          </div>
+          <div class="map-footer">
+            <div>
+              <div class="map-name">Minnewater 愛之湖</div>
+              <div class="map-addr">Minnewater, 8000 Brugge</div>
+            </div>
+            <a class="map-link" href="https://maps.google.com/?q=Minnewater+Park+Brugge+Belgium" target="_blank" rel="noopener">導航 ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stop 3 -->
+      <div class="stop reveal" role="listitem">
+        <div class="stop-left">
+          <span class="stop-time">09:40<br>—<br>10:00</span>
+          <div class="stop-dot gold" aria-label="必去景點"></div>
+        </div>
+        <div class="stop-body">
+          <div class="stop-header">
+            <h3 class="stop-name">Rozenhoedkaai 運河碼頭</h3>
+            <span class="stop-emoji" aria-hidden="true">📸</span>
+          </div>
+          <p class="stop-desc">
+            沿 Dijver 運河步行約 15 分鐘抵達 <strong>Rozenhoedkaai</strong>——比利時被拍攝最多的地點。運河、中世紀建築與鐘樓的倒影構成明信片般的畫面，<em>清晨光線是黃金時段，人少景美</em>。
+          </p>
+          <div class="stop-tags">
+            <span class="tag tag-free">免費</span>
+            <span class="tag tag-must">打卡必拍</span>
+          </div>
+          <div class="map-wrap">
+            <iframe src="https://www.google.com/maps?q=Rozenhoedkaai+Brugge+Belgium&output=embed&hl=zh-TW" loading="lazy" title="Rozenhoedkaai"></iframe>
+          </div>
+          <div class="map-footer">
+            <div>
+              <div class="map-name">Rozenhoedkaai</div>
+              <div class="map-addr">Rozenhoedkaai, 8000 Brugge</div>
+            </div>
+            <a class="map-link" href="https://maps.google.com/?q=Rozenhoedkaai+Brugge+Belgium" target="_blank" rel="noopener">導航 ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stop 4 -->
+      <div class="stop reveal" role="listitem">
+        <div class="stop-left">
+          <span class="stop-time">10:00<br>—<br>10:20</span>
+          <div class="stop-dot" aria-label="景點"></div>
+        </div>
+        <div class="stop-body">
+          <div class="stop-header">
+            <h3 class="stop-name">Burg Square 城堡廣場 + 聖血聖殿</h3>
+            <span class="stop-emoji" aria-hidden="true">⛪</span>
+          </div>
+          <p class="stop-desc">
+            <strong>Burg Square（城堡廣場）</strong>——布魯日行政與宗教中心，四周包圍著哥德式、文藝復興與巴洛克建築群。<br><br>
+            <strong>Basilica of the Holy Blood（聖血聖殿）</strong>——下層是肅穆的 12 世紀羅馬式教堂，上層是華麗的哥德式禮拜堂，供奉相傳裝有基督聖血的水晶瓶。免費入場，莊嚴而神秘。
+          </p>
+          <div class="stop-tags">
+            <span class="tag tag-free">免費入場</span>
+            <span class="tag tag-tip">週日 09:30–11:50 開放</span>
+          </div>
+          <div class="map-wrap">
+            <iframe src="https://www.google.com/maps?q=Burg+Square+Brugge+Belgium&output=embed&hl=zh-TW" loading="lazy" title="Burg Square 城堡廣場"></iframe>
+          </div>
+          <div class="map-footer">
+            <div>
+              <div class="map-name">Burg Square 城堡廣場</div>
+              <div class="map-addr">Burg, 8000 Brugge</div>
+            </div>
+            <a class="map-link" href="https://maps.google.com/?q=Burg+Square+Brugge+Belgium" target="_blank" rel="noopener">導航 ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stop 5 -->
+      <div class="stop reveal" role="listitem">
+        <div class="stop-left">
+          <span class="stop-time">10:20<br>—<br>10:40</span>
+          <div class="stop-dot" aria-label="景點"></div>
+        </div>
+        <div class="stop-body">
+          <div class="stop-header">
+            <h3 class="stop-name">Blinde-Ezelstraat 盲驢巷 → Markt 市集廣場</h3>
+            <span class="stop-emoji" aria-hidden="true">🏛️</span>
+          </div>
+          <p class="stop-desc">
+            穿過古老的 <strong>Blinde-Ezelstraat（盲驢巷）</strong>，石板路窄到兩人並肩剛好，走到布魯日最熱鬧的 <strong>Markt（市集廣場）</strong>。<br><br>
+            五顏六色的中世紀行會建築圍繞廣場，馬車來回，<em>週日 11:00 鐘樓有鐘琴演奏</em>，現場聽非常療癒。
+          </p>
+          <div class="stop-tags">
+            <span class="tag tag-free">免費</span>
+            <span class="tag tag-tip">週日 11:00 鐘琴演奏</span>
+          </div>
+          <div class="map-wrap">
+            <iframe src="https://www.google.com/maps?q=Markt+Brugge+Belgium&output=embed&hl=zh-TW" loading="lazy" title="Markt 市集廣場"></iframe>
+          </div>
+          <div class="map-footer">
+            <div>
+              <div class="map-name">Markt 市集廣場</div>
+              <div class="map-addr">Markt, 8000 Brugge</div>
+            </div>
+            <a class="map-link" href="https://maps.google.com/?q=Markt+Bruges+Belgium" target="_blank" rel="noopener">導航 ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stop 6 - BELFRY -->
+      <div class="stop reveal" role="listitem">
+        <div class="stop-left">
+          <span class="stop-time">10:40<br>—<br>11:30</span>
+          <div class="stop-dot gold" aria-label="必去景點"></div>
+        </div>
+        <div class="stop-body">
+          <div class="stop-header">
+            <h3 class="stop-name">Belfry 鐘樓 — 366 階登頂</h3>
+            <span class="stop-emoji" aria-hidden="true">🔔</span>
+          </div>
+          <p class="stop-desc">
+            布魯日的精神象徵，83 公尺高。爬完 <strong>366 階旋轉石梯</strong>，登頂可見布魯日紅瓦屋頂的 <em>360° 全景</em>——運河蜿蜒、鐘樓投影在市集廣場上，風大但美絕了。
+          </p>
+          <div class="alert alert-burg">
+            <span class="alert-icon" aria-hidden="true">⚠️</span>
+            <div><strong>每時段限 25 人，務必提前線上預約！</strong>現場排隊可能等超過 1 小時甚至賣完。票價 €15/人。</div>
+          </div>
+          <div class="stop-tags">
+            <span class="tag tag-ticket">€15 / 人</span>
+            <span class="tag tag-must">必去</span>
+            <span class="tag tag-tip">需提前預約時段</span>
+          </div>
+          <a class="btn-book" href="https://www.museabrugge.be/en/plan-your-visit/tickets" target="_blank" rel="noopener" aria-label="訂購鐘樓門票（開啟新視窗）">訂購門票 ↗</a>
+          <div class="map-wrap" style="margin-top:.75rem;">
+            <iframe src="https://www.google.com/maps?q=Belfort+van+Brugge+Markt+7+Brugge+Belgium&output=embed&hl=zh-TW" loading="lazy" title="Belfry 鐘樓"></iframe>
+          </div>
+          <div class="map-footer">
+            <div>
+              <div class="map-name">Belfort（鐘樓）</div>
+              <div class="map-addr">Markt 7, 8000 Brugge</div>
+            </div>
+            <a class="map-link" href="https://maps.google.com/?q=Belfort+van+Brugge+Markt+7+8000+Brugge" target="_blank" rel="noopener">導航 ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stop 7 - Waffle & Chocolate -->
+      <div class="stop reveal" role="listitem">
+        <div class="stop-left">
+          <span class="stop-time">11:30<br>—<br>12:00</span>
+          <div class="stop-dot teal" aria-label="飲食"></div>
+        </div>
+        <div class="stop-body">
+          <div class="stop-header">
+            <h3 class="stop-name">鬆餅 × 熱巧克力 × 秘密酒吧</h3>
+            <span class="stop-emoji" aria-hidden="true">🧇</span>
+          </div>
+          <p class="stop-desc">
+            三選一，或都去：<br><br>
+            <strong>Lizzie's Wafels</strong>——空氣感布魯塞爾格鬆餅，€3.50–8。<br>
+            <strong>The Old Chocolate House</strong>——用真正的巧克力棒攪進熱牛奶，一杯 €5–7，超療癒，市集廣場旁。<br>
+            <strong>Café De Garre</strong>——隱藏在 Breidelstraat 旁小巷中的 <em>秘密酒吧</em>，自釀 Tripel 啤酒 11% 酒精，每人限點 3 杯，配起司板。進去要先找到那扇不起眼的門。
+          </p>
+          <div class="stop-tags">
+            <span class="tag tag-food">必吃</span>
+            <span class="tag tag-tip">Café De Garre 找小巷入口</span>
+          </div>
+          <div class="map-wrap">
+            <iframe src="https://www.google.com/maps?q=Cafe+De+Garre+Brugge+Belgium&output=embed&hl=zh-TW" loading="lazy" title="Café De Garre"></iframe>
+          </div>
+          <div class="map-footer">
+            <div>
+              <div class="map-name">Café De Garre（秘密酒吧）</div>
+              <div class="map-addr">De Garre 1, 8000 Brugge</div>
+            </div>
+            <a class="map-link" href="https://maps.google.com/?q=Cafe+De+Garre+De+Garre+1+8000+Brugge" target="_blank" rel="noopener">導航 ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stop 8 - Lunch -->
+      <div class="stop reveal" role="listitem">
+        <div class="stop-left">
+          <span class="stop-time">12:00<br>—<br>12:45</span>
+          <div class="stop-dot teal" aria-label="飲食"></div>
+        </div>
+        <div class="stop-body">
+          <div class="stop-header">
+            <h3 class="stop-name">午餐</h3>
+            <span class="stop-emoji" aria-hidden="true">🍺</span>
+          </div>
+          <p class="stop-desc">
+            <strong>省錢方案：</strong>市集廣場上的薯條攤（€3–5）+ 比利時啤酒站著吃。<br><br>
+            <strong>坐下來吃：Cambrinus</strong>——布魯日知名比利時啤酒餐廳，400 種啤酒，點招牌 <em>Stoofvlees（啤酒燉牛肉配薯條）</em>，€15–25。<br><br>
+            <strong>學生友善：Republiek</strong>——自由氣氛，€10–18，有大桌子可以休息一下。
+          </p>
+          <div class="stop-tags">
+            <span class="tag tag-food">必點：Stoofvlees 啤酒燉牛肉</span>
+            <span class="tag tag-tip">€3–25 看預算</span>
+          </div>
+          <div class="map-wrap">
+            <iframe src="https://www.google.com/maps?q=Cambrinus+restaurant+Brugge+Belgium&output=embed&hl=zh-TW" loading="lazy" title="Cambrinus 餐廳"></iframe>
+          </div>
+          <div class="map-footer">
+            <div>
+              <div class="map-name">Cambrinus 餐廳</div>
+              <div class="map-addr">Philipstockstraat 19, 8000 Brugge</div>
+            </div>
+            <a class="map-link" href="https://maps.google.com/?q=Cambrinus+Philipstockstraat+19+Brugge" target="_blank" rel="noopener">導航 ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stop 9 - Museum -->
+      <div class="stop reveal" role="listitem">
+        <div class="stop-left">
+          <span class="stop-time">12:45<br>—<br>13:45</span>
+          <div class="stop-dot" aria-label="景點"></div>
+        </div>
+        <div class="stop-body">
+          <div class="stop-header">
+            <h3 class="stop-name">Groeningemuseum 或 Choco-Story</h3>
+            <span class="stop-emoji" aria-hidden="true">🎨</span>
+          </div>
+          <p class="stop-desc">
+            <strong>二選一：</strong><br><br>
+            <strong>Groeningemuseum（格羅寧根美術館）</strong>——收藏揚·凡·艾克、漢斯·梅姆林等佛蘭德原始派大師真跡，全球僅此一處能看到這個密度的 15 世紀畫作，藝術愛好者不能錯過。門票 €15。<br><br>
+            <strong>Choco-Story 巧克力博物館</strong>——有現場製作巧克力示範和品嚐，互動性強，約 1 小時逛完。門票 €9–11。
+          </p>
+          <div class="stop-tags">
+            <span class="tag tag-ticket">Groeningemuseum €15</span>
+            <span class="tag tag-ticket">Choco-Story €9–11</span>
+          </div>
+          <div class="map-wrap">
+            <iframe src="https://www.google.com/maps?q=Groeningemuseum+Brugge+Belgium&output=embed&hl=zh-TW" loading="lazy" title="Groeningemuseum"></iframe>
+          </div>
+          <div class="map-footer">
+            <div>
+              <div class="map-name">Groeningemuseum</div>
+              <div class="map-addr">Dijver 12, 8000 Brugge</div>
+            </div>
+            <a class="map-link" href="https://maps.google.com/?q=Groeningemuseum+Dijver+12+Brugge" target="_blank" rel="noopener">導航 ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stop 10 - Canal Boat -->
+      <div class="stop reveal" role="listitem">
+        <div class="stop-left">
+          <span class="stop-time">13:45<br>—<br>14:15</span>
+          <div class="stop-dot gold" aria-label="必去景點"></div>
+        </div>
+        <div class="stop-body">
+          <div class="stop-header">
+            <h3 class="stop-name">運河遊船 或 聖母教堂</h3>
+            <span class="stop-emoji" aria-hidden="true">🛶</span>
+          </div>
+          <p class="stop-desc">
+            <strong>運河遊船（€15 / 人，30 分鐘）</strong>——從水面仰望中世紀橋樑和房屋，視角完全不同，情侶最愛。多處上船點，離市集廣場和 Dijver 最近。<br><br>
+            <strong>或：聖母教堂（Onze-Lieve-Vrouwekerk）</strong>——週日下午 13:30 才開放。館內收藏米開朗基羅的《聖母子像》，他生前唯一離開義大利的雕塑作品。門票 €7。
+          </p>
+          <div class="stop-tags">
+            <span class="tag tag-ticket">運河船 €15 / 人</span>
+            <span class="tag tag-ticket">聖母教堂 €7（週日 13:30 後）</span>
+          </div>
+          <div class="map-wrap">
+            <iframe src="https://www.google.com/maps?q=Canal+boat+tour+Dijver+Brugge+Belgium&output=embed&hl=zh-TW" loading="lazy" title="運河遊船上船點"></iframe>
+          </div>
+          <div class="map-footer">
+            <div>
+              <div class="map-name">運河遊船 上船點（Dijver）</div>
+              <div class="map-addr">Dijver, 8000 Brugge</div>
+            </div>
+            <a class="map-link" href="https://maps.google.com/?q=Canal+boat+Dijver+Brugge+Belgium" target="_blank" rel="noopener">導航 ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stop 11 - Final Walk -->
+      <div class="stop reveal" role="listitem">
+        <div class="stop-left">
+          <span class="stop-time">14:15<br>—<br>14:45</span>
+          <div class="stop-dot" aria-label="景點"></div>
+        </div>
+        <div class="stop-body">
+          <div class="stop-header">
+            <h3 class="stop-name">最後巡禮：巧克力 + Bonifacius Bridge</h3>
+            <span class="stop-emoji" aria-hidden="true">🍫</span>
+          </div>
+          <p class="stop-desc">
+            在 <strong>The Chocolate Line</strong> 和 <strong>Dumon Chocolatier</strong> 挑選手工巧克力伴手禮，再走到 <strong>Bonifacius Bridge（波尼法修斯橋）</strong>——運河邊的小石橋，垂柳低垂，是布魯日最隱密也最浪漫的拍照點，比 Rozenhoedkaai 人少，氣氛絕佳。最後繞到 <strong>Jan van Eyck 廣場</strong>收尾。
+          </p>
+          <div class="stop-tags">
+            <span class="tag tag-food">巧克力伴手禮</span>
+            <span class="tag tag-must">Bonifacius Bridge 浪漫必拍</span>
+            <span class="tag tag-free">免費散步</span>
+          </div>
+          <div class="map-wrap">
+            <iframe src="https://www.google.com/maps?q=Bonifacius+Bridge+Brugge+Belgium&output=embed&hl=zh-TW" loading="lazy" title="Bonifacius Bridge"></iframe>
+          </div>
+          <div class="map-footer">
+            <div>
+              <div class="map-name">Bonifacius Bridge</div>
+              <div class="map-addr">Bonifaciusbrug, 8000 Brugge</div>
+            </div>
+            <a class="map-link" href="https://maps.google.com/?q=Bonifacius+Bridge+Brugge+Belgium" target="_blank" rel="noopener">導航 ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stop 12 - Departure -->
+      <div class="stop reveal" role="listitem">
+        <div class="stop-left">
+          <span class="stop-time">15:00<br>—<br>16:00</span>
+          <div class="stop-dot filled" aria-label="結束"></div>
+        </div>
+        <div class="stop-body">
+          <div class="stop-header">
+            <h3 class="stop-name">步行回 Brugge 車站・出發</h3>
+            <span class="stop-emoji" aria-hidden="true">🚉</span>
+          </div>
+          <p class="stop-desc">
+            從市集廣場步行回車站約 20 分鐘，沿路可再逛一次 Steenstraat 購物街。<strong>建議 16:00 的班次出發</strong>，可在 19:00 前輕鬆抵達 Schiphol，趕上 ibis 免費接駁車（末班 00:43）。
+          </p>
+          <div class="stop-tags">
+            <span class="tag tag-tip">步行 20 分回車站</span>
+            <span class="tag tag-tip">建議搭 16:00 班次</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /timeline -->
+  </div>
+</section>
+
+<!-- ── FOOD ── -->
+<section class="section" id="sec-food" aria-labelledby="h-food">
+  <div class="container">
+    <p class="section-label reveal">02 · Eat &amp; Drink</p>
+    <h2 class="section-title reveal d1" id="h-food">布魯日 <em>必吃必喝</em></h2>
+
+    <div class="food-grid reveal d2">
+      <article class="food-card">
+        <p class="food-cat">比利時鬆餅</p>
+        <h3 class="food-name">Lizzie's Wafels</h3>
+        <p class="food-desc">空氣感布魯塞爾格鬆餅，加草莓 + 鮮奶油是經典。也有列日鬆餅（較厚、較甜）。</p>
+        <p class="food-price">€3.50–€8</p>
+      </article>
+      <article class="food-card">
+        <p class="food-cat">熱巧克力</p>
+        <h3 class="food-name">The Old Chocolate House</h3>
+        <p class="food-desc">用真正的比利時巧克力棒攪進熱牛奶，濃稠香甜，坐下來慢慢喝的那種。</p>
+        <p class="food-price">€5–€7 / 杯</p>
+      </article>
+      <article class="food-card">
+        <p class="food-cat">秘密酒吧</p>
+        <h3 class="food-name">Café De Garre</h3>
+        <p class="food-desc">自釀 Tripel 啤酒 11%，每人限點 3 杯，配起司板。找到 Breidelstraat 旁那扇小門才算真的去過。</p>
+        <p class="food-price">€5–€6 / 杯</p>
+      </article>
+      <article class="food-card">
+        <p class="food-cat">比利時國菜</p>
+        <h3 class="food-name">Stoofvlees + 薯條</h3>
+        <p class="food-desc">啤酒燉牛肉，用 Kriek 或 Duvel 慢燉 3 小時，配上無限續薯條，比台灣的滷肉飯更有衝擊感。</p>
+        <p class="food-price">€15–€20</p>
+      </article>
+      <article class="food-card">
+        <p class="food-cat">醃炸蝦</p>
+        <h3 class="food-name">Garnaalkroketten</h3>
+        <p class="food-desc">北海小蝦做成的炸可樂餅，外酥內軟，是比利時最獨特的小吃之一，任何一間傳統酒吧都有。</p>
+        <p class="food-price">€8–€12</p>
+      </article>
+      <article class="food-card">
+        <p class="food-cat">巧克力伴手禮</p>
+        <h3 class="food-name">The Chocolate Line / Dumon</h3>
+        <p class="food-desc">Dominique Persoone 的前衛手工巧克力（The Chocolate Line）；在地人更愛的老字號 Dumon，口味正統。</p>
+        <p class="food-price">€5–€20 / 盒</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ── TIPS ── -->
+<section class="section section-alt" id="sec-tips" aria-labelledby="h-tips">
+  <div class="container">
+    <p class="section-label reveal">03 · Tips</p>
+    <h2 class="section-title reveal d1" id="h-tips">出發前 <em>注意事項</em></h2>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;" class="reveal d2">
+      <div class="alert alert-burg" role="note">
+        <span class="alert-icon" aria-hidden="true">🔔</span>
+        <div><strong>鐘樓門票一定要提前訂！</strong>每時段只有 25 個名額，週日通常很快售完。訂票：<a href="https://www.museabrugge.be/en/plan-your-visit/tickets" target="_blank" rel="noopener" style="color:var(--burgundy2);font-weight:700;">museabrugge.be ↗</a></div>
+      </div>
+      <div class="alert alert-gold" role="note">
+        <span class="alert-icon" aria-hidden="true">🚂</span>
+        <div><strong>比利時火車不用提前訂。</strong>SNCB 國內線當天在車站售票機買就好，26 歲以下選「Youth」類別自動 40% 折扣。</div>
+      </div>
+      <div class="alert alert-teal" role="note">
+        <span class="alert-icon" aria-hidden="true">💳</span>
+        <div><strong>比利時幾乎全面信用卡。</strong>基本上不需要帶現金，連路邊薯條攤都刷卡。Visa / Mastercard 完全通用。</div>
+      </div>
+      <div class="alert alert-gold" role="note">
+        <span class="alert-icon" aria-hidden="true">🌤️</span>
+        <div><strong>3 月布魯日約 5–10°C。</strong>帶防風外套和洋蔥式穿搭，運河旁風大，但適合走路的氣溫。</div>
+      </div>
+      <div class="alert alert-burg" role="note">
+        <span class="alert-icon" aria-hidden="true">🗺️</span>
+        <div><strong>整個舊城步行即可。</strong>布魯日市區非常小，所有景點步行 10–20 分鐘都能到，不需搭巴士。</div>
+      </div>
+      <div class="alert alert-teal" role="note">
+        <span class="alert-icon" aria-hidden="true">📱</span>
+        <div><strong>SNCB App 下載備用。</strong>比利時國鐵 App 可查即時班次和月台，不需要買票（直接感應或在機器買）。</div>
+      </div>
+    </div>
+
+    <div class="divider reveal">費用總估算（兩人）</div>
+    <div class="summary-grid reveal" role="list" aria-label="費用總估算">
+      <div class="sum-card" role="listitem">
+        <p class="sum-label">火車（去程兩人）</p>
+        <p class="sum-val">€21</p>
+        <p class="sum-desc">Antwerp→Bruges 青年票 ×2</p>
+      </div>
+      <div class="sum-card" role="listitem">
+        <p class="sum-label">鐘樓門票（兩人）</p>
+        <p class="sum-val">€30</p>
+        <p class="sum-desc">€15 × 2，提前預約</p>
+      </div>
+      <div class="sum-card" role="listitem">
+        <p class="sum-label">運河遊船（兩人）</p>
+        <p class="sum-val">€30</p>
+        <p class="sum-desc">€15 × 2，30 分鐘</p>
+      </div>
+      <div class="sum-card" role="listitem">
+        <p class="sum-label">博物館（選一）</p>
+        <p class="sum-val">€18–30</p>
+        <p class="sum-desc">Groeningemuseum 或 Choco-Story</p>
+      </div>
+      <div class="sum-card" role="listitem">
+        <p class="sum-label">餐飲（兩人）</p>
+        <p class="sum-val">€30–50</p>
+        <p class="sum-desc">含鬆餅、午餐、啤酒、巧克力</p>
+      </div>
+      <div class="sum-card" role="listitem">
+        <p class="sum-label">全日總計（兩人）</p>
+        <p class="sum-val">€130</p>
+        <p class="sum-desc">含交通、景點、餐飲的合理預算</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer class="site-footer" role="contentinfo">
+  <p class="footer-title">Brugge · 布魯日</p>
+  <p>秀吉 &amp; 晴晴 · 3/22（週日）· 比利時雙城行 Day 2</p>
+</footer>
+
+<script>
+function go(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset - 52, behavior: 'smooth' });
+  el.setAttribute('tabindex', '-1');
+  el.focus({ preventScroll: true });
+}
+
+const secs = ['sec-transport','sec-itinerary','sec-food','sec-tips'];
+const btns = document.querySelectorAll('.nav-btn');
+
+window.addEventListener('scroll', () => {
+  let cur = '';
+  secs.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && window.scrollY >= el.offsetTop - 80) cur = id;
+  });
+  btns.forEach((b, i) => {
+    const on = secs[i] === cur;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-current', on ? 'true' : 'false');
+  });
+}, { passive: true });
+
+const io = new IntersectionObserver(es => {
+  es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold: 0.06 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
