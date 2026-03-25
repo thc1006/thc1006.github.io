@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KubeCon EU 2026 Day 3 — 蔡秀吉 深度攻略</title>
+<meta name="theme-color" content="#0F172A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0B0F1A;--bg2:#111827;--bg3:#1E293B;
+  --card:#151C2C;--card2:#1A2235;--card-hover:#1E2A40;
+  --accent:#3B82F6;--accent2:#60A5FA;--accent-glow:rgba(59,130,246,.15);
+  --green:#10B981;--green-bg:rgba(16,185,129,.1);
+  --amber:#F59E0B;--amber-bg:rgba(245,158,11,.1);
+  --red:#EF4444;--red-bg:rgba(239,68,68,.1);
+  --purple:#8B5CF6;--purple-bg:rgba(139,92,246,.1);
+  --cyan:#06B6D4;--cyan-bg:rgba(6,182,212,.1);
+  --pink:#EC4899;--pink-bg:rgba(236,72,153,.1);
+  --text:#F1F5F9;--text2:#94A3B8;--text3:#64748B;
+  --border:#1E293B;--border2:#334155;
+  --radius:12px;--radius-sm:8px;
+}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:'Inter','Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+a{color:var(--accent2);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* NAV */
+.topnav{position:sticky;top:0;z-index:100;background:rgba(11,15,26,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;gap:8px;height:52px;overflow-x:auto;white-space:nowrap}
+.topnav a{color:var(--text2);font-size:.78rem;font-weight:500;padding:6px 12px;border-radius:20px;transition:.15s;flex-shrink:0}
+.topnav a:hover,.topnav a.active{background:var(--accent-glow);color:var(--accent2);text-decoration:none}
+
+/* HERO */
+.hero{padding:48px 20px 32px;text-align:center;background:linear-gradient(180deg,rgba(59,130,246,.06) 0%,transparent 100%)}
+.hero h1{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:800;letter-spacing:-.03em;line-height:1.2}
+.hero h1 span{background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero .sub{color:var(--text2);font-size:.9rem;margin-top:8px}
+.hero .badge-row{display:flex;justify-content:center;gap:8px;margin-top:16px;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:.72rem;font-weight:600;border:1px solid}
+.badge.tsc{background:var(--accent-glow);border-color:rgba(59,130,246,.3);color:var(--accent2)}
+.badge.ieee{background:var(--purple-bg);border-color:rgba(139,92,246,.3);color:#A78BFA}
+.badge.porch{background:var(--green-bg);border-color:rgba(16,185,129,.3);color:var(--green)}
+
+/* CONTAINER */
+.container{max-width:900px;margin:0 auto;padding:0 16px 60px}
+
+/* SECTION */
+.section{margin-top:40px}
+.section-title{font-size:1.1rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:10px;letter-spacing:-.02em}
+.section-title .icon{width:28px;height:28px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:28px}
+.timeline::before{content:'';position:absolute;left:11px;top:0;bottom:0;width:2px;background:var(--border)}
+.tl-item{position:relative;margin-bottom:20px}
+.tl-dot{position:absolute;left:-28px;top:6px;width:18px;height:18px;border-radius:50%;border:3px solid var(--bg);z-index:2}
+.tl-dot.must{background:var(--red)}
+.tl-dot.high{background:var(--amber)}
+.tl-dot.mid{background:var(--accent)}
+.tl-dot.net{background:var(--purple)}
+.tl-dot.rest{background:var(--green)}
+
+.tl-time{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--text3);font-weight:500;margin-bottom:4px}
+.tl-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;transition:.2s}
+.tl-card:hover{border-color:var(--border2);background:var(--card-hover)}
+.tl-card h3{font-size:.95rem;font-weight:700;line-height:1.3;margin-bottom:6px}
+.tl-card .room{font-size:.72rem;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-bottom:8px}
+.tl-card .speakers{font-size:.82rem;color:var(--text2);margin-bottom:10px}
+.tl-card .speakers strong{color:var(--text);font-weight:600}
+.tl-card .why{font-size:.82rem;color:var(--text2);padding:10px 12px;background:var(--bg2);border-radius:var(--radius-sm);border-left:3px solid var(--accent);margin-bottom:10px}
+.tl-card .priority{display:inline-flex;align-items:center;gap:4px;font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:12px;text-transform:uppercase;letter-spacing:.05em}
+.priority.must{background:var(--red-bg);color:var(--red)}
+.priority.high{background:var(--amber-bg);color:var(--amber)}
+.priority.mid{background:var(--accent-glow);color:var(--accent2)}
+.priority.net{background:var(--purple-bg);color:#A78BFA}
+
+/* QUESTION BOX */
+.q-box{margin-top:10px;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm)}
+.q-box .q-label{font-size:.68rem;font-weight:700;color:var(--accent2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.q-box .q-en{font-size:.82rem;font-style:italic;color:var(--text);line-height:1.5;margin-bottom:6px}
+.q-box .q-zh{font-size:.78rem;color:var(--text3);line-height:1.5}
+
+/* SPEAKER CARD */
+.speaker{display:flex;gap:12px;align-items:flex-start;padding:12px;background:var(--bg);border-radius:var(--radius-sm);margin-top:10px;border:1px solid var(--border)}
+.speaker .avatar{width:40px;height:40px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;font-weight:700;color:var(--accent2)}
+.speaker-info{flex:1;min-width:0}
+.speaker-info .name{font-size:.82rem;font-weight:700}
+.speaker-info .role{font-size:.72rem;color:var(--text3)}
+.speaker-info .cred{font-size:.72rem;color:var(--text2);margin-top:2px}
+
+/* RECORDING LIST */
+.rec-day{margin-bottom:24px}
+.rec-day h3{font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.rec-item{display:flex;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);transition:.15s;align-items:flex-start}
+.rec-item:hover{background:var(--card)}
+.rec-rank{font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:10px;flex-shrink:0;margin-top:2px}
+.rec-rank.s{background:var(--red-bg);color:var(--red)}
+.rec-rank.a{background:var(--amber-bg);color:var(--amber)}
+.rec-rank.b{background:var(--accent-glow);color:var(--accent2)}
+.rec-body{flex:1;min-width:0}
+.rec-body .rec-title{font-size:.82rem;font-weight:600;line-height:1.3}
+.rec-body .rec-meta{font-size:.72rem;color:var(--text3);margin-top:2px}
+.rec-body .rec-why{font-size:.72rem;color:var(--text2);margin-top:3px}
+
+/* TABS */
+.tabs{display:flex;gap:4px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px}
+.tab{padding:6px 14px;border-radius:20px;font-size:.78rem;font-weight:600;color:var(--text3);background:transparent;border:1px solid var(--border);cursor:pointer;white-space:nowrap;transition:.15s}
+.tab:hover{border-color:var(--border2);color:var(--text2)}
+.tab.active{background:var(--accent);border-color:var(--accent);color:white}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* LEGEND */
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;padding:12px 16px;background:var(--card);border-radius:var(--radius);border:1px solid var(--border)}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:.72rem;color:var(--text2)}
+.legend-dot{width:10px;height:10px;border-radius:50%}
+
+/* COLLAPSIBLE */
+details{border:1px solid var(--border);border-radius:var(--radius-sm);margin-top:8px}
+details summary{padding:10px 12px;font-size:.82rem;font-weight:600;cursor:pointer;color:var(--text2)}
+details summary:hover{color:var(--text)}
+details[open] summary{border-bottom:1px solid var(--border)}
+details .detail-body{padding:12px}
+
+/* FOOTER */
+.footer{text-align:center;padding:32px 16px;color:var(--text3);font-size:.72rem;border-top:1px solid var(--border);margin-top:48px}
+
+/* MOBILE */
+@media(max-width:600px){
+  .hero{padding:32px 16px 24px}
+  .hero h1{font-size:1.4rem}
+  .topnav{gap:4px;padding:0 12px}
+  .topnav a{font-size:.72rem;padding:5px 10px}
+  .tl-card{padding:12px}
+}
+
+/* PRINT */
+@media print{
+  .topnav{display:none}
+  body{background:white;color:black}
+  .tl-card,.rec-item{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a href="#today" class="active">Today 3/25</a>
+  <a href="#recordings">Must-Watch</a>
+  <a href="#day0">Day 0</a>
+  <a href="#day1">Day 1</a>
+  <a href="#day3">Day 3</a>
+  <a href="#profile">Profile</a>
+</nav>
+
+<div class="hero">
+  <h1><span>KubeCon EU 2026</span> Day 3 Guide</h1>
+  <div class="sub">3/25 Wed &middot; RAI Amsterdam &middot; Main Conference Day 2</div>
+  <div class="badge-row">
+    <span class="badge tsc">Nephio TSC</span>
+    <span class="badge ieee">IEEE R10 Ambassador</span>
+    <span class="badge porch">Porch Contributor</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ===== TODAY'S SCHEDULE ===== -->
+<section class="section" id="today">
+  <div class="section-title">
+    <div class="icon" style="background:var(--accent-glow)">&#x1F4C5;</div>
+    Today's Optimized Schedule
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>MUST</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>HIGH</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>MID</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div>NETWORKING</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>REST</div>
+  </div>
+
+  <div class="timeline">
+
+    <!-- 09:00 KEYNOTES -->
+    <div class="tl-item">
+      <div class="tl-dot must"></div>
+      <div class="tl-time">09:00 - 10:22 CET</div>
+      <div class="tl-card">
+        <h3>Keynotes &mdash; CRA + Agentic AI + Sustainability</h3>
+        <div class="room">Hall 12 (Main Keynote Hall)</div>
+        <span class="priority must">MUST ATTEND</span>
+        <div class="why" style="margin-top:10px">
+          <strong>3 keynotes 直接相關你的 goals</strong>：(1) Greg Kroah-Hartman 講 CRA &mdash; 你是 Nephio TSC，9/11 漏洞通報截止影響你；(2) Idit Levine (Solo.io) 講 Agentic Workloads on K8s &mdash; 你想學 AI/MCP；(3) Faseela K (Ericsson/CNCF TOC) &mdash; hallway networking 最高優先級目標
+        </div>
+
+        <details>
+          <summary>09:05 &mdash; Greg Kroah-Hartman: CRA and Open Source</summary>
+          <div class="detail-body">
+            <div class="speaker">
+              <div class="avatar">GK</div>
+              <div class="speaker-info">
+                <div class="name">Greg Kroah-Hartman</div>
+                <div class="role">Linux Kernel Maintainer & Fellow, The Linux Foundation</div>
+                <div class="cred">Linux stable kernel maintainer 25+ years &middot; LF Fellow (1 of 3, with Linus Torvalds) &middot; Created udev &middot; CRA working group expert &middot; 2026 European Open Source Excellence Award</div>
+              </div>
+            </div>
+            <div class="q-box">
+              <div class="q-label">Prepared Question (if Q&A exists)</div>
+              <div class="q-en">"For projects hosted under LF sub-foundations like LF Networking &mdash; where the project has a small TSC and limited resources &mdash; how should we prepare for the September 2026 reporting deadline? Is the steward obligation handled entirely at the LF level, or do individual project TSCs need their own vulnerability handling infrastructure?"</div>
+              <div class="q-zh">你身為 Nephio TSC member，有合法理由問這個。Greg 的回答直接影響你未來幾個月的治理工作。他會說 LF 處理 steward 責任，但你需要確認 Nephio 自己要不要建 vulnerability handling。</div>
+            </div>
+          </div>
+        </details>
+
+        <details>
+          <summary>09:41 &mdash; Idit Levine: Scaling Agentic Workloads on K8s</summary>
+          <div class="detail-body">
+            <div class="speaker">
+              <div class="avatar">IL</div>
+              <div class="speaker-info">
+                <div class="name">Idit Levine</div>
+                <div class="role">Founder & CEO, Solo.io</div>
+                <div class="cred">Solo.io 創辦人（$1B unicorn）&middot; 前 Dell EMC CTO &middot; Istio Steering Committee &middot; Donated Kagent (CNCF Sandbox) + Agentgateway (Linux Foundation) &middot; 以色列職業籃球員出身</div>
+              </div>
+            </div>
+            <p style="font-size:.82rem;color:var(--text2);margin-top:8px">
+              Solo.io 是目前 MCP/Agentic AI infra 的 <strong>定義者</strong>。Agentgateway（donated to LF）支援 MCP + A2A 協定。Kagent（donated to CNCF）讓 AI agents 成為 K8s first-class citizens。這場 keynote 講「from pilot to production」——跟你的 nephoran-intent-operator 直接相關。
+            </p>
+          </div>
+        </details>
+
+        <details>
+          <summary>10:05 &mdash; Faseela K: From Orbit to the Grid</summary>
+          <div class="detail-body">
+            <div class="speaker">
+              <div class="avatar">FK</div>
+              <div class="speaker-info">
+                <div class="name">Faseela K (Faseela Kundattil)</div>
+                <div class="role">Ericsson Software Technology</div>
+                <div class="cred">CNCF TOC member (2025-2027) &middot; KubeCon co-chair (3 consecutive) &middot; Istio Steering Committee &middot; Istio 1.25 Release Manager &middot; CNCF 2023 Chop Wood Carry Water Award &middot; OpenDaylight PTL &middot; 和 Liam Fallon / efiacor 同一個 Ericsson 部門</div>
+              </div>
+            </div>
+            <div class="q-box">
+              <div class="q-label">Hallway Opener (keynote 結束後找她)</div>
+              <div class="q-en">"Hi Faseela, great keynote. I'm Hsiu-Chi from the Nephio TSC &mdash; I work on Porch with Liam Fallon and efiacor. As a CNCF TOC member, how do you see sustainability-focused edge workloads driving new requirements for cloud-native projects? Are there gaps in the current CNCF landscape for energy-sector edge use cases?"</div>
+              <div class="q-zh">提到 Liam + efiacor 的名字讓她知道你是 insider。問 CNCF TOC 視角的問題展示你對治理的興趣——呼應你想當 SIG-2 VC 的目標。她是 Ericsson 在 CNCF 最有影響力的人。</div>
+            </div>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <!-- 10:30 COFFEE -->
+    <div class="tl-item">
+      <div class="tl-dot net"></div>
+      <div class="tl-time">10:30</div>
+      <div class="tl-card">
+        <h3>Coffee Break + Hallway: Find Faseela K</h3>
+        <div class="room">Solutions Showcase / Foyer</div>
+        <span class="priority net">NETWORKING</span>
+      </div>
+    </div>
+
+    <!-- 11:00 MCP SANDBOX -->
+    <div class="tl-item">
+      <div class="tl-dot must"></div>
+      <div class="tl-time">11:00 - 11:30 CET</div>
+      <div class="tl-card">
+        <h3>Sandbox Operator: MCP Tool Execution in Kubernetes</h3>
+        <div class="room">Auditorium &middot; AI + ML Track</div>
+        <div class="speakers">
+          <strong>Zhen Zhang</strong> &amp; <strong>Mingshan Zhao</strong>, Alibaba
+        </div>
+        <span class="priority must">MUST &mdash; AI Learning</span>
+        <div class="why" style="margin-top:10px">
+          <strong>MCP 就是 Claude Code 的底層協定</strong>。OpenSandbox 專案（9,200+ stars，CNCF Landscape）解決 session-aware pod 管理 + state persistence。講者是 OpenKruise maintainer（CNCF incubating），管理阿里百萬容器調度系統。理解這個，你用 Claude Code 就不只是按按鈕——你會懂架構。
+        </div>
+
+        <details>
+          <summary>Speaker Deep Dive</summary>
+          <div class="detail-body">
+            <div class="speaker">
+              <div class="avatar">ZZ</div>
+              <div class="speaker-info">
+                <div class="name">Zhen Zhang (張振)</div>
+                <div class="role">Staff Engineer, Alibaba Group</div>
+                <div class="cred">浙江大學博士 &middot; OpenKruise main maintainer &middot; 阿里百萬容器調度核心 &middot; KubeCon NA 2025: In-place Pod Resize &middot; 另一場 KubeCon EU 2026: OpenKruise for AI</div>
+              </div>
+            </div>
+            <div class="speaker">
+              <div class="avatar">MZ</div>
+              <div class="speaker-info">
+                <div class="name">Mingshan Zhao (趙銘善 / Liheng)</div>
+                <div class="role">Senior R&D Engineer, Alibaba Cloud</div>
+                <div class="cred">OpenKruise community maintainer &middot; 阿里百萬容器調度系統核心成員 &middot; KubeCon China 2024: Beyond StatefulSet</div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <div class="q-box">
+          <div class="q-label">Prepared Question</div>
+          <div class="q-en">"I'm building MCP server plugins for telecom operations &mdash; wrapping O-RAN and Nephio APIs as MCP tools for Claude Code. How does the Sandbox Operator handle state persistence across tool calls within the same agent session? And what's the latency overhead of sandbox creation compared to direct execution?"</div>
+          <div class="q-zh">你直接說你在做什麼（telecom MCP plugins），問兩個實務問題：(1) session 內的 state persistence、(2) sandbox latency overhead。展示你是 builder 不是觀眾。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11:45 CAPI -->
+    <div class="tl-item">
+      <div class="tl-dot must"></div>
+      <div class="tl-time">11:45 - 12:15 CET</div>
+      <div class="tl-card">
+        <h3>In-place Updates with Cluster API</h3>
+        <div class="room">Hall 8 Room D</div>
+        <div class="speakers">
+          <strong>Fabrizio Pandini</strong> &amp; <strong>Stefan B&uuml;ringer</strong>, Broadcom
+        </div>
+        <span class="priority must">MUST &mdash; Telecom ISSU</span>
+        <div class="why" style="margin-top:10px">
+          <strong>兩人合計 2,000+ merged PRs 在 CAPI</strong>。Pandini 是 SIG Cluster Lifecycle Tech Lead + CAPI 三個 admin 之一。B&uuml;ringer 同時是 controller-runtime 四個 admin 之一。他們就是 Cluster API 本身。CAPI v1.12 的 in-place update 直接解決電信 ISSU 需求。
+        </div>
+
+        <details>
+          <summary>Speaker Deep Dive</summary>
+          <div class="detail-body">
+            <div class="speaker">
+              <div class="avatar">FP</div>
+              <div class="speaker-info">
+                <div class="name">Fabrizio Pandini</div>
+                <div class="role">Principal Engineer, Broadcom</div>
+                <div class="cred">779 merged PRs in CAPI &middot; SIG Cluster Lifecycle Tech Lead &middot; Created ClusterClass &middot; kubeadm subproject owner &middot; 前 UniCredit → Heptio → VMware</div>
+              </div>
+            </div>
+            <div class="speaker">
+              <div class="avatar">SB</div>
+              <div class="speaker-info">
+                <div class="name">Stefan B&uuml;ringer</div>
+                <div class="role">Principal Engineer, Broadcom</div>
+                <div class="cred">1,199 merged PRs in CAPI (可能是 #1 contributor) &middot; controller-runtime admin (1 of 4) &middot; CAPV maintainer &middot; 前 Mercedes-Benz → VMware &middot; Ulm 大學 CS</div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <div class="q-box">
+          <div class="q-label">Prepared Question</div>
+          <div class="q-en">"For telecom CNFs that require ISSU &mdash; in-service software upgrade without service disruption &mdash; what is the recommended pattern for implementing an ExternalUpdate extension? Specifically, how do you handle the case where an upgrade requires a specific sequence &mdash; for example, upgrading the SMF before the UPF in a 5G core?"</div>
+          <div class="q-zh">ISSU 是電信的硬需求。5G core 升級有嚴格順序（SMF 先於 UPF），這是 CAPI extension 設計可能沒考慮到的 use case。展示你對 5G 核心網架構的深度理解。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12:00 MEET & GREET -->
+    <div class="tl-item">
+      <div class="tl-dot net"></div>
+      <div class="tl-time">12:00</div>
+      <div class="tl-card">
+        <h3>Kubernetes Meet + Greet Europe</h3>
+        <div class="room">Foyer</div>
+        <span class="priority net">NETWORKING</span>
+        <div class="why" style="margin-top:10px">帶名片。你的 digital card 在 <a href="card.html">card.html</a>。</div>
+      </div>
+    </div>
+
+    <!-- 12:15 LUNCH -->
+    <div class="tl-item">
+      <div class="tl-dot rest"></div>
+      <div class="tl-time">12:15 - 14:00</div>
+      <div class="tl-card">
+        <h3>Lunch + 消化筆記</h3>
+        <div class="room">Hall 1-5, Solutions Showcase</div>
+        <span class="priority" style="background:var(--green-bg);color:var(--green)">REST</span>
+      </div>
+    </div>
+
+    <!-- 14:15 KEP -->
+    <div class="tl-item">
+      <div class="tl-dot high"></div>
+      <div class="tl-time">14:15 - 14:45 CET</div>
+      <div class="tl-card">
+        <h3>The KEP Lifecycle: How the Release Team Guides Enhancements</h3>
+        <div class="room">E106-108</div>
+        <div class="speakers">
+          <strong>Kat Cosgrove</strong> (Minimus), <strong>Sreeram Venkitesh</strong> &amp; <strong>Rayan Das</strong> (DigitalOcean)
+        </div>
+        <span class="priority high">HIGH &mdash; TSC Governance</span>
+        <div class="why" style="margin-top:10px">
+          Kat Cosgrove 是 K8s Steering Committee member + v1.30 Release Lead。你要把 KEP 的治理模型帶回 Nephio 改善提案流程（如 #1049 FunctionConfig CRD）。
+        </div>
+
+        <div class="q-box">
+          <div class="q-label">Prepared Question</div>
+          <div class="q-en">"For projects outside Kubernetes that want to adopt a KEP-like process &mdash; I'm on the TSC of a smaller project under LF Networking &mdash; what is the minimum viable version you would recommend? Is the full Production Readiness Review and enhancements freeze necessary from day one, or can you start lighter and grow into it?"</div>
+          <div class="q-zh">直接說「I'm on the TSC」讓講者知道你有實際治理責任。「minimum viable version」是最務實的問題——Nephio 資源有限，不可能照搬 KEP。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 15:00 MCP ENTERPRISE -->
+    <div class="tl-item">
+      <div class="tl-dot must"></div>
+      <div class="tl-time">15:00 - 15:30 CET</div>
+      <div class="tl-card">
+        <h3>Enterprise Challenges with MCP Adoption</h3>
+        <div class="room">Hall 7, Room C</div>
+        <div class="speakers">
+          <strong>Christian Posta</strong>, Solo.io
+        </div>
+        <span class="priority must">MUST &mdash; MCP Authority</span>
+        <div class="why" style="margin-top:10px">
+          <strong>Christian Posta 是 MCP 企業落地的全球 #1 權威</strong>。30+ 篇 MCP 部落格、4 本 O'Reilly 書（含《AI Gateways in the Enterprise》+《Istio in Action》）。Istio Steering Committee。GitHub 1,200+ followers。他的 blog 定義了 MCP 企業架構應該怎麼做。
+        </div>
+
+        <details>
+          <summary>Speaker Deep Dive</summary>
+          <div class="detail-body">
+            <div class="speaker">
+              <div class="avatar">CP</div>
+              <div class="speaker-info">
+                <div class="name">Christian Posta</div>
+                <div class="role">VP, Global Field CTO, Solo.io</div>
+                <div class="cred">4x O'Reilly Author &middot; Apache ActiveMQ/Camel Committer &middot; Istio Steering &middot; 前 Red Hat Principal Architect &middot; "Most Active Speaker 2024" on Sessionize &middot; blog: 35K+ monthly views</div>
+              </div>
+            </div>
+            <p style="font-size:.82rem;color:var(--text2);margin-top:8px">
+              <strong>Talk 涵蓋 3 大 enterprise 痛點</strong>：(1) MCP service discovery & registration (防 tool poisoning)；(2) OAuth 2.1 auth 的企業落地問題（Dynamic Client Registration, Resource Indicators）；(3) Upstream API permission management（MCP server 代表用戶呼叫後端 API）。他的 mcp-auth-step-by-step repo (57 stars) 是最好的 MCP auth 教材。
+            </p>
+          </div>
+        </details>
+
+        <div class="q-box">
+          <div class="q-label">Prepared Question</div>
+          <div class="q-en">"For MCP servers that expose infrastructure operations &mdash; like Kubernetes resource management or network function lifecycle &mdash; what authentication and authorization patterns have you seen enterprises adopt? Is the current MCP spec sufficient for enterprise security requirements, or are there gaps?"</div>
+          <div class="q-zh">大部分人問 MCP + chatbot，你問 MCP + infra automation。展示你的獨特視角——telecom ops through MCP。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 15:30 COFFEE -->
+    <div class="tl-item">
+      <div class="tl-dot rest"></div>
+      <div class="tl-time">15:30</div>
+      <div class="tl-card">
+        <h3>Coffee Break</h3>
+        <div class="room">Hall 1-5</div>
+        <span class="priority" style="background:var(--green-bg);color:var(--green)">REST</span>
+      </div>
+    </div>
+
+    <!-- 16:00 LLM INFERENCE -->
+    <div class="tl-item">
+      <div class="tl-dot high"></div>
+      <div class="tl-time">16:00 - 16:30 CET</div>
+      <div class="tl-card">
+        <h3>Optimizing LLM Inference for the Rest of Us</h3>
+        <div class="room">F002-005</div>
+        <div class="speakers">
+          <strong>Abdel Sghiouar</strong>, Google
+        </div>
+        <span class="priority high">HIGH &mdash; AI Fundamentals</span>
+        <div class="why" style="margin-top:10px">
+          Abdel 是 <strong>CNCF Most Active Speaker 2024 &amp; 2025</strong>（一年 60 場！）。Kubernetes Podcast from Google 共同主持人。他參與了 llm-d（CNCF Sandbox，分散式 LLM inference 框架）。「for the Rest of Us」= 給你這種想用 AI 但不是 ML 專家的人。
+        </div>
+
+        <div class="q-box">
+          <div class="q-label">Prepared Question</div>
+          <div class="q-en">"For a small open-source project that wants to offer AI-assisted features &mdash; like intent-based configuration generation &mdash; but doesn't have budget for dedicated GPU infrastructure, what's your recommended deployment pattern on Kubernetes? Is it viable to run a quantized model on CPU-only nodes, or should we just use API calls to hosted models?"</div>
+          <div class="q-zh">Nephio 不可能有 GPU cluster。你想知道小 project 的 AI 部署策略。Abdel 一定會推薦 API calls + 小模型 hybrid approach。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 16:45 LIGHTNING TALKS -->
+    <div class="tl-item">
+      <div class="tl-dot high"></div>
+      <div class="tl-time">16:45 - 17:41 CET</div>
+      <div class="tl-card">
+        <h3>Lightning Talks</h3>
+        <div class="room">Auditorium</div>
+        <span class="priority high">HIGH &mdash; CP 值最高</span>
+        <div class="why" style="margin-top:10px">7 分鐘一場，重點聽：</div>
+
+        <details>
+          <summary>16:59 &mdash; Go 1.25 Container-Aware GOMAXPROCS</summary>
+          <div class="detail-body">
+            <div class="speaker">
+              <div class="avatar">AK</div>
+              <div class="speaker-info">
+                <div class="name">Adarsh K Kumar</div>
+                <div class="role">Lead Product Engineer II, Rapido</div>
+                <div class="cred">13 年經驗 &middot; 前 ThoughtWorks &middot; Rapido: 印度最大機車出行服務（800+ K8s nodes）&middot; 第一次 KubeCon talk</div>
+              </div>
+            </div>
+            <p style="font-size:.82rem;color:var(--text2);margin-top:8px">
+              <strong>你寫 Go，這直接影響你</strong>。Go 1.25 之前：2-CPU container 在 128-core machine 上 GOMAXPROCS=128，p99 latency 890ms + 72% throttle。Go 1.25 自動偵測 cgroup CPU limits，不再需要 uber-go/automaxprocs。Porch 跑在 K8s 上，這個改變直接改善 performance。
+            </p>
+          </div>
+        </details>
+
+        <details>
+          <summary>17:27 &mdash; How To Contribute To Open Source Using AI</summary>
+          <div class="detail-body">
+            <div class="speaker">
+              <div class="avatar">TH</div>
+              <div class="speaker-info">
+                <div class="name">Tyler Helmuth</div>
+                <div class="role">Staff Software Engineer, Honeycomb</div>
+                <div class="cred">OTel Collector core maintainer &middot; OTTL code owner &middot; 已寫 blog: AI 幫助貢獻但也造成 trust erosion</div>
+              </div>
+            </div>
+            <p style="font-size:.82rem;color:var(--text2);margin-top:8px">
+              <strong>直接是你在做的事</strong>。你用 Claude Code 做 Nephio PR。Tyler 的核心訊息：AI-generated 過大的 PR 和 verbose comments 會耗盡 maintainers 的信任。但 AI 對非母語者的語言障礙突破非常有價值——這完全是你的場景。
+            </p>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <!-- 17:30 AGENTIC NETWORKING -->
+    <div class="tl-item">
+      <div class="tl-dot mid"></div>
+      <div class="tl-time">17:30 - 18:00 CET</div>
+      <div class="tl-card">
+        <h3>Agentic Networking: Securing AI Agents on Kubernetes</h3>
+        <div class="room">Elicium 1</div>
+        <div class="speakers">
+          <strong>Haiyan Meng</strong> (Google) &amp; <strong>Evaline Ju</strong> (IBM)
+        </div>
+        <span class="priority mid">MEDIUM &mdash; If Energy Permits</span>
+        <div class="why" style="margin-top:10px">
+          AI agent 在 K8s 上的 networking security model。你的 nephoran-intent-operator 就是 agentic workload。如果累了就跳過看錄影。
+        </div>
+      </div>
+    </div>
+
+  </div><!-- timeline -->
+</section>
+
+<!-- ===== MUST-WATCH RECORDINGS ===== -->
+<section class="section" id="recordings">
+  <div class="section-title">
+    <div class="icon" style="background:var(--red-bg)">&#x1F3AC;</div>
+    Must-Watch Recordings (Other Days)
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab(event,'tab-day0')">Day 0 (3/23)</button>
+    <button class="tab" onclick="switchTab(event,'tab-day1')">Day 1 (3/24)</button>
+    <button class="tab" onclick="switchTab(event,'tab-day3')">Day 3 (3/26)</button>
+  </div>
+
+  <!-- DAY 0 -->
+  <div class="tab-content active" id="tab-day0">
+    <div class="rec-day" id="day0">
+      <h3>Monday 3/23 &mdash; Co-located Events</h3>
+
+      <div class="rec-item">
+        <span class="rec-rank s">S</span>
+        <div class="rec-body">
+          <div class="rec-title">Cloud Native Telco Day (Full Day)</div>
+          <div class="rec-meta">G104-105 &middot; Gergely Csatari (Nokia) + Philippe Ensarguet (Orange)</div>
+          <div class="rec-why"><strong>你的 home track</strong>。Liam Fallon + Istvan Kispal (Nokia) 講「Are We Stuck With Helm Forever?」&mdash; 你的 Nephio 同事。還有 Agentic AI for Telecom panel（NTT DOCOMO + Orange + Huawei + China Mobile），以及 5G Config、AI-Powered RCA、Telco Observability 等。全天 8 場都要看。</div>
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-rank s">S</span>
+        <div class="rec-body">
+          <div class="rec-title">Agentics Day: MCP + Agents (Full Day)</div>
+          <div class="rec-meta">Co-located Event &middot; 10+ MCP sessions</div>
+          <div class="rec-why"><strong>MCP 的集中課程</strong>。包含 MCP spec deep dive、enterprise patterns、agent-to-agent、tool execution。你要學 AI 工具就要看這個。</div>
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-rank a">A</span>
+        <div class="rec-body">
+          <div class="rec-title">Cloud Native AI + Kubeflow Day (Selected)</div>
+          <div class="rec-meta">Hall 7 Rooms B & C</div>
+          <div class="rec-why">
+            重點看：(1) Federated llm-d: Distributed Inference Beyond Cluster Boundaries (IBM)；(2) AI-Native Networking (Microsoft + Solo.io)；(3) From Hallucinations To Hardware: Diagnosing LLM Failures；(4) NVIDIA GB200 for Training & Inference
+          </div>
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-rank a">A</span>
+        <div class="rec-body">
+          <div class="rec-title">Open Source SecurityCon: CRA by Ericsson</div>
+          <div class="rec-meta">Hall 8 Room D &middot; Georg Kunz + Jan Melen (Ericsson)</div>
+          <div class="rec-why">「Upstream Collaboration for the Win (of the CRA)」&mdash; Ericsson 的視角！補完 Greg Kroah-Hartman 的 LF 視角，了解你的 maintainer 組織怎麼看 CRA。</div>
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-rank b">B</span>
+        <div class="rec-body">
+          <div class="rec-title">ArgoCon: BYD Million-Task Argo Workflows</div>
+          <div class="rec-meta">Auditorium &middot; Alibaba Cloud + BYD</div>
+          <div class="rec-why">BYD 用 Argo Workflows 跑百萬級 task。了解 GitOps at massive scale。</div>
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-rank b">B</span>
+        <div class="rec-body">
+          <div class="rec-title">Observability Day: OTel Spec-tacular Game Show</div>
+          <div class="rec-meta">Forum &middot; Tyler Helmuth, Pablo Baeyens, etc.</div>
+          <div class="rec-why">Tyler Helmuth（你今天也會聽他）的 panel。輕鬆但有深度。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAY 1 -->
+  <div class="tab-content" id="tab-day1">
+    <div class="rec-day" id="day1">
+      <h3>Tuesday 3/24 &mdash; Main Conference Day 1</h3>
+
+      <div class="rec-item">
+        <span class="rec-rank s">S</span>
+        <div class="rec-body">
+          <div class="rec-title">Keynote: From Inference to Agents + The Future is Agentic</div>
+          <div class="rec-meta">09:56 Hall 12 &middot; Brian Stevens (Red Hat CEO), Lin Sun (Solo.io), Mark Collier (PyTorch)</div>
+          <div class="rec-why"><strong>KubeCon EU 2026 的核心敘事</strong>。Red Hat CEO + Solo.io + PyTorch 一起講 agentic AI 的未來。Lin Sun 接著做 solo keynote。這定義了整個 conference 的方向。</div>
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-rank s">S</span>
+        <div class="rec-body">
+          <div class="rec-title">Why Is It So Hard to Run a 5G Core on K8s &mdash; And What Needs to Change for 6G</div>
+          <div class="rec-meta">17:00 Hall 7C &middot; Joel Studler (Swisscom) + Ashan Senevirathne (Telstra)</div>
+          <div class="rec-why"><strong>你的電信本業</strong>。Swisscom + Telstra 兩家電信商現身說法。Joel Studler 也出現在 Telco Day 講 5G Config。這場會揭露 K8s 在 5G/6G core 的真實痛點。</div>
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-rank s">S</span>
+        <div class="rec-body">
+          <div class="rec-title">The 10x DevOps Engineer's Toolkit: Argo CD + AI-Driven MCP Automation</div>
+          <div class="rec-meta">16:15 Auditorium &middot; Alexander Matyushentsev (Akuity) + Leonardo Luz Almeida (Intuit)</div>
+          <div class="rec-why"><strong>MCP + GitOps 的交匯</strong>。Argo CD 創始人 + Intuit 核心開發者講怎麼用 AI + MCP 自動化 GitOps pipeline。你用 Claude Code 做 Nephio 開發，這就是你的 workflow 的未來。</div>
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-rank a">A</span>
+        <div class="rec-body">
+          <div class="rec-title">SIG Network: State of Networking for AI</div>
+          <div class="rec-meta">17:00 E103-105 &middot; Haiyan Meng (Google), Bowei Du (Google), Nadia Pinaeva (NVIDIA)</div>
+          <div class="rec-why">AI workloads 的網路需求。Haiyan Meng 今天也在 Agentic Networking session。連起來看會有完整的 AI networking picture。</div>
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-rank a">A</span>
+        <div class="rec-body">
+          <div class="rec-title">What LLMs Do and Don't Know About Kubernetes</div>
+          <div class="rec-meta">14:30 Hall 8 &middot; Rory McCune (Datadog)</div>
+          <div class="rec-why">LLM 對 K8s 的理解限制。你用 Claude Code 做 K8s 開發，這場告訴你 AI 在哪裡容易出錯。</div>
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-rank a">A</span>
+        <div class="rec-body">
+          <div class="rec-title">The Future of Kubernetes Scalability</div>
+          <div class="rec-meta">15:15 Hall 8 &middot; Maciek Rozacki (Google Cloud) + Artur Rodrigues (<strong>Anthropic</strong>)</div>
+          <div class="rec-why">Google Cloud + <strong>Anthropic</strong>（Claude 的公司！）一起講 K8s scalability。你用 Claude Code，了解 Anthropic 怎麼 scale K8s 非常有價值。</div>
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-rank a">A</span>
+        <div class="rec-body">
+          <div class="rec-title">Rust Vs. Go: Building a Container Network Stack</div>
+          <div class="rec-meta">15:15 Hall 8 &middot; Matt Heon (Red Hat)</div>
+          <div class="rec-why">你寫 Go。Rust vs Go 的實戰比較，來自 Podman 核心開發者。</div>
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-rank a">A</span>
+        <div class="rec-body">
+          <div class="rec-title">Intelligent Routing for Optimized Inference</div>
+          <div class="rec-meta">12:00 Hall 7B &middot; Antonio Berben (Solo.io) + Felipe Vicens (<strong>Telefonica</strong>)</div>
+          <div class="rec-why">Solo.io + <strong>電信商 Telefonica</strong> 講 AI inference routing。電信 + AI 的實戰交匯。</div>
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-rank b">B</span>
+        <div class="rec-body">
+          <div class="rec-title">Enterprise-Scale Migrations Using Agentic Workflows</div>
+          <div class="rec-meta">14:30 Forum &middot; Adobe</div>
+          <div class="rec-why">Adobe 用 agentic workflows 做大規模遷移。Agentic pattern 的企業實踐。</div>
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-rank b">B</span>
+        <div class="rec-body">
+          <div class="rec-title">Flipping the Curve: Platform Engineer's Guide</div>
+          <div class="rec-meta">12:00 F002-005 &middot; Michael Reichenbach (1KOMMA5)</div>
+          <div class="rec-why">今天 keynote 的 co-speaker Michael Reichenbach 的 solo talk。Platform engineering 的 guerrilla product thinking。</div>
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-rank b">B</span>
+        <div class="rec-body">
+          <div class="rec-title">Contribfest: Bring Agentic AI With Kagent (Solo.io)</div>
+          <div class="rec-meta">14:30 G107 &middot; Lin Sun, Peter Jausovec (Solo.io) + Dmytriy Rashko (Amdocs)</div>
+          <div class="rec-why">Kagent 是 Solo.io donate 到 CNCF 的 K8s AI agent framework。Hands-on contribution session。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAY 3 -->
+  <div class="tab-content" id="tab-day3">
+    <div class="rec-day" id="day3">
+      <h3>Thursday 3/26 &mdash; Final Day (Half Day)</h3>
+
+      <div class="rec-item">
+        <span class="rec-rank s">S</span>
+        <div class="rec-body">
+          <div class="rec-title">Keynote: Building Autonomous Networks for the AI Era</div>
+          <div class="rec-meta">09:58 Hall 12 &middot; Gergely Csatari (<strong>Nokia</strong>)</div>
+          <div class="rec-why"><strong>Nokia 在 KubeCon 主舞台講自主網路</strong>。Gergely 也是 Telco Day 的 co-chair。Nokia 是 Nephio 的核心貢獻者（kispaljr, mozesl-nokia）。這場定義 telecom + AI 的下一步。</div>
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-rank s">S</span>
+        <div class="rec-body">
+          <div class="rec-title">Keynote: Agents as First-Class Users in Production</div>
+          <div class="rec-meta">09:53 Hall 12 &middot; Mathias Biilmann (Netlify)</div>
+          <div class="rec-why">Netlify CEO 講 AI agents 在 production 中作為「first-class users」。和 Idit Levine 的 keynote 互補。</div>
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-rank s">S</span>
+        <div class="rec-body">
+          <div class="rec-title">AI Agents & Platform Engineering Panel</div>
+          <div class="rec-meta">11:45 Auditorium &middot; Cisco, Red Hat, <strong>UN</strong>, Solo.io (Idit Levine), AWS</div>
+          <div class="rec-why"><strong>Idit Levine 又出現了</strong>，和 Red Hat + AWS + 聯合國的人一起做 panel。AI agent 怎麼改變 platform engineering。</div>
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-rank a">A</span>
+        <div class="rec-body">
+          <div class="rec-title">Tutorial: KV-Cache Wins &mdash; Building AI-Aware LLM Routing</div>
+          <div class="rec-meta">11:00 Elicium 1 &middot; Red Hat, DaoCloud, IBM</div>
+          <div class="rec-why">Hands-on LLM routing tutorial。KV cache 是 LLM inference 優化的核心。補完 Abdel 今天的理論。</div>
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-rank a">A</span>
+        <div class="rec-body">
+          <div class="rec-title">Multi-Network: SR-IOV Support (NTT + Red Hat)</div>
+          <div class="rec-meta">11:45 Hall 7C &middot; Masaharu Kanda (NTT) + Lionel Jouin (Red Hat)</div>
+          <div class="rec-why">SR-IOV 是電信 CNF 的硬需求。NTT + Red Hat 講怎麼在 K8s 上做 multi-network SR-IOV。</div>
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-rank a">A</span>
+        <div class="rec-body">
+          <div class="rec-title">Envoy in the Era of Agentic Workloads</div>
+          <div class="rec-meta">14:30 G102-103 &middot; Yan Avlasov (Google) + Erica Hughberg (Tetrate)</div>
+          <div class="rec-why">Envoy proxy 怎麼處理 agentic traffic。Envoy 是 agentgateway 的底層。</div>
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-rank a">A</span>
+        <div class="rec-body">
+          <div class="rec-title">Evolution or Revolution: Istio as the Network Platform</div>
+          <div class="rec-meta">11:45 Amtrium 1+2 &middot; Mitch Connors (Microsoft) + Daniel Grimm (Red Hat)</div>
+          <div class="rec-why">Istio 的下一步 &mdash; 從 service mesh 演變為 network platform。影響你的 #878 fix (Istio holdApplicationUntilProxyStarts)。</div>
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-rank a">A</span>
+        <div class="rec-body">
+          <div class="rec-title">Metal3.io's Path to CNCF Incubation</div>
+          <div class="rec-meta">14:30 Hall 7B &middot; Kashif Khan (<strong>Ericsson</strong>) + Dmitry Tantsur (Red Hat)</div>
+          <div class="rec-why">Ericsson 的 Kashif Khan 講 Metal3（bare-metal K8s provisioning）進入 CNCF incubation。了解 Ericsson 在 CNCF 的另一條線。</div>
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-rank b">B</span>
+        <div class="rec-body">
+          <div class="rec-title">From Logs to Decisions: Autonomous AI Agents for K8s Threat Response</div>
+          <div class="rec-meta">15:15 Elicium 1 &middot; Willem Berroubache (Orange)</div>
+          <div class="rec-why">Orange（法國電信）用 AI agents 做 K8s 安全自動化。電信商的 AI 實踐。</div>
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-rank b">B</span>
+        <div class="rec-body">
+          <div class="rec-title">Virtualizing Large Scale GPU Cluster for Sovereign AI</div>
+          <div class="rec-meta">14:30 Auditorium &middot; Jian Li (SK Telecom)</div>
+          <div class="rec-why">SK Telecom（韓國電信）的大規模 GPU 虛擬化。了解亞洲電信商的 AI infra 策略。</div>
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-rank b">B</span>
+        <div class="rec-body">
+          <div class="rec-title">Is the Agent in the Room with Us Right Now?</div>
+          <div class="rec-meta">15:15 Hall 7C &middot; Nick Rutigliano + Andrew Halaney (Netflix)</div>
+          <div class="rec-why">Netflix 的 AI agent 實踐。標題很有趣，通常這種 talk 有很好的 insight。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ===== PROFILE ===== -->
+<section class="section" id="profile">
+  <div class="section-title">
+    <div class="icon" style="background:var(--purple-bg)">&#x1F464;</div>
+    Profile Card
+  </div>
+  <div class="tl-card" style="padding:24px">
+    <h3 style="font-size:1.2rem;margin-bottom:4px">蔡秀吉 Hsiu-Chi Tsai</h3>
+    <div style="color:var(--text2);font-size:.85rem;margin-bottom:16px">@thc1006 &middot; NYCU Arete Honors Program (Medicine + EECS + Drama)</div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+      <div style="padding:12px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border)">
+        <div style="font-size:.68rem;color:var(--accent2);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Governance</div>
+        <div style="font-size:.82rem">Nephio TSC Member (2026)</div>
+        <div style="font-size:.72rem;color:var(--text3)">IEEE R10 ACEI Entrepreneurship Ambassador</div>
+      </div>
+      <div style="padding:12px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border)">
+        <div style="font-size:.68rem;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Open Source</div>
+        <div style="font-size:.82rem">Porch contributor (5+ PRs merged)</div>
+        <div style="font-size:.72rem;color:var(--text3)">COSCUP O-RAN track organizer (2024-25)</div>
+      </div>
+      <div style="padding:12px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border)">
+        <div style="font-size:.68rem;color:var(--amber);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Research</div>
+        <div style="font-size:.82rem">O-RAN + Federated Learning + Intent-Based Automation</div>
+        <div style="font-size:.72rem;color:var(--text3)">TSRI Prague &middot; nephoran-intent-operator (17 stars)</div>
+      </div>
+      <div style="padding:12px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border)">
+        <div style="font-size:.68rem;color:var(--pink);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Awards</div>
+        <div style="font-size:.82rem">2023 Presidential Education Award</div>
+        <div style="font-size:.72rem;color:var(--text3)">2025 Mei-Chu Hackathon 1st Place</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- container -->
+
+<div class="footer">
+  Built with Claude Code &middot; KubeCon + CloudNativeCon Europe 2026 &middot; Amsterdam
+  <br>Data sourced from kccnceu2026.sched.com + speaker research
+</div>
+
+<script>
+function switchTab(e,id){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  e.target.classList.add('active');
+  document.getElementById(id).classList.add('active');
+}
+</script>
+</body>
+</html>
