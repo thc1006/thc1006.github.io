@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>µT-Cal 3D方塊對比展示模擬 (進化版)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #0b1120; color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; }
+        .pointer-events-auto { pointer-events: auto; }
+        
+        /* 科技感發光效果 */
+        .glow-text { text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+        .panel-blur { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body>
+
+    <!-- 3D Canvas 容器 -->
+    <div id="canvas-container"></div>
+
+    <!-- UI 疊加層 -->
+    <div id="ui-layer" class="flex flex-col justify-between p-4 md:p-8 h-screen box-border">
+        
+        <!-- 頂部標題區與控制台 -->
+        <div class="w-full panel-blur p-5 rounded-2xl pointer-events-auto shadow-2xl flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold tracking-wider text-blue-400 glow-text">µT-Cal 即時神經網路陀螺儀校正</h1>
+                <p class="text-sm text-slate-400 mt-1 flex items-center gap-2">
+                    <span class="inline-block w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                    STM32N6570-DK / µT-Kernel 3.0 / 5,571 Params INT8 MLP
+                </p>
+            </div>
+            
+            <!-- 控制按鈕 -->
+            <div class="flex flex-wrap justify-center gap-2 md:gap-3">
+                <button onclick="triggerAction('static')" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-sm transition-all border border-slate-600 hover:border-blue-400 hover:shadow-[0_0_15px_rgba(96,165,250,0.5)] font-medium">
+                    ⏸️ 1. 靜態置放 (桌上)
+                </button>
+                <button onclick="triggerAction('rotate90')" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-sm transition-all border border-slate-600 hover:border-blue-400 hover:shadow-[0_0_15px_rgba(96,165,250,0.5)] font-medium">
+                    🔄 2. 精準旋轉 90°
+                </button>
+                <button onclick="triggerAction('random')" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-sm transition-all border border-slate-600 hover:border-blue-400 hover:shadow-[0_0_15px_rgba(96,165,250,0.5)] font-medium">
+                    🔀 3. 複雜軌跡運動
+                </button>
+                <button onclick="triggerAction('reset')" class="px-5 py-2.5 bg-red-950 hover:bg-red-900 text-red-200 rounded-lg text-sm transition-all border border-red-800 hover:border-red-400 font-medium ml-2">
+                    ⏹️ 歸零重置
+                </button>
+            </div>
+        </div>
+
+        <!-- 圖例說明 -->
+        <div class="w-full flex justify-center pointer-events-none mt-4">
+            <div class="panel-blur px-6 py-2 rounded-full flex gap-6 text-sm font-medium">
+                <span class="flex items-center gap-2"><span class="w-3 h-3 bg-white opacity-80 rounded-sm"></span> 真實物理機器 (Ground Truth)</span>
+                <span class="flex items-center gap-2 text-red-400"><span class="w-3 h-3 border-2 border-red-500 rounded-sm"></span> 原始陀螺儀 (累積誤差)</span>
+                <span class="flex items-center gap-2 text-green-400"><span class="w-3 h-3 border-2 border-green-500 rounded-sm"></span> µT-Cal AI 校正後</span>
+            </div>
+        </div>
+
+        <!-- 左右數據面板 -->
+        <div class="flex justify-between w-full mt-auto gap-4 md:gap-10">
+            <!-- 左側：原始數據 -->
+            <div class="w-full md:w-5/12 panel-blur p-5 md:p-6 rounded-2xl border-l-4 border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.15)] pointer-events-auto">
+                <div class="flex justify-between items-end border-b border-slate-700 pb-3 mb-4">
+                    <h2 class="text-xl md:text-2xl font-bold text-red-400">原始感測器 (Baseline)</h2>
+                    <span id="raw-status" class="text-xs px-2 py-1 bg-red-950 text-red-300 rounded font-mono animate-pulse">DRIFTING...</span>
+                </div>
+                
+                <div class="space-y-3 font-mono text-sm md:text-base">
+                    <div class="flex justify-between items-center bg-slate-800/50 p-2 rounded">
+                        <span class="text-slate-400">X 軸 (Roll)</span> 
+                        <div class="text-right">
+                            <div id="raw-x" class="text-white font-bold">0.00°</div>
+                            <div id="err-x" class="text-red-400 text-xs mt-1">誤差: +0.00°</div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center bg-slate-800/50 p-2 rounded">
+                        <span class="text-slate-400">Y 軸 (Yaw)</span> 
+                        <div class="text-right">
+                            <div id="raw-y" class="text-white font-bold">0.00°</div>
+                            <div id="err-y" class="text-red-400 text-xs mt-1">誤差: +0.00°</div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center bg-slate-800/50 p-2 rounded">
+                        <span class="text-slate-400">Z 軸 (Pitch)</span> 
+                        <div class="text-right">
+                            <div id="raw-z" class="text-white font-bold">0.00°</div>
+                            <div id="err-z" class="text-red-400 text-xs mt-1">誤差: +0.00°</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右側：AI校正數據 -->
+            <div class="w-full md:w-5/12 panel-blur p-5 md:p-6 rounded-2xl border-r-4 border-green-500 shadow-[0_0_30px_rgba(34,197,94,0.15)] pointer-events-auto">
+                <div class="flex justify-between items-end border-b border-slate-700 pb-3 mb-4">
+                    <h2 class="text-xl md:text-2xl font-bold text-green-400">µT-Cal 預測校正</h2>
+                    <span class="text-xs px-2 py-1 bg-green-900/50 text-green-300 rounded font-mono">STABLE</span>
+                </div>
+                
+                <div class="space-y-3 font-mono text-sm md:text-base">
+                    <div class="flex justify-between items-center bg-slate-800/50 p-2 rounded">
+                        <div class="text-left">
+                            <div id="cal-x" class="text-white font-bold">0.00°</div>
+                            <div id="cal-err-x" class="text-green-400 text-xs mt-1">誤差: +0.00°</div>
+                        </div>
+                        <span class="text-slate-400">X 軸 (Roll)</span> 
+                    </div>
+                    <div class="flex justify-between items-center bg-slate-800/50 p-2 rounded">
+                        <div class="text-left">
+                            <div id="cal-y" class="text-white font-bold">0.00°</div>
+                            <div id="cal-err-y" class="text-green-400 text-xs mt-1">誤差: +0.00°</div>
+                        </div>
+                        <span class="text-slate-400">Y 軸 (Yaw)</span> 
+                    </div>
+                    <div class="flex justify-between items-center bg-slate-800/50 p-2 rounded">
+                        <div class="text-left">
+                            <div id="cal-z" class="text-white font-bold">0.00°</div>
+                            <div id="cal-err-z" class="text-green-400 text-xs mt-1">誤差: +0.00°</div>
+                        </div>
+                        <span class="text-slate-400">Z 軸 (Pitch)</span> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // === Three.js 初始化與場景建構 ===
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x0b1120, 0.05); // 增加空間深度感
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 2, 7); // 稍微由上往下看
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio); // 適應高解析螢幕
+        container.appendChild(renderer.domElement);
+
+        // === 燈光 (讓實體 Ghost 方塊更有立體感) ===
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+        scene.add(ambientLight);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        dirLight.position.set(5, 10, 7);
+        scene.add(dirLight);
+
+        // === 創建幾何體 ===
+        const geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+        
+        // 1. 真實物理方塊 (Ghost Cubes) - 白色半透明實體
+        const ghostMaterial = new THREE.MeshStandardMaterial({ 
+            color: 0xffffff, transparent: true, opacity: 0.15, 
+            roughness: 0.2, metalness: 0.8, side: THREE.DoubleSide
+        });
+        const ghostLeft = new THREE.Mesh(geometry, ghostMaterial);
+        const ghostRight = new THREE.Mesh(geometry, ghostMaterial);
+        ghostLeft.position.x = -2.5;
+        ghostRight.position.x = 2.5;
+        scene.add(ghostLeft);
+        scene.add(ghostRight);
+
+        // 加粗線框材質輔助函數
+        function createWireframeCube(colorHex, posX) {
+            const edges = new THREE.EdgesGeometry(geometry);
+            const lineMat = new THREE.LineBasicMaterial({ color: colorHex, linewidth: 2 });
+            const wireframe = new THREE.LineSegments(edges, lineMat);
+            wireframe.position.x = posX;
+            scene.add(wireframe);
+            return wireframe;
+        }
+
+        // 2. 原始感測器 (紅色線框)
+        const rawCube = createWireframeCube(0xff3333, -2.5);
+        // 3. AI 校正感測器 (綠色線框)
+        const calCube = createWireframeCube(0x33ff33, 2.5);
+
+        // 裝飾性地板網格
+        const gridHelper = new THREE.GridHelper(20, 20, 0x1e293b, 0x0f172a);
+        gridHelper.position.y = -1.5;
+        scene.add(gridHelper);
+
+        // === 物理與感測器模擬變數 ===
+        let physicalRot = { x: 0, y: 0, z: 0 }; // 真實馬達/手部角度
+        let targetRot = { x: 0, y: 0, z: 0 };   // 運動目標角度
+        
+        // 模擬真實的 MEMS 漂移特性 (Bias Instability + Random Walk)
+        let dynamicBias = { x: 0.0001, y: 0.0003, z: 0.00005 }; // 初始零偏 (Y軸也就是 Yaw 飄最快)
+        let rawError = { x: 0, y: 0, z: 0 };    // 原始累積誤差
+        let calError = { x: 0, y: 0, z: 0 };    // AI 校正後殘留誤差
+
+        let currentAction = 'static';
+        let isRandomMoving = false;
+        let animationTime = 0; // 用於生成平滑曲線
+
+        // === 操控與狀態機 ===
+        window.triggerAction = function(action) {
+            currentAction = action;
+            isRandomMoving = false;
+            document.getElementById('raw-status').innerText = action === 'static' ? 'STATIC DRIFT' : 'MOTION TRACKING';
+
+            if (action === 'static') {
+                targetRot = { x: 0, y: 0, z: 0 };
+            } 
+            else if (action === 'rotate90') {
+                targetRot = { x: 0, y: Math.PI / 2, z: 0 };
+            } 
+            else if (action === 'random') {
+                isRandomMoving = true;
+                animationTime = 0; 
+                setTimeout(() => {
+                    isRandomMoving = false; // 5秒後自動回正
+                    targetRot = { x: 0, y: 0, z: 0 };
+                }, 5000);
+            }
+            else if (action === 'reset') {
+                physicalRot = { x: 0, y: 0, z: 0 };
+                targetRot = { x: 0, y: 0, z: 0 };
+                dynamicBias = { x: 0.0001, y: 0.0003, z: 0.00005 };
+                rawError = { x: 0, y: 0, z: 0 };
+                calError = { x: 0, y: 0, z: 0 };
+            }
+        };
+
+        // 輔助函數：將弧度轉為正規化角度 (-180° 到 180°)
+        function normalizeAngle(rad) {
+            let deg = rad * 180 / Math.PI;
+            deg = deg % 360;
+            if (deg > 180) deg -= 360;
+            if (deg < -180) deg += 360;
+            return deg;
+        }
+
+        // 輔助函數：格式化顯示字串
+        function formatDeg(deg) { return deg.toFixed(2).padStart(6, ' ') + '°'; }
+        function formatErr(err) { return '誤差: ' + (err > 0 ? '+' : '') + err.toFixed(2) + '°'; }
+
+        // === 主渲染循環 (Simulation Loop) ===
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // 1. 真實物理運動模擬 (平滑運動)
+            if (isRandomMoving) {
+                animationTime += 0.015;
+                // 使用多重正弦波疊加，創造極度平滑且複雜的 3D 軌跡 (Lissajous curves)
+                targetRot.x = Math.sin(animationTime * 2.1) * 0.5 + Math.cos(animationTime * 0.8) * 0.2;
+                targetRot.y = Math.sin(animationTime * 1.5) * Math.PI * 0.8; // Y 軸大旋轉
+                targetRot.z = Math.cos(animationTime * 1.8) * 0.5;
+            }
+
+            // 阻尼插值：讓方塊平滑追蹤目標角度 (模擬真實馬達轉動或手的動作)
+            physicalRot.x += (targetRot.x - physicalRot.x) * 0.08;
+            physicalRot.y += (targetRot.y - physicalRot.y) * 0.08;
+            physicalRot.z += (targetRot.z - physicalRot.z) * 0.08;
+
+            // 2. 感測器漂移演算法 (Drift Physics)
+            // Bias 本身會隨機游走 (Bias Instability)
+            dynamicBias.x += (Math.random() - 0.5) * 0.00002;
+            dynamicBias.y += (Math.random() - 0.5) * 0.00005; // Y軸最不穩定
+            dynamicBias.z += (Math.random() - 0.5) * 0.00002;
+
+            // 積分 Bias 產生角度誤差
+            rawError.x += dynamicBias.x;
+            rawError.y += dynamicBias.y;
+            rawError.z += dynamicBias.z;
+
+            // AI 模型發揮作用：企劃書指出 MLP 減少了 93% 的漂移 (EuRoC 數據集)
+            // 這裡我們模擬 AI 成功預測了大部分的 Bias 並扣除
+            calError.x += dynamicBias.x * 0.07; 
+            calError.y += dynamicBias.y * 0.07;
+            calError.z += dynamicBias.z * 0.07;
+
+            // 3. 更新所有 3D 物件的旋轉
+            // A. 真實物理方塊 (完美無誤差)
+            ghostLeft.rotation.set(physicalRot.x, physicalRot.y, physicalRot.z);
+            ghostRight.rotation.set(physicalRot.x, physicalRot.y, physicalRot.z);
+
+            // B. 原始陀螺儀方塊 (物理角度 + 巨大累積誤差)
+            rawCube.rotation.set(
+                physicalRot.x + rawError.x, 
+                physicalRot.y + rawError.y, 
+                physicalRot.z + rawError.z
+            );
+
+            // C. AI 校正方塊 (物理角度 + 極微小誤差，幾乎與 Ghost 重疊)
+            calCube.rotation.set(
+                physicalRot.x + calError.x, 
+                physicalRot.y + calError.y, 
+                physicalRot.z + calError.z
+            );
+
+            // 4. 更新 UI 數字面板
+            const rawDeg = { x: normalizeAngle(rawCube.rotation.x), y: normalizeAngle(rawCube.rotation.y), z: normalizeAngle(rawCube.rotation.z) };
+            const calDeg = { x: normalizeAngle(calCube.rotation.x), y: normalizeAngle(calCube.rotation.y), z: normalizeAngle(calCube.rotation.z) };
+            const errDeg = { x: rawDeg.x - normalizeAngle(physicalRot.x), y: rawDeg.y - normalizeAngle(physicalRot.y), z: rawDeg.z - normalizeAngle(physicalRot.z) };
+            const calErrDeg = { x: calDeg.x - normalizeAngle(physicalRot.x), y: calDeg.y - normalizeAngle(physicalRot.y), z: calDeg.z - normalizeAngle(physicalRot.z) };
+
+            document.getElementById('raw-x').innerText = formatDeg(rawDeg.x);
+            document.getElementById('raw-y').innerText = formatDeg(rawDeg.y);
+            document.getElementById('raw-z').innerText = formatDeg(rawDeg.z);
+            document.getElementById('err-x').innerText = formatErr(errDeg.x);
+            document.getElementById('err-y').innerText = formatErr(errDeg.y);
+            document.getElementById('err-z').innerText = formatErr(errDeg.z);
+
+            document.getElementById('cal-x').innerText = formatDeg(calDeg.x);
+            document.getElementById('cal-y').innerText = formatDeg(calDeg.y);
+            document.getElementById('cal-z').innerText = formatDeg(calDeg.z);
+            document.getElementById('cal-err-x').innerText = formatErr(calErrDeg.x);
+            document.getElementById('cal-err-y').innerText = formatErr(calErrDeg.y);
+            document.getElementById('cal-err-z').innerText = formatErr(calErrDeg.z);
+
+            renderer.render(scene, camera);
+        }
+
+        // 處理視窗縮放
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // 啟動動畫
+        window.onload = animate;
+    </script>
+</body>
+</html>
