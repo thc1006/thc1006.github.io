@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORCA-Inspired Dexterous Hand — System Wiring Design v3.0</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Google Fonts: Noto Sans TC (內文) & JetBrains Mono (程式碼/專有名詞) -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+TC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans TC"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    colors: {
+                        panjit: {
+                            50: '#f0f4f8',
+                            100: '#d9e2ec',
+                            500: '#334e68',
+                            600: '#243b53',
+                            900: '#102a43',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* --- 全局與滾動條 --- */
+        body { background-color: #f8fafc; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* --- 文章排版覆寫 (Prose) --- */
+        .article-content { color: #334155; font-size: 1.05rem; line-height: 1.75; }
+        .article-content h1 { font-size: 2.25rem; font-weight: 800; color: #0f172a; margin-top: 3.5rem; margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 2px solid #e2e8f0; scroll-margin-top: 5rem; }
+        .article-content h3 { font-size: 1.35rem; font-weight: 700; color: #1e293b; margin-top: 2.5rem; margin-bottom: 1rem; display: flex; align-items: center; scroll-margin-top: 5rem; }
+        .article-content h3::before { content: ""; display: inline-block; width: 4px; height: 1.2rem; background-color: #3b82f6; margin-right: 0.75rem; border-radius: 2px; }
+        .article-content h4 { font-size: 1.15rem; font-weight: 600; color: #334155; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+        .article-content p { margin-bottom: 1.25rem; }
+        
+        /* --- 列表 --- */
+        .article-content ul, .article-content ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+        .article-content ul { list-style-type: disc; }
+        .article-content ol { list-style-type: decimal; }
+        .article-content li { margin-bottom: 0.5rem; }
+        .article-content li::marker { color: #64748b; }
+
+        /* --- 連結與強調 --- */
+        .article-content a { color: #2563eb; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: #93c5fd; font-weight: 500; transition: all 0.2s; }
+        .article-content a:hover { color: #1d4ed8; text-decoration-color: #2563eb; }
+        .article-content strong { font-weight: 700; color: #0f172a; }
+
+        /* --- 專有名詞 / 接腳標籤 (Tech Tags) --- */
+        .tech-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background-color: #f1f5f9; color: #475569; padding: 0.15rem 0.4rem; border-radius: 0.25rem; border: 1px solid #e2e8f0; font-weight: 500; }
+        .pin-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background-color: #eff6ff; color: #1e40af; padding: 0.15rem 0.4rem; border-radius: 0.25rem; border: 1px solid #bfdbfe; font-weight: 600; }
+
+        /* --- At-a-glance 卡片 --- */
+        .glance-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0; }
+        .glance-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.25rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border-top: 4px solid #3b82f6; transition: transform 0.2s; }
+        .glance-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .glance-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 700; margin-bottom: 0.5rem; }
+        .glance-value { font-size: 1.1rem; font-weight: 600; color: #0f172a; }
+
+        /* --- 圖片與圖說 --- */
+        figure { margin: 2.5rem 0; background: #ffffff; padding: 1.5rem; border-radius: 1rem; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05); }
+        figure img { display: block; margin: 0 auto; max-width: 100%; height: auto; border-radius: 0.5rem; }
+        figcaption { text-align: center; font-size: 0.875rem; color: #64748b; margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed #cbd5e1; font-style: normal; line-height: 1.5; }
+
+        /* --- 專業表格 --- */
+        .table-wrapper { overflow-x: auto; margin: 1.5rem 0 2.5rem 0; border-radius: 0.75rem; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1); }
+        table { width: 100%; border-collapse: collapse; text-align: left; background-color: #ffffff; }
+        th { background-color: #f8fafc; color: #475569; font-weight: 600; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 1rem 1.5rem; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 1rem 1.5rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.95rem; }
+        tbody tr:nth-child(even) { background-color: #f8fafc; }
+        tbody tr:hover { background-color: #f0f9ff; transition: background-color 0.15s ease; }
+
+        /* --- Callout 卡片 --- */
+        .callout { display: flex; gap: 1rem; padding: 1.25rem; border-radius: 0.75rem; margin: 1.5rem 0; align-items: flex-start; }
+        .callout-icon { flex-shrink: 0; width: 1.5rem; height: 1.5rem; }
+        .callout-content p:last-child { margin-bottom: 0; }
+        
+        .callout.info { background-color: #eff6ff; border: 1px solid #bfdbfe; }
+        .callout.info .callout-icon { color: #3b82f6; }
+        .callout.info strong { color: #1e3a8a; }
+
+        .callout.warning { background-color: #fffbeb; border: 1px solid #fde68a; }
+        .callout.warning .callout-icon { color: #d97706; }
+        .callout.warning strong { color: #92400e; }
+
+        /* --- 程式碼區塊 --- */
+        pre { background-color: #0f172a; color: #f8fafc; padding: 1.5rem; border-radius: 0.75rem; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; line-height: 1.5; margin: 1.5rem 0; box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.06); }
+        pre code { background: none; border: none; padding: 0; color: inherit; }
+
+        /* --- 目錄追蹤狀態 --- */
+        .toc-link { display: block; padding: 0.375rem 0.75rem; color: #64748b; font-size: 0.875rem; border-left: 2px solid transparent; transition: all 0.2s ease; border-radius: 0 0.25rem 0.25rem 0; }
+        .toc-link:hover { color: #0f172a; background-color: #f1f5f9; border-left-color: #cbd5e1; }
+        .toc-link.active { color: #2563eb; font-weight: 600; border-left-color: #2563eb; background-color: #eff6ff; }
+        .toc-link.level-2 { padding-left: 1.5rem; font-size: 0.8rem; }
+    </style>
+</head>
+<body class="selection:bg-blue-200 selection:text-blue-900 font-sans">
+
+    <!-- 頂部裝飾條 -->
+    <div class="h-2 w-full bg-gradient-to-r from-blue-600 via-indigo-500 to-sky-400 fixed top-0 z-50"></div>
+
+    <div class="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+        <div class="flex flex-col lg:flex-row gap-8 py-10 relative">
+            
+            <!-- 側邊導覽列 (TOC) -->
+            <aside class="w-full lg:w-72 shrink-0 lg:sticky lg:top-14 h-fit max-h-[calc(100vh-6rem)] overflow-y-auto hidden lg:block pr-2">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
+                        <h3 class="text-sm font-bold text-slate-800 uppercase tracking-widest">Table of Contents</h3>
+                    </div>
+                    <nav class="flex flex-col space-y-1 relative" id="toc-container">
+                        <!-- TOC 項目將由 JS 自動生成 -->
+                    </nav>
+                </div>
+            </aside>
+
+            <!-- 主要內容區 -->
+            <main class="flex-1 min-w-0 bg-white rounded-3xl shadow-sm border border-slate-200 p-8 sm:p-12 lg:p-16">
+                
+                <!-- Hero Header (對齊 v3.0 Cover) -->
+                <header class="mb-12 border-b border-slate-100 pb-10">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-bold uppercase tracking-widest mb-6">
+                        <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                        PANJIT-VOICEMOTION · MakeNTU 2026
+                    </div>
+                    
+                    <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 leading-[1.15] mb-4 tracking-tight">
+                        ORCA-Inspired Dexterous Hand
+                    </h1>
+                    <h2 class="text-2xl text-slate-500 font-medium mb-6">
+                        System Wiring Design — 電路與機構一體規劃
+                    </h2>
+                    
+                    <div class="flex flex-wrap gap-2 mb-8">
+                        <span class="px-3 py-1 bg-slate-100 text-slate-600 rounded text-sm font-mono font-medium border border-slate-200">PM32F407</span>
+                        <span class="px-3 py-1 bg-slate-100 text-slate-600 rounded text-sm font-mono font-medium border border-slate-200">5× PM30225V FOC</span>
+                        <span class="px-3 py-1 bg-slate-100 text-slate-600 rounded text-sm font-mono font-medium border border-slate-200">5× B1044 BLDC</span>
+                        <span class="px-3 py-1 bg-slate-100 text-slate-600 rounded text-sm font-mono font-medium border border-slate-200">WM8978 Audio</span>
+                    </div>
+                    
+                    <div class="flex items-center gap-6 pt-6 border-t border-slate-50 text-sm text-slate-400 font-medium">
+                        <div class="flex items-center gap-2 text-slate-600">
+                            <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold">T</div>
+                            thc1006
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            2026-04-20
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-700 font-bold text-xs border border-amber-200">v3.0</span>
+                            強茂企業獎
+                        </div>
+                    </div>
+                </header>
+
+                <!-- 內文開始 -->
+                <div class="article-content">
+
+                    <section id="exec-summary">
+                        <h1>Executive Summary</h1>
+                        <p>本文件為 <strong>MakeNTU 2026 強茂企業獎</strong> <em>Proposal A VoiceMotion</em> 的<strong>電路 + 機構一體設計規劃</strong>。目標：利用<strong>語音指令</strong>驅動 <strong>ORCA-inspired 腱繩式靈巧手</strong>。系統基於強茂主控、FOC 驅動板與無刷馬達進行整合。</p>
+                        
+                        <!-- At a glance 新增區塊 -->
+                        <div class="glance-grid">
+                            <div class="glance-card">
+                                <div class="glance-title">主控 MCU</div>
+                                <div class="glance-value">Cortex-M4 @ 168 MHz</div>
+                            </div>
+                            <div class="glance-card">
+                                <div class="glance-title">自由度 (DoF)</div>
+                                <div class="glance-value">5 (欠驅動簡化)</div>
+                            </div>
+                            <div class="glance-card">
+                                <div class="glance-title">機構參考</div>
+                                <div class="glance-value">ORCA Hand v2</div>
+                            </div>
+                            <div class="glance-card border-t-indigo-500">
+                                <div class="glance-title">FOC 驅動板</div>
+                                <div class="glance-value">5 × PM30225V</div>
+                            </div>
+                            <div class="glance-card border-t-indigo-500">
+                                <div class="glance-title">馬達 + 編碼器</div>
+                                <div class="glance-value">5 × B1044 + MA600</div>
+                            </div>
+                        </div>
+
+                        <figure>
+                            <img src="https://raw.githubusercontent.com/thc1006/panjit-voicemotion/main/docs/06_firmware/img/system_block.png" alt="系統總覽方塊圖" onerror="this.src='https://placehold.co/800x400/f8fafc/475569?text=System+Block+Diagram'">
+                            <figcaption>
+                                <strong>圖 1：系統總覽方塊圖</strong><br>
+                                PC 透過 USB/CH340 燒錄程式至 PM32F407；主控輸出 5 組 PWM 控制前臂 5 張 KXB 驅動板；驅動板透過 FFC 軟排線連接 5 顆 B1044 馬達；馬達捲動 5 條腱繩拉動 ORCA 手掌 5 指；系統由單一 12V PSU 並聯供電；WM8978 負責麥克風收音與耳機播放。
+                            </figcaption>
+                        </figure>
+                    </section>
+
+                    <section id="sec-1">
+                        <h1>1. ORCA Hand 官方規格</h1>
+                        <p>參考文獻：arXiv 2504.04259</p>
+                        
+                        <h3 id="sec-1-1">1.1 基本參數</h3>
+                        <ul>
+                            <li><strong>馬達</strong>：Pollen Robotics B1044 BLDC（最大扭矩 0.16 Nm，連續 0.08 Nm）。</li>
+                            <li><strong>編碼器</strong>：MPS MA600（12-bit SPI 絕對值編碼器）。</li>
+                            <li><strong>腱繩</strong>：Dyneema 0.5mm 釣魚線（強度 30kg+）。</li>
+                            <li><strong>彈簧</strong>：拉伸彈簧（Restoring force）用於手指伸展回彈。</li>
+                        </ul>
+
+                        <h3 id="sec-1-2">1.2 17個 Joint 的完整定義 (v2)</h3>
+                        <p>原版 ORCA 手掌擁有 17 個自由度，由 6 顆馬達透過滑輪與差速器驅動：</p>
+                        <ul>
+                            <li><strong>拇指 (Thumb)</strong>：3 joints (Abduction, Proximal, Distal) - 需 2 Motors。</li>
+                            <li><strong>食指 (Index)</strong>：3 joints - 1 Motor。</li>
+                            <li><strong>中指 (Middle)</strong>：3 joints - 1 Motor。</li>
+                            <li><strong>無名指 (Ring)</strong>：4 joints (包含掌骨彎曲) - 1 Motor (與小指偶合)。</li>
+                            <li><strong>小指 (Pinky)</strong>：4 joints - 1 Motor (與無名指偶合)。</li>
+                        </ul>
+
+                        <h3 id="sec-1-3">1.3 為何不能 1:1 復刻</h3>
+                        <div class="callout warning mt-0">
+                            <svg class="callout-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            <div class="callout-content">
+                                <strong>硬體與環境限制說明：</strong>
+                                <ol class="mt-2 mb-0">
+                                    <li><strong>馬達數量限制</strong>：原版需 6 顆馬達，而強茂提供給我們的配額僅為 <strong>5 顆</strong> B1044。</li>
+                                    <li><strong>驅動板體積限制</strong>：原版使用極小化的 Orbita 驅動板藏在手掌內。我們使用的是官方 KXB EVB 開發板，體積較大，必須外掛於前臂（Forearm）。</li>
+                                    <li><strong>加工難度</strong>：原版的差速滑輪 (Differential pulleys) 需要高精度 SLA 或 CNC 加工，我們在賽場環境只能依賴 FDM 3D 列印。</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="sec-2">
+                        <h1>2. 我們的簡化變形：5-DoF 欠驅動</h1>
+                        
+                        <h3 id="sec-2-1">2.1 動作取捨</h3>
+                        <p>為適應硬體限制，我們將機構改為 <strong>1 馬達對應 1 手指</strong> 的獨立欠驅動 (Underactuated) 設計：</p>
+                        
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>手指 (Finger)</th>
+                                        <th>分配馬達</th>
+                                        <th>關節數</th>
+                                        <th>致動方式 (Actuation)</th>
+                                        <th>回彈方式 (Return)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Thumb (拇指)</td><td><span class="tech-tag">M1</span></td><td>2 (僅屈曲)</td><td>單一腱繩貫穿</td><td>彈簧 / 橡皮筋</td></tr>
+                                    <tr><td>Index (食指)</td><td><span class="tech-tag">M2</span></td><td>3</td><td>單一腱繩貫穿</td><td>彈簧 / 橡皮筋</td></tr>
+                                    <tr><td>Middle (中指)</td><td><span class="tech-tag">M3</span></td><td>3</td><td>單一腱繩貫穿</td><td>彈簧 / 橡皮筋</td></tr>
+                                    <tr><td>Ring (無名指)</td><td><span class="tech-tag">M4</span></td><td>3</td><td>單一腱繩貫穿</td><td>彈簧 / 橡皮筋</td></tr>
+                                    <tr><td>Pinky (小指)</td><td><span class="tech-tag">M5</span></td><td>3</td><td>單一腱繩貫穿</td><td>彈簧 / 橡皮筋</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="callout info">
+                            <svg class="callout-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <div class="callout-content">
+                                <strong>設計妥協 (Trade-off)</strong>
+                                <p>放棄了原版拇指的外展/內收自由度。雖然無法進行「精確捏取硬幣」等極度精細動作，但對於展示「抓握 (Grasp)」、「指引 (Point)」等大姿態已經非常足夠，符合語音控制的情境需求。</p>
+                            </div>
+                        </div>
+
+                        <h3 id="sec-2-2">2.2 每根手指的機構細節</h3>
+                        <ul>
+                            <li><strong>Spool (捲線軸)</strong>：直接鎖固在 B1044 的外轉子上。</li>
+                            <li><strong>Tendon Routing (走線)</strong>：Dyneema 線從 Spool 出發，經過前臂導環，進入掌心，穿過近端指骨、中端，最終固定在遠端指骨末端。</li>
+                            <li><strong>動作原理</strong>：馬達收卷時拉動腱繩，造成手指彎曲；馬達放鬆時，由背側彈簧拉回使手指伸直。</li>
+                        </ul>
+
+                        <h3 id="sec-2-3">2.3 力矩 Budget 驗證</h3>
+                        <p>根據 B1044 特性：連續扭矩 <span class="tech-tag">0.08 Nm</span>。假設捲線軸半徑 <span class="tech-tag">r = 8mm (0.008m)</span>：</p>
+                        <ul>
+                            <li>腱繩拉力 <span class="tech-tag">F = T / r = 0.08 / 0.008 = 10 N (~1 kgf)</span>。</li>
+                            <li>對於單根手指的屈曲，10N 的拉力足以克服復歸彈簧的阻力並提供穩定的抓握力。峰值扭矩可短暫提供 <span class="tech-tag">~2 kgf</span> 的拉力應付突發阻力。</li>
+                        </ul>
+                    </section>
+
+                    <section id="sec-3">
+                        <h1>3. 完整電路設計</h1>
+                        
+                        <h3 id="sec-3-1">3.1 主控 ↔ 驅動板：PWM × 5 配線</h3>
+                        <p>PM32F407 需配置定時器，發送 5 組 PWM 訊號給 5 張 PM30225V-0401。</p>
+                        
+                        <figure>
+                            <img src="https://raw.githubusercontent.com/thc1006/panjit-voicemotion/main/docs/06_firmware/img/pwm_routing.png" alt="PWM 訊號接線圖" onerror="this.src='https://placehold.co/800x300/f8fafc/475569?text=PWM+Routing+Diagram'">
+                            <figcaption>圖 2：主控至驅動板的 PWM 訊號拓撲</figcaption>
+                        </figure>
+                        
+                        <div class="callout warning border-l-4 border-l-orange-500">
+                            <svg class="callout-icon text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            <div class="callout-content">
+                                <strong>驅動板 (KXB EVB) 端接腳處理必看清單：</strong>
+                                <ul class="mt-2 mb-0">
+                                    <li><span class="pin-tag">J7</span> (Sensorless Jumper)：<strong>必須拔除跳線帽！</strong> 本案採用有感 FOC 控制。</li>
+                                    <li><span class="pin-tag">J9</span> (PWM Mode)：<strong>必須插上跳線帽！</strong>（將 PWM_MODE 腳位拉高）。</li>
+                                    <li><span class="pin-tag">P4</span> 排針的 <code>HIN1</code>：此為 PWM 訊號輸入點。</li>
+                                    <li><strong>共地 (Common GND)</strong>：5 張驅動板的 GND 必須與 PM32F407 的 GND 確實相連，否則訊號會飄移。</li>
+                                </ul>
+                                <p class="text-sm mt-3 text-slate-500 italic">* 註：詳細 PM30225V KXB EVB 實體 silkscreen 請參考硬體技術手冊。</p>
+                            </div>
+                        </div>
+
+                        <h3 id="sec-3-2">3.2 馬達 ↔ 編碼器：Molex 12-pin FFC × 5</h3>
+                        <p>B1044 馬達尾部內建了 MPS MA600 磁感編碼器，並透過 12-pin 軟排線 (FFC) 引出。我們需要準備 FFC 轉接板，將訊號拆解：</p>
+                        <ul>
+                            <li><strong>動力線 (U, V, W)</strong>：接回各別 KXB EVB 的馬達輸出端子。</li>
+                            <li><strong>SPI 訊號 + 電源 (3.3V, GND)</strong>：接回 <strong>KXB EVB 板上的 MCU</strong>。注意：FOC 閉迴路運算是在 PM30225 內部執行，主控只負責下達指令。</li>
+                        </ul>
+                        <figure>
+                            <img src="https://raw.githubusercontent.com/thc1006/panjit-voicemotion/main/docs/06_firmware/img/molex_ffc.png" alt="12-pin FFC 腳位定義" onerror="this.src='https://placehold.co/800x300/f8fafc/475569?text=FFC+Pinout+Diagram'">
+                            <figcaption>圖 3：B1044 尾端 12-pin FFC 排線定義與分流</figcaption>
+                        </figure>
+
+                        <h3 id="sec-3-3">3.3 電源架構</h3>
+                        <p>為求簡潔，全系統採用單一 12V 輸入。</p>
+                        <figure>
+                            <img src="https://raw.githubusercontent.com/thc1006/panjit-voicemotion/main/docs/06_firmware/img/power_dist.png" alt="系統電源分配圖" onerror="this.src='https://placehold.co/800x400/f8fafc/475569?text=Power+Distribution+Tree'">
+                            <figcaption>圖 4：12V 電源分配樹狀圖</figcaption>
+                        </figure>
+                        
+                        <h4>電流預算 (Current Budget)</h4>
+                        <div class="table-wrapper my-2">
+                            <table>
+                                <thead><tr><th>組件</th><th>電壓</th><th>預估最大耗電流</th><th>備註</th></tr></thead>
+                                <tbody>
+                                    <tr><td>PM32F407 EVB</td><td>5V (降壓)</td><td>~300 mA</td><td>含 Codec 與周邊</td></tr>
+                                    <tr><td>B1044 + KXB EVB (單指)</td><td>12V</td><td>~600 mA</td><td>峰值扭矩時可能微升</td></tr>
+                                    <tr class="font-bold bg-slate-100"><td>全系統總計 (5指同時作動)</td><td>12V</td><td>~3.5 A</td><td>建議選用 12V 5A 電源供應器確保餘裕</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h4>PM32F407 EVB 自動 Power Path</h4>
+                        <p>PM32F407 主控板支援從 USB 或外部 5V 供電。實作上，可從其中一張 KXB 驅動板的 5V LDO 輸出端拉線至主控板的 5V 腳位，達成全系統僅需一個 12V 變壓器插頭的設計。</p>
+
+                        <h3 id="sec-3-4">3.4 音訊路徑 (M2階段)</h3>
+                        <p>為了實現語音辨識與互動，我們直接利用 PM32F407 EVB 上的 <strong>WM8978 音訊 Codec</strong>。</p>
+                        <ul>
+                            <li><strong>硬體介面</strong>：EVB 左下角具備 3.5mm <code>MIC</code> 與 <code>EARPHONE</code> 插孔。</li>
+                            <li><strong>通訊協定</strong>：MCU 透過 <span class="tech-tag">I2C</span> 設定暫存器，並透過 <span class="tech-tag">I2S</span> 傳輸 PCM 音訊。</li>
+                        </ul>
+
+                        <h3 id="sec-3-5">3.5 觸覺感測 (選配, M3後)</h3>
+                        <p>預計在指尖貼附 FSR 薄膜壓力感測器，並透過分壓電路將類比電壓回傳至主控 ADC，實現抓握力道的閉迴路控制。</p>
+                        <figure>
+                            <img src="https://raw.githubusercontent.com/thc1006/panjit-voicemotion/main/docs/06_firmware/img/fsr_divider.png" alt="FSR 分壓電路" onerror="this.src='https://placehold.co/400x300/f8fafc/475569?text=FSR+Divider+Circuit'">
+                            <figcaption>圖 5：FSR 簡單分壓電路參考</figcaption>
+                        </figure>
+                    </section>
+
+                    <section id="sec-4">
+                        <h1>4. 零組件 BOM</h1>
+                        <p>我們將清單細分為借用項與採購項，以利掌控預算（總採購預算約 NT$700-1500）。</p>
+
+                        <h3 id="sec-4-1">4.1 借用項 (MakeNTU 組委會供應，須歸還)</h3>
+                        <div class="table-wrapper mt-2">
+                            <table>
+                                <thead><tr><th>品項名稱</th><th>數量</th><th>用途說明</th></tr></thead>
+                                <tbody>
+                                    <tr><td>PM32F407 M4 EVB</td><td>1</td><td>系統主控、語音辨識與音訊輸出</td></tr>
+                                    <tr><td>PM30225V-0401 EVB</td><td>5</td><td>FOC 馬達驅動節點</td></tr>
+                                    <tr><td>Pollen B1044 BLDC Motor</td><td>5</td><td>靈巧手關節致動器</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h3 id="sec-4-2">4.2 採購清單 - A. 電子類</h3>
+                        <div class="table-wrapper mt-2">
+                            <table>
+                                <thead><tr><th>品項名稱</th><th>數量</th><th>預估單價</th><th>來源</th></tr></thead>
+                                <tbody>
+                                    <tr><td>12-pin 0.5mm FFC 轉接板 + 軟排線</td><td>5 組</td><td>NT$ 30</td><td>電子材料行</td></tr>
+                                    <tr><td>杜邦線 (公母混合)</td><td>1 包</td><td>NT$ 50</td><td>自備/採購</td></tr>
+                                    <tr><td>12V 5A 電源供應器 (DC 5.5/2.1)</td><td>1 顆</td><td>NT$ 350</td><td>光華/網購</td></tr>
+                                    <tr><td>DC 1 對 5 分接線</td><td>1 條</td><td>NT$ 80</td><td>光華/網購</td></tr>
+                                    <tr><td>2.54mm 跳線帽 (Jumper)</td><td>10 顆</td><td>NT$ 10</td><td>電子材料行</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h3 id="sec-4-3">4.3 採購清單 - B. 機構類</h3>
+                        <div class="table-wrapper mt-2">
+                            <table>
+                                <thead><tr><th>品項名稱</th><th>數量</th><th>預估單價</th><th>來源</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Dyneema 0.5mm 釣魚線 (腱繩)</td><td>1 卷</td><td>NT$ 150</td><td>釣具行/網購</td></tr>
+                                    <tr><td>拉伸彈簧 (指背回彈用)</td><td>10 條</td><td>NT$ 50</td><td>五金行</td></tr>
+                                    <tr><td>PLA / PETG 3D 列印線材</td><td>1 卷</td><td>-</td><td>實驗室自備</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <section id="sec-5">
+                        <h1>5. 軟體 Toolchain 與編譯驗證</h1>
+                        <p>開發環境建置是初期的主要挑戰。我們採用 Keil uVision 5 搭配 ARM Compiler 6，並參考了開源社群 (SunboAZ) 的修正方案來解決原廠 SDK 的相容性問題。</p>
+                        
+                        <figure>
+                            <img src="https://raw.githubusercontent.com/thc1006/panjit-voicemotion/main/docs/06_firmware/img/build_flow.png" alt="軟體編譯流程" onerror="this.src='https://placehold.co/800x300/f8fafc/475569?text=Software+Build+Flow'">
+                            <figcaption>圖 6：韌體開發與編譯部署流程</figcaption>
+                        </figure>
+
+                        <h3>Keil uVision 5 (AC6) 設定要點</h3>
+                        <p>在編譯原廠底層庫（如 <code>system_hk32l08x.c</code>）時，若遇到 <code>inline</code> 函數報錯，請採取以下修正：</p>
+                        <pre><code><span class="text-slate-400">// 將原本會報錯的宣告：</span>
+<span class="text-red-400">__inline</span> <span class="text-blue-300">void</span> <span class="text-amber-200">SystemCoreClockUpdate</span>(<span class="text-blue-300">void</span>)
+
+<span class="text-slate-400">// 改為標準 C99 語法：</span>
+<span class="text-green-400">static inline</span> <span class="text-blue-300">void</span> <span class="text-amber-200">SystemCoreClockUpdate</span>(<span class="text-blue-300">void</span>)
+
+<span class="text-slate-400">// 或者使用編譯器屬性強制 inline：</span>
+<span class="text-green-400">__attribute__((always_inline))</span> <span class="text-blue-300">void</span> <span class="text-amber-200">SystemCoreClockUpdate</span>(<span class="text-blue-300">void</span>)</code></pre>
+                    </section>
+
+                    <section id="sec-6">
+                        <h1>6. 韌體架構與 FreeRTOS</h1>
+                        <p>為了確保音訊採樣與馬達控制的即時性，PM32F407 將運行 FreeRTOS 作業系統。任務規劃如下：</p>
+                        <ul>
+                            <li><strong>Audio Task (High Priority)</strong>: 負責處理 I2S DMA 中斷，將 WM8978 收到的 PCM 音訊存入 Ping-Pong Buffer，並將處理完的音效輸出。</li>
+                            <li><strong>Motor Control Task (Real-time)</strong>: 根據計算出的角度目標，更新 5 個 Timer 的 PWM 佔空比 (Duty Cycle)。</li>
+                            <li><strong>AI/Logic Task (Normal Priority)</strong>: 處理語音辨識的輕量化特徵擷取（如 MFCC），或接收來自 UART/USB 的上位機指令，轉換為手部動作序列。</li>
+                        </ul>
+                    </section>
+
+                    <section id="sec-7">
+                        <h1>7. AI 模型與語音推理</h1>
+                        <p>考量到 PM32F407 (Cortex-M4) 的算力限制，我們不跑龐大的 LLM，而是採用 <strong>Keyword Spotting (KWS)</strong> 或輕量級指令辨識模型。</p>
+                        <ul>
+                            <li><strong>工具</strong>：使用 TensorFlow Lite for Microcontrollers (TFLM) 或是 CMSIS-NN。</li>
+                            <li><strong>指令集</strong>：訓練 5-10 個明確的關鍵字，例如："Open", "Close", "Point", "Thumb"。</li>
+                            <li><strong>回饋機制</strong>：辨識成功後，不僅手部做出動作，WM8978 也會播放預載的「滴」聲或簡短的語音確認。</li>
+                        </ul>
+                    </section>
+
+                    <section id="sec-8">
+                        <h1>8. 預期風險與 Mitigation</h1>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>潛在風險 (Risks)</th>
+                                        <th>緩解策略 (Mitigation)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>FOC 驅動板通訊延遲</strong><br><span class="text-sm text-slate-500">主控發送 5 路 PWM 若不同步，手部動作會怪異。</span></td>
+                                        <td>硬體層面使用 MCU 的 Advanced Timer (TIM1/TIM8) 確保 PWM 同步輸出；軟體層面優化 FreeRTOS Task 排程。</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>腱繩斷裂或打結</strong><br><span class="text-sm text-slate-500">Dyneema 線在滑輪處摩擦或纏繞。</span></td>
+                                        <td>列印時確保導線孔(Routing holes) 平滑；軟體設定馬達轉角極限 (Software Limits)，防止過度收卷。</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>MCU 記憶體不足</strong><br><span class="text-sm text-slate-500">音訊 Buffer + TFLM 模型吃光 RAM。</span></td>
+                                        <td>精簡模型架構；降低音訊採樣率至 16kHz；若真不夠，退而求其次將 AI 運算移至 PC 端。</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <section id="sec-9">
+                        <h1>9. 參考文獻與資源連結</h1>
+                        <ul>
+                            <li>本案 GitHub Repo (Private): <a href="https://github.com/thc1006/panjit-voicemotion" target="_blank">panjit-voicemotion</a></li>
+                            <li>Keil AC6 bug tracking issue: <a href="https://github.com/thc1006/panjit-voicemotion/issues/1" target="_blank">Issue #1</a></li>
+                            <li>SunboAZ HK32 fix PR: <a href="https://github.com/SunboAZ/hk32l08x-sdk-2024-12-02-V1.0.4/pull/1" target="_blank">PR #1</a></li>
+                            <li>RUKA Hand (欠驅動參考): <a href="https://ruka-hand.github.io/" target="_blank">Project Page</a></li>
+                            <li>AmazingHand (Pollen Robotics): <a href="https://github.com/pollen-robotics/AmazingHand" target="_blank">Repo</a></li>
+                        </ul>
+                    </section>
+
+                    <section id="sec-10">
+                        <h1>10. 下一步行動清單</h1>
+                        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 mt-4">
+                            <ul class="space-y-4 mb-0 list-none pl-0">
+                                <li class="flex items-start">
+                                    <div class="flex-shrink-0 h-6 flex items-center">
+                                        <input type="checkbox" class="w-5 h-5 text-blue-600 rounded border-slate-300 focus:ring-blue-500 transition duration-150 cursor-pointer">
+                                    </div>
+                                    <span class="ml-3 text-slate-700 leading-6">採購 10 顆跳線帽、12V 5A PSU、5-way 分電板、FFC 轉接板 × 5、耳機與麥克風。</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <div class="flex-shrink-0 h-6 flex items-center">
+                                        <input type="checkbox" class="w-5 h-5 text-blue-600 rounded border-slate-300 focus:ring-blue-500 transition duration-150 cursor-pointer">
+                                    </div>
+                                    <span class="ml-3 text-slate-700 leading-6">下載 ORCA Hand v2 STL 檔並開始 3D 列印（先列印 3 指試水溫）。</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <div class="flex-shrink-0 h-6 flex items-center">
+                                        <input type="checkbox" class="w-5 h-5 text-blue-600 rounded border-slate-300 focus:ring-blue-500 transition duration-150 cursor-pointer">
+                                    </div>
+                                    <span class="ml-3 text-slate-700 leading-6"><strong>跑階段 1</strong>：4 跳線帽閉合 + Keil build I2S_Audio + flash + UART 驗證 banner。</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <div class="flex-shrink-0 h-6 flex items-center">
+                                        <input type="checkbox" class="w-5 h-5 text-blue-600 rounded border-slate-300 focus:ring-blue-500 transition duration-150 cursor-pointer">
+                                    </div>
+                                    <span class="ml-3 text-slate-700 leading-6"><strong>跑階段 2/3</strong>：馬達單張 → 多張驗通。</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <div class="flex-shrink-0 h-6 flex items-center">
+                                        <input type="checkbox" class="w-5 h-5 text-blue-600 rounded border-slate-300 focus:ring-blue-500 transition duration-150 cursor-pointer">
+                                    </div>
+                                    <span class="ml-3 text-slate-700 leading-6">等機構到位後進階段 4：腱繩 + 手指組裝。</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <div class="flex-shrink-0 h-6 flex items-center">
+                                        <input type="checkbox" class="w-5 h-5 text-blue-600 rounded border-slate-300 focus:ring-blue-500 transition duration-150 cursor-pointer">
+                                    </div>
+                                    <span class="ml-3 text-slate-700 leading-6">追 Aaron Huang email 回覆 + SunboAZ PR 狀態。</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+
+                    <hr class="border-slate-200 my-12">
+
+                    <section id="appendix">
+                        <h2 class="text-slate-400 border-none before:hidden text-lg font-bold mb-2">附錄 A：Diagram 生成方法（版本控制可重現）</h2>
+                        <p class="text-sm text-slate-500 mb-2">
+                            本專案所有圖示皆為版本控制可重現：
+                        </p>
+                        <ul class="text-sm text-slate-500 list-disc pl-5">
+                            <li><strong>Mermaid 流程圖</strong> (<code>img/_sources/*.mmd</code>)：使用 Mermaid 官網工具生成。</li>
+                            <li><strong>Schemdraw 電路圖</strong> (<code>img/_sources/*.py</code>)：使用 Python 腳本生成。</li>
+                        </ul>
+                    </section>
+
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- 動態生成階層式 TOC 的腳本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tocContainer = document.getElementById('toc-container');
+            // 抓取所有的 h1 與 h3 作為目錄結構
+            const headers = document.querySelectorAll('.article-content h1, .article-content h3');
+            
+            // 生成目錄連結
+            headers.forEach((header, index) => {
+                // 如果 header 沒有 ID，幫它生一個
+                if (!header.id) {
+                    header.id = 'toc-header-' + index;
+                }
+                const id = header.id;
+                const title = header.textContent;
+                const level = header.tagName.toLowerCase() === 'h1' ? 1 : 2;
+
+                const a = document.createElement('a');
+                a.href = `#${id}`;
+                // 根據階層加上不同的 class，h3 會縮排
+                a.className = `toc-link ${level === 2 ? 'level-2' : 'font-medium mt-1'}`;
+                a.textContent = title;
+                a.setAttribute('data-target', id);
+                tocContainer.appendChild(a);
+            });
+
+            // 設置 Intersection Observer 處理滾動高亮
+            const navLinks = document.querySelectorAll('.toc-link');
+            const observerOptions = {
+                root: null,
+                rootMargin: '-100px 0px -60% 0px',
+                threshold: 0
+            };
+
+            const observerCallback = (entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.id;
+                        navLinks.forEach(link => link.classList.remove('active'));
+                        const activeLink = document.querySelector(`.toc-link[data-target="${id}"]`);
+                        if (activeLink) {
+                            activeLink.classList.add('active');
+                            // 滾動側邊欄確保高亮項目可見
+                            const container = document.querySelector('aside > div');
+                            const linkTop = activeLink.offsetTop;
+                            if (linkTop > container.scrollTop + container.clientHeight - 50 || linkTop < container.scrollTop) {
+                                container.scrollTo({ top: linkTop - 100, behavior: 'smooth' });
+                            }
+                        }
+                    }
+                });
+            };
+
+            const observer = new IntersectionObserver(observerCallback, observerOptions);
+            headers.forEach(header => observer.observe(header));
+            
+            // 點擊平滑滾動
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('data-target');
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80, 
+                            behavior: 'smooth'
+                        });
+                        history.pushState(null, null, `#${targetId}`);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
