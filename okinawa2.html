@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>從設計力到編輯力｜投影片設計</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --yellow: #FDE667; /* 取自你圖片的溫暖黃色 */
+            --white: #FDFDFD;
+            --black: #1A1A1A;
+            --border-width: 2.5px;
+        }
+
+        * {
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #e0e0e0; /* 外部深色背景，凸顯投影片 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Noto Sans TC', sans-serif;
+            color: var(--black);
+        }
+
+        /* --- 16:9 投影片容器 --- */
+        .slide-wrapper {
+            width: 100%;
+            max-width: 1440px;
+            aspect-ratio: 16 / 9;
+            background-color: var(--yellow);
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            padding: 4%;
+            display: grid;
+            grid-template-columns: 48% 48%;
+            gap: 4%;
+            container-type: inline-size;
+        }
+
+        /* --- 手繪感共用 Class --- */
+        .wobbly-border {
+            border: var(--border-width) solid var(--black);
+            /* 魔法數值：創造不規則手繪邊緣 */
+            border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+        }
+
+        /* ================= 左側佈局 ================= */
+        .left-col {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 10;
+        }
+
+        /* 1. 標題區塊 */
+        .title-group {
+            background: var(--white);
+            padding: 5cqw;
+            transform: rotate(-1.5deg);
+            align-self: flex-start;
+            margin-bottom: 2cqw;
+        }
+        
+        .page-tag {
+            font-size: 1.2cqw;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 1.5cqw;
+            display: inline-block;
+            border-bottom: 2px solid var(--black);
+            padding-bottom: 2px;
+        }
+
+        .main-title {
+            font-size: 3.8cqw;
+            font-weight: 900;
+            line-height: 1.2;
+            margin: 0;
+        }
+
+        .subtitle {
+            font-size: 1.5cqw;
+            font-weight: 700;
+            margin-top: 1cqw;
+            background-color: var(--yellow);
+            display: inline-block;
+            padding: 0.2cqw 1cqw;
+            border: 2px solid var(--black);
+            border-radius: 20px 50px 30px 40px/40px 30px 50px 20px;
+            transform: rotate(2deg);
+        }
+
+        /* 2. 過去與現在 對比區 */
+        .comparison-zone {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5cqw;
+            margin-top: 2cqw;
+        }
+
+        .comp-card {
+            background: var(--white);
+            padding: 1.5cqw 2cqw;
+            width: 85%;
+        }
+
+        .comp-card.past {
+            transform: rotate(1deg);
+            opacity: 0.9;
+        }
+
+        .comp-card.present {
+            transform: rotate(-2deg);
+            left: 5%;
+            border-width: 3.5px; /* 加粗現在的重點 */
+            box-shadow: 4px 4px 0 var(--black);
+        }
+
+        .comp-label {
+            font-weight: 900;
+            font-size: 1.4cqw;
+            margin-bottom: 0.5cqw;
+            display: block;
+        }
+
+        .comp-desc {
+            font-size: 1.2cqw;
+            font-weight: 700;
+            color: #333;
+        }
+
+        /* 3. 學習路徑 */
+        .learning-path {
+            margin-top: 2cqw;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1cqw;
+            font-weight: 700;
+            font-size: 1.2cqw;
+        }
+
+        .path-node {
+            background: var(--yellow);
+            border: 2px solid var(--black);
+            padding: 0.5cqw 1.2cqw;
+            border-radius: 50% 20% / 10% 40%;
+        }
+
+        .path-arrow {
+            font-family: monospace;
+            font-size: 1.5cqw;
+        }
+
+        .path-final {
+            background: var(--black);
+            color: var(--white);
+            border: 2px solid var(--black);
+            padding: 0.5cqw 1.2cqw;
+            border-radius: 10% 30% / 40% 10%;
+        }
+
+        /* ================= 右側佈局 ================= */
+        .right-col {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 1.8cqw; /* 控制列表間距 */
+            z-index: 10;
+        }
+
+        /* 完美復刻圖三的清單樣式 */
+        .list-row {
+            display: flex;
+            align-items: stretch;
+            gap: 1.5cqw;
+            transform: rotate(calc(var(--rot) * 1deg));
+            transition: transform 0.2s ease;
+        }
+
+        .list-row:hover {
+            transform: scale(1.02) rotate(0deg);
+        }
+
+        .list-skill {
+            background-color: var(--yellow);
+            font-size: 1.6cqw;
+            font-weight: 900;
+            padding: 1cqw 2cqw;
+            min-width: 28%;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 2px;
+        }
+
+        .list-target {
+            background-color: var(--white);
+            font-size: 1.4cqw;
+            font-weight: 700;
+            padding: 1cqw 2cqw;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            letter-spacing: 1px;
+        }
+
+        .target-light {
+            color: #666;
+            margin-right: 1cqw;
+        }
+
+        /* ================= 底部註腳 ================= */
+        .footer-note {
+            position: absolute;
+            bottom: 4%;
+            left: 4%;
+            right: 4%;
+            background: var(--white);
+            padding: 1cqw 2cqw;
+            font-size: 1cqw;
+            font-weight: 700;
+            line-height: 1.6;
+            z-index: 10;
+            transform: rotate(-0.5deg);
+        }
+
+        /* ================= 背景裝飾元素 (SVG) ================= */
+        .deco-star {
+            position: absolute;
+            top: -10%;
+            right: 2%;
+            width: 45cqw;
+            height: auto;
+            z-index: 1;
+            opacity: 0.9;
+        }
+
+        .deco-pebbles {
+            position: absolute;
+            bottom: 12%;
+            right: 5%;
+            width: 15cqw;
+            height: auto;
+            z-index: 1;
+        }
+
+        .deco-wave {
+            position: absolute;
+            left: 10%;
+            bottom: 25%;
+            width: 20cqw;
+            height: auto;
+            z-index: 1;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="slide-wrapper">
+        
+        <!-- 背景裝飾：還原圖一的巨大星星 -->
+        <svg class="deco-star" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="250,20 300,180 480,120 350,260 480,450 280,350 200,480 200,320 30,300 180,220 50,50" 
+                     fill="#FDE667" stroke="#1A1A1A" stroke-width="4" stroke-linejoin="round"/>
+        </svg>
+
+        <!-- 背景裝飾：波浪線條 -->
+        <svg class="deco-wave" viewBox="0 0 200 50" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10,25 Q40,5 70,25 T130,25 T190,25" fill="none" stroke="#1A1A1A" stroke-width="2"/>
+            <path d="M30,40 Q60,20 90,40 T150,40" fill="none" stroke="#1A1A1A" stroke-width="2"/>
+        </svg>
+
+        <!-- 背景裝飾：右下角小石頭群 -->
+        <svg class="deco-pebbles" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M140,80 C150,40 190,50 195,80 C200,100 150,110 140,80 Z" fill="#FDFDFD" stroke="#1A1A1A" stroke-width="3"/>
+            <circle cx="120" cy="70" r="15" fill="#FDFDFD" stroke="#1A1A1A" stroke-width="3"/>
+            <circle cx="95" cy="85" r="12" fill="#FDFDFD" stroke="#1A1A1A" stroke-width="3"/>
+            <circle cx="115" cy="95" r="8" fill="#FDFDFD" stroke="#1A1A1A" stroke-width="3"/>
+            <circle cx="75" cy="70" r="10" fill="#FDFDFD" stroke="#1A1A1A" stroke-width="3"/>
+        </svg>
+
+        <!-- 左半部：觀念與標題 -->
+        <div class="left-col">
+            <div class="title-group wobbly-border">
+                <div class="page-tag">第 3 頁｜為什麼選擇沖繩編輯力</div>
+                <h1 class="main-title">從設計力，<br>推進到地方編輯力</h1>
+                <div class="subtitle">補上編輯力</div>
+            </div>
+
+            <div class="comparison-zone">
+                <div class="comp-card past wobbly-border">
+                    <span class="comp-label">過去：地方素材</span>
+                    <span class="comp-desc">商品、品牌、活動</span>
+                </div>
+                <div class="comp-card present wobbly-border">
+                    <span class="comp-label">現在：地方記憶</span>
+                    <span class="comp-desc">可閱讀、可保存、可傳播</span>
+                </div>
+            </div>
+
+            <div class="learning-path">
+                <span style="font-size: 1cqw; opacity: 0.8;">學習沖繩方法：</span><br>
+                <div class="path-node">田野採集</div>
+                <div class="path-arrow">➔</div>
+                <div class="path-node">產業分析</div>
+                <div class="path-arrow">➔</div>
+                <div class="path-node">歷史轉譯</div>
+                <div class="path-arrow">➔</div>
+                <div class="path-final">南方編輯手帖</div>
+            </div>
+            
+            <!-- 佔位符，把內容往上推，留給 footer 空間 -->
+            <div style="height: 4cqw;"></div>
+        </div>
+
+        <!-- 右半部：能力對接清單 (完美復刻圖三樣式) -->
+        <div class="right-col">
+            <!-- 透過 CSS 變數 --rot 給予每個項目微小的隨機傾斜感 -->
+            <div class="list-row" style="--rot: -1;">
+                <div class="list-skill wobbly-border">工藝設計</div>
+                <div class="list-target wobbly-border">
+                    <span class="target-light">對接 ｜</span> 讀谷村陶藝
+                </div>
+            </div>
+
+            <div class="list-row" style="--rot: 0.5;">
+                <div class="list-skill wobbly-border">社區分析</div>
+                <div class="list-target wobbly-border">
+                    <span class="target-light">對接 ｜</span> 糸滿觀光
+                </div>
+            </div>
+
+            <div class="list-row" style="--rot: -0.5;">
+                <div class="list-skill wobbly-border">品牌策展</div>
+                <div class="list-target wobbly-border">
+                    <span class="target-light">對接 ｜</span> cafe MONDOOR
+                </div>
+            </div>
+
+            <div class="list-row" style="--rot: 1;">
+                <div class="list-skill wobbly-border">刊物編排</div>
+                <div class="list-target wobbly-border">
+                    <span class="target-light">對接 ｜</span> Urara／出版社協會
+                </div>
+            </div>
+
+            <div class="list-row" style="--rot: -1.5;">
+                <div class="list-skill wobbly-border">議題轉譯</div>
+                <div class="list-target wobbly-border">
+                    <span class="target-light">對接 ｜</span> 姬百合／沖繩藝大
+                </div>
+            </div>
+
+            <div class="list-row" style="--rot: 0;">
+                <div class="list-skill wobbly-border">圖文整理</div>
+                <div class="list-target wobbly-border">
+                    <span class="target-light">產出 ｜</span> 南方編輯手帖
+                </div>
+            </div>
+             <!-- 佔位符，把內容往上推，留給 footer 空間 -->
+             <div style="height: 4cqw;"></div>
+        </div>
+
+        <!-- 底部註腳說明 -->
+        <div class="footer-note wobbly-border">
+            官方計畫本身從やちむん之里、糸滿觀光、姬百合資料館、Urara／出版社協會，到最後整合全期採集成果為圖文排版與成果發表，正好對應這條「設計力到編輯力」的路徑。
+        </div>
+
+    </div>
+
+</body>
+</html>
