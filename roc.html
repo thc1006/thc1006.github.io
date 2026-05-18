@@ -78,36 +78,11 @@
     <!-- 主體：滿版 Canvas 國旗渲染區 -->
     <canvas id="flag-viewport" class="absolute inset-0 w-full h-full z-0 block"></canvas>
 
-    <!-- 頂部輕量 HUD 資訊 -->
-    <div class="absolute top-4 left-6 z-10 pointer-events-none flex flex-col gap-1 drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]">
-        <div class="flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
-            <h1 class="text-lg font-black tracking-widest text-slate-100">中華民國國旗 • 實體仿生布料模擬</h1>
-        </div>
-        <p class="text-xs text-slate-400 font-light tracking-wider tech-font">CINEMATIC FULLSCREEN SILK REAL-PHYSICS SIMULATION</p>
-    </div>
+    <!-- 右下角隱形觸發區域 (無任何按鈕顯示，點擊此區域即可喚出/隱藏設置) -->
+    <div id="invisible-trigger" class="absolute bottom-0 right-0 w-24 h-24 z-50 cursor-pointer bg-transparent" title="點擊此處開啟/關閉設定面板"></div>
 
-    <!-- 顯示當前風阻力學狀態 -->
-    <div class="absolute bottom-6 left-6 z-10 pointer-events-none hidden lg:flex flex-col gap-1 text-xs text-cyan-400/80 tech-font drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-        <div class="flex items-center gap-2">
-            <span>[AERO_DRAG]: </span><span id="hud-aero-drag">0.45 N</span>
-        </div>
-        <div class="flex items-center gap-2">
-            <span>[WIND_GUST]: </span><span id="hud-wind-gust">STABLE</span>
-        </div>
-    </div>
-
-    <!-- 控制面板收合開關按鈕 (圓形懸浮) -->
-    <button id="btn-toggle-hud" class="absolute bottom-6 right-6 lg:bottom-auto lg:top-6 lg:right-6 z-30 w-12 h-12 rounded-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 active:scale-95" title="顯示/隱藏控制面板">
-        <!-- 控制面板齒輪圖標 -->
-        <svg id="toggle-icon" class="w-6 h-6 transition-transform duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-            <circle cx="12" cy="12" r="3" />
-        </svg>
-    </button>
-
-    <!-- 懸浮式控制 HUD 面板 -->
-    <div id="control-panel" class="absolute bottom-0 left-0 right-0 lg:bottom-auto lg:right-6 lg:left-auto lg:top-24 z-20 w-full lg:w-[400px] glass-hud rounded-t-3xl lg:rounded-2xl p-6 flex flex-col gap-5 overflow-y-auto max-h-[75vh] lg:max-h-[82vh]">
+    <!-- 懸浮式控制 HUD 面板 (預設為 panel-collapsed 收合狀態，呈現最乾淨的滿版畫面) -->
+    <div id="control-panel" class="absolute bottom-0 left-0 right-0 lg:bottom-auto lg:right-6 lg:left-auto lg:top-24 z-20 w-full lg:w-[400px] glass-hud rounded-t-3xl lg:rounded-2xl p-6 flex flex-col gap-5 overflow-y-auto max-h-[75vh] lg:max-h-[82vh] panel-collapsed">
         
         <!-- 標題與預設 -->
         <div class="flex items-center justify-between border-b border-white/10 pb-3">
@@ -115,16 +90,23 @@
                 <span class="text-xs text-cyan-400 font-bold tracking-widest tech-font">REAL_PHYSICS_PRESETS</span>
                 <h2 class="text-sm font-bold text-slate-200">真實風場飄揚預設</h2>
             </div>
-            <div class="flex gap-1.5">
-                <button onclick="applyPreset('calm')" class="px-2 py-0.5 text-[10px] font-bold rounded bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors">無風下垂</button>
-                <button onclick="applyPreset('breeze')" class="px-2 py-0.5 text-[10px] font-bold rounded bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors">自然微風</button>
-                <button onclick="applyPreset('ceremonial')" class="px-2 py-0.5 text-[10px] font-bold rounded bg-cyan-950/85 text-cyan-300 border border-cyan-500/20 hover:bg-cyan-900 transition-colors">大典慢舞</button>
-                <button onclick="applyPreset('storm')" class="px-2 py-0.5 text-[10px] font-bold rounded bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors">強風疾舞</button>
-            </div>
+            <!-- 右上角關閉按鈕 -->
+            <button id="btn-close-panel" class="text-slate-400 hover:text-white transition-colors p-1">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l18 18" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="flex gap-1.5 justify-between">
+            <button onclick="applyPreset('calm')" class="flex-1 py-1 text-[10px] font-bold rounded bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors">無風下垂</button>
+            <button onclick="applyPreset('breeze')" class="flex-1 py-1 text-[10px] font-bold rounded bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors">自然微風</button>
+            <button onclick="applyPreset('ceremonial')" class="flex-1 py-1 text-[10px] font-bold rounded bg-cyan-950/85 text-cyan-300 border border-cyan-500/20 hover:bg-cyan-900 transition-colors">大典慢舞</button>
+            <button onclick="applyPreset('storm')" class="flex-1 py-1 text-[10px] font-bold rounded bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors">強風疾舞</button>
         </div>
 
         <!-- 旗面藝術外觀 -->
-        <div class="flex flex-col gap-3">
+        <div class="flex flex-col gap-3 border-t border-white/5 pt-3">
             <h3 class="text-xs font-bold text-slate-400 tracking-wider">旗幟風格造型 (Flag Style)</h3>
             <div class="grid grid-cols-2 gap-2">
                 <button id="btn-style-matrix" onclick="setFlagStyle('matrix')" class="py-2.5 rounded-lg text-xs font-bold border border-cyan-500 bg-cyan-950/30 text-cyan-300 transition-all duration-200">
@@ -136,7 +118,7 @@
             </div>
         </div>
 
-        <!-- 辨識度及代碼雨調諧面板 (為解決看不清楚所增加之核心控制) -->
+        <!-- 辨識度及代碼雨調諧面板 -->
         <div class="flex flex-col gap-4 border-t border-white/5 pt-4">
             <h3 class="text-xs font-bold text-slate-400 tracking-wider">代碼雨與國旗辨識度調諧</h3>
 
@@ -144,9 +126,9 @@
             <div class="flex flex-col gap-1.5">
                 <div class="flex justify-between text-xs">
                     <span class="text-slate-300">真實底色顯影強度 (Base Flag Blend)</span>
-                    <span id="val-baseOpacity" class="tech-font text-cyan-400">45%</span>
+                    <span id="val-baseOpacity" class="tech-font text-cyan-400">35%</span>
                 </div>
-                <input id="slider-baseOpacity" type="range" min="0" max="100" step="5" value="45">
+                <input id="slider-baseOpacity" type="range" min="0" max="100" step="5" value="35">
                 <span class="text-[10px] text-slate-500">拉高數值可看清原圖細節，調至0%為極客純代碼雨</span>
             </div>
 
@@ -154,9 +136,9 @@
             <div class="flex flex-col gap-1.5">
                 <div class="flex justify-between text-xs">
                     <span class="text-slate-300">流動代碼雨亮度 (Rain Opacity)</span>
-                    <span id="val-rainBrightness" class="tech-font text-cyan-400">85%</span>
+                    <span id="val-rainBrightness" class="tech-font text-cyan-400">100%</span>
                 </div>
-                <input id="slider-rainBrightness" type="range" min="10" max="100" step="5" value="85">
+                <input id="slider-rainBrightness" type="range" min="10" max="100" step="5" value="100">
             </div>
 
             <!-- 霓虹線框輔助 -->
@@ -176,57 +158,57 @@
             <div class="flex flex-col gap-1.5">
                 <div class="flex justify-between text-xs">
                     <span class="text-slate-300">模擬風速 (Wind Velocity)</span>
-                    <span id="val-speed" class="tech-font text-cyan-400">1.2 m/s</span>
+                    <span id="val-speed" class="tech-font text-cyan-400">1.0 m/s</span>
                 </div>
-                <input id="slider-speed" type="range" min="0.2" max="8.0" step="0.1" value="1.2">
+                <input id="slider-speed" type="range" min="0.2" max="8.0" step="0.1" value="1.0">
                 <span class="text-[10px] text-slate-500">減慢風速可表現布料受重力拉扯下墜的莊嚴質感</span>
             </div>
 
-            <!-- 重力常數 (重磅物理下垂) -->
+            <!-- 重力常數 -->
             <div class="flex flex-col gap-1.5">
                 <div class="flex justify-between text-xs">
                     <span class="text-slate-300">重力下垂效應 (Gravity Sag)</span>
-                    <span id="val-gravity" class="tech-font text-cyan-400">0.7 G</span>
+                    <span id="val-gravity" class="tech-font text-cyan-400">0.5 G</span>
                 </div>
-                <input id="slider-gravity" type="range" min="0.0" max="2.0" step="0.1" value="0.7">
-                <span class="text-[10px] text-slate-500">無風或風速低時，右端受重力影響產生的真實墜落感</span>
+                <input id="slider-gravity" type="range" min="0.0" max="2.0" step="0.1" value="0.5">
+                <span class="text-[10px] text-slate-500">控制低風速下旗面自然垂墜感，數值低更顯輕柔飄逸</span>
             </div>
 
-            <!-- 扭轉切變波 (2D Phase Diff) -->
+            <!-- 扭轉切變波 -->
             <div class="flex flex-col gap-1.5">
                 <div class="flex justify-between text-xs">
                     <span class="text-slate-300">扭轉與不對稱剪切波 (Torsional Shear)</span>
-                    <span id="val-torsion" class="tech-font text-cyan-400">1.2 rad</span>
+                    <span id="val-torsion" class="tech-font text-cyan-400">1.4 rad</span>
                 </div>
-                <input id="slider-torsion" type="range" min="0.0" max="3.0" step="0.1" value="1.2">
-                <span class="text-[10px] text-slate-500">增加旗幟頂部與底部的相位偏移，使布料產生上下扭曲的3D張力</span>
+                <input id="slider-torsion" type="range" min="0.0" max="3.0" step="0.1" value="1.4">
+                <span class="text-[10px] text-slate-500">增加上下相位相移，使布料產生上下扭曲的3D張力</span>
             </div>
 
             <!-- X軸3D折疊壓縮 -->
             <div class="flex flex-col gap-1.5">
                 <div class="flex justify-between text-xs">
                     <span class="text-slate-300">布料不可伸展性 (Cloth Tension)</span>
-                    <span id="val-tension" class="tech-font text-cyan-400">1.0</span>
+                    <span id="val-tension" class="tech-font text-cyan-400">0.8</span>
                 </div>
-                <input id="slider-tension" type="range" min="0.0" max="2.0" step="0.1" value="1.0">
-                <span class="text-[10px] text-slate-500">物理張力壓縮：折疊越深，旗面橫向收縮越明顯，模擬真實 3D 摺痕</span>
+                <input id="slider-tension" type="range" min="0.0" max="2.0" step="0.1" value="0.8">
+                <span class="text-[10px] text-slate-500">控制布料拉伸度，調低數值使布料感覺更鬆軟溫和</span>
             </div>
 
             <!-- 波浪起伏細節與密度 -->
             <div class="flex flex-col gap-1.5">
                 <div class="flex justify-between text-xs">
                     <span class="text-slate-300">巨型褶皺振幅 (Amplitude)</span>
-                    <span id="val-amplitude" class="tech-font text-cyan-400">35 px</span>
+                    <span id="val-amplitude" class="tech-font text-cyan-400">30 px</span>
                 </div>
-                <input id="slider-amplitude" type="range" min="10" max="80" step="1" value="35">
+                <input id="slider-amplitude" type="range" min="10" max="80" step="1" value="30">
             </div>
 
             <div class="flex flex-col gap-1.5">
                 <div class="flex justify-between text-xs">
                     <span class="text-slate-300">微細絲絨摺皺 (Micro Ripples)</span>
-                    <span id="val-ripples" class="tech-font text-cyan-400">1.5</span>
+                    <span id="val-ripples" class="tech-font text-cyan-400">1.1</span>
                 </div>
-                <input id="slider-ripples" type="range" min="0" max="3.0" step="0.1" value="1.5">
+                <input id="slider-ripples" type="range" min="0" max="3.0" step="0.1" value="1.1">
             </div>
         </div>
 
@@ -241,7 +223,6 @@
                     <span id="val-shadow" class="tech-font text-cyan-400">75%</span>
                 </div>
                 <input id="slider-shadow" type="range" min="0" max="100" step="5" value="75">
-                <span class="text-[10px] text-slate-500">物理褶皺深谷處的局部自陰影，大幅提升布料立體層次</span>
             </div>
 
             <div class="flex flex-col gap-1.5">
@@ -260,7 +241,7 @@
                 </label>
                 <div class="text-right text-[10px] text-slate-500 flex items-center justify-end gap-1">
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
-                    <span>240-MEMBER GRID</span>
+                    <span>300-MEMBER GRID</span>
                 </div>
             </div>
 
@@ -316,28 +297,28 @@
     <script>
         // 1. 全域實體物理與視覺參數
         const settings = {
-            speed: 1.2,             // 風速
-            gravity: 0.7,           // 重力下垂 (0 G ~ 2 G)
-            torsion: 1.2,           // 剪切扭轉率 (0 ~ 3)
-            tension: 1.0,           // 3D 橫向折疊壓縮力 (0 ~ 2)
-            amplitude: 35,          // 主摺皺起伏大小 (px)
+            speed: 1.0,             // 風速 (調整為預設更優雅緩慢 1.0)
+            gravity: 0.5,           // 重力下垂 (調軟為 0.5 G)
+            torsion: 1.4,           // 剪切扭轉率 (增加流線扭曲 1.4)
+            tension: 0.8,           // 3D 橫向折疊壓縮力 (降低張力 0.8，增加布料鬆軟感)
+            amplitude: 30,          // 主摺皺起伏大小 (柔和波動 30px)
             frequency: 0.04,        // 波浪密度 / 頻率
-            rippleDetail: 1.5,      // 高頻細碎漣漪
+            rippleDetail: 1.1,      // 高頻細碎漣漪 (柔和 1.1)
             shadowDepth: 0.75,      // 陰影/環境光遮蔽強度
             highlightDepth: 0.70,   // 高光反射強度
             scaleMode: 'cover',     // cover | stretch
             style: 'matrix',        // matrix (數位代碼亂碼) | classic (平滑經典)
             wireframe: false,       // 是否開啟3D骨架
-            slices: 240,            // 高解析度橫向物理組件
-            baseOpacity: 0.45,      // 新增：真實國旗底色顯影強度 (預設45%完美融合)
-            rainBrightness: 0.85,   // 新增：動態程式雨亮度 (預設85%)
-            glowOutline: true       // 新增：霓虹幾何線框輔助辨識
+            slices: 300,            // 超高解析度橫向物理組件 (提高至 300 片，物理折面更柔軟流暢)
+            baseOpacity: 0.35,      // 真實國旗底色顯影強度 (預設35%)
+            rainBrightness: 1.0,    // 動態程式雨亮度 (預設100%)
+            glowOutline: true       // 霓虹幾何線框輔助辨識
         };
 
         // 2. 初始化核心物件與 Matrix 動態流狀態
         const canvas = document.getElementById('flag-viewport');
         const ctx = canvas.getContext('2d');
-        let vectorFlagCanvas = null;    // 儲存原始規格的中華民國國旗向量圖 (作為顏色採樣與顯影背景)
+        let vectorFlagCanvas = null;    // 儲存原始規格的中華民國國旗向量圖
         let offscreenFlagCanvas = null; // 儲存經即時轉譯後、作為渲染紋理的最終 Canvas
         let currentFlagSource = null;   // 當前國旗來源
         let customImage = null;         // 自訂上傳圖
@@ -346,14 +327,15 @@
         let rainCanvas = null;
         let rainCtx = null;
 
-        const gridCols = 150;           // 1800 寬 / 12px = 150 列
-        const gridRows = 80;            // 1200 高 / 15px = 80 行
-        let matrixStreams = [];         // 儲存 150 條串流的下落位置與速度
+        // 加寬代碼格網，解決字元重疊問題，使代碼清晰奪目
+        const gridCols = 128;           // 1800 寬 / 14px 寬間距 = ~128 列
+        const gridRows = 66;            // 1200 高 / 18px 高間距 = ~66 行
+        let matrixStreams = [];         // 儲存 128 條串流的下落位置與速度
         let gridColors = [];            // 儲存後台預採樣的 RGB 矩陣
 
         let time = 0;
         let lastTimestamp = 0;
-        let hudVisible = true;
+        let hudVisible = false;         // 預設為收合狀態，保持畫面100%純淨
 
         // 音訊與風速動態調變
         let audioCtx = null;
@@ -380,7 +362,7 @@
             // 4. 啟動主渲染物理迴圈
             requestAnimationFrame(renderLoop);
             
-            showToast("等比例滿版「動態防退色代碼雨」國旗已啟動，辨識度大幅提升！");
+            showToast("滿版大典慢舞代碼旗載入成功。點擊右下角可喚出設定面板。");
         });
 
         // 調整主畫布
@@ -454,19 +436,19 @@
         function buildColorMap() {
             const baseSource = customImage ? customImage : vectorFlagCanvas;
             const tempCanvas = document.createElement('canvas');
-            tempCanvas.width = 150;
-            tempCanvas.height = 80;
+            tempCanvas.width = 128;
+            tempCanvas.height = 66;
             const tempCtx = tempCanvas.getContext('2d');
-            tempCtx.drawImage(baseSource, 0, 0, 150, 80);
+            tempCtx.drawImage(baseSource, 0, 0, 128, 66);
 
-            const imgData = tempCtx.getImageData(0, 0, 150, 80);
+            const imgData = tempCtx.getImageData(0, 0, 128, 66);
             const pixels = imgData.data;
 
             gridColors = [];
-            for (let c = 0; c < 150; c++) {
+            for (let c = 0; c < 128; c++) {
                 gridColors[c] = [];
-                for (let r = 0; r < 80; r++) {
-                    const idx = (r * 150 + c) * 4;
+                for (let r = 0; r < 66; r++) {
+                    const idx = (r * 128 + c) * 4;
                     gridColors[c][r] = {
                         r: pixels[idx],
                         g: pixels[idx + 1],
@@ -481,44 +463,45 @@
             matrixStreams = [];
             for (let i = 0; i < gridCols; i++) {
                 matrixStreams.push({
-                    x: i * 12,                  // 每列寬度 12px (150列 = 1800)
+                    x: i * 14,                  // 寬間距 14px (128列 = 1792)
                     y: Math.random() * -1200,    // 隨機置於上方
-                    speed: 4 + Math.random() * 8, // 每條代碼串流不同的速度
+                    speed: 3 + Math.random() * 5, // 調整下落速度，使流動更優雅
                     lastY: -1
                 });
             }
         }
 
         // 6. 雙層獨立隔離「代碼雨」與「固態底色」渲染器
-        // 此重構徹底解決了「國旗看不清楚、無法辨識」的問題
         function updateMatrixRain() {
             if (settings.style !== 'matrix' || !rainCtx || !offscreenFlagCanvas) return;
 
-            // Step A: 在獨立隔離畫布（rainCanvas）上繪製字元雨並形成螢光殘影拖尾
-            rainCtx.fillStyle = 'rgba(2, 2, 6, 0.16)'; 
-            rainCtx.fillRect(0, 0, 1800, 1200);
+            // 徹底清空殘影畫布，避免色澤混濁，呈現極致對比度
+            rainCtx.clearRect(0, 0, 1800, 1200);
 
+            // 駭客任務專屬半角片假名與極客字元池
             const charPool = 'ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ1234567890:*+-<>|!?$#@';
-            rainCtx.font = 'bold 12px "Share Tech Mono", monospace';
-            rainCtx.textBaseline = 'top';
 
             for (let i = 0; i < matrixStreams.length; i++) {
                 const stream = matrixStreams[i];
                 stream.y += stream.speed;
 
                 if (stream.y > 1200) {
-                    stream.y = Math.random() * -200;
-                    stream.speed = 4 + Math.random() * 8;
+                    stream.y = Math.random() * -300;
+                    stream.speed = 3 + Math.random() * 5; 
                     stream.lastY = -1;
                 }
 
                 const colIdx = i;
-                const rowIdx = Math.floor(stream.y / 15);
+                const currentHeadRow = Math.floor(stream.y / 18); // 行高 18px
+                const trailLen = 16; 
 
-                if (rowIdx !== stream.lastY && rowIdx >= 0 && rowIdx < 80) {
-                    stream.lastY = rowIdx;
+                // 繪製單條下落鏈的所有字元
+                for (let t = 0; t < trailLen; t++) {
+                    const rowIdx = currentHeadRow - t;
+                    if (rowIdx < 0 || rowIdx >= 66) continue;
+
                     const x = stream.x;
-                    const y = rowIdx * 15;
+                    const y = rowIdx * 18;
 
                     let rgb = { r: 0, g: 0, b: 0 };
                     if (gridColors[colIdx] && gridColors[colIdx][rowIdx]) {
@@ -527,34 +510,50 @@
 
                     const luma = 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
 
-                    if (luma > 10) {
+                    if (luma > 15) {
                         const char = charPool[Math.floor(Math.random() * charPool.length)];
-                        const isLeadingHead = Math.random() < 0.15; 
+                        const isHead = (t === 0); 
+                        
+                        // 計算代碼漸層淡出
+                        const trailAlpha = (1.0 - (t / trailLen)) * settings.rainBrightness;
+                        if (trailAlpha <= 0) continue;
+
                         let colorStr = '';
 
-                        // 極客高光譜顯色
+                        // 極客高對比偏振著色
                         if (rgb.r > 215 && rgb.g > 215 && rgb.b > 215) {
-                            colorStr = isLeadingHead ? '#ffffff' : '#a6e8ff';
-                            if (isLeadingHead) {
+                            // 太陽光芒區：發光冰藍白
+                            colorStr = isHead ? `rgba(255, 255, 255, ${trailAlpha})` : `rgba(180, 240, 255, ${trailAlpha})`;
+                            if (isHead) {
                                 rainCtx.shadowColor = '#00f0ff';
-                                rainCtx.shadowBlur = 10;
+                                rainCtx.shadowBlur = 12;
                             }
                         } else if (rgb.b > 95 && rgb.b > rgb.r) {
-                            colorStr = isLeadingHead ? '#38bdf8' : '#0284c7';
-                            if (isLeadingHead) {
+                            // 青天湛藍區：高飽和霓虹電信藍
+                            colorStr = isHead ? `rgba(56, 189, 248, ${trailAlpha})` : `rgba(0, 140, 255, ${trailAlpha})`;
+                            if (isHead) {
                                 rainCtx.shadowColor = '#0070ff';
-                                rainCtx.shadowBlur = 8;
+                                rainCtx.shadowBlur = 10;
                             }
                         } else if (rgb.r > 95 && rgb.r > rgb.b) {
-                            colorStr = isLeadingHead ? '#fda4af' : '#e11d48';
-                            if (isLeadingHead) {
+                            // 紅地紅海區：高溫霓虹紅
+                            colorStr = isHead ? `rgba(255, 180, 190, ${trailAlpha})` : `rgba(244, 63, 94, ${trailAlpha})`;
+                            if (isHead) {
                                 rainCtx.shadowColor = '#ff003c';
-                                rainCtx.shadowBlur = 8;
+                                rainCtx.shadowBlur = 10;
                             }
                         } else {
-                            colorStr = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+                            colorStr = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${trailAlpha})`;
                         }
 
+                        // 雙重字級設計，字體更飽滿
+                        rainCtx.font = isHead ? 'bold 17px "Share Tech Mono", monospace' : 'bold 14px "Share Tech Mono", monospace';
+                        
+                        // 核心技術：陰影反襯疊加 (在字元下方繪製一層深黑色 Drop Shadow，讓亂碼邊緣銳利化、極度清晰！)
+                        rainCtx.fillStyle = `rgba(1, 1, 3, ${trailAlpha * 0.95})`;
+                        rainCtx.fillText(char, x + 1.5, y + 1.5);
+
+                        // 繪製發光代碼字元主體
                         rainCtx.fillStyle = colorStr;
                         rainCtx.fillText(char, x, y);
                         rainCtx.shadowBlur = 0; 
@@ -562,18 +561,24 @@
                 }
             }
 
-            // 系統隨機突變雜訊
-            for (let k = 0; k < 6; k++) {
-                const rx = Math.floor(Math.random() * 150);
-                const ry = Math.floor(Math.random() * 80);
-                const x = rx * 12;
-                const y = ry * 15;
+            // 隨機系統突變螢光噪訊 (同步加深加粗)
+            for (let k = 0; k < 12; k++) {
+                const rx = Math.floor(Math.random() * 128);
+                const ry = Math.floor(Math.random() * 66);
+                const x = rx * 14;
+                const y = ry * 18;
                 const rgb = gridColors[rx]?.[ry] || { r: 0, g: 0, b: 0 };
                 const luma = 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
 
                 if (luma > 15) {
                     const char = charPool[Math.floor(Math.random() * charPool.length)];
-                    rainCtx.fillStyle = rgb.r > 215 ? '#ffffff' : (rgb.b > rgb.r ? '#00e5ff' : '#ff3366');
+                    
+                    // 噪訊也疊加陰影反襯
+                    rainCtx.font = 'bold 14px "Share Tech Mono", monospace';
+                    rainCtx.fillStyle = 'rgba(1, 1, 3, 0.9)';
+                    rainCtx.fillText(char, x + 1.5, y + 1.5);
+
+                    rainCtx.fillStyle = rgb.r > 215 ? 'rgba(255, 255, 255, 0.9)' : (rgb.b > rgb.r ? 'rgba(0, 229, 255, 0.8)' : 'rgba(255, 51, 102, 0.8)');
                     rainCtx.fillText(char, x, y);
                 }
             }
@@ -583,7 +588,7 @@
             mCtx.fillStyle = '#020206'; // 基底極深藍
             mCtx.fillRect(0, 0, 1800, 1200);
 
-            // 1. 疊加真實國旗底色（透明度由滑桿調控，避免代碼雨覆蓋導致無法辨識）
+            // 1. 疊加真實國旗底色
             if (settings.baseOpacity > 0) {
                 mCtx.save();
                 mCtx.globalAlpha = settings.baseOpacity;
@@ -594,9 +599,9 @@
             // 2. 繪製霓虹幾何輔助線框 (青天外框、白日耀眼冰藍框)
             if (settings.glowOutline) {
                 mCtx.save();
-                mCtx.strokeStyle = 'rgba(0, 240, 255, 0.75)';
+                mCtx.strokeStyle = 'rgba(0, 240, 255, 0.85)';
                 mCtx.shadowColor = '#00f0ff';
-                mCtx.shadowBlur = 12;
+                mCtx.shadowBlur = 14;
                 mCtx.lineWidth = 5;
 
                 // 繪製太陽線框
@@ -621,7 +626,7 @@
                 mCtx.stroke();
 
                 // 繪製青天白日區分界線
-                mCtx.strokeStyle = 'rgba(0, 112, 255, 0.55)';
+                mCtx.strokeStyle = 'rgba(0, 112, 255, 0.65)';
                 mCtx.shadowColor = '#0070ff';
                 mCtx.beginPath();
                 mCtx.moveTo(900, 0);
@@ -631,14 +636,13 @@
                 mCtx.restore();
             }
 
-            // 3. 疊加獨立雨滴流 (透明度可調控)
+            // 3. 疊加獨立雨滴流 (雨滴畫布本身已經包含完美的 Alpha 漸層與發光頭部)
             mCtx.save();
-            mCtx.globalAlpha = settings.rainBrightness;
             mCtx.drawImage(rainCanvas, 0, 0);
             mCtx.restore();
         }
 
-        // 更新當前渲染用之紋理 (整合亂碼與經典緞面)
+        // 更新當前渲染用之紋理
         function updateFlagTexture() {
             const baseSource = customImage ? customImage : vectorFlagCanvas;
 
@@ -666,18 +670,15 @@
 
         // 6. 控制面板與按鈕連動監聽
         function initControls() {
-            // 收合功能
-            document.getElementById('btn-toggle-hud').addEventListener('click', () => {
-                hudVisible = !hudVisible;
-                const panel = document.getElementById('control-panel');
-                const icon = document.getElementById('toggle-icon');
-                if (hudVisible) {
-                    panel.classList.remove('panel-collapsed');
-                    icon.classList.remove('rotate-180');
-                } else {
-                    panel.classList.add('panel-collapsed');
-                    icon.classList.add('rotate-180');
-                }
+            // 右下角隱形觸發區域點擊 -> 切換面板顯示/收合
+            document.getElementById('invisible-trigger').addEventListener('click', () => {
+                toggleHUD();
+            });
+
+            // 控制面板右上角關閉按鈕 -> 收合面板
+            document.getElementById('btn-close-panel').addEventListener('click', () => {
+                hudVisible = false;
+                document.getElementById('control-panel').classList.add('panel-collapsed');
             });
 
             // 物理滑動條連動
@@ -728,6 +729,19 @@
             });
         }
 
+        // 切換控制面板狀態
+        function toggleHUD() {
+            hudVisible = !hudVisible;
+            const panel = document.getElementById('control-panel');
+            if (hudVisible) {
+                panel.classList.remove('panel-collapsed');
+                showToast("已喚出控制設定面板。");
+            } else {
+                panel.classList.add('panel-collapsed');
+                showToast("設定面板已收合。");
+            }
+        }
+
         function setupSlider(id, unit, decimals, callback) {
             const slider = document.getElementById(`slider-${id}`);
             const display = document.getElementById(`val-${id}`);
@@ -775,27 +789,27 @@
                 updateSlider('baseOpacity', 45, '%', 0);
                 showToast("物理預設：無風重力自然下垂");
             } else if (mode === 'breeze') {
-                updateSlider('speed', 2.2, 'm/s', 1);
-                updateSlider('gravity', 0.8, 'G', 1);
-                updateSlider('torsion', 1.1, 'rad', 1);
-                updateSlider('tension', 0.8, '', 1);
-                updateSlider('amplitude', 30, 'px', 0);
-                updateSlider('ripples', 1.3, '', 1);
+                updateSlider('speed', 1.8, 'm/s', 1);
+                updateSlider('gravity', 0.6, 'G', 1);
+                updateSlider('torsion', 1.2, 'rad', 1);
+                updateSlider('tension', 0.7, '', 1); 
+                updateSlider('amplitude', 28, 'px', 0);
+                updateSlider('ripples', 1.1, '', 1);
                 updateSlider('highlight', 70, '%', 0);
                 updateSlider('shadow', 75, '%', 0);
-                updateSlider('baseOpacity', 45, '%', 0);
-                showToast("物理預設：自然微風與不對稱剪切");
+                updateSlider('baseOpacity', 35, '%', 0);
+                showToast("物理預設：自然微風（柔軟細緻）");
             } else if (mode === 'ceremonial') {
-                updateSlider('speed', 1.2, 'm/s', 1);
-                updateSlider('gravity', 0.7, 'G', 1);
-                updateSlider('torsion', 1.5, 'rad', 1);
-                updateSlider('tension', 1.2, '', 1);
-                updateSlider('amplitude', 42, 'px', 0);
-                updateSlider('ripples', 1.0, '', 1);
+                updateSlider('speed', 1.0, 'm/s', 1); 
+                updateSlider('gravity', 0.5, 'G', 1); 
+                updateSlider('torsion', 1.4, 'rad', 1); 
+                updateSlider('tension', 0.8, '', 1); 
+                updateSlider('amplitude', 30, 'px', 0); 
+                updateSlider('ripples', 1.1, '', 1);
                 updateSlider('highlight', 75, '%', 0);
                 updateSlider('shadow', 80, '%', 0);
-                updateSlider('baseOpacity', 55, '%', 0); // 大典提高底色對比度
-                showToast("物理預設：大典儀式慢速飄揚（極致立體）");
+                updateSlider('baseOpacity', 35, '%', 0); 
+                showToast("物理預設：大典儀式優雅慢飄（極致鬆軟）");
             } else if (mode === 'storm') {
                 updateSlider('speed', 6.2, 'm/s', 1);
                 updateSlider('gravity', 0.1, 'G', 1);
@@ -903,13 +917,6 @@
             const gust = 1.0 + 0.28 * Math.sin(timeFactor * 0.04) * Math.cos(timeFactor * 0.015);
             const activeSpeed = settings.speed * gust;
 
-            // 即時輸出風速監控至 HUD
-            if (Math.random() < 0.1) {
-                const aeroDrag = (0.22 * Math.pow(activeSpeed, 2) * (1.0 + Math.sin(timeFactor*0.1)*0.1)).toFixed(2);
-                document.getElementById('hud-aero-drag').textContent = `${aeroDrag} N`;
-                document.getElementById('hud-wind-gust').textContent = gust > 1.15 ? "陣風(GUSTY)" : (gust < 0.85 ? "微弱(LULL)" : "穩定(STABLE)");
-            }
-
             const waveT = [];
             const waveB = [];
 
@@ -920,22 +927,22 @@
                 // 固定端錨定因子：旗面左側綁在旗桿上
                 const tether = Math.min(1.0, Math.pow(xRatio / 0.15, 1.6));
 
-                // 物理重力下墜
+                // 物理重力下墜拋物線
                 const gravityDroop = settings.gravity * 75 * Math.pow(xRatio, 2) * (1.0 - Math.min(0.92, activeSpeed / 3.0));
 
-                // 2D 扭轉波動剪切差
+                // 2.5D 扭轉波動剪切差
                 const shearOffset = settings.torsion * 0.45 * Math.sin(xRatio * 3.5 + timeFactor * 0.05);
 
                 // 物理多重諧波波形公式
-                let wt = Math.sin(xRatio * settings.frequency * 65 - timeFactor * activeSpeed * 0.12) * 1.0;
-                wt += Math.sin(xRatio * 150 - timeFactor * activeSpeed * 0.24) * 0.22 * settings.rippleDetail;
-                wt += Math.sin(xRatio * 320 - timeFactor * activeSpeed * 0.48) * 0.06 * settings.rippleDetail;
-                wt += Math.sin(xRatio * 460 - timeFactor * activeSpeed * 0.65) * 0.03 * settings.rippleDetail * Math.pow(xRatio, 2);
+                let wt = Math.sin(xRatio * settings.frequency * 55 - timeFactor * activeSpeed * 0.1) * 1.0;
+                wt += Math.sin(xRatio * 110 - timeFactor * activeSpeed * 0.18) * 0.25 * settings.rippleDetail;
+                wt += Math.sin(xRatio * 240 - timeFactor * activeSpeed * 0.35) * 0.05 * settings.rippleDetail;
+                wt += Math.sin(xRatio * 380 - timeFactor * activeSpeed * 0.55) * 0.02 * settings.rippleDetail * Math.pow(xRatio, 2);
 
-                let wb = Math.sin(xRatio * settings.frequency * 65 - timeFactor * activeSpeed * 0.12 + shearOffset) * 1.0;
-                wb += Math.sin(xRatio * 150 - timeFactor * activeSpeed * 0.24 + shearOffset) * 0.22 * settings.rippleDetail;
-                wb += Math.sin(xRatio * 320 - timeFactor * activeSpeed * 0.48 + shearOffset) * 0.06 * settings.rippleDetail;
-                wb += Math.sin(xRatio * 460 - timeFactor * activeSpeed * 0.65 + shearOffset) * 0.03 * settings.rippleDetail * Math.pow(xRatio, 2);
+                let wb = Math.sin(xRatio * settings.frequency * 55 - timeFactor * activeSpeed * 0.1 + shearOffset) * 1.0;
+                wb += Math.sin(xRatio * 110 - timeFactor * activeSpeed * 0.18 + shearOffset) * 0.25 * settings.rippleDetail;
+                wb += Math.sin(xRatio * 240 - timeFactor * activeSpeed * 0.35 + shearOffset) * 0.05 * settings.rippleDetail;
+                wb += Math.sin(xRatio * 380 - timeFactor * activeSpeed * 0.55 + shearOffset) * 0.02 * settings.rippleDetail * Math.pow(xRatio, 2);
 
                 // 物理疊加
                 waveT.push(wt * settings.amplitude * tether + gravityDroop);
