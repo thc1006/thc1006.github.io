@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>電影級滿版絲綢國旗飄揚模擬器</title>
+    <!-- 引入 Tailwind CSS 進行現代化 UI 佈局 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Noto+Sans+TC:wght@300;400;700;900&display=swap');
+        
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #020205;
+            color: #f1f5f9;
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .tech-font {
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        /* 頂級科技感玻璃擬態 */
+        .glass-hud {
+            background: rgba(10, 11, 22, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* 控制滑桿美化 */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(255, 255, 255, 0.1);
+            height: 5px;
+            border-radius: 999px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #22d3ee;
+            cursor: pointer;
+            box-shadow: 0 0 8px #22d3ee;
+            transition: transform 0.15s ease, background-color 0.15s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.3);
+            background: #ffffff;
+        }
+
+        /* 面板收合過渡 */
+        .panel-collapsed {
+            transform: translateX(110%);
+        }
+        
+        @media (max-width: 1024px) {
+            .panel-collapsed {
+                transform: translateY(110%);
+            }
+        }
+    </style>
+</head>
+<body class="relative w-screen h-screen select-none">
+
+    <!-- 主體：滿版 Canvas 國旗渲染區 -->
+    <canvas id="flag-viewport" class="absolute inset-0 w-full h-full z-0 block"></canvas>
+
+    <!-- 頂部輕量 HUD 資訊 -->
+    <div class="absolute top-4 left-6 z-10 pointer-events-none flex flex-col gap-1 drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]">
+        <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
+            <h1 class="text-lg font-black tracking-widest text-slate-100">中華民國國旗 • 3D 絲綢模擬</h1>
+        </div>
+        <p class="text-xs text-slate-400 font-light tracking-wider tech-font">CINEMATIC FULLSCREEN SILK SIMULATION</p>
+    </div>
+
+    <!-- 控制面板收合開關按鈕 (圓形懸浮) -->
+    <button id="btn-toggle-hud" class="absolute bottom-6 right-6 lg:bottom-auto lg:top-6 lg:right-6 z-30 w-12 h-12 rounded-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 active:scale-95" title="顯示/隱藏控制面板">
+        <!-- 控制面板齒輪圖標 -->
+        <svg id="toggle-icon" class="w-6 h-6 transition-transform duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <circle cx="12" cy="12" r="3" />
+        </svg>
+    </button>
+
+    <!-- 懸浮式控制 HUD 面板 -->
+    <div id="control-panel" class="absolute bottom-0 left-0 right-0 lg:bottom-auto lg:right-6 lg:left-auto lg:top-24 z-20 w-full lg:w-[400px] glass-hud rounded-t-3xl lg:rounded-2xl p-6 flex flex-col gap-5 overflow-y-auto max-h-[75vh] lg:max-h-[82vh]">
+        
+        <!-- 標題與預設 -->
+        <div class="flex items-center justify-between border-b border-white/10 pb-3">
+            <div class="flex flex-col">
+                <span class="text-xs text-cyan-400 font-bold tracking-widest tech-font">PRESETS</span>
+                <h2 class="text-sm font-bold text-slate-200">物理飄動預設組合</h2>
+            </div>
+            <div class="flex gap-1.5">
+                <button onclick="applyPreset('majestic')" class="px-2.5 py-1 text-[11px] font-bold rounded-md bg-cyan-950/85 text-cyan-300 border border-cyan-500/20 hover:bg-cyan-900 transition-colors">莊嚴慢速</button>
+                <button onclick="applyPreset('satin')" class="px-2.5 py-1 text-[11px] font-bold rounded-md bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors">絲綢細褶</button>
+                <button onclick="applyPreset('gale')" class="px-2.5 py-1 text-[11px] font-bold rounded-md bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors">強風疾舞</button>
+            </div>
+        </div>
+
+        <!-- 物理風學控制器 -->
+        <div class="flex flex-col gap-4">
+            <h3 class="text-xs font-bold text-slate-400 tracking-wider">物理動態設定</h3>
+            
+            <!-- 風速 (飄慢一點) -->
+            <div class="flex flex-col gap-1.5">
+                <div class="flex justify-between text-xs">
+                    <span class="text-slate-300">模擬風速 (Wind Speed)</span>
+                    <span id="val-speed" class="tech-font text-cyan-400">1.5 m/s</span>
+                </div>
+                <input id="slider-speed" type="range" min="0.4" max="8.0" step="0.1" value="1.5">
+                <span class="text-[10px] text-slate-500">減慢風速能創造出大典般的莊嚴慢動作感</span>
+            </div>
+
+            <!-- 摺皺波幅 -->
+            <div class="flex flex-col gap-1.5">
+                <div class="flex justify-between text-xs">
+                    <span class="text-slate-300">折疊波幅 (Wave Amplitude)</span>
+                    <span id="val-amplitude" class="tech-font text-cyan-400">35 px</span>
+                </div>
+                <input id="slider-amplitude" type="range" min="10" max="80" step="1" value="35">
+            </div>
+
+            <!-- 波浪密度 -->
+            <div class="flex flex-col gap-1.5">
+                <div class="flex justify-between text-xs">
+                    <span class="text-slate-300">波浪密度 / 頻率</span>
+                    <span id="val-frequency" class="tech-font text-cyan-400">0.04</span>
+                </div>
+                <input id="slider-frequency" type="range" min="0.01" max="0.12" step="0.005" value="0.04">
+            </div>
+
+            <!-- 絲綢細緻摺皺 (關鍵：模擬相片中高頻微小漣漪) -->
+            <div class="flex flex-col gap-1.5">
+                <div class="flex justify-between text-xs">
+                    <span class="text-slate-300">細緻絲絨摺皺 (Micro Ripples)</span>
+                    <span id="val-ripples" class="tech-font text-cyan-400">1.5</span>
+                </div>
+                <input id="slider-ripples" type="range" min="0" max="3.0" step="0.1" value="1.5">
+                <span class="text-[10px] text-slate-500">控制高頻微小布料摺痕的繁複程度，模擬真實緞面</span>
+            </div>
+        </div>
+
+        <!-- 3D 著色控制器 -->
+        <div class="flex flex-col gap-4 border-t border-white/5 pt-4">
+            <h3 class="text-xs font-bold text-slate-400 tracking-wider">絲綢光澤與視覺</h3>
+
+            <!-- 絲絨高光強度 -->
+            <div class="flex flex-col gap-1.5">
+                <div class="flex justify-between text-xs">
+                    <span class="text-slate-300">高光亮度 (Satin Highlights)</span>
+                    <span id="val-highlight" class="tech-font text-cyan-400">70%</span>
+                </div>
+                <input id="slider-highlight" type="range" min="0" max="100" step="5" value="70">
+            </div>
+
+            <!-- 深沈陰影強度 -->
+            <div class="flex flex-col gap-1.5">
+                <div class="flex justify-between text-xs">
+                    <span class="text-slate-300">暗部陰影 (Velvet Shadows)</span>
+                    <span id="val-shadow" class="tech-font text-cyan-400">75%</span>
+                </div>
+                <input id="slider-shadow" type="range" min="0" max="100" step="5" value="75">
+            </div>
+
+            <!-- 旗幟呈現模式 -->
+            <div class="flex flex-col gap-2 pt-1">
+                <span class="text-xs text-slate-300">畫面配置</span>
+                <div class="grid grid-cols-2 gap-2">
+                    <button id="btn-scale-cover" onclick="setScaleMode('cover')" class="py-2 rounded-lg text-xs font-bold border border-cyan-500 bg-cyan-950/30 text-cyan-300">
+                        等比例滿版 (無裁切)
+                    </button>
+                    <button id="btn-scale-stretch" onclick="setScaleMode('stretch')" class="py-2 rounded-lg text-xs font-bold border border-slate-800 bg-slate-900/40 text-slate-400 hover:text-slate-200">
+                        強制延伸填滿
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 進階環境工具 -->
+        <div class="flex flex-col gap-3 border-t border-white/5 pt-4">
+            <!-- 擬真風聲 -->
+            <div class="flex items-center justify-between bg-slate-950/50 p-2.5 rounded-xl border border-white/5">
+                <div class="flex flex-col">
+                    <span class="text-xs text-slate-200 font-bold">微風呼嘯模擬音效</span>
+                    <span class="text-[9px] text-slate-500">Web Audio 即時合成大氣風鳴</span>
+                </div>
+                <button id="btn-toggle-sound" onclick="toggleSound()" class="py-1 px-3 rounded-lg text-xs font-bold border border-slate-700 bg-slate-800/60 text-slate-300">
+                    開啟
+                </button>
+            </div>
+
+            <!-- 自由上傳與功能鍵 -->
+            <div class="grid grid-cols-2 gap-2">
+                <label class="py-2 rounded-lg text-xs font-bold border border-slate-700 bg-slate-800/40 text-slate-300 hover:bg-slate-700/40 flex items-center justify-center gap-1 cursor-pointer text-center">
+                    <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                    </svg>
+                    更換自訂旗幟
+                    <input id="file-uploader" type="file" accept="image/*" class="hidden">
+                </label>
+                <button onclick="toggleFullscreen()" class="py-2 rounded-lg text-xs font-bold border border-slate-700 bg-slate-800/40 text-slate-300 hover:bg-slate-700/40 flex items-center justify-center gap-1">
+                    <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" />
+                    </svg>
+                    劇院全螢幕
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Toast 輕量通知 -->
+    <div id="toast-container" class="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 pointer-events-none flex flex-col gap-2"></div>
+
+    <script>
+        // 1. 全域物理與視覺參數
+        const settings = {
+            speed: 1.5,             // 風速 (預設為緩慢飄動)
+            amplitude: 35,          // 大摺皺幅度
+            frequency: 0.04,        // 波浪密度
+            rippleDetail: 1.5,      // 高頻絲絨細碎摺皺 (0~3)
+            shadowDepth: 0.75,      // 陰影係數
+            highlightDepth: 0.70,   // 高光係數
+            scaleMode: 'cover',     // cover (保持比例填充裁切) | stretch (強制延展)
+            slices: 240             // 超高解析度細分切片數，保證摺皺滑順
+        };
+
+        // 2. 初始化核心物件
+        const canvas = document.getElementById('flag-viewport');
+        const ctx = canvas.getContext('2d');
+        let offscreenFlagCanvas = null; // 儲存預渲染的純淨國旗底圖
+        let currentFlagSource = null;   // 當前國旗來源 (Canvas或Image)
+        let customImage = null;         // 使用者自訂上傳圖像
+
+        let time = 0;
+        let lastTimestamp = 0;
+        let hudVisible = true;
+
+        // 音訊合成變數
+        let audioCtx = null;
+        let windNoise = null;
+        let windFilter = null;
+        let windGain = null;
+        let lfo = null;
+        let soundOn = false;
+
+        // 3. 初始載入與視窗調整
+        window.addEventListener('load', () => {
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            // 1. 初始化產生完美規格的中華民國國旗
+            generateTaiwanFlag();
+            currentFlagSource = offscreenFlagCanvas;
+
+            // 2. 初始化 UI 控制元件與滑桿監聽
+            initControls();
+
+            // 3. 啟動主渲染迴圈
+            requestAnimationFrame(renderLoop);
+            
+            showToast("等比例滿版絲綢國旗載入成功。");
+        });
+
+        // 動態調整主畫布尺寸
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        // 4. 精確繪製中華民國國旗向量底圖 (1800x1200 黄金解析度)
+        function generateTaiwanFlag() {
+            offscreenFlagCanvas = document.createElement('canvas');
+            offscreenFlagCanvas.width = 1800;
+            offscreenFlagCanvas.height = 1200;
+            const fCtx = offscreenFlagCanvas.getContext('2d');
+
+            // 紅地 (熱烈滿版極致紅)
+            fCtx.fillStyle = '#DD1111';
+            fCtx.fillRect(0, 0, 1800, 1200);
+
+            // 青天 (深邃湛藍)
+            fCtx.fillStyle = '#001A80';
+            fCtx.fillRect(0, 0, 900, 600);
+
+            // 白日 (圓心置於青天正中央: 450, 300)
+            const cx = 450;
+            const cy = 300;
+            const rOuter = 200; // 太陽光芒外圈半徑
+
+            // 精準繪製12道白日光芒
+            const rRayBase = rOuter * 0.5625; // 內圓半徑 = 3/8除以2/3之比例
+            const rRing = rRayBase * 1.0625;  // 藍色圓環寬度為1/16，外半徑為 17/16 內半徑
+
+            fCtx.fillStyle = '#FFFFFF';
+            for (let i = 0; i < 12; i++) {
+                const angle = (i * Math.PI) / 6 - Math.PI / 2; // 從正上方光芒開始旋轉
+                
+                // 光芒頂點
+                const tx = cx + Math.cos(angle) * rOuter;
+                const ty = cy + Math.sin(angle) * rOuter;
+
+                // 光芒左右基點 (相鄰光芒於内圓周相切，夾角15度)
+                const angleLeft = angle - Math.PI / 12;
+                const angleRight = angle + Math.PI / 12;
+
+                const bx1 = cx + Math.cos(angleLeft) * rRayBase;
+                const by1 = cy + Math.sin(angleLeft) * rRayBase;
+
+                const bx2 = cx + Math.cos(angleRight) * rRayBase;
+                const by2 = cy + Math.sin(angleRight) * rRayBase;
+
+                fCtx.beginPath();
+                fCtx.moveTo(tx, ty);
+                fCtx.lineTo(bx1, by1);
+                fCtx.lineTo(bx2, by2);
+                fCtx.closePath();
+                fCtx.fill();
+            }
+
+            // 繪製藍色圓環 (蓋掉光芒重疊中心點)
+            fCtx.fillStyle = '#001A80';
+            fCtx.beginPath();
+            fCtx.arc(cx, cy, rRing, 0, Math.PI * 2);
+            fCtx.fill();
+
+            // 繪製白日圓心
+            fCtx.fillStyle = '#FFFFFF';
+            fCtx.beginPath();
+            fCtx.arc(cx, cy, rRayBase, 0, Math.PI * 2);
+            fCtx.fill();
+        }
+
+        // 5. 控制面板綁定
+        function initControls() {
+            // 收合功能
+            document.getElementById('btn-toggle-hud').addEventListener('click', () => {
+                hudVisible = !hudVisible;
+                const panel = document.getElementById('control-panel');
+                const icon = document.getElementById('toggle-icon');
+                if (hudVisible) {
+                    panel.classList.remove('panel-collapsed');
+                    icon.classList.remove('rotate-180');
+                } else {
+                    panel.classList.add('panel-collapsed');
+                    icon.classList.add('rotate-180');
+                }
+            });
+
+            // 物理滑動條連動
+            setupSlider('speed', 'm/s', 1, (v) => {
+                settings.speed = v;
+                updateWindAudio();
+            });
+            setupSlider('amplitude', 'px', 0, (v) => settings.amplitude = v);
+            setupSlider('frequency', '', 3, (v) => settings.frequency = v);
+            setupSlider('ripples', '', 1, (v) => settings.rippleDetail = v);
+            
+            // 視覺滑動條
+            setupSlider('highlight', '%', 0, (v) => settings.highlightDepth = v / 100);
+            setupSlider('shadow', '%', 0, (v) => settings.shadowDepth = v / 100);
+
+            // 自訂上傳檔案
+            document.getElementById('file-uploader').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            customImage = img;
+                            currentFlagSource = customImage;
+                            showToast("成功套用自訂旗幟紋理！");
+                        };
+                        img.src = event.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        function setupSlider(id, unit, decimals, callback) {
+            const slider = document.getElementById(`slider-${id}`);
+            const display = document.getElementById(`val-${id}`);
+            slider.addEventListener('input', (e) => {
+                const val = parseFloat(e.target.value);
+                display.textContent = `${val.toFixed(decimals)}${unit ? ' ' + unit : ''}`;
+                callback(val);
+            });
+        }
+
+        // 6. 預設模式快速套用
+        function applyPreset(mode) {
+            if (mode === 'majestic') {
+                updateSlider('speed', 1.0, 'm/s', 1);
+                updateSlider('amplitude', 38, 'px', 0);
+                updateSlider('frequency', 0.035, '', 3);
+                updateSlider('ripples', 0.8, '', 1);
+                updateSlider('highlight', 65, '%', 0);
+                updateSlider('shadow', 80, '%', 0);
+                showToast("已套用：莊嚴大典慢速飄揚預設");
+            } else if (mode === 'satin') {
+                updateSlider('speed', 1.6, 'm/s', 1);
+                updateSlider('amplitude', 24, 'px', 0);
+                updateSlider('frequency', 0.055, '', 3);
+                updateSlider('ripples', 2.2, '', 1); // 極細摺皺
+                updateSlider('highlight', 85, '%', 0); // 亮眼絲綢反光
+                updateSlider('shadow', 75, '%', 0);
+                showToast("已套用：細緻絲綢微風預設");
+            } else if (mode === 'gale') {
+                updateSlider('speed', 5.5, 'm/s', 1);
+                updateSlider('amplitude', 55, 'px', 0);
+                updateSlider('frequency', 0.05, '', 3);
+                updateSlider('ripples', 1.4, '', 1);
+                updateSlider('highlight', 55, '%', 0);
+                updateSlider('shadow', 70, '%', 0);
+                showToast("已套用：狂暴疾風狂颮預設");
+            }
+        }
+
+        function updateSlider(id, val, unit, decimals) {
+            const slider = document.getElementById(`slider-${id}`);
+            const display = document.getElementById(`val-${id}`);
+            slider.value = val;
+            display.textContent = `${val.toFixed(decimals)}${unit ? ' ' + unit : ''}`;
+            
+            if (id === 'speed') {
+                settings.speed = val;
+                updateWindAudio();
+            }
+            else if (id === 'amplitude') settings.amplitude = val;
+            else if (id === 'frequency') settings.frequency = val;
+            else if (id === 'ripples') settings.rippleDetail = val;
+            else if (id === 'highlight') settings.highlightDepth = val / 100;
+            else if (id === 'shadow') settings.shadowDepth = val / 100;
+        }
+
+        // 7. 配置模式
+        function setScaleMode(mode) {
+            settings.scaleMode = mode;
+            const btnCover = document.getElementById('btn-scale-cover');
+            const btnStretch = document.getElementById('btn-scale-stretch');
+
+            btnCover.className = "py-2 rounded-lg text-xs font-bold border ";
+            btnStretch.className = "py-2 rounded-lg text-xs font-bold border ";
+
+            if (mode === 'cover') {
+                btnCover.classList.add('border-cyan-500', 'bg-cyan-950/30', 'text-cyan-300');
+                btnStretch.classList.add('border-slate-800', 'bg-slate-900/40', 'text-slate-400', 'hover:text-slate-200');
+                showToast("畫面設置：等比例滿版。");
+            } else {
+                btnStretch.classList.add('border-cyan-500', 'bg-cyan-950/30', 'text-cyan-300');
+                btnCover.classList.add('border-slate-800', 'bg-slate-900/40', 'text-slate-400', 'hover:text-slate-200');
+                showToast("畫面設置：強制拉伸。");
+            }
+        }
+
+        // 8. 劇院全螢幕切換
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    showToast("瀏覽器不支援全螢幕模式", "error");
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // 9. 核心光影布料物理渲染引擎 (Canvas 2D)
+        function drawSilkFlag() {
+            if (!currentFlagSource) return;
+
+            const slices = settings.slices;
+            const sourceW = currentFlagSource.width;
+            const sourceH = currentFlagSource.height;
+
+            // 計算滿版佈局尺寸
+            let destW, destH, destX, destY;
+
+            if (settings.scaleMode === 'cover') {
+                // 等比例剪裁滿版
+                const targetRatio = canvas.width / canvas.height;
+                const sourceRatio = 3 / 2; // 國旗標準比例 3:2
+
+                if (targetRatio > sourceRatio) {
+                    destW = canvas.width;
+                    destH = canvas.width / sourceRatio;
+                } else {
+                    destH = canvas.height;
+                    destW = canvas.height * sourceRatio;
+                }
+                destX = (canvas.width - destW) / 2;
+                destY = (canvas.height - destH) / 2;
+            } else {
+                // 強制拉伸填滿
+                destW = canvas.width;
+                destH = canvas.height;
+                destX = 0;
+                destY = 0;
+            }
+
+            const sliceSourceW = sourceW / slices;
+            const sliceDestW = destW / slices;
+
+            // 預先估算所有切片的波峰值，以便精準計算斜率進行光影著色
+            const waveHeights = [];
+            for (let i = 0; i <= slices; i++) {
+                const xRatio = i / slices;
+                const timeFactor = time * settings.speed * 0.022; // 慢速時鐘
+
+                // 物理多重諧波疊加公式：
+                // 第一層：巨型慢billow波浪 (大結構)
+                let wave = Math.sin(xRatio * settings.frequency * 70 - timeFactor) * 1.0;
+                
+                // 第二層：中頻流動Flutter (風阻交互作用)
+                wave += Math.sin(xRatio * settings.frequency * 140 + timeFactor * 1.7) * 0.25 * settings.rippleDetail;
+                
+                // 第三與四層：高頻極微小褶皺波 (模擬緞面、微型拉扯褶痕，完美呼應相片效果)
+                if (settings.rippleDetail > 0) {
+                    wave += Math.sin(xRatio * 320 - timeFactor * 2.8) * 0.07 * settings.rippleDetail;
+                    wave += Math.cos(xRatio * 510 + timeFactor * 4.0) * 0.03 * settings.rippleDetail;
+                }
+
+                // 物理錨定函數：旗桿左邊緣(i=0)固定不移，振幅漸進式向右自由放大
+                const tether = Math.min(1.0, Math.pow(xRatio / 0.12, 1.8));
+
+                waveHeights.push(wave * settings.amplitude * tether);
+            }
+
+            // 開始精細切片繪製
+            for (let i = 0; i < slices; i++) {
+                const sx = i * sliceSourceW;
+                const sy = 0;
+                const sw = sliceSourceW;
+                const sh = sourceH;
+
+                const dx = destX + (i * sliceDestW);
+                const dy = destY + waveHeights[i];
+                const dw = sliceDestW + 0.7; // 稍微溢出防止切片接縫出現微孔隙
+                const dh = destH;
+
+                // 1. 繪製布料基底切片
+                ctx.drawImage(currentFlagSource, sx, sy, sw, sh, dx, dy, dw, dh);
+
+                // 2. 超細緻「絲綢光影引擎」：使用切片斜率動態計算反射
+                // 模擬光源來自左上方 45 度角
+                const slope = (waveHeights[i] - (i > 0 ? waveHeights[i - 1] : waveHeights[i])) * 1.5;
+                
+                // 微觀高頻反光偏移 (讓高光隨小褶皺變換，呈現偏振效果)
+                const microReflect = Math.sin(i * 0.3 - time * 0.05) * 0.06 * settings.rippleDetail;
+
+                // 動態陰影疊加 ( slope < 0 表凹面，面光較弱 )
+                if (slope < 0 && settings.shadowDepth > 0) {
+                    const shadowAlpha = Math.min(0.85, -slope * settings.shadowDepth * 0.45);
+                    ctx.save();
+                    // 冷調暗部：帶有一絲絲深藍紫的暗色陰影，遠比純黑色更具電影寫實質感
+                    ctx.fillStyle = `rgba(3, 4, 18, ${shadowAlpha})`;
+                    ctx.beginPath();
+                    ctx.rect(dx, dy, dw, dh);
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                // 動態絲網高光疊加 ( slope > 0 表凸面，迎光面強烈，呈現高級緞面反光 )
+                if (slope > 0 && settings.highlightDepth > 0) {
+                    const highlightAlpha = Math.min(0.75, (slope + microReflect) * settings.highlightDepth * 0.38);
+                    ctx.save();
+                    // 絲綢白高光
+                    ctx.fillStyle = `rgba(255, 255, 255, ${highlightAlpha})`;
+                    ctx.beginPath();
+                    ctx.rect(dx, dy, dw, dh);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+        }
+
+        // 10. Web Audio 風鳴合成器
+        function toggleSound() {
+            const btn = document.getElementById('btn-toggle-sound');
+            if (!soundOn) {
+                try {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    audioCtx = new AudioContext();
+
+                    // 1. 建立粉紅/白噪音緩衝
+                    const bufferSize = 2 * audioCtx.sampleRate;
+                    const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                    const output = noiseBuffer.getChannelData(0);
+                    for (let i = 0; i < bufferSize; i++) {
+                        output[i] = Math.random() * 2 - 1;
+                    }
+
+                    windNoise = audioCtx.createBufferSource();
+                    windNoise.buffer = noiseBuffer;
+                    windNoise.loop = true;
+
+                    // 2. 帶通濾波器調變風音 (做出大自然呼嘯的幽靜空氣感)
+                    windFilter = audioCtx.createBiquadFilter();
+                    windFilter.type = 'bandpass';
+                    windFilter.Q.value = 3.0;
+
+                    // 3. 增益節點控制音量
+                    windGain = audioCtx.createGain();
+
+                    // 4. 低頻震盪調諧 (陣風漸強漸弱效果)
+                    lfo = audioCtx.createOscillator();
+                    lfo.type = 'sine';
+                    lfo.frequency.value = 0.18; // 緩慢調變周期
+
+                    const lfoGain = audioCtx.createGain();
+                    lfoGain.gain.value = 140;
+
+                    // 串接
+                    lfo.connect(lfoGain);
+                    lfoGain.connect(windFilter.frequency);
+                    
+                    windNoise.connect(windFilter);
+                    windFilter.connect(windGain);
+                    windGain.connect(audioCtx.destination);
+
+                    lfo.start();
+                    windNoise.start();
+
+                    soundOn = true;
+                    btn.classList.add('bg-cyan-500', 'text-slate-950', 'border-cyan-400');
+                    btn.textContent = "關閉";
+                    updateWindAudio();
+                    showToast("擬真大自然空氣風嘯合成已開啟。");
+                } catch (e) {
+                    showToast("您的瀏覽器暫不支援 Web Audio API", "error");
+                }
+            } else {
+                if (windNoise) windNoise.stop();
+                if (lfo) lfo.stop();
+                soundOn = false;
+                btn.className = "py-1 px-3 rounded-lg text-xs font-bold border border-slate-700 bg-slate-800/60 text-slate-300";
+                btn.textContent = "開啟";
+                showToast("音效已靜音。");
+            }
+        }
+
+        // 動態隨風速調校音頻頻率
+        function updateWindAudio() {
+            if (!soundOn || !audioCtx) return;
+            const spd = settings.speed;
+            
+            // 風越強，嘯聲越高亢、音量越明顯
+            const centerFreq = 160 + (spd * 45);
+            windFilter.frequency.setValueAtTime(centerFreq, audioCtx.currentTime);
+            
+            lfo.frequency.setValueAtTime(0.08 + (spd * 0.04), audioCtx.currentTime);
+            
+            const volume = 0.03 + (spd * 0.022);
+            windGain.gain.setValueAtTime(volume, audioCtx.currentTime);
+        }
+
+        // 11. Toast 輔助元件
+        function showToast(msg, type = "info") {
+            const toast = document.createElement('div');
+            toast.className = `px-4 py-2.5 rounded-xl text-xs font-bold shadow-2xl transition-all duration-300 transform translate-y-3 opacity-0 ${
+                type === 'error' ? 'bg-red-950/90 text-red-400 border border-red-500/30' : 'bg-cyan-950/95 text-cyan-300 border border-cyan-400/30'
+            }`;
+            toast.textContent = msg;
+            
+            const container = document.getElementById('toast-container');
+            container.appendChild(toast);
+            
+            setTimeout(() => toast.classList.remove('translate-y-3', 'opacity-0'), 50);
+            setTimeout(() => {
+                toast.classList.add('translate-y-3', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // 12. 主運作與動畫幀渲染迴圈
+        function renderLoop(timestamp) {
+            if (!lastTimestamp) lastTimestamp = timestamp;
+            const delta = timestamp - lastTimestamp;
+            lastTimestamp = timestamp;
+
+            // 慢動作時間軸步進：即使風速設定極低，利用 delta 保障動畫仍能以 60fps 優雅滑行不卡頓
+            time += delta;
+
+            // 繪製背景 (微光深藍，承托飽滿紅藍國旗色彩)
+            ctx.fillStyle = '#010103';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 繪製 3D 物理絲絨旗幟
+            drawSilkFlag();
+
+            requestAnimationFrame(renderLoop);
+        }
+    </script>
+</body>
+</html>
