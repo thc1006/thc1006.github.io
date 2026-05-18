@@ -326,12 +326,14 @@
         // 雙緩衝隔離雨滴與殘影
         let rainCanvas = null;
         let rainCtx = null;
+        let baseAsciiCanvas = null;     // 預渲染的靜態完整 ASCII 藝術國旗層，保證高幀率與完美可讀性
+        let baseAsciiCtx = null;
 
-        // 加寬代碼格網，解決字元重疊問題，使代碼清晰奪目
-        const gridCols = 128;           // 1800 寬 / 14px 寬間距 = ~128 列
-        const gridRows = 66;            // 1200 高 / 18px 高間距 = ~66 行
+        // 加寬代碼格網，使代碼大而清晰，完美呈現 ASCII 藝術感
+        const gridCols = 128;           // 1800 寬 / 14px = 128 列
+        const gridRows = 66;            // 1200 高 / 18px = 66 行
         let matrixStreams = [];         // 儲存 128 條串流的下落位置與速度
-        let gridColors = [];            // 儲存後台預採樣的 RGB 矩陣
+        let gridColors = [];            // 儲存後台預採樣的 RGB 物質結構
 
         let time = 0;
         let lastTimestamp = 0;
@@ -458,12 +460,86 @@
             }
         }
 
+        // 依據色域與明度智慧分配 ASCII 藝術字元
+        function getASCIIChar(rgb, c, r) {
+            const luma = 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
+            if (luma < 15) return ' '; // 黑色暗處不顯示
+
+            const charIndex = (c + r) % 12;
+
+            if (rgb.r > 215 && rgb.g > 215 && rgb.b > 215) {
+                // 太陽區：使用高密度區塊與發光星體
+                const sunChars = ['█', '▓', '▒', '☼', '☀', 'O', '#', '█', '▓', '▒', '☼', '☀'];
+                return sunChars[charIndex % sunChars.length];
+            } else if (rgb.b > 95 && rgb.b > rgb.r) {
+                // 青天區：使用工整的對稱程式碼符號
+                const blueChars = ['{', '}', '[', ']', '(', ')', '<', '>', '&', '%', '$', '!'];
+                return blueChars[charIndex % blueChars.length];
+            } else if (rgb.r > 95 && rgb.r > rgb.b) {
+                // 紅地區：使用極客感二進位與假名
+                const redChars = ['0', '1', 'ｦ', 'ｧ', 'ｨ', 'ｴ', 'ｵ', 'ｶ', 'ｷ', 'R', 'E', 'D'];
+                return redChars[charIndex % redChars.length];
+            }
+            return ' ';
+        }
+
+        // 預渲染靜態完整 ASCII 藝術網格 (高對比、不褪色)
+        function buildAsciiBase() {
+            if (!baseAsciiCanvas) {
+                baseAsciiCanvas = document.createElement('canvas');
+                baseAsciiCanvas.width = 1800;
+                baseAsciiCanvas.height = 1200;
+                baseAsciiCtx = baseAsciiCanvas.getContext('2d');
+            }
+            
+            baseAsciiCtx.fillStyle = '#020206';
+            baseAsciiCtx.fillRect(0, 0, 1800, 1200);
+            
+            baseAsciiCtx.font = 'bold 14px "Share Tech Mono", monospace';
+            baseAsciiCtx.textBaseline = 'top';
+            
+            const colW = 1800 / 128;
+            const rowH = 1200 / 66;
+            
+            for (let c = 0; c < 128; c++) {
+                for (let r = 0; r < 66; r++) {
+                    let rgb = { r: 0, g: 0, b: 0 };
+                    if (gridColors[c] && gridColors[c][r]) {
+                        rgb = gridColors[c][r];
+                    }
+                    
+                    const luma = 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
+                    if (luma < 15) continue;
+                    
+                    const char = getASCIIChar(rgb, c, r);
+                    let colorStr = '';
+                    
+                    if (rgb.r > 215 && rgb.g > 215 && rgb.b > 215) {
+                        colorStr = 'rgba(180, 240, 255, 0.22)'; // 冰白太陽
+                    } else if (rgb.b > 95 && rgb.b > rgb.r) {
+                        colorStr = 'rgba(0, 100, 220, 0.35)';   // 電信藍青天
+                    } else if (rgb.r > 95 && rgb.r > rgb.b) {
+                        colorStr = 'rgba(180, 15, 30, 0.32)';   // 電流紅腹
+                    } else {
+                        colorStr = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.3)`;
+                    }
+                    
+                    // 雙重影線：繪製黑色偏移底影，提供極致的 ASCII 清晰邊緣
+                    baseAsciiCtx.fillStyle = 'rgba(1, 1, 3, 0.85)';
+                    baseAsciiCtx.fillText(char, c * colW + 1.2, r * rowH + 1.2);
+                    
+                    baseAsciiCtx.fillStyle = colorStr;
+                    baseAsciiCtx.fillText(char, c * colW, r * rowH);
+                }
+            }
+        }
+
         // 初始化 Matrix 垂直代碼串流
         function initMatrixStreams() {
             matrixStreams = [];
             for (let i = 0; i < gridCols; i++) {
                 matrixStreams.push({
-                    x: i * 14,                  // 寬間距 14px (128列 = 1792)
+                    x: i * 14,                  // 寬間距 14px
                     y: Math.random() * -1200,    // 隨機置於上方
                     speed: 3 + Math.random() * 5, // 調整下落速度，使流動更優雅
                     lastY: -1
@@ -475,11 +551,16 @@
         function updateMatrixRain() {
             if (settings.style !== 'matrix' || !rainCtx || !offscreenFlagCanvas) return;
 
-            // 徹底清空殘影畫布，避免色澤混濁，呈現極致對比度
+            // 1. 清空動態層
             rainCtx.clearRect(0, 0, 1800, 1200);
 
-            // 駭客任務專屬半角片假名與極客字元池
-            const charPool = 'ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ1234567890:*+-<>|!?$#@';
+            // 2. 繪製預先構建完成的完整高對比 ASCII 藝術底圖
+            rainCtx.drawImage(baseAsciiCanvas, 0, 0);
+
+            // 3. 疊加極高對比的「落雨代碼高亮鏈」
+            const colW = 1800 / 128;
+            const rowH = 1200 / 66;
+            rainCtx.textBaseline = 'top';
 
             for (let i = 0; i < matrixStreams.length; i++) {
                 const stream = matrixStreams[i];
@@ -492,16 +573,16 @@
                 }
 
                 const colIdx = i;
-                const currentHeadRow = Math.floor(stream.y / 18); // 行高 18px
-                const trailLen = 16; 
+                const currentHeadRow = Math.floor(stream.y / rowH);
+                const trailLen = 14; 
 
                 // 繪製單條下落鏈的所有字元
                 for (let t = 0; t < trailLen; t++) {
                     const rowIdx = currentHeadRow - t;
                     if (rowIdx < 0 || rowIdx >= 66) continue;
 
-                    const x = stream.x;
-                    const y = rowIdx * 18;
+                    const x = colIdx * colW;
+                    const y = rowIdx * rowH;
 
                     let rgb = { r: 0, g: 0, b: 0 };
                     if (gridColors[colIdx] && gridColors[colIdx][rowIdx]) {
@@ -511,7 +592,7 @@
                     const luma = 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
 
                     if (luma > 15) {
-                        const char = charPool[Math.floor(Math.random() * charPool.length)];
+                        const char = getASCIIChar(rgb, colIdx, rowIdx);
                         const isHead = (t === 0); 
                         
                         // 計算代碼漸層淡出
@@ -520,24 +601,24 @@
 
                         let colorStr = '';
 
-                        // 極客高對比偏振著色
+                        // 極客高對比偏振著色 (動態高亮鏈採用飽和度極高的發光色)
                         if (rgb.r > 215 && rgb.g > 215 && rgb.b > 215) {
                             // 太陽光芒區：發光冰藍白
-                            colorStr = isHead ? `rgba(255, 255, 255, ${trailAlpha})` : `rgba(180, 240, 255, ${trailAlpha})`;
+                            colorStr = isHead ? `rgba(255, 255, 255, ${trailAlpha})` : `rgba(0, 240, 255, ${trailAlpha})`;
                             if (isHead) {
                                 rainCtx.shadowColor = '#00f0ff';
                                 rainCtx.shadowBlur = 12;
                             }
                         } else if (rgb.b > 95 && rgb.b > rgb.r) {
                             // 青天湛藍區：高飽和霓虹電信藍
-                            colorStr = isHead ? `rgba(56, 189, 248, ${trailAlpha})` : `rgba(0, 140, 255, ${trailAlpha})`;
+                            colorStr = isHead ? `rgba(140, 225, 255, ${trailAlpha})` : `rgba(0, 110, 255, ${trailAlpha})`;
                             if (isHead) {
                                 rainCtx.shadowColor = '#0070ff';
                                 rainCtx.shadowBlur = 10;
                             }
                         } else if (rgb.r > 95 && rgb.r > rgb.b) {
                             // 紅地紅海區：高溫霓虹紅
-                            colorStr = isHead ? `rgba(255, 180, 190, ${trailAlpha})` : `rgba(244, 63, 94, ${trailAlpha})`;
+                            colorStr = isHead ? `rgba(255, 160, 160, ${trailAlpha})` : `rgba(255, 10, 40, ${trailAlpha})`;
                             if (isHead) {
                                 rainCtx.shadowColor = '#ff003c';
                                 rainCtx.shadowBlur = 10;
@@ -558,28 +639,6 @@
                         rainCtx.fillText(char, x, y);
                         rainCtx.shadowBlur = 0; 
                     }
-                }
-            }
-
-            // 隨機系統突變螢光噪訊 (同步加深加粗)
-            for (let k = 0; k < 12; k++) {
-                const rx = Math.floor(Math.random() * 128);
-                const ry = Math.floor(Math.random() * 66);
-                const x = rx * 14;
-                const y = ry * 18;
-                const rgb = gridColors[rx]?.[ry] || { r: 0, g: 0, b: 0 };
-                const luma = 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
-
-                if (luma > 15) {
-                    const char = charPool[Math.floor(Math.random() * charPool.length)];
-                    
-                    // 噪訊也疊加陰影反襯
-                    rainCtx.font = 'bold 14px "Share Tech Mono", monospace';
-                    rainCtx.fillStyle = 'rgba(1, 1, 3, 0.9)';
-                    rainCtx.fillText(char, x + 1.5, y + 1.5);
-
-                    rainCtx.fillStyle = rgb.r > 215 ? 'rgba(255, 255, 255, 0.9)' : (rgb.b > rgb.r ? 'rgba(0, 229, 255, 0.8)' : 'rgba(255, 51, 102, 0.8)');
-                    rainCtx.fillText(char, x, y);
                 }
             }
 
@@ -661,6 +720,7 @@
                 }
 
                 buildColorMap();
+                buildAsciiBase(); // 重新生成完整的 ASCII 藝術底圖！
                 initMatrixStreams();
                 currentFlagSource = offscreenFlagCanvas;
             } else {
@@ -977,21 +1037,16 @@
                 const dw = sliceWidths[i] + 0.9;
                 const dh = dyB - dyT;
 
+                // 繪製國旗（若開啟3D線框，則以30%透明度繪製底圖，以反襯發光網格）
+                ctx.save();
                 if (settings.wireframe) {
-                    ctx.strokeStyle = i % 2 === 0 ? 'rgba(34, 211, 238, 0.65)' : 'rgba(8, 145, 178, 0.45)';
-                    ctx.lineWidth = 1.2;
-                    ctx.strokeRect(dx, dyT, dw, dh);
-                    
-                    ctx.beginPath();
-                    ctx.moveTo(dx, dyT);
-                    ctx.lineTo(dx + dw, dyT);
-                    ctx.moveTo(dx, dyB);
-                    ctx.lineTo(dx + dw, dyB);
-                    ctx.stroke();
-                } else {
-                    ctx.drawImage(currentFlagSource, sx, sy, sw, sh, dx, dyT, dw, dh);
+                    ctx.globalAlpha = 0.30; 
+                }
+                ctx.drawImage(currentFlagSource, sx, sy, sw, sh, dx, dyT, dw, dh);
+                ctx.restore();
 
-                    // 4. 三維曲率著色引擎
+                // 4. 三維曲率著色（僅在一般模式下渲染，以維持 3D 骨架模式的乾淨極客感）
+                if (!settings.wireframe) {
                     const slope = (waveT[i] - (i > 0 ? waveT[i - 1] : waveT[i])) * 1.5;
                     
                     let curvature = 0;
@@ -1039,6 +1094,63 @@
                         ctx.restore();
                     }
                 }
+            }
+
+            // 5. 新增：3D 仿生網格線框疊加繪製（在最上層繪製完美的橫縱交織發光網格）
+            if (settings.wireframe) {
+                ctx.save();
+                ctx.shadowColor = '#00f0ff';
+                ctx.shadowBlur = 10;
+                ctx.lineWidth = 1.5;
+
+                const gridStep = 10;   // 每 10 個切片繪製一條縱向線 (共 30 條縱線)
+                const horizRows = 10;  // 繪製 10 條橫向水平線
+
+                // A. 繪製橫向流體曲面網格
+                for (let j = 0; j <= horizRows; j++) {
+                    const r = j / horizRows;
+                    // 自上而下漸變透明，增強光學透視
+                    ctx.strokeStyle = `rgba(34, 211, 238, ${0.25 + (1 - r) * 0.45})`;
+                    ctx.beginPath();
+                    for (let i = 0; i <= slices; i++) {
+                        const dx = dxPositions[i];
+                        const dyT = destY + waveT[i];
+                        const dyB = destY + destH + waveB[i];
+                        const y = dyT + (dyB - dyT) * r;
+                        if (i === 0) {
+                            ctx.moveTo(dx, y);
+                        } else {
+                            ctx.lineTo(dx, y);
+                        }
+                    }
+                    ctx.stroke();
+                }
+
+                // B. 繪製縱向仿生粒子切片線
+                for (let i = 0; i <= slices; i += gridStep) {
+                    const dx = dxPositions[i];
+                    const dyT = destY + waveT[i];
+                    const dyB = destY + destH + waveB[i];
+
+                    // 起點、終點和邊界線給予高對比亮度
+                    ctx.strokeStyle = (i === 0 || i >= slices - gridStep) ? 'rgba(0, 240, 255, 0.85)' : 'rgba(34, 211, 238, 0.45)';
+                    ctx.beginPath();
+                    ctx.moveTo(dx, dyT);
+                    ctx.lineTo(dx, dyB);
+                    ctx.stroke();
+                }
+
+                // 確保最右端閉合線完美呈現
+                const dxEnd = dxPositions[slices];
+                const dyTEnd = destY + waveT[slices];
+                const dyBEnd = destY + destH + waveB[slices];
+                ctx.strokeStyle = 'rgba(0, 240, 255, 0.85)';
+                ctx.beginPath();
+                ctx.moveTo(dxEnd, dyTEnd);
+                ctx.lineTo(dxEnd, dyBEnd);
+                ctx.stroke();
+
+                ctx.restore();
             }
         }
 
