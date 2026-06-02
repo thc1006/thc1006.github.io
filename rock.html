@@ -33,11 +33,11 @@
             text-shadow: 0 0 10px currentColor;
         }
 
-        /* Orbit Animations */
+        /* Generic Orbit Styles */
         .orbit-container {
             position: relative;
-            width: 300px;
-            height: 300px;
+            width: 250px;
+            height: 250px;
             border-radius: 50%;
             border: 1px dashed rgba(148, 163, 184, 0.3);
             margin: 0 auto;
@@ -48,19 +48,16 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 40px;
-            height: 40px;
+            width: 32px;
+            height: 32px;
             background: radial-gradient(circle at 30% 30%, #3b82f6, #1e3a8a);
             border-radius: 50%;
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
         }
 
         .orbit-a-path {
             position: absolute;
-            top: 10%;
-            left: 10%;
-            right: 10%;
-            bottom: 10%;
+            top: 10%; left: 10%; right: 10%; bottom: 10%;
             border: 1px solid rgba(34, 197, 94, 0.3);
             border-radius: 50%;
             animation: spin 12s linear infinite;
@@ -68,46 +65,94 @@
 
         .spacecraft-a {
             position: absolute;
-            top: -6px;
-            left: 50%;
+            top: -5px; left: 50%;
             transform: translateX(-50%);
-            width: 12px;
-            height: 12px;
+            width: 10px; height: 10px;
             background-color: #22c55e;
             border-radius: 50%;
-            box-shadow: 0 0 15px #22c55e;
+            box-shadow: 0 0 10px #22c55e;
         }
 
-        .orbit-b-path {
+        /* Specific Scenario Animations */
+        .orbit-b-path-base {
             position: absolute;
-            top: -10%;
-            left: -10%;
-            right: -10%;
-            bottom: -10%;
-            border: 1px dashed rgba(249, 115, 22, 0.3);
+            top: -10%; left: -10%; right: -10%; bottom: -10%;
+            border: 1px dashed;
             border-radius: 50%;
-            animation: spin-intercept 8s ease-in-out infinite alternate;
         }
 
         .spacecraft-b {
             position: absolute;
-            top: 40%;
-            left: -6px;
-            width: 12px;
-            height: 12px;
-            background-color: #f97316;
+            top: 40%; left: -5px;
+            width: 10px; height: 10px;
             border-radius: 50%;
-            box-shadow: 0 0 15px #f97316;
         }
 
-        @keyframes spin {
-            100% { transform: rotate(360deg); }
+        /* Scenario A: Normal Fast */
+        .orbit-b-path-a {
+            border-color: rgba(34, 197, 94, 0.5);
+            animation: spin-intercept-a 4s ease-in-out infinite alternate;
+        }
+        .sc-b-a { background-color: #22c55e; box-shadow: 0 0 10px #22c55e; }
+
+        /* Scenario B: Slow and efficient */
+        .orbit-b-path-b {
+            border-color: rgba(59, 130, 246, 0.5);
+            animation: spin-intercept-a 10s ease-in-out infinite alternate;
+        }
+        .sc-b-b { background-color: #3b82f6; box-shadow: 0 0 10px #3b82f6; }
+
+        /* Scenario C: Missed intercept */
+        .orbit-b-path-c {
+            border-color: rgba(249, 115, 22, 0.5);
+            animation: spin-miss-c 5s ease-in-out infinite alternate;
+        }
+        .sc-b-c { background-color: #f97316; box-shadow: 0 0 10px #f97316; }
+
+        /* Scenario D: Violation (Red Flash) */
+        .orbit-b-path-d {
+            border-color: rgba(239, 68, 68, 0.8);
+            border-width: 2px;
+            animation: spin-intercept-d 2.5s ease-in infinite alternate;
+        }
+        .sc-b-d { 
+            background-color: #ef4444; 
+            box-shadow: 0 0 20px #ef4444; 
+            animation: blink-red 0.5s infinite;
         }
 
-        @keyframes spin-intercept {
+        /* Keyframes */
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes spin-intercept-a {
             0% { transform: rotate(0deg) scale(1); }
-            100% { transform: rotate(180deg) scale(0.65); } /* Simulating transfer orbit */
+            100% { transform: rotate(180deg) scale(0.65); }
         }
+        @keyframes spin-miss-c {
+            0% { transform: rotate(0deg) scale(1); }
+            100% { transform: rotate(140deg) scale(0.85); } /* Never reaches scale 0.65 (Target A) */
+        }
+        @keyframes spin-intercept-d {
+            0% { transform: rotate(0deg) scale(1); }
+            100% { transform: rotate(200deg) scale(0.65); }
+        }
+        @keyframes blink-red {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Tab Transitions */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        .tab-content.active {
+            display: grid;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
     </style>
 </head>
 <body class="min-h-screen p-4 md:p-8">
@@ -128,22 +173,11 @@
         <!-- Main Content Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            <!-- Left Column: Mission Setup & Animation -->
+            <!-- Left Column: Mission Setup & Tie Breaker -->
             <div class="lg:col-span-1 space-y-8">
                 <div class="glass-panel rounded-2xl p-6 relative overflow-hidden">
                     <h2 class="text-xl font-bold mb-6 text-blue-300"><i class="fa-solid fa-satellite mr-2"></i> 任務情境 (Mission Setup)</h2>
-                    
-                    <div class="orbit-container my-8">
-                        <div class="earth"></div>
-                        <div class="orbit-a-path text-center">
-                            <div class="spacecraft-a" title="太空船 A"></div>
-                        </div>
-                        <div class="orbit-b-path">
-                            <div class="spacecraft-b" title="太空船 B"></div>
-                        </div>
-                    </div>
-
-                    <div class="space-y-3 mt-6 text-sm">
+                    <div class="space-y-3 mt-4 text-sm">
                         <div class="flex items-center gap-3">
                             <div class="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_8px_#22c55e]"></div>
                             <span><strong class="text-white">太空船 A (目標)：</strong> 僅受重力影響，無主動機動。</span>
@@ -155,7 +189,6 @@
                     </div>
                 </div>
 
-                <!-- Tie Breaking -->
                 <div class="glass-panel rounded-2xl p-6">
                     <h2 class="text-xl font-bold mb-4 text-purple-300"><i class="fa-solid fa-scale-balanced mr-2"></i> 同分判定 (Tie-Breaker)</h2>
                     <ol class="list-decimal list-inside space-y-2 text-slate-300 text-sm">
@@ -169,13 +202,10 @@
 
             <!-- Right Column: Constraints & Scoring -->
             <div class="lg:col-span-2 space-y-8">
-                
                 <!-- Constraints Grid -->
                 <div>
                     <h2 class="text-2xl font-bold mb-4 text-slate-200"><i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-2"></i> 絕對硬限制 (Hard Constraints)</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        
-                        <!-- Constraint 1 -->
                         <div class="glass-panel p-5 rounded-xl border-l-4 border-l-red-500 hover:bg-slate-800/50 transition duration-300">
                             <div class="flex justify-between items-start">
                                 <div>
@@ -186,8 +216,6 @@
                             </div>
                             <p class="text-xs text-slate-400 mt-3">違規罰則：每次超標扣 10 分</p>
                         </div>
-
-                        <!-- Constraint 2 -->
                         <div class="glass-panel p-5 rounded-xl border-l-4 border-l-blue-500 hover:bg-slate-800/50 transition duration-300">
                             <div class="flex justify-between items-start">
                                 <div>
@@ -198,8 +226,6 @@
                             </div>
                             <p class="text-xs text-slate-400 mt-3">兩次脈衝之間的最短滑行時間</p>
                         </div>
-
-                        <!-- Constraint 3 -->
                         <div class="glass-panel p-5 rounded-xl border-l-4 border-l-green-500 hover:bg-slate-800/50 transition duration-300">
                             <div class="flex justify-between items-start">
                                 <div>
@@ -210,8 +236,6 @@
                             </div>
                             <p class="text-xs text-slate-400 mt-3">無相對速度限制，僅看空間距離</p>
                         </div>
-
-                        <!-- Constraint 4 -->
                         <div class="glass-panel p-5 rounded-xl border-l-4 border-l-purple-500 hover:bg-slate-800/50 transition duration-300">
                             <div class="flex justify-between items-start">
                                 <div>
@@ -222,143 +246,164 @@
                             </div>
                             <p class="text-xs text-slate-400 mt-3">T_A = 太空船 A 的軌道週期</p>
                         </div>
-
-                    </div>
-                </div>
-
-                <!-- Scoring System -->
-                <div class="glass-panel rounded-2xl p-6">
-                    <h2 class="text-2xl font-bold mb-6 text-slate-200"><i class="fa-solid fa-chart-pie text-cyan-400 mr-2"></i> 計分權重分析 (Scoring System)</h2>
-                    
-                    <!-- Visual Bar -->
-                    <div class="w-full h-8 flex rounded-full overflow-hidden mb-4 shadow-inner bg-slate-800">
-                        <div class="h-full bg-green-500 flex items-center justify-center font-bold text-xs glow-text" style="width: 50%;">精準度 (50%)</div>
-                        <div class="h-full bg-blue-500 flex items-center justify-center font-bold text-xs" style="width: 25%;">時間效率 (25%)</div>
-                        <div class="h-full bg-orange-500 flex items-center justify-center font-bold text-xs" style="width: 25%;">燃料效率 (25%)</div>
-                    </div>
-
-                    <!-- Breakdown -->
-                    <div class="space-y-4">
-                        <div class="flex gap-4 items-start p-3 bg-slate-800/30 rounded-lg">
-                            <div class="w-2 h-10 bg-green-500 rounded-full mt-1"></div>
-                            <div>
-                                <h3 class="font-bold text-green-400">1. 攔截精準度 (最大 50 分)</h3>
-                                <p class="text-sm text-slate-400 mt-1">
-                                    <code class="bg-slate-900 px-2 py-1 rounded text-green-300">50 * exp(-(Δr_min - 5) / 100)</code><br>
-                                    只要最小距離達到 5km 以內，此項即可拿滿 50 分。距離超出 5km 則分數呈指數衰減。
-                                </p>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- NEW SECTION: Scenario Analysis -->
-        <div class="mt-12 space-y-6">
-            <h2 class="text-3xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-400 mb-8">
-                <i class="fa-solid fa-flask-vial mr-2 text-teal-400"></i> 情境模擬與數值分析 (Scenario Analysis)
+        <!-- NEW INTERACTIVE SECTION: Scenario Analysis -->
+        <div class="mt-12 space-y-6 pt-12 border-t border-slate-700">
+            <h2 class="text-3xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-400 mb-2">
+                <i class="fa-solid fa-gamepad mr-2 text-teal-400"></i> 互動式情境模擬 (Interactive Scenarios)
             </h2>
-            <p class="text-center text-slate-400 mb-8 max-w-3xl mx-auto">
-                以下展示四種常見的設計情境。計分公式中，最關鍵的判定為：<br>
-                <code class="text-green-300 bg-slate-800 px-2 rounded">Δr_min = max(實際攔截距離, 5)</code><br>
-                這意味著只要距離 $\le 5$ km，公式就會將其視為 5 計算，使指數項 $\exp(0) = 1$，從而獲得滿分 50 分。
+            <p class="text-center text-slate-400 mb-8 max-w-3xl mx-auto text-sm">
+                點擊下方按鈕以切換四種常見的設計戰略，觀察「精準度」、「時間」與「燃料」如何在計分公式中交互影響。<br>
+                公式關鍵：<code class="text-green-300 bg-slate-800 px-2 py-0.5 rounded ml-1">Δr_min = max(實際攔截距離, 5)</code>
             </p>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- TAB BUTTONS -->
+            <div class="flex flex-wrap justify-center gap-3 mb-8">
+                <button onclick="openTab('A')" id="btn-A" class="tab-btn px-6 py-3 rounded-full font-bold transition-all duration-300 bg-green-500/20 text-green-400 border border-green-500 shadow-[0_0_15px_rgba(34,197,94,0.4)]">
+                    <i class="fa-solid fa-check-double mr-2"></i> 情境 A：理想攔截
+                </button>
+                <button onclick="openTab('B')" id="btn-B" class="tab-btn px-6 py-3 rounded-full font-bold transition-all duration-300 bg-slate-800 text-slate-400 border border-slate-700 hover:bg-blue-500/10 hover:text-blue-400">
+                    <i class="fa-solid fa-leaf mr-2"></i> 情境 B：極致省油
+                </button>
+                <button onclick="openTab('C')" id="btn-C" class="tab-btn px-6 py-3 rounded-full font-bold transition-all duration-300 bg-slate-800 text-slate-400 border border-slate-700 hover:bg-orange-500/10 hover:text-orange-400">
+                    <i class="fa-solid fa-xmark mr-2"></i> 情境 C：擦肩而過
+                </button>
+                <button onclick="openTab('D')" id="btn-D" class="tab-btn px-6 py-3 rounded-full font-bold transition-all duration-300 bg-slate-800 text-slate-400 border border-slate-700 hover:bg-red-500/10 hover:text-red-400">
+                    <i class="fa-solid fa-triangle-exclamation mr-2"></i> 情境 D：違規暴衝
+                </button>
+            </div>
+
+            <!-- TAB CONTENT CONTAINER -->
+            <div class="glass-panel p-6 rounded-2xl relative overflow-hidden min-h-[400px]">
                 
-                <!-- Scenario A -->
-                <div class="glass-panel p-6 rounded-2xl relative overflow-hidden border border-green-500/30">
-                    <div class="absolute top-0 right-0 bg-green-500 text-slate-900 font-bold px-4 py-1 rounded-bl-xl text-sm">成功攔截</div>
-                    <h3 class="text-xl font-bold text-green-400 mb-2">情境 A：理想攔截 (快又準)</h3>
-                    <p class="text-sm text-slate-300 mb-4 pb-4 border-b border-slate-700">善用霍曼轉移，適當切分點火時間，在短時間內精準攔截。</p>
-                    
-                    <ul class="space-y-2 text-sm text-slate-400 font-orbitron mb-4">
-                        <li><span class="text-slate-500">實際最短距離:</span> <span class="text-white">2.1 km</span></li>
-                        <li><span class="text-slate-500">任務耗時:</span> <span class="text-white">1.2 T_A</span></li>
-                        <li><span class="text-slate-500">機動策略:</span> <span class="text-white">1200 m/s 接著 800 m/s</span></li>
-                        <li><span class="text-slate-500">違規次數:</span> <span class="text-white">0</span></li>
-                    </ul>
-                    
-                    <div class="bg-slate-900/50 p-4 rounded-lg">
-                        <div class="text-sm">
-                            <span class="text-green-400 font-bold">精準度分數：50 分</span> 
-                            <p class="text-xs text-slate-500 mt-1">因 2.1 < 5，故代入 5。<br>50 * exp(-(5-5)/100) = 50 * exp(0) = 50</p>
+                <!-- SCENARIO A -->
+                <div id="tab-A" class="tab-content active grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="space-y-4">
+                        <div class="inline-block bg-green-500 text-slate-900 font-bold px-3 py-1 rounded text-sm mb-2">成功攔截</div>
+                        <h3 class="text-2xl font-bold text-green-400">理想攔截 (快又準)</h3>
+                        <p class="text-sm text-slate-300 pb-4 border-b border-slate-700">善用霍曼轉移，適當切分點火時間，在短時間內精準攔截。動畫展示快速且精確的軌道交會。</p>
+                        <ul class="space-y-2 text-sm text-slate-400 font-orbitron">
+                            <li><span class="text-slate-500 w-24 inline-block">實際最短距離:</span> <span class="text-white font-bold">2.1 km</span></li>
+                            <li><span class="text-slate-500 w-24 inline-block">任務耗時:</span> <span class="text-white font-bold">1.2 T_A</span></li>
+                            <li><span class="text-slate-500 w-24 inline-block">機動策略:</span> <span class="text-white font-bold">1200 m/s 接著 800 m/s</span></li>
+                            <li><span class="text-slate-500 w-24 inline-block">違規次數:</span> <span class="text-white font-bold">0</span></li>
+                        </ul>
+                        <div class="bg-green-900/20 p-4 rounded-lg border border-green-500/30">
+                            <span class="text-green-400 font-bold">精準度滿分 (50 分)</span> 
+                            <p class="text-xs text-slate-400 mt-1">因 2.1 < 5，故代入 5。<br>50 * exp(-(5-5)/100) = 50</p>
+                            <div class="mt-2 text-sm text-white border-t border-slate-700 pt-2">
+                                預估總分：<span class="text-green-400 font-bold text-xl">92 / 100</span>
+                            </div>
                         </div>
-                        <div class="mt-2 text-xs text-slate-400 border-t border-slate-700 pt-2">
-                            時間與燃料均表現優良，預估總分：<span class="text-white font-bold text-lg">92 / 100</span>
+                    </div>
+                    <!-- Animation A -->
+                    <div class="flex justify-center py-8">
+                        <div class="orbit-container">
+                            <div class="earth"></div>
+                            <div class="orbit-a-path text-center"><div class="spacecraft-a"></div></div>
+                            <div class="orbit-b-path-base orbit-b-path-a">
+                                <div class="spacecraft-b sc-b-a"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Scenario B -->
-                <div class="glass-panel p-6 rounded-2xl relative overflow-hidden border border-blue-500/30">
-                    <div class="absolute top-0 right-0 bg-blue-500 text-slate-900 font-bold px-4 py-1 rounded-bl-xl text-sm">成功攔截</div>
-                    <h3 class="text-xl font-bold text-blue-400 mb-2">情境 B：極致省油 (慢郎中)</h3>
-                    <p class="text-sm text-slate-300 mb-4 pb-4 border-b border-slate-700">利用微小推力改變軌道週期，等待近乎 4 圈才依靠自然交會追上目標。</p>
-                    
-                    <ul class="space-y-2 text-sm text-slate-400 font-orbitron mb-4">
-                        <li><span class="text-slate-500">實際最短距離:</span> <span class="text-white">4.8 km</span></li>
-                        <li><span class="text-slate-500">任務耗時:</span> <span class="text-white">3.9 T_A (壓線)</span></li>
-                        <li><span class="text-slate-500">機動策略:</span> <span class="text-white">僅 400 m/s</span></li>
-                        <li><span class="text-slate-500">違規次數:</span> <span class="text-white">0</span></li>
-                    </ul>
-                    
-                    <div class="bg-slate-900/50 p-4 rounded-lg">
-                        <div class="text-sm">
-                            <span class="text-green-400 font-bold">精準度分數：50 分</span> 
-                            <p class="text-xs text-slate-500 mt-1">因 4.8 < 5，故仍算作滿分 50。</p>
+                <!-- SCENARIO B -->
+                <div id="tab-B" class="tab-content grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="space-y-4">
+                        <div class="inline-block bg-blue-500 text-slate-900 font-bold px-3 py-1 rounded text-sm mb-2">成功攔截</div>
+                        <h3 class="text-2xl font-bold text-blue-400">極致省油 (慢郎中)</h3>
+                        <p class="text-sm text-slate-300 pb-4 border-b border-slate-700">利用微小推力改變軌道週期，等待近乎 4 圈才依靠自然交會追上目標。動畫展示緩慢的接近過程。</p>
+                        <ul class="space-y-2 text-sm text-slate-400 font-orbitron">
+                            <li><span class="text-slate-500 w-24 inline-block">實際最短距離:</span> <span class="text-white font-bold">4.8 km</span></li>
+                            <li><span class="text-slate-500 w-24 inline-block">任務耗時:</span> <span class="text-white font-bold">3.9 T_A (壓線)</span></li>
+                            <li><span class="text-slate-500 w-24 inline-block">機動策略:</span> <span class="text-white font-bold">僅 400 m/s</span></li>
+                            <li><span class="text-slate-500 w-24 inline-block">違規次數:</span> <span class="text-white font-bold">0</span></li>
+                        </ul>
+                        <div class="bg-blue-900/20 p-4 rounded-lg border border-blue-500/30">
+                            <span class="text-blue-400 font-bold">精準度滿分 (50 分)</span> 
+                            <p class="text-xs text-slate-400 mt-1">因 4.8 < 5，故仍算作滿分 50。</p>
+                            <div class="mt-2 text-sm text-white border-t border-slate-700 pt-2">
+                                預估總分：<span class="text-blue-400 font-bold text-xl">80 / 100</span> <span class="text-xs text-slate-500">(時間分極低，燃料分極高)</span>
+                            </div>
                         </div>
-                        <div class="mt-2 text-xs text-slate-400 border-t border-slate-700 pt-2">
-                            燃料分極高(約25分)，但時間分極低(約5分)。預估總分：<span class="text-white font-bold text-lg">80 / 100</span>
+                    </div>
+                    <!-- Animation B -->
+                    <div class="flex justify-center py-8">
+                        <div class="orbit-container">
+                            <div class="earth"></div>
+                            <div class="orbit-a-path text-center"><div class="spacecraft-a"></div></div>
+                            <div class="orbit-b-path-base orbit-b-path-b">
+                                <div class="spacecraft-b sc-b-b"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Scenario C -->
-                <div class="glass-panel p-6 rounded-2xl relative overflow-hidden border border-orange-500/30">
-                    <div class="absolute top-0 right-0 bg-orange-500 text-slate-900 font-bold px-4 py-1 rounded-bl-xl text-sm">未達門檻</div>
-                    <h3 class="text-xl font-bold text-orange-400 mb-2">情境 C：擦肩而過 (計算失誤)</h3>
-                    <p class="text-sm text-slate-300 mb-4 pb-4 border-b border-slate-700">軌道設計存在誤差，任務時間結束前，兩者最近距離仍超過 5 公里。</p>
-                    
-                    <ul class="space-y-2 text-sm text-slate-400 font-orbitron mb-4">
-                        <li><span class="text-slate-500">實際最短距離:</span> <span class="text-white">55 km</span></li>
-                        <li><span class="text-slate-500">任務耗時:</span> <span class="text-white">4.0 T_A (強制結束)</span></li>
-                        <li><span class="text-slate-500">機動策略:</span> <span class="text-white">總計 2000 m/s</span></li>
-                        <li><span class="text-slate-500">違規次數:</span> <span class="text-white">0</span></li>
-                    </ul>
-                    
-                    <div class="bg-slate-900/50 p-4 rounded-lg">
-                        <div class="text-sm">
-                            <span class="text-orange-400 font-bold">精準度分數：30.3 分</span> 
-                            <p class="text-xs text-slate-500 mt-1">代入公式：50 * exp(-(55-5)/100)<br>= 50 * exp(-0.5) ≈ 30.3</p>
+                <!-- SCENARIO C -->
+                <div id="tab-C" class="tab-content grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="space-y-4">
+                        <div class="inline-block bg-orange-500 text-slate-900 font-bold px-3 py-1 rounded text-sm mb-2">未達門檻</div>
+                        <h3 class="text-2xl font-bold text-orange-400">擦肩而過 (計算失誤)</h3>
+                        <p class="text-sm text-slate-300 pb-4 border-b border-slate-700">軌道設計存在誤差，任務時間結束前，兩者最近距離仍超過 5 公里。動畫顯示 B 無法觸及 A 所在軌道。</p>
+                        <ul class="space-y-2 text-sm text-slate-400 font-orbitron">
+                            <li><span class="text-slate-500 w-24 inline-block">實際最短距離:</span> <span class="text-white font-bold">55 km</span></li>
+                            <li><span class="text-slate-500 w-24 inline-block">任務耗時:</span> <span class="text-white font-bold">4.0 T_A (強制結束)</span></li>
+                            <li><span class="text-slate-500 w-24 inline-block">機動策略:</span> <span class="text-white font-bold">總計 2000 m/s</span></li>
+                            <li><span class="text-slate-500 w-24 inline-block">違規次數:</span> <span class="text-white font-bold">0</span></li>
+                        </ul>
+                        <div class="bg-orange-900/20 p-4 rounded-lg border border-orange-500/30">
+                            <span class="text-orange-400 font-bold">精準度衰減 (30.3 分)</span> 
+                            <p class="text-xs text-slate-400 mt-1">代入公式：50 * exp(-(55-5)/100) ≈ 30.3</p>
+                            <div class="mt-2 text-sm text-white border-t border-slate-700 pt-2">
+                                預估總分：<span class="text-orange-400 font-bold text-xl">45 / 100</span>
+                            </div>
                         </div>
-                        <div class="mt-2 text-xs text-slate-400 border-t border-slate-700 pt-2">
-                            因未達成早期攔截，時間與燃料分皆低。預估總分：<span class="text-white font-bold text-lg">45 / 100</span>
+                    </div>
+                    <!-- Animation C -->
+                    <div class="flex justify-center py-8">
+                        <div class="orbit-container">
+                            <div class="earth"></div>
+                            <div class="orbit-a-path text-center"><div class="spacecraft-a"></div></div>
+                            <div class="orbit-b-path-base orbit-b-path-c">
+                                <div class="spacecraft-b sc-b-c"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Scenario D -->
-                <div class="glass-panel p-6 rounded-2xl relative overflow-hidden border border-red-500/30 bg-red-900/10">
-                    <div class="absolute top-0 right-0 bg-red-500 text-white font-bold px-4 py-1 rounded-bl-xl text-sm">違規扣分</div>
-                    <h3 class="text-xl font-bold text-red-400 mb-2">情境 D：違規暴衝 (踩紅線)</h3>
-                    <p class="text-sm text-slate-300 mb-4 pb-4 border-b border-slate-700">雖然極速抵達目標位置，但演算法未設定單次機動上限，導致嚴重扣分。</p>
-                    
-                    <ul class="space-y-2 text-sm text-slate-400 font-orbitron mb-4">
-                        <li><span class="text-slate-500">實際最短距離:</span> <span class="text-white">1.0 km (極準)</span></li>
-                        <li><span class="text-slate-500">任務耗時:</span> <span class="text-white">0.5 T_A (極快)</span></li>
-                        <li><span class="text-slate-500">機動策略:</span> <span class="text-red-400 font-bold">單次點火 2200 m/s</span></li>
-                        <li><span class="text-slate-500">違規次數:</span> <span class="text-red-400 font-bold">1 次 (超過 1500 上限)</span></li>
-                    </ul>
-                    
-                    <div class="bg-slate-900/50 p-4 rounded-lg">
-                        <div class="text-sm">
-                            <span class="text-green-400 font-bold">原始表現佳 (精準50 + 時間22 + 燃料8 = 80)</span> 
-                            <p class="text-xs text-red-400 mt-1">觸發罰則：P_n = -10 分 (單次機動違規)</p>
+                <!-- SCENARIO D -->
+                <div id="tab-D" class="tab-content grid-cols-1 md:grid-cols-2 gap-8 items-center bg-red-900/10 -m-6 p-6 min-h-[400px]">
+                    <div class="space-y-4">
+                        <div class="inline-block bg-red-500 text-white font-bold px-3 py-1 rounded text-sm mb-2 animate-pulse">違規扣分</div>
+                        <h3 class="text-2xl font-bold text-red-400">違規暴衝 (踩紅線)</h3>
+                        <p class="text-sm text-slate-300 pb-4 border-b border-slate-700">極速抵達目標，但單次機動上限超過 1500m/s，導致嚴重扣分。紅色閃爍代表推進器過載違規。</p>
+                        <ul class="space-y-2 text-sm text-slate-400 font-orbitron">
+                            <li><span class="text-slate-500 w-24 inline-block">實際最短距離:</span> <span class="text-white font-bold">1.0 km (極準)</span></li>
+                            <li><span class="text-slate-500 w-24 inline-block">任務耗時:</span> <span class="text-white font-bold">0.5 T_A (極快)</span></li>
+                            <li><span class="text-slate-500 w-24 inline-block">機動策略:</span> <span class="text-red-400 font-bold">單次點火 2200 m/s</span></li>
+                            <li><span class="text-slate-500 w-24 inline-block">違規次數:</span> <span class="text-red-400 font-bold">1 次 (超過 1500)</span></li>
+                        </ul>
+                        <div class="bg-red-900/20 p-4 rounded-lg border border-red-500/30">
+                            <span class="text-red-400 font-bold">觸發罰則：P_n = -10 分</span> 
+                            <p class="text-xs text-slate-400 mt-1">原始表現極佳(約80分)，但單次機動違規重創分數。</p>
+                            <div class="mt-2 text-sm text-white border-t border-slate-700 pt-2">
+                                預估總分：<span class="text-red-400 font-bold text-xl">70 / 100</span>
+                            </div>
                         </div>
-                        <div class="mt-2 text-xs text-slate-400 border-t border-slate-700 pt-2">
-                            即使軌跡完美，違規仍會重創分數。預估總分：<span class="text-red-400 font-bold text-lg">70 / 100</span>
+                    </div>
+                    <!-- Animation D -->
+                    <div class="flex justify-center py-8">
+                        <div class="orbit-container">
+                            <div class="earth"></div>
+                            <div class="orbit-a-path text-center"><div class="spacecraft-a"></div></div>
+                            <div class="orbit-b-path-base orbit-b-path-d">
+                                <div class="spacecraft-b sc-b-d"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -367,9 +412,54 @@
         </div>
         
         <!-- Footer -->
-        <footer class="text-center text-slate-500 text-sm pt-8">
+        <footer class="text-center text-slate-500 text-sm pt-12">
             <p>主辦單位：國家太空中心 (National Space Organization) | 前 8 名晉級決賽</p>
         </footer>
     </div>
+
+    <!-- JavaScript for Tab Interaction -->
+    <script>
+        const config = {
+            'A': { color: 'green', hex: '#22c55e' },
+            'B': { color: 'blue', hex: '#3b82f6' },
+            'C': { color: 'orange', hex: '#f97316' },
+            'D': { color: 'red', hex: '#ef4444' }
+        };
+
+        function openTab(tabId) {
+            // 1. Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 2. Reset all buttons styling to default (unselected state)
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                // Reset classes
+                btn.className = 'tab-btn px-6 py-3 rounded-full font-bold transition-all duration-300 bg-slate-800 text-slate-400 border border-slate-700';
+                
+                // Add specific hover effects back based on their ID
+                const id = btn.id.split('-')[1];
+                btn.classList.add(`hover:bg-${config[id].color}-500/10`, `hover:text-${config[id].color}-400`);
+            });
+
+            // 3. Show target tab content
+            document.getElementById('tab-' + tabId).classList.add('active');
+            
+            // 4. Highlight the selected button
+            const activeBtn = document.getElementById('btn-' + tabId);
+            const activeColor = config[tabId].color;
+            const activeHex = config[tabId].hex;
+            
+            activeBtn.className = `tab-btn px-6 py-3 rounded-full font-bold transition-all duration-300 bg-${activeColor}-500/20 text-${activeColor}-400 border border-${activeColor}-500`;
+            activeBtn.style.boxShadow = `0 0 15px rgba(${hexToRgb(activeHex)}, 0.4)`;
+        }
+
+        // Helper function for box-shadow glowing effect
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? 
+                `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '255, 255, 255';
+        }
+    </script>
 </body>
 </html>
